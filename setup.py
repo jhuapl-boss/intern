@@ -11,7 +11,7 @@ setup(
     version = '0.0.1',
     description = 'A Python library for neuroscience data access and manipulation.',
     author = 'Jordan Matelsky',
-    author_email = 'jordan.matelsky@jhu.edu',
+    author_email = 'j6k4m8@gmail.com',
     url = 'https://github.com/openconnectome/ndio',
     download_url = 'https://github.com/openconnectome/ndio/tarball/0.0.1',
     keywords = [
