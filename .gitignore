@@ -1,0 +1,11 @@
+# Compiled things
+*.pyc
+
+# Data
+*.hdf5
+*.png
+*.tif
+
+# Temp Files
+*.swp
+*.swo
