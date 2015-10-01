@@ -2,19 +2,16 @@ import requests
 import h5py
 import os
 import numpy
-from PIL import Image
-import time
 from cStringIO import StringIO
 import zlib
 
-from Request import *
+from Remote import Remote
 
 DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
-DEFAULT_FORMAT   = "hdf5"
-CHUNK_DEPTH      = 16
 
-class OCP:
+
+class OCP(Remote):
     def __init__(self,
             hostname=DEFAULT_HOSTNAME,
             protocol=DEFAULT_PROTOCOL):
@@ -96,7 +93,11 @@ class OCP:
         Returns:
             :``str`` binary image data:
         """
-        r = requests.get(self.url() +"{}/image/xy/{}/{},{}/{},{}/{}/".format(token, resolution, x_start, x_stop, y_start, y_stop, z_index))
+        r = requests.get(self.url() +
+            "{}/image/xy/{}/{},{}/{},{}/{}/".format(token, resolution,
+            x_start, x_stop,
+            y_start, y_stop,
+            z_index))
         if r.status_code == 200:
             return r.content
         else:
@@ -140,7 +141,7 @@ class OCP:
 
         x_bounds = snap_to_cube(x_start, x_stop, chunk_depth=256, q_index=0)
         y_bounds = snap_to_cube(y_start, y_stop, chunk_depth=256, q_index=0)
-        z_bounds = snap_to_cube(z_start, z_stop, chunk_depth=16, q_index=1)
+        z_bounds = snap_to_cube(z_start, z_stop, chunk_depth=16,  q_index=1)
 
         volume = numpy.zeros((x_bounds[1], y_bounds[1], z_bounds[1]-1))
 
@@ -164,9 +165,13 @@ class OCP:
     def _get_cutout_no_chunking(self, token, channel, resolution,
                                 x_start, x_stop, y_start, y_stop,
                                 z_start, z_stop):
-        req = requests.get(self.url() + "{}/{}/npz/{}/{},{}/{},{}/{},{}/".format(
-                token, channel, resolution, x_start, x_stop,
-                y_start, y_stop, z_start, z_stop))
+        req = requests.get(self.url() +
+                "{}/{}/npz/{}/{},{}/{},{}/{},{}/".format(
+                    token, channel, resolution,
+                    x_start, x_stop,
+                    y_start, y_stop,
+                    z_start, z_stop
+                ))
         if req.status_code is not 200:
             raise IOError("Bad server response: {}".format(req.status_code))
 
