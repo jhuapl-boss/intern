@@ -4,6 +4,7 @@ import os
 import numpy
 from cStringIO import StringIO
 import zlib
+import tempfile
 
 from Remote import Remote
 
@@ -155,7 +156,9 @@ class OCP(Remote):
                 for y in range(y_range[0], y_range[1]):
                     zi = 0
                     for z in range(z_range[0], z_range[1]):
-                        volume[x][y][z] = chunk[1][0][zi][xi][yi]
+                        volume[x][y][z] = chunk[1][zi][xi][yi]
+                        # for using format = npz
+                        # volume[x][y][z] = chunk[1][0][zi][xi][yi]
                         zi += 1
                     yi += 1
                 xi += 1
@@ -166,7 +169,7 @@ class OCP(Remote):
                                 x_start, x_stop, y_start, y_stop,
                                 z_start, z_stop):
         req = requests.get(self.url() +
-                "{}/{}/npz/{}/{},{}/{},{}/{},{}/".format(
+                "{}/{}/hdf5/{}/{},{}/{},{}/{},{}/".format(
                     token, channel, resolution,
                     x_start, x_stop,
                     y_start, y_stop,
@@ -175,6 +178,14 @@ class OCP(Remote):
         if req.status_code is not 200:
             raise IOError("Bad server response: {}".format(req.status_code))
 
-        decompressed = zlib.decompress(req.content)
-        s = StringIO(decompressed)
-        return numpy.load(s)
+        with tempfile.NamedTemporaryFile () as tmpfile:
+            tmpfile.write(req.content)
+            tmpfile.seek(0)
+            h5file = h5py.File(tmpfile.name, "r")
+            return h5file.get(channel).get('CUTOUT')[:]
+        raise IOError("Failed to make tempfile.")
+
+        # For using format = npz
+        # decompressed = zlib.decompress(req.content)
+        # s = StringIO(decompressed)
+        # return numpy.load(s)
