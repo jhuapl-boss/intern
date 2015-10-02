@@ -110,7 +110,8 @@ class OCP(Remote):
                  y_start, y_stop,
                  z_start, z_stop,
                  resolution=1,
-                 block_size=(256, 256, 16)):
+                 block_size=(256, 256, 16),
+                 crop=True):
         """
         Get data from the OCP server.
 
@@ -121,6 +122,8 @@ class OCP(Remote):
             :Q_start:               ``int`` The lower bound of dimension 'Q'
             :Q_stop:                ``int`` The upper bound of dimension 'Q'
             :block_size:            ``int(3)`` Block size of this dataset
+            :crop:                  ``boolean : True`` whether or not to crop
+                                    the volume before returning it
 
         Returns:
             :``numpy.ndarray``: Downloaded data.
@@ -162,7 +165,17 @@ class OCP(Remote):
                         zi += 1
                     yi += 1
                 xi += 1
-        return volume
+
+        if crop == False:
+            return volume
+        else:
+            raise NotImplementedError("Can't handle crops yet, sorry! :(")
+            # we have to go get the bounds, subtract what they asked for,
+            # and then return a sub-volume.
+            x_start_trim = x_start - x_bounds[0]
+            y_start_trim = y_start - y_bounds[0]
+            z_start_trim = z_start - z_bounds[0]
+
 
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
