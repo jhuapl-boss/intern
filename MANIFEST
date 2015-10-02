@@ -17,7 +17,7 @@ ndio/ramon/__init__.py
 ndio/ramon/enums.py
 ndio/ramon/exceptions.py
 ndio/remote/OCP.py
-ndio/remote/Query.py
+ndio/remote/Remote.py
 ndio/remote/Request.py
 ndio/remote/__init__.py
 ndio/utils/__init__.py

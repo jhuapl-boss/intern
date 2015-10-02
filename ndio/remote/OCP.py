@@ -111,7 +111,7 @@ class OCP(Remote):
                  z_start, z_stop,
                  resolution=1,
                  block_size=(256, 256, 16),
-                 crop=True):
+                 crop=False):
         """
         Get data from the OCP server.
 
