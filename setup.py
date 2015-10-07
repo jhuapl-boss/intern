@@ -1,4 +1,6 @@
-VERSION = '0.0.3'
+import ndio
+
+VERSION = ndio.version
 """
 roll with
 git tag VERSION
