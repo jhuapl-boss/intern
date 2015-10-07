@@ -33,18 +33,28 @@ def export_png(png_filename, numpy_data):
 
     Arguments:
         png_filename:   A filename to which to save the png data
-        numpy_data:     The numpy array to save to png
+        numpy_data:     The numpy array to save to png. OR a string
 
     Returns:
         String. The expanded filename that now holds the png data
     """
 
+    # Expand filename to be absolute
+    png_filename = os.path.expanduser(png_filename)
+
+
+    if type(numpy_data) is str:
+        fp = open(png_filename, "wb")
+        fp.write(numpy_data)
+        fp.close()
+
+    return png_filename
+
+
     if len(numpy_data.shape) is not 2:
         print("Cannot save 3D data in this format.")
         return False
 
-    # Expand filename to be absolute
-    png_filename = os.path.expanduser(png_filename)
 
     if os.path.exists(png_filename):
         print("File {0} already exists, stopping...".format(png_filename))
