@@ -147,7 +147,10 @@ class OCP(Remote):
         y_bounds = snap_to_cube(y_start, y_stop, chunk_depth=256, q_index=0)
         z_bounds = snap_to_cube(z_start, z_stop, chunk_depth=16,  q_index=1)
 
-        volume = numpy.zeros((x_bounds[1], y_bounds[1], z_bounds[1]-1))
+        volume = numpy.zeros((
+                x_bounds[1]-x_bounds[0],
+                y_bounds[1]-y_bounds[0],
+                z_bounds[1]-z_bounds[0]))
 
 
         # TODO: Optimize.
@@ -159,7 +162,7 @@ class OCP(Remote):
                 for y in range(y_range[0], y_range[1]):
                     zi = 0
                     for z in range(z_range[0], z_range[1]):
-                        volume[x][y][z] = chunk[1][zi][xi][yi]
+                        volume[x-x_range[0]][y-y_range[0]][z-z_range[0]] = chunk[1][zi][xi][yi]
                         # for using format = npz
                         # volume[x][y][z] = chunk[1][0][zi][xi][yi]
                         zi += 1
