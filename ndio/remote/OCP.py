@@ -7,6 +7,7 @@ import zlib
 import tempfile
 
 from Remote import Remote
+from errors import *
 
 DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
@@ -201,7 +202,28 @@ class OCP(Remote):
             return h5file.get(channel).get('CUTOUT')[:]
         raise IOError("Failed to make tempfile.")
 
-        # For using format = npz
-        # decompressed = zlib.decompress(req.content)
-        # s = StringIO(decompressed)
-        # return numpy.load(s)
+
+    def get_ramon(self, token, channel, anno_id, opts="", resolution=1):
+        """
+        Download a RAMON object by ID.
+
+        Arguments:
+            token:      Project to use
+            channel:    The channel to use
+            id:         The ID of a RAMON object to gather
+            opts:       String options (ignored)
+            resolution: The scale to return (defaults to 1)
+        Returns:
+            ndio.ramon.RAMON
+        Throws:
+            RemoteDataNotFoundError
+        """
+        req = requests.get(self.url() +
+                "{}/{}/{}/{}/{}".format(token, channel,
+                anno_id, opts, resolution))
+
+        if req.status_code is not 200:
+                raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
+        else:
+            import pdb; pdb.set_trace()
+            
