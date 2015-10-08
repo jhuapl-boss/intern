@@ -47,8 +47,7 @@ def export_png(png_filename, numpy_data):
         fp = open(png_filename, "wb")
         fp.write(numpy_data)
         fp.close()
-
-    return png_filename
+        return png_filename
 
 
     if len(numpy_data.shape) is not 2:

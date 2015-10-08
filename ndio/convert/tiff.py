@@ -42,6 +42,12 @@ def export_tiff(tiff_filename, numpy_data):
     # Expand filename to be absolute
     tiff_filename = os.path.expanduser(tiff_filename)
 
+    if type(numpy_data) is str:
+        fp = open(png_filename, "wb")
+        fp.write(numpy_data)
+        fp.close()
+        return png_filename
+
     if numpy_data.dtype.name is not 'uint8':
         print("Datatype is not uint8, you may experience a known PIL bug. Continuing...")
 
