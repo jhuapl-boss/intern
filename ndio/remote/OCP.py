@@ -14,41 +14,13 @@ DEFAULT_PROTOCOL = "http"
 
 
 class OCP(Remote):
-    def __init__(self,
-            hostname=DEFAULT_HOSTNAME,
-            protocol=DEFAULT_PROTOCOL):
-        """
-        Arguments:
-            `hostname`:     `str : ndio.remote.OCP.DEFAULT_HOSTNAME`
-            `protocol`:     `str : ndio.remote.OCP.DEFAULT_PROTOCOL`
-        """
-        self.protocol = protocol
-        self.hostname = hostname
 
-
-    def url(self):
-        """
-        Get the base URL of the Remote.
-
-        Arguments:
-            None
-        Returns:
-            `str` base URL
-        """
-        return self.protocol + "://" + self.hostname + "/ocp/ca/"
+    def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL):
+        super(OCP, self).__init__(hostname, protocol)
 
 
     def ping(self):
-        """
-        Ping the server to make sure that you can access the base URL.
-
-        Arguments:
-            None
-        Returns:
-            `boolean` Successful access of server (or status code)
-        """
-        r = requests.get(self.url() + "public_tokens/")
-        return r.status_code
+        return super(OCP, self).ping('public_tokens/')
 
 
     def get_public_tokens(self):
@@ -164,8 +136,6 @@ class OCP(Remote):
                     zi = 0
                     for z in range(z_range[0], z_range[1]):
                         volume[x-x_range[0]][y-y_range[0]][z-z_range[0]] = chunk[1][zi][xi][yi]
-                        # for using format = npz
-                        # volume[x][y][z] = chunk[1][0][zi][xi][yi]
                         zi += 1
                     yi += 1
                 xi += 1
@@ -203,6 +173,7 @@ class OCP(Remote):
         raise IOError("Failed to make tempfile.")
 
 
+
     def get_ramon(self, token, channel, anno_id, opts="", resolution=1):
         """
         Download a RAMON object by ID.
@@ -226,4 +197,3 @@ class OCP(Remote):
                 raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
         else:
             import pdb; pdb.set_trace()
-            
