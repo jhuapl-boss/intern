@@ -207,6 +207,7 @@ class OCP(Remote):
                     y_start, y_stop,
                     z_start, z_stop,
                     data,
+                    dtype='',
                     resolution=0,
                     roll_axis=True):
         """
@@ -221,6 +222,8 @@ class OCP(Remote):
             resolution:     Default resolution of the data
             roll_axis:      Default True. Pass False if you're supplying data in
                             (z, x, y) order.
+            dtype:          Pass in datatype if you know it. Otherwise we'll
+                            check the projinfo.
         Returns:
             True on success
 
@@ -228,13 +231,15 @@ class OCP(Remote):
             RemoteDataUploadError if there's an issue during upload.
         """
 
-        import urllib2
+        datatype = self.get_proj_info(token)['channels'][channel]['datatype']
+        if data.dtype.name != datatype:
+            data = data.astype(datatype)
+
         if roll_axis:
             # put the z-axis first
             data = numpy.rollaxis(data, 2)
 
         data = numpy.expand_dims(data, axis=0)
-        data = data.astype(numpy.uint32)
         tempfile = StringIO()
         numpy.save(tempfile, data)
 
