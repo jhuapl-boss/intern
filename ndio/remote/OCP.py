@@ -22,6 +22,9 @@ class OCP(Remote):
     def ping(self):
         return super(OCP, self).ping('public_tokens/')
 
+    def url(self):
+        return super(OCP, self).url('/ocp/ca/')
+
 
     def get_public_tokens(self):
         """
@@ -197,3 +200,39 @@ class OCP(Remote):
                 raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
         else:
             import pdb; pdb.set_trace()
+
+
+    def post_cutout(self, token, channel,
+                    x_start, x_stop,
+                    y_start, y_stop,
+                    z_start, z_stop,
+                    data,
+                    resolution=0,
+                    roll_axis=True):
+
+        import urllib2
+        if roll_axis:
+            # put the z-axis first
+            data = numpy.rollaxis(data, 2)
+
+        data = numpy.expand_dims(data, axis=0)
+        data = data.astype(numpy.uint32)
+        tempfile = StringIO()
+        numpy.save(tempfile, data)
+
+        compressed = zlib.compress(tempfile.getvalue())
+
+        url = self.url() + "{}/{}/npz/{}/{},{}/{},{}/{},{}/".format(
+            token, channel,
+            resolution,
+            x_start, x_stop,
+            y_start, y_stop,
+            z_start, z_stop
+        )
+
+        req = requests.post(url, data=compressed, headers={'Content-Type': 'application/octet-stream'})
+
+        if req.status_code is not 200:
+            raise RemoteDataUploadError(req.text, req.status_code)
+        else:
+            return True

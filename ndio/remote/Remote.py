@@ -10,7 +10,7 @@ class Remote(object):
         self.protocol = protocol
         self.hostname = hostname
 
-    def url(self):
+    def url(self, endpoint=''):
         """
         Get the base URL of the Remote.
 
@@ -19,7 +19,7 @@ class Remote(object):
         Returns:
             `str` base URL
         """
-        return self.protocol + "://" + self.hostname + "/ocp/ca/"
+        return self.protocol + "://" + self.hostname + endpoint
 
 
     def ping(self, endpoint=''):
