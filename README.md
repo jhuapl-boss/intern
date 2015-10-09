@@ -1,6 +1,7 @@
 # ndio
 python interface to neurodata code
 
+
 ## Changelog
 
 - 0.0.6 (October 9 2015)
@@ -11,3 +12,7 @@ python interface to neurodata code
     - `ndio.version` attribute, plus better version management
     - Allows writing image files directly from binary string
     - Optimized download code for numpy-array access
+
+## Under Development
+- [ ] Download RAMON objects
+- [ ] OCPMeta Remote
