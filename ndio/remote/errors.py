@@ -16,3 +16,12 @@ class RemoteDataNotFoundError(RemoteError):
     """
     def __init__(self, message):
         super(RemoteError, self).__init__(message)
+
+class RemoteDataUploadError(RemoteError):
+    """
+    Called when there's an issue during data upload. Could be
+    because you don't have write access to this channel, or
+    because there's a problem with your data. (Check your bounds?)
+    """
+    def __init__(self, message):
+        super(RemoteError, self).__init__(message)

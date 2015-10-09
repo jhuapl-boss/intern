@@ -209,6 +209,24 @@ class OCP(Remote):
                     data,
                     resolution=0,
                     roll_axis=True):
+        """
+        Post a cutout to the server.
+
+        Arguemnts:
+            token
+            channel
+            q_start
+            q_stop
+            data:           A numpy array of data. Pass in (x, y, z)
+            resolution:     Default resolution of the data
+            roll_axis:      Default True. Pass False if you're supplying data in
+                            (z, x, y) order.
+        Returns:
+            True on success
+
+        Throws:
+            RemoteDataUploadError if there's an issue during upload.
+        """
 
         import urllib2
         if roll_axis:
