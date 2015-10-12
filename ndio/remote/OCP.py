@@ -287,23 +287,23 @@ class OCP(Remote):
 
         if type(anno_id) is int:
             # there's just one ID to download
-            return _get_single_ramon_metadata(token, channel, str(anno_id))
+            return self._get_single_ramon_metadata(token, channel, str(anno_id))
         elif type(anno_id) is str:
             # either "id" or "id,id,id":
             if (len(anno_id.split(',')) > 1):
                 results = {}
                 for i in anno_id.split(','):
-                    results[i] = _get_single_ramon_metadata(token, channel,
+                    results[i] = self._get_single_ramon_metadata(token, channel,
                                                             anno_id.strip())
                 return results
             else:
                 # "id"
-                return _get_single_ramon_metadata(token, channel, anno_id.strip())
+                return self._get_single_ramon_metadata(token, channel, anno_id.strip())
         elif type(anno_id) is list:
             # [id, id] or ['id', 'id']
             results = {}
             for i in anno_id:
-                results[i] = _get_single_ramon_metadata(token, channel,
+                results[i] = self._get_single_ramon_metadata(token, channel,
                                                         str(anno_id).strip())
             return results
 
