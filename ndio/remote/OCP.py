@@ -177,31 +177,6 @@ class OCP(Remote):
 
 
 
-    def get_ramon(self, token, channel, anno_id, opts="", resolution=1):
-        """
-        Download a RAMON object by ID.
-
-        Arguments:
-            token:      Project to use
-            channel:    The channel to use
-            id:         The ID of a RAMON object to gather
-            opts:       String options (ignored)
-            resolution: The scale to return (defaults to 1)
-        Returns:
-            ndio.ramon.RAMON
-        Throws:
-            RemoteDataNotFoundError
-        """
-        req = requests.get(self.url() +
-                "{}/{}/{}/{}/{}".format(token, channel,
-                anno_id, opts, resolution))
-
-        if req.status_code is not 200:
-                raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
-        else:
-            import pdb; pdb.set_trace()
-
-
     def post_cutout(self, token, channel,
                     x_start, x_stop,
                     y_start, y_stop,
@@ -257,5 +232,113 @@ class OCP(Remote):
 
         if req.status_code is not 200:
             raise RemoteDataUploadError(req.text, req.status_code)
+        else:
+            return True
+
+
+    def get_ramon(self, token, channel, anno_id, opts="", resolution=1,
+                  metadata_only=False):
+        """
+        Download a RAMON object by ID.
+
+        Arguments:
+            token:          Project to use
+            channel:        The channel to use
+            id:             The ID of a RAMON object to gather
+            opts:           String options (ignored)
+            resolution:     The scale to return (defaults to 1)
+            metadata_only:  Defers to `get_ramon_metadata` instead
+        Returns:
+            ndio.ramon.RAMON
+        Throws:
+            RemoteDataNotFoundError
+        """
+
+        if metadata_only:
+            return self.get_ramon_metadata(token, channel, anno_id)
+
+        req = requests.get(self.url() +
+                "{}/{}/{}/{}/{}/".format(token, channel,
+                anno_id, opts, resolution))
+
+        if req.status_code is not 200:
+            raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
+        else:
+            return True
+
+
+
+    def get_ramon_metadata(self, token, channel, anno_id):
+        """
+        Download a RAMON object by ID.
+
+        Arguments:
+            token:      Project to use
+            channel:    The channel to use
+            anno_id:    An int, a str, or a list of ids to gather
+        Returns:
+            JSON. If you pass a single id in str or int, returns a single datum.
+            If you pass a list of int or str or a comma-separated string, will
+            return a dict with keys from the list and the values are the server-
+            returned JSON.
+        Throws:
+            RemoteDataNotFoundError
+        """
+
+        if type(anno_id) is int:
+            # there's just one ID to download
+            return _get_single_ramon_metadata(token, channel, str(anno_id))
+        elif type(anno_id) is str:
+            # either "id" or "id,id,id":
+            if (len(anno_id.split(',')) > 1):
+                results = {}
+                for i in anno_id.split(','):
+                    results[i] = _get_single_ramon_metadata(token, channel,
+                                                            anno_id.strip())
+                return results
+            else:
+                # "id"
+                return _get_single_ramon_metadata(token, channel, anno_id.strip())
+        elif type(anno_id) is list:
+            # [id, id] or ['id', 'id']
+            results = {}
+            for i in anno_id:
+                results[i] = _get_single_ramon_metadata(token, channel,
+                                                        str(anno_id).strip())
+            return results
+
+
+
+    def _get_single_ramon_metadata(self, token, channel, anno_id):
+        req = requests.get(self.url() +
+                "{}/{}/{}/json/".format(token, channel,
+                anno_id))
+
+        if req.status_code is not 200:
+            raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
+        else:
+            return req.json()
+
+
+    def post_ramon(self, token, channel, ramon, opts=""):
+        """
+        Download a RAMON object by ID.
+
+        Arguments:
+            token:      Project to use
+            channel:    The channel to use
+            ramon:      A ndio.ramon.RAMON object
+            opts:       String options (ignored)
+        Returns:
+            ndio.ramon.RAMON
+        Throws:
+            RemoteDataNotFoundError
+        """
+
+        req = requests.get(self.url() +
+                "{}/{}/{}/".format(token, channel, opts))
+
+        if req.status_code is not 200:
+            raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
         else:
             return True
