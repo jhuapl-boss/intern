@@ -5,6 +5,7 @@ A Python interface to neurodata.
 [![](https://img.shields.io/pypi/v/ndio.svg)](https://pypi.python.org/pypi/ndio)
 [![](https://img.shields.io/badge/SfN-2015-blue.svg)](http://www.sfn.org/annual-meeting/neuroscience-2015)
 
+Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 
 ## Changelog
 
