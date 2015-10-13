@@ -1,5 +1,9 @@
 # ndio
-python interface to neurodata code
+A Python interface to neurodata.
+
+[![](https://img.shields.io/pypi/dm/ndio.svg)](https://pypi.python.org/pypi/ndio)
+[![](https://img.shields.io/pypi/v/ndio.svg)](https://pypi.python.org/pypi/ndio)
+[![](https://img.shields.io/badge/SfN-2015-blue.svg)](http://www.sfn.org/annual-meeting/neuroscience-2015)
 
 
 ## Changelog
