@@ -24,3 +24,4 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 ## Under Development
 - [ ] Upload RAMON
 - [ ] Download RAMON objects
+- [x] Begin test suite
