@@ -5,7 +5,6 @@ python interface to neurodata code
 ## Changelog
 
 - **0.0.7** (October 11 2015)
-    - Download RAMON objects
     - Download RAMON metadata (thanks Alex!)
     - OCPMeta Remote
 - **0.0.6** (October 9 2015)
@@ -19,3 +18,4 @@ python interface to neurodata code
 
 ## Under Development
 - [ ] Upload RAMON
+- [ ] Download RAMON objects

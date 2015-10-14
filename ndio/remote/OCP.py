@@ -8,6 +8,7 @@ import tempfile
 
 from Remote import Remote
 from errors import *
+import ndio.ramon as ramon
 
 DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
@@ -168,7 +169,7 @@ class OCP(Remote):
         if req.status_code is not 200:
             raise IOError("Bad server response: {}".format(req.status_code))
 
-        with tempfile.NamedTemporaryFile () as tmpfile:
+        with tempfile.NamedTemporaryFile() as tmpfile:
             tmpfile.write(req.content)
             tmpfile.seek(0)
             h5file = h5py.File(tmpfile.name, "r")
@@ -236,8 +237,7 @@ class OCP(Remote):
             return True
 
 
-    def get_ramon(self, token, channel, anno_id, opts="", resolution=1,
-                  metadata_only=False):
+    def get_ramon(self, token, channel, anno_id, metadata_only=False):
         """
         Download a RAMON object by ID.
 
@@ -245,8 +245,6 @@ class OCP(Remote):
             token:          Project to use
             channel:        The channel to use
             id:             The ID of a RAMON object to gather
-            opts:           String options (ignored)
-            resolution:     The scale to return (defaults to 1)
             metadata_only:  Defers to `get_ramon_metadata` instead
         Returns:
             ndio.ramon.RAMON
@@ -254,17 +252,42 @@ class OCP(Remote):
             RemoteDataNotFoundError
         """
 
+        metadata = self.get_ramon_metadata(token, channel, anno_id)
+
         if metadata_only:
-            return self.get_ramon_metadata(token, channel, anno_id)
+            return metadata
+
+        metadata = metadata[str(anno_id)]
+
+
+        # Download the data itself
+
 
         req = requests.get(self.url() +
-                "{}/{}/{}/{}/{}/".format(token, channel,
-                anno_id, opts, resolution))
+                "{}/{}/{}/".format(token, channel,
+                anno_id))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
         else:
-            return True
+            # Populate metadata of the RAMON Object
+            if metadata['type'] == 'segment':
+                # RAMONSegment
+                r = ramon.RAMONSegment()
+                r.segment_class =   metadata['metadata']['segmentclass']
+                r.status =          metadata['metadata']['status']
+                r.confidence =      metadata['metadata']['confidence']
+                r.author =          metadata['metadata']['author']
+                r.neuron =          metadata['metadata']['neuron']
+
+                with tempfile.NamedTemporaryFile() as tmpfile:
+                    tmpfile.write(req.content)
+                    tmpfile.seek(0)
+                    import pdb; pdb.set_trace()
+                    h5file = h5py.File(tmpfile.name, "r")
+
+            else:
+                raise NotImplementedError("Only RAMONSegments are currently supported.")
 
 
 
