@@ -237,6 +237,34 @@ class OCP(Remote):
             return True
 
 
+    def get_ramon_ids(self, token, channel='annotation'):
+        """
+        Return a list of all IDs available for download from this token and
+        channel.
+
+        Arguments:
+            token:          Project to use
+            channel:        Channel to use (default 'annotation')
+        Returns:
+            int[]
+        Throws:
+            RemoteDataNotFoundError
+        """
+
+        req = requests.get(self.url() + "{}/{}/query/".format(token, channel))
+
+        if req.status_code is not 200:
+            raise RemoteDataNotFoundError('No query results for token {}.'.format(token))
+        else:
+            with tempfile.NamedTemporaryFile() as tmpfile:
+                tmpfile.write(req.content)
+                tmpfile.seek(0)
+                h5file = h5py.File(tmpfile.name, "r")
+                import pdb; pdb.set_trace()
+                print "next..."
+
+
+
     def get_ramon(self, token, channel, anno_id, metadata_only=False):
         """
         Download a RAMON object by ID.
