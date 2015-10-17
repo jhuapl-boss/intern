@@ -17,6 +17,7 @@ class RemoteDataNotFoundError(RemoteError):
     def __init__(self, message):
         super(RemoteError, self).__init__(message)
 
+
 class RemoteDataUploadError(RemoteError):
     """
     Called when there's an issue during data upload. Could be

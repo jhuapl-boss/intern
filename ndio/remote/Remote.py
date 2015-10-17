@@ -19,6 +19,8 @@ class Remote(object):
         Returns:
             `str` base URL
         """
+        if not endpoint.startswith('/'):
+            endpoint = "/" + endpoint
         return self.protocol + "://" + self.hostname + endpoint
 
 
