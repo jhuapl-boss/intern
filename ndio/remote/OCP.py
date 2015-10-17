@@ -53,10 +53,10 @@ class OCP(Remote):
         return r.json()
 
 
-    def get_image(self, token,
+    def get_image(self, token, channel,
                   x_start, x_stop,
                   y_start, y_stop,
-                  z_index, resolution=1):
+                  z_index, resolution=0):
         """
         Return a binary-encoded, decompressed image. You should probably
         check to see that your token has an `image` channel before running this,
@@ -64,6 +64,7 @@ class OCP(Remote):
 
         Arguments:
             :token:                 ``string`` Token to identify data to download
+            :channel:               ``string`` Channel to identify data to download
             :Q_start:               ``int`` The lower bound of dimension 'Q'
             :Q_stop:                ``int`` The upper bound of dimension 'Q'
             :z_index:               ``int`` The layer of data to return (1D)
@@ -232,7 +233,7 @@ class OCP(Remote):
         req = requests.post(url, data=compressed, headers={'Content-Type': 'application/octet-stream'})
 
         if req.status_code is not 200:
-            raise RemoteDataUploadError(req.text, req.status_code)
+            raise RemoteDataUploadError(req.text)
         else:
             return True
 
