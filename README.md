@@ -9,6 +9,12 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 
 ## Changelog
 
+- **0.0.9** (October 17 2015)
+    - OCPMeta for get/set by token
+    - Fixes for URL construction
+- **0.0.8** (October 13 2015)
+    - RAMONSegment downloads
+    - Begin test suite
 - **0.0.7** (October 11 2015)
     - Download RAMON metadata (thanks Alex!)
     - OCPMeta Remote
@@ -24,4 +30,3 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 ## Under Development
 - [ ] Upload RAMON
 - [ ] Download RAMON objects
-- [x] Begin test suite
