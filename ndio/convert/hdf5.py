@@ -19,7 +19,7 @@ def import_hdf5(hdf5_filename):
     try:
         f = h5py.File(hdf5_filename, "r")
         # OCP stores data inside the 'cutout' h5 dataset
-        data_layers = f.get('CUTOUT')
+        data_layers = f.get('image').get('CUTOUT')
     except Exception as e:
         print("Could not load file {0} for conversion.".format(hdf5_filename))
         raise
