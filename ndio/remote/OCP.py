@@ -266,14 +266,15 @@ class OCP(Remote):
 
 
 
-    def get_ramon(self, token, channel, anno_id, metadata_only=False):
+    def get_ramon(self, token, channel, anno_id, resolution, metadata_only=False):
         """
         Download a RAMON object by ID.
 
         Arguments:
             token:          Project to use
             channel:        The channel to use
-            id:             The ID of a RAMON object to gather
+            anno_id:        The ID of a RAMON object to gather
+            resolution:     Resolution (if not working, try a higher num)
             metadata_only:  Defers to `get_ramon_metadata` instead
         Returns:
             ndio.ramon.RAMON
@@ -293,8 +294,8 @@ class OCP(Remote):
 
 
         req = requests.get(self.url() +
-                "{}/{}/{}/".format(token, channel,
-                anno_id))
+                "{}/{}/{}/cutout/{}".format(token, channel,
+                anno_id, resolution))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
@@ -312,8 +313,21 @@ class OCP(Remote):
                 with tempfile.NamedTemporaryFile() as tmpfile:
                     tmpfile.write(req.content)
                     tmpfile.seek(0)
-                    import pdb; pdb.set_trace()
                     h5file = h5py.File(tmpfile.name, "r")
+
+                    metadata = h5file[str(anno_id)]['METADATA']
+                    r.author =          metadata['AUTHOR'][0]
+                    r.confidence =      metadata['CONFIDENCE'][0]
+                    r.neuron =          metadata['NEURON'][0]
+                    r.parent_seed =     metadata['PARENTSEED'][0]
+                    r.segment_class =   metadata['SEGMENTCLASS'][0]
+                    r.status =          metadata['STATUS'][0]
+                    r.synapses =        metadata['SYNAPSES'][()]
+                    r.xyz_offset =      h5file[str(anno_id)]['XYZOFFSET'][()]
+                    r.resolution =      h5file[str(anno_id)]['RESOLUTION'][0]
+                    r.cutout =          h5file[str(anno_id)]['CUTOUT'][()]
+
+                return r
 
             else:
                 raise NotImplementedError("Only RAMONSegments are currently supported.")
