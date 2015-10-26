@@ -9,6 +9,14 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 
 ## Changelog
 
+- **0.0.12** (October 19 2015)
+    - OCP Metadata Access
+    - Add API key support to coincide with new API keys on LIMS server
+    - Fix png export behavior
+- **0.0.11** (October 18 2015)
+    - A few more bug fixes in time for SfN
+- **0.0.10** (October 17 2015)
+    - Bug fixes for volume uploads
 - **0.0.9** (October 17 2015)
     - OCPMeta for get/set by token
     - Fixes for URL construction

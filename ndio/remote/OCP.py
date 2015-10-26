@@ -322,17 +322,21 @@ class OCP(Remote):
 
     def get_ramon_metadata(self, token, channel, anno_id):
         """
-        Download a RAMON object by ID.
+        Download a RAMON object by ID. `anno_id` can be a string `"123"`, an
+        int `123`, an array of ints `[123, 234, 345]`, an array of strings
+        `["123", "234", "345"]`, or a comma-separated string list `"123,234,345"`.
 
         Arguments:
             token:      Project to use
             channel:    The channel to use
             anno_id:    An int, a str, or a list of ids to gather
+
         Returns:
             JSON. If you pass a single id in str or int, returns a single datum.
             If you pass a list of int or str or a comma-separated string, will
             return a dict with keys from the list and the values are the server-
             returned JSON.
+
         Throws:
             RemoteDataNotFoundError
         """

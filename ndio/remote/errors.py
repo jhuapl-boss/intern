@@ -26,3 +26,13 @@ class RemoteDataUploadError(RemoteError):
     """
     def __init__(self, message):
         super(RemoteError, self).__init__(message)
+
+
+class BadAPIKeyError(RemoteError):
+    """
+    Called when you do not specify an API key and one is needed,
+    or if you specify an API key that does not match the requirements
+    to access/edit the data you're accessing/editing.
+    """
+    def __init__(self, message):
+        super(RemoteError, self).__init__(message)

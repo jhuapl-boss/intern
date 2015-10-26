@@ -49,16 +49,6 @@ def export_png(png_filename, numpy_data):
         fp.close()
         return png_filename
 
-
-    if len(numpy_data.shape) is not 2:
-        print("Cannot save 3D data in this format.")
-        return False
-
-
-    if os.path.exists(png_filename):
-        print("File {0} already exists, stopping...".format(png_filename))
-        return False
-
     try:
         if numpy_data.dtype.name != 'uint8':
             m = 'I'
