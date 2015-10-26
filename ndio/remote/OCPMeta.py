@@ -19,13 +19,11 @@ class OCPMeta(Remote):
 
     def __init__(self,
                  hostname=DEFAULT_HOSTNAME,
-                 protocol=DEFAULT_PROTOCOL,
-                 key=""):
+                 protocol=DEFAULT_PROTOCOL):
         super(OCPMeta, self).__init__(hostname, protocol)
-        self.key = key
 
 
-    def get_project_by_token(self, token):
+    def get_metadata(self, token):
         """
         Get metadata via a project token.
 
@@ -39,22 +37,18 @@ class OCPMeta(Remote):
         return req.json()
 
 
-    def insert_project(self, token, data):
+    def set_metadata(self, token, data):
         """
         Insert new metadata into the OCP metadata database.
 
         Arguments:
-            token:      A new token to insert. If your `data` contains a token,
-                        it is overwritten by this value.
-            data:       A dictionary to insert as metadata.
+            token:      Token of the datum to set
+            data:       A dictionary to insert as metadata. Can include `secret`.
         Returns:
             JSON of the inserted ID (convenience) or an error message.
         Throws:
-            RemoteDataUploadError if the token is already populated, or if you
-            have not specified an API key.
+            RemoteDataUploadError if the token is already populated, or if there is an issue with your specified `secret` key.
         """
-        if self.key == "" or not self.key:
-            raise BadAPIKeyError("No API key specified. (Request one from support@neurodata.io.)")
 
         req = requests.post(self.url("/metadata/ocp/set/" + token), data=data)
         if req.status_code != 200:
