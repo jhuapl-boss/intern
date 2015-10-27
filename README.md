@@ -9,6 +9,12 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 
 ## Changelog
 
+
+- **0.0.14**
+    - Remove excess code for RAMON downloads
+- **0.0.13** (October 26 2015)
+    - RAMON Downloads fully working for `Segments`
+    - OCPMeta Remote support for `set`s with `secret`
 - **0.0.12** (October 19 2015)
     - OCP Metadata Access
     - Add API key support to coincide with new API keys on LIMS server

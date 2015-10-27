@@ -304,11 +304,6 @@ class OCP(Remote):
             if metadata['type'] == 'segment':
                 # RAMONSegment
                 r = ramon.RAMONSegment()
-                r.segment_class =   metadata['metadata']['segmentclass']
-                r.status =          metadata['metadata']['status']
-                r.confidence =      metadata['metadata']['confidence']
-                r.author =          metadata['metadata']['author']
-                r.neuron =          metadata['metadata']['neuron']
 
                 with tempfile.NamedTemporaryFile() as tmpfile:
                     tmpfile.write(req.content)
