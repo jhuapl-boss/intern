@@ -10,7 +10,7 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 ## Changelog
 
 
-- **0.0.14**
+- **0.0.14** (October 29 2015)
     - Remove excess code for RAMON downloads
     - Fix some old docstrings so everything's pretty again
     - Add channel addition and removal
