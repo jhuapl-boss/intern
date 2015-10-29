@@ -56,19 +56,35 @@ def metadata_to_ramon(metadata):
     pass
 
 
-def hdf5_to_ramon(hdf5):
+def hdf5_to_ramon(hdf5, anno_id=None):
     """
     Converts an HDF5 file to a RAMON object. Returns an object that is a
     child-class of RAMON (though it's determined at run-time what type
     exactly is returned.)
 
     Arguments:
-        hdf5:           A h5py File object that holds RAMON data
+        hdf5 (h5py.File): A h5py File object that holds RAMON data
+        anno_id (int): The ID of the RAMON object to extract from the file.
+            Defaults to the first one numerically, if none is specified.
+
     Returns:
-        RAMON object
-    Raises:
-        A whole lotta errors.
+        ndio.RAMON object
     """
+
+    if anno_id is None:
+        # The user just wants the first item we find, so... Yeah.
+        return hdf5_to_ramon(hdf5, hdf5.keys()[0])
+
+
+    # First, get the actual object we're going to download.
+    anno_id = str(anno_id)
+    if anno_id not in hdf5.keys():
+        raise ValueError("ID {} is not in this file. Options are: {}".format(
+            anno_id,
+            ", ".join(hdf5.keys())
+        ))
+    else:
+        anno = hdf5[anno_id]
 
 
     raise NotImplementedError("WIP")

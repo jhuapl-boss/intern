@@ -29,7 +29,7 @@ class OCP(Remote):
     def ping(self):
         return super(OCP, self).ping('public_tokens/')
 
-    def url(self, suffix):
+    def url(self, suffix=""):
         return super(OCP, self).url('/ocp/ca/' + suffix)
 
     ############################################################################ SECTION:
