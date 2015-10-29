@@ -4,7 +4,7 @@ import json
 from Remote import Remote
 from errors import *
 
-DEFAULT_HOSTNAME = "api.neurodata.io"
+DEFAULT_HOSTNAME = "lims.neurodata.io"
 DEFAULT_PROTOCOL = "http"
 
 
@@ -28,7 +28,8 @@ class OCPMeta(Remote):
         Get metadata via a project token.
 
         Arguments:
-            token:      The project (token) to access
+            token (str):      The project (token) to access
+
         Returns:
             JSON metadata associated with this project
         """
@@ -47,10 +48,14 @@ class OCPMeta(Remote):
         Returns:
             JSON of the inserted ID (convenience) or an error message.
         Throws:
-            RemoteDataUploadError if the token is already populated, or if there is an issue with your specified `secret` key.
+            RemoteDataUploadError: If the token is already populated, or if
+                there is an issue with your specified `secret` key.
         """
 
         req = requests.post(self.url("/metadata/ocp/set/" + token), data=data)
+
         if req.status_code != 200:
-            raise RemoteDataUploadError("Could not upload metadata: " + req.json()['message'])
+            raise RemoteDataUploadError(
+                "Could not upload metadata: " + req.json()['message']
+            )
         return req.json()
