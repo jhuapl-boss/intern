@@ -34,6 +34,7 @@ class OCP(Remote):
 
         Arguments:
             None
+
         Returns:
             `str[]` list of public tokens
         """
@@ -46,9 +47,10 @@ class OCP(Remote):
         Returns the project info for a given token.
 
         Arguments:
-            `token`:        `str` Token to return information for
+            token (str): Token to return information for
+
         Returns:
-            JSON representation of proj_info
+            JSON: representation of proj_info
         """
         r = requests.get(self.url() + "{}/info/".format(token))
         return r.json()
@@ -66,14 +68,15 @@ class OCP(Remote):
         or it won't do anything interesting.
 
         Arguments:
-            :token:                 ``string`` Token to identify data to download
-            :channel:               ``string`` Channel to identify data to download
-            :Q_start:               ``int`` The lower bound of dimension 'Q'
-            :Q_stop:                ``int`` The upper bound of dimension 'Q'
-            :z_index:               ``int`` The layer of data to return (1D)
-            :resolution:            ``int : 1`` Resolution level
+            token (str): Token to identify data to download
+            channel (str): Channel
+            resolution (int): Resolution level
+            Q_start (int):` The lower bound of dimension 'Q'
+            Q_stop (int): The upper bound of dimension 'Q'
+            z_index (int): The z-slice to image
+
         Returns:
-            :``str`` binary image data:
+            str: binary image data
         """
         r = requests.get(self.url() +
                 "{}/image/xy/{}/{},{}/{},{}/{}/".format(token, resolution,
@@ -97,17 +100,19 @@ class OCP(Remote):
         Get data from the OCP server.
 
         Arguments:
-            :token:                 ``string`` Token to identify data to download
-            :channel:               ``string`` Channel
-            :resolution:            ``int : 1`` Resolution level
-            :Q_start:               ``int`` The lower bound of dimension 'Q'
-            :Q_stop:                ``int`` The upper bound of dimension 'Q'
-            :block_size:            ``int(3)`` Block size of this dataset
-            :crop:                  ``boolean : True`` whether or not to crop
-                                    the volume before returning it
+            token (str): Token to identify data to download
+            channel (str): Channel
+            resolution (int): Resolution level
+            Q_start (int):` The lower bound of dimension 'Q'
+            Q_stop (int): The upper bound of dimension 'Q'
+            block_size (int[3]): Block size of this dataset
+            crop (bool): whether or not to crop the volume before returning it
 
         Returns:
-            :``numpy.ndarray``: Downloaded data.
+            numpy.ndarray: Downloaded data.
+
+        Raises:
+            NotImplementedError: If you try to crop... Sorry :(
         """
 
         # Get an array-of-tuples of blocks to request.
