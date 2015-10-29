@@ -1,6 +1,7 @@
 import requests
 
 class Remote(object):
+
     def __init__(self, hostname, protocol):
         """
         Arguments:
@@ -9,6 +10,7 @@ class Remote(object):
         """
         self.protocol = protocol
         self.hostname = hostname
+
 
     def url(self, endpoint=''):
         """

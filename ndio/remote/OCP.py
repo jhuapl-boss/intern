@@ -26,7 +26,8 @@ class OCP(Remote):
     def url(self):
         return super(OCP, self).url('/ocp/ca/')
 
-
+    ############################################################################ SECTION:
+    ############################################################################ Housekeeping
     def get_public_tokens(self):
         """
         Get a list of public tokens available on this server.
@@ -52,6 +53,8 @@ class OCP(Remote):
         r = requests.get(self.url() + "{}/info/".format(token))
         return r.json()
 
+    ############################################################################ SECTION:
+    ############################################################################ Data Download
 
     def get_image(self, token, channel,
                   x_start, x_stop,
@@ -73,10 +76,10 @@ class OCP(Remote):
             :``str`` binary image data:
         """
         r = requests.get(self.url() +
-            "{}/image/xy/{}/{},{}/{},{}/{}/".format(token, resolution,
-            x_start, x_stop,
-            y_start, y_stop,
-            z_index))
+                "{}/image/xy/{}/{},{}/{},{}/{}/".format(token, resolution,
+                x_start, x_stop,
+                y_start, y_stop,
+                z_index))
         if r.status_code == 200:
             return r.content
         else:
@@ -84,7 +87,7 @@ class OCP(Remote):
 
 
     def get_cutout(self, token, channel,
-                 x_start, x_stop,
+                x_start, x_stop,
                  y_start, y_stop,
                  z_start, z_stop,
                  resolution=1,
@@ -145,7 +148,7 @@ class OCP(Remote):
                     yi += 1
                 xi += 1
 
-        if crop == False:
+        if crop is False:
             return volume
         else:
             raise NotImplementedError("Can't handle crops yet, sorry! :(")
@@ -178,6 +181,8 @@ class OCP(Remote):
         raise IOError("Failed to make tempfile.")
 
 
+    ############################################################################ SECTION:
+    ############################################################################ Data Upload
 
     def post_cutout(self, token, channel,
                     x_start, x_stop,
@@ -238,6 +243,9 @@ class OCP(Remote):
             return True
 
 
+    ############################################################################ SECTION:
+    ############################################################################ RAMON Download
+
     def get_ramon_ids(self, token, channel='annotation'):
         """
         Return a list of all IDs available for download from this token and
@@ -261,8 +269,8 @@ class OCP(Remote):
                 tmpfile.write(req.content)
                 tmpfile.seek(0)
                 h5file = h5py.File(tmpfile.name, "r")
-                import pdb; pdb.set_trace()
-                print "next..."
+                # TODO
+                raise NotImplementedError()
 
 
 
@@ -291,8 +299,6 @@ class OCP(Remote):
 
 
         # Download the data itself
-
-
         req = requests.get(self.url() +
                 "{}/{}/{}/cutout/{}".format(token, channel,
                 anno_id, resolution))
@@ -373,7 +379,6 @@ class OCP(Remote):
             return results
 
 
-
     def _get_single_ramon_metadata(self, token, channel, anno_id):
         req = requests.get(self.url() +
                 "{}/{}/{}/json/".format(token, channel,
@@ -385,25 +390,5 @@ class OCP(Remote):
             return req.json()
 
 
-    def post_ramon(self, token, channel, ramon, opts=""):
-        """
-        Download a RAMON object by ID.
-
-        Arguments:
-            token:      Project to use
-            channel:    The channel to use
-            ramon:      A ndio.ramon.RAMON object
-            opts:       String options (ignored)
-        Returns:
-            ndio.ramon.RAMON
-        Throws:
-            RemoteDataNotFoundError
-        """
-
-        req = requests.get(self.url() +
-                "{}/{}/{}/".format(token, channel, opts))
-
-        if req.status_code is not 200:
-            raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
-        else:
-            return True
+    ############################################################################ SECTION:
+    ############################################################################ RAMON Upload
