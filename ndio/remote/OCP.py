@@ -29,8 +29,8 @@ class OCP(Remote):
     def ping(self):
         return super(OCP, self).ping('public_tokens/')
 
-    def url(self):
-        return super(OCP, self).url('/ocp/ca/')
+    def url(self, suffix):
+        return super(OCP, self).url('/ocp/ca/' + suffix)
 
     ############################################################################ SECTION:
     ############################################################################ Metadata
@@ -411,7 +411,7 @@ class OCP(Remote):
     ############################################################################ SECTION:
     ############################################################################ Channels
 
-    def create_channel(token, name, channel_type, dtype, readonly):
+    def create_channel(self, token, name, channel_type, dtype, readonly):
         """
         Create a new channel on the Remote, using channel_data.
 
@@ -438,18 +438,47 @@ class OCP(Remote):
         if channel_type not in ['image', 'annotation']:
             raise ValueError('Type must be either OCP.IMAGE or OCP.ANNOTATION.')
 
-        if readonly * 1 is not in [0, 1]:
+        if readonly * 1 not in [0, 1]:
             raise ValueError("readonly must be 0 (False) or 1 (True).")
 
         # Good job! You supplied very nice arguments.
-        req = requests.post(this.url("{}/createChannel/".format(token)), data={
-            "channel_name": name,
-            "channel_type": channel_type,
-            "datatype": dtype,
-            "readonly": readonly * 1
+        req = requests.post(self.url("{}/createChannel/".format(token)), json={
+            "channels": {
+                name: {
+                    "channel_name": name,
+                    "channel_type": channel_type,
+                    "datatype": dtype,
+                    "readonly": readonly * 1
+                }
+            }
         })
 
         if req.status_code is not 200:
             raise RemoteDataUploadError('Could not upload. {}'.format(req.text))
+        else:
+            return True
+
+
+    def delete_channel(self, token, name):
+        """
+        Delete an existing channel on the Remote. Be careful!
+
+        Arguments:
+            token (str): The token the new channel should be deleted from
+            name (str): The name of the channel to delete
+
+        Returns:
+            bool: True if successful, False otherwise.
+
+        Raises:
+            RemoteDataUploadError: If the upload fails for some reason.
+        """
+
+        req = requests.post(self.url("{}/deleteChannel/".format(token)), json={
+            "channels": [name]
+        })
+
+        if req.status_code is not 200:
+            raise RemoteDataUploadError('Could not delete. {}'.format(req.text))
         else:
             return True
