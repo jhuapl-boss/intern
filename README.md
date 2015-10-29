@@ -12,6 +12,9 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 
 - **0.0.14**
     - Remove excess code for RAMON downloads
+    - Fix some old docstrings so everything's pretty again
+    - Add channel addition and removal
+    - Add IMAGE and ANNOTATION enumerables
 - **0.0.13** (October 26 2015)
     - RAMON Downloads fully working for `Segments`
     - OCPMeta Remote support for `set`s with `secret`

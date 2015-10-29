@@ -16,6 +16,12 @@ DEFAULT_PROTOCOL = "http"
 
 class OCP(Remote):
 
+    ############################################################################ SECTION:
+    ############################################################################ Enumerables
+
+    IMAGE = IMG = 'image'
+    ANNOTATION = ANNO = 'annotation'
+
     def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL):
         super(OCP, self).__init__(hostname, protocol)
 
@@ -27,7 +33,8 @@ class OCP(Remote):
         return super(OCP, self).url('/ocp/ca/')
 
     ############################################################################ SECTION:
-    ############################################################################ Housekeeping
+    ############################################################################ Metadata
+
     def get_public_tokens(self):
         """
         Get a list of public tokens available on this server.
@@ -404,18 +411,45 @@ class OCP(Remote):
     ############################################################################ SECTION:
     ############################################################################ Channels
 
-    def create_channel(channel_data):
+    def create_channel(token, name, channel_type, dtype, readonly):
         """
         Create a new channel on the Remote, using channel_data.
 
         Arguments:
-            channel_data (json): The JSON to parse to generate the channel.
+            token (str): The token the new channel should be added to
+            name (str): The name of the channel to add
+            type (str): Type of the channel to add (e.g. OCP.IMAGE)
+            dtype (str): The datatype of the channel's data (e.g. 'uint8')
+            readonly (bool): Can others write to this channel?
 
         Returns:
             bool: True if successful, False otherwise.
 
         Raises:
-            ValueError: If channel_data is invalid channel-creation JSON
+            ValueError: If your args were bad :(
             RemoteDataUploadError: If the channel data is valid but upload
                 fails for some other reason.
         """
+
+        for c in name:
+            if not c.isalnum():
+                raise ValueError("Name cannot contain character {}.".format(c))
+
+        if channel_type not in ['image', 'annotation']:
+            raise ValueError('Type must be either OCP.IMAGE or OCP.ANNOTATION.')
+
+        if readonly * 1 is not in [0, 1]:
+            raise ValueError("readonly must be 0 (False) or 1 (True).")
+
+        # Good job! You supplied very nice arguments.
+        req = requests.post(this.url("{}/createChannel/".format(token)), data={
+            "channel_name": name,
+            "channel_type": channel_type,
+            "datatype": dtype,
+            "readonly": readonly * 1
+        })
+
+        if req.status_code is not 200:
+            raise RemoteDataUploadError('Could not upload. {}'.format(req.text))
+        else:
+            return True
