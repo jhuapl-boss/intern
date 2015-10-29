@@ -23,7 +23,7 @@ _ramon_types = {
     _types["SYNAPSE"]: RAMONSynapse,
     _types["SEED"]:  None,
     _types["SEGMENT"]: RAMONSegment,
-    _types["NEURON"]: RAMONNeuron,
+    _types["NEURON"]: None,
     _types["ORGANELLE"]: RAMONOrganelle,
     _types["ATTRIBUTEDREGION"]: None,
     _types["VOLUME"]: RAMONVolume
