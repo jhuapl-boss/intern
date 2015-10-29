@@ -87,7 +87,7 @@ class OCP(Remote):
 
 
     def get_cutout(self, token, channel,
-                x_start, x_stop,
+                 x_start, x_stop,
                  y_start, y_stop,
                  z_start, z_stop,
                  resolution=1,
@@ -195,11 +195,11 @@ class OCP(Remote):
         """
         Post a cutout to the server.
 
-        Arguemnts:
-            token
-            channel
-            q_start
-            q_stop
+        Arguments:
+            token (str)
+            channel (str)
+            q_start (int)
+            q_stop (int)
             data:           A numpy array of data. Pass in (x, y, z)
             resolution:     Default resolution of the data
             roll_axis:      Default True. Pass False if you're supplying data in
@@ -207,9 +207,9 @@ class OCP(Remote):
             dtype:          Pass in datatype if you know it. Otherwise we'll
                             check the projinfo.
         Returns:
-            True on success
+            bool: True on success
 
-        Throws:
+        Raises:
             RemoteDataUploadError if there's an issue during upload.
         """
 
@@ -252,12 +252,12 @@ class OCP(Remote):
         channel.
 
         Arguments:
-            token:          Project to use
-            channel:        Channel to use (default 'annotation')
+            token (str): Project to use
+            channel (str): Channel to use (default 'annotation')
         Returns:
-            int[]
-        Throws:
-            RemoteDataNotFoundError
+            int[]: A list of the ids of the returned RAMON objects
+        Raises:
+            RemoteDataNotFoundError: If the channel or token is not found
         """
 
         req = requests.get(self.url() + "{}/{}/query/".format(token, channel))
@@ -279,15 +279,17 @@ class OCP(Remote):
         Download a RAMON object by ID.
 
         Arguments:
-            token:          Project to use
-            channel:        The channel to use
-            anno_id:        The ID of a RAMON object to gather
-            resolution:     Resolution (if not working, try a higher num)
-            metadata_only:  Defers to `get_ramon_metadata` instead
+            token (str): Project to use
+            channel (str): The channel to use
+            anno_id (int, str): The ID of a RAMON object to gather. Coerced str
+            resolution (int): Resolution (if not working, try a higher num)
+            metadata_only (bool):  If true, returns `get_ramon_metadata` instead
+
         Returns:
             ndio.ramon.RAMON
-        Throws:
-            RemoteDataNotFoundError
+
+        Raises:
+            RemoteDataNotFoundError: If the requested anno_id cannot be found.
         """
 
         metadata = self.get_ramon_metadata(token, channel, anno_id)
@@ -342,9 +344,9 @@ class OCP(Remote):
         `["123", "234", "345"]`, or a comma-separated string list `"123,234,345"`.
 
         Arguments:
-            token:      Project to use
-            channel:    The channel to use
-            anno_id:    An int, a str, or a list of ids to gather
+            token (str): Project to use
+            channel (str): The channel to use
+            anno_id: An int, a str, or a list of ids to gather
 
         Returns:
             JSON. If you pass a single id in str or int, returns a single datum.
@@ -352,8 +354,8 @@ class OCP(Remote):
             return a dict with keys from the list and the values are the server-
             returned JSON.
 
-        Throws:
-            RemoteDataNotFoundError
+        Raises:
+            RemoteDataNotFoundError: If the data cannot be found on the Remote
         """
 
         if type(anno_id) is int:
@@ -392,3 +394,23 @@ class OCP(Remote):
 
     ############################################################################ SECTION:
     ############################################################################ RAMON Upload
+
+
+    ############################################################################ SECTION:
+    ############################################################################ Channels
+
+    def create_channel(channel_data):
+        """
+        Create a new channel on the Remote, using channel_data.
+
+        Arguments:
+            channel_data (json): The JSON to parse to generate the channel.
+
+        Returns:
+            bool: True if successful, False otherwise.
+
+        Raises:
+            ValueError: If channel_data is invalid channel-creation JSON
+            RemoteDataUploadError: If the channel data is valid but upload
+                fails for some other reason.
+        """
