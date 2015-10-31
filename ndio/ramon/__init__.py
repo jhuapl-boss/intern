@@ -59,9 +59,11 @@ _ramon_types = {
     _types["SEGMENT"]: RAMONSegment,
     _types["NEURON"]: RAMONNeuron,
     _types["ORGANELLE"]: RAMONOrganelle,
-    _types["ATTRIBUTEDREGION"]: None,
+    # _types["ATTRIBUTEDREGION"]: None,
     _types["VOLUME"]: RAMONVolume
 }
+
+_reverse_ramon_types = {v: k for k, v in _ramon_types.items()}
 
 class AnnotationType:
     GENERIC = _types["GENERIC"]
@@ -80,6 +82,10 @@ class AnnotationType:
     @staticmethod
     def get_class(type):
         return _ramon_types[type]
+
+    @staticmethod
+    def get_int(type):
+        return _reverse_ramon_types[type]
 
 
 def hdf5_to_ramon(hdf5, anno_id=None):
@@ -154,6 +160,87 @@ def hdf5_to_ramon(hdf5, anno_id=None):
             r.organelles =  metadata['ORGANELLES'][()]
 
     if type(r) is RAMONOrganelle:
-        r.organelleclass =  metadata['ORGANELLECLASS'][0]
+        r.organelle_class =  metadata['ORGANELLECLASS'][0]
 
     return r
+
+
+def ramon_to_hdf5(ramon, hdf5=None):
+    """
+    Exports a RAMON object to an HDF5 file object.
+
+    Arguments:
+        ramon (RAMON): A subclass of RAMONBase
+
+    Returns:
+        hdf5.File
+
+    Raises:
+        InvalidRAMONError if you pass a non-RAMON object
+    """
+
+    if issubclass(type(ramon), RAMONBase) is False:
+        raise InvalidRAMONError("Invalid RAMON supplied to ramon_to_hdf5.")
+
+    import h5py
+    import numpy
+
+    if hdf5 is None:
+        with h5py.File('{}.hdf5'.format(ramon.id), 'a') as hdf5:
+
+            # First we'll export things that all RAMON objects have in common, starting
+            # with the Group that encompasses each ID:
+            grp = hdf5.create_group(str(ramon.id))
+
+            grp.create_dataset("ANNOTATION_TYPE", (1,),
+                                numpy.uint32,
+                                data=AnnotationType.get_int(type(ramon)))
+            grp.create_dataset('RESOLUTION', (1,), numpy.uint32, data=ramon.resolution)
+            grp.create_dataset('XYZOFFSET', (3,), numpy.uint32, data=ramon.xyz_offset)
+            grp.create_dataset('CUTOUT', ramon.cutout.shape,
+                                ramon.cutout.dtype, data=ramon.cutout)
+
+            # Next, add general metadata.
+            metadata = grp.create_group('METADATA')
+
+            metadata.create_dataset('AUTHOR', (1,),
+                                    dtype=h5py.special_dtype(vlen=str),
+                                    data=ramon.author)
+            metadata.create_dataset('CONFIDENCE', (1,), numpy.float,
+                                    data=ramon.confidence)
+            metadata.create_dataset('STATUS', (1,), numpy.uint32,
+                                    data=ramon.status)
+
+            # Finally, add type-specific metadata:
+
+            if hasattr(ramon, 'segments'):
+                metadata.create_dataset('SEGMENTS', (len(ramon.segments),2),
+                                    numpy.uint32, data=ramon.segments)
+
+            if hasattr(ramon, 'synapse_type'):
+                metadata.create_dataset('SYNAPSETYPE', (1,), numpy.uint32,
+                                    data=ramon.synapse_type)
+
+            if hasattr(ramon, 'weight'):
+                metadata.create_dataset('WEIGHT', (1,), numpy.float, data=ramon.weight)
+
+            if hasattr(ramon, 'neuron'):
+                metadata.create_dataset('NEURON', (1,), numpy.uint32, data=ramon.neuron)
+
+            if hasattr(ramon, 'segment_class'):
+                metadata.create_dataset('SEGMENTCLASS', (1,), numpy.uint32,
+                                    data=ramon.segment_class)
+
+            if hasattr(ramon, 'synapses'):
+                metadata.create_dataset('SYNAPSES', (len(ramon.synapses),), numpy.uint32,
+                                    data=ramon.synapses)
+
+            if hasattr(ramon, 'organelles'):
+                metadata.create_dataset('ORGANELLES', (len(ramon.organelles),),
+                                    numpy.uint32, data=ramon.organelles)
+
+            if hasattr(ramon, 'organelle_class'):
+                metadata.create_dataset('ORGANELLECLASS', (1,), numpy.uint32,
+                                    data=ramon.organelle_class)
+
+            return hdf5
