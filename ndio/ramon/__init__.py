@@ -151,9 +151,12 @@ def hdf5_to_ramon(hdf5, anno_id=None):
         r.weight =          metadata['WEIGHT'][0]
 
     if type(r) is RAMONSegment:
-        r.neuron =          metadata['NEURON'][0]
-        r.parent_seed =     metadata['PARENTSEED'][0]
-        r.segment_class =   metadata['SEGMENTCLASS'][0]
+        if 'NEURON' in metadata:
+            r.neuron =      metadata['NEURON'][0]
+        if 'PARENTSEED' in metadata:
+            r.parent_seed = metadata['PARENTSEED'][0]
+        if 'SEGMENTCLASS' in metadata:
+            r.segment_class = metadata['SEGMENTCLASS'][0]
         if 'SYNAPSES' in metadata:
             r.synapses =    metadata['SYNAPSES'][()]
         if 'ORGANELLES' in metadata:
