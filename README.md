@@ -9,9 +9,11 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 
 ## Changelog
 
+- **0.0.16** (October 31 2015)
+    - RAMON Downloads
+    - HDF5-to-RAMON conversion
 - **0.0.15**
-- **0.0.15.1**
-    - Bug fixes for the new RAMON code (WIP)
+    - Bug fixes
 - **0.0.14** (October 29 2015)
     - Remove excess code for RAMON downloads
     - Fix some old docstrings so everything's pretty again
