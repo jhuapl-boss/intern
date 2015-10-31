@@ -131,10 +131,15 @@ def hdf5_to_ramon(hdf5, anno_id=None):
     r.status =          metadata['STATUS'][0]
 
     # We have to be more careful with these. Not all RAMONs will have these:
-    r.neuron =          metadata['NEURON'][0]
-    r.parent_seed =     metadata['PARENTSEED'][0]
-    r.segment_class =   metadata['SEGMENTCLASS'][0]
-    r.synapses =        metadata['SYNAPSES'][()]
-    r.xyz_offset =      anno['XYZOFFSET'][()]
-    r.resolution =      anno['RESOLUTION'][0]
-    r.cutout =          anno['CUTOUT'][()]
+    if type(r) is RAMONSegment:
+        r.neuron =          metadata['NEURON'][0]
+        r.parent_seed =     metadata['PARENTSEED'][0]
+        r.segment_class =   metadata['SEGMENTCLASS'][0]
+        r.synapses =        metadata['SYNAPSES'][()]
+        r.xyz_offset =      anno['XYZOFFSET'][()]
+        r.resolution =      anno['RESOLUTION'][0]
+        r.cutout =          anno['CUTOUT'][()]
+    else:
+        raise NotImplementedError("Only segments for now, sorry!")
+
+    return r

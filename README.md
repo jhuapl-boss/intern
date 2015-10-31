@@ -10,7 +10,8 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 ## Changelog
 
 - **0.0.15**
-    - Allow direct translation of HDF5 to RAMON, which is awesome for downloads.
+- **0.0.15.1**
+    - Bug fixes for the new RAMON code (WIP)
 - **0.0.14** (October 29 2015)
     - Remove excess code for RAMON downloads
     - Fix some old docstrings so everything's pretty again
