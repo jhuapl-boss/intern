@@ -329,30 +329,6 @@ class OCP(Remote):
                 r = ramon.hdf5_to_ramon(h5file)
                 return r
 
-            # # Populate metadata of the RAMON Object
-            # if metadata['type'] == 'segment':
-            #     # RAMONSegment
-            #     r = ramon.RAMONSegment()
-            #
-            #
-            #         metadata = h5file[str(anno_id)]['METADATA']
-            #         r.author =          metadata['AUTHOR'][0]
-            #         r.confidence =      metadata['CONFIDENCE'][0]
-            #         r.neuron =          metadata['NEURON'][0]
-            #         r.parent_seed =     metadata['PARENTSEED'][0]
-            #         r.segment_class =   metadata['SEGMENTCLASS'][0]
-            #         r.status =          metadata['STATUS'][0]
-            #         r.synapses =        metadata['SYNAPSES'][()]
-            #         r.xyz_offset =      h5file[str(anno_id)]['XYZOFFSET'][()]
-            #         r.resolution =      h5file[str(anno_id)]['RESOLUTION'][0]
-            #         r.cutout =          h5file[str(anno_id)]['CUTOUT'][()]
-            #
-            #     return r
-            #
-            # else:
-            #     raise NotImplementedError("Only RAMONSegments are currently supported.")
-
-
 
     def get_ramon_metadata(self, token, channel, anno_id):
         """

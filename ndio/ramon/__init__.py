@@ -57,7 +57,7 @@ _ramon_types = {
     _types["SYNAPSE"]: RAMONSynapse,
     _types["SEED"]:  None,
     _types["SEGMENT"]: RAMONSegment,
-    _types["NEURON"]: None,
+    _types["NEURON"]: RAMONNeuron,
     _types["ORGANELLE"]: RAMONOrganelle,
     _types["ATTRIBUTEDREGION"]: None,
     _types["VOLUME"]: RAMONVolume
@@ -126,20 +126,33 @@ def hdf5_to_ramon(hdf5, anno_id=None):
 
     # All RAMON types definitely have these attributes:
     metadata = anno['METADATA']
-    r.author =          metadata['AUTHOR'][0]
-    r.confidence =      metadata['CONFIDENCE'][0]
-    r.status =          metadata['STATUS'][0]
+    r.author =              metadata['AUTHOR'][0]
+    r.confidence =          metadata['CONFIDENCE'][0]
+    r.status =              metadata['STATUS'][0]
+    r.id =                  anno_id
 
-    # We have to be more careful with these. Not all RAMONs will have these:
+    # These are a little tougher, some RAMON types have special attributes:
+
+    if type(r) in [RAMONNeuron, RAMONSynapse]:
+        r.segments =        metadata['SEGMENTS'][()]
+
+    if issubclass(type(r), ramon.RAMONVolume):
+        r.cutout =          anno['CUTOUT'][()]
+        r.xyz_offset =      anno['XYZOFFSET'][()]
+        r.resolution =      anno['RESOLUTION'][0]
+
+    if type(r) is RAMONSynapse:
+        r.synapse_type =    metadata['SYNAPSETYPE'][0]
+        r.weight =          metadata['WEIGHT'][0]
+
     if type(r) is RAMONSegment:
         r.neuron =          metadata['NEURON'][0]
         r.parent_seed =     metadata['PARENTSEED'][0]
         r.segment_class =   metadata['SEGMENTCLASS'][0]
         r.synapses =        metadata['SYNAPSES'][()]
-        r.xyz_offset =      anno['XYZOFFSET'][()]
-        r.resolution =      anno['RESOLUTION'][0]
-        r.cutout =          anno['CUTOUT'][()]
-    else:
-        raise NotImplementedError("Only segments for now, sorry!")
+        r.organelles =      metadata['ORGANELLES'][()]
+
+    if type(r) is RAMONOrganelle:
+        r.organelleclass = metadata['ORGANELLECLASS'][0]
 
     return r
