@@ -106,7 +106,6 @@ def hdf5_to_ramon(hdf5, anno_id=None):
         # The user just wants the first item we find, so... Yeah.
         return hdf5_to_ramon(hdf5, hdf5.keys()[0])
 
-
     # First, get the actual object we're going to download.
     anno_id = str(anno_id)
     if anno_id not in hdf5.keys():
@@ -151,11 +150,11 @@ def hdf5_to_ramon(hdf5, anno_id=None):
         r.parent_seed =     metadata['PARENTSEED'][0]
         r.segment_class =   metadata['SEGMENTCLASS'][0]
         if 'SYNAPSES' in metadata:
-            r.synapses =        metadata['SYNAPSES'][()]
+            r.synapses =    metadata['SYNAPSES'][()]
         if 'ORGANELLES' in metadata:
-            r.organelles =      metadata['ORGANELLES'][()]
+            r.organelles =  metadata['ORGANELLES'][()]
 
     if type(r) is RAMONOrganelle:
-        r.organelleclass = metadata['ORGANELLECLASS'][0]
+        r.organelleclass =  metadata['ORGANELLECLASS'][0]
 
     return r

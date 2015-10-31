@@ -1,5 +1,5 @@
 from enums import *
-from exceptions import *
+from errors import *
 import numpy
 
 from RAMONBase import RAMONBase

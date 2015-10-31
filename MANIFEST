@@ -9,6 +9,7 @@ ndio/convert/png.py
 ndio/convert/tiff.py
 ndio/ramon/RAMONBase.py
 ndio/ramon/RAMONGeneric.py
+ndio/ramon/RAMONNeuron.py
 ndio/ramon/RAMONOrganelle.py
 ndio/ramon/RAMONSegment.py
 ndio/ramon/RAMONSynapse.py

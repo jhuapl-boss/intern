@@ -1,5 +1,5 @@
 from enums import *
-from exceptions import *
+from errors import *
 
 class RAMONBase(object):
     """
