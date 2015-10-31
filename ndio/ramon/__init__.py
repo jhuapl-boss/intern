@@ -137,7 +137,7 @@ def hdf5_to_ramon(hdf5, anno_id=None):
     if type(r) in [RAMONNeuron, RAMONSynapse]:
         r.segments =        metadata['SEGMENTS'][()]
 
-    if issubclass(type(r), ramon.RAMONVolume):
+    if issubclass(type(r), RAMONVolume):
         r.cutout =          anno['CUTOUT'][()]
         r.xyz_offset =      anno['XYZOFFSET'][()]
         r.resolution =      anno['RESOLUTION'][0]
@@ -150,8 +150,10 @@ def hdf5_to_ramon(hdf5, anno_id=None):
         r.neuron =          metadata['NEURON'][0]
         r.parent_seed =     metadata['PARENTSEED'][0]
         r.segment_class =   metadata['SEGMENTCLASS'][0]
-        r.synapses =        metadata['SYNAPSES'][()]
-        r.organelles =      metadata['ORGANELLES'][()]
+        if 'SYNAPSES' in metadata:
+            r.synapses =        metadata['SYNAPSES'][()]
+        if 'ORGANELLES' in metadata:
+            r.organelles =      metadata['ORGANELLES'][()]
 
     if type(r) is RAMONOrganelle:
         r.organelleclass = metadata['ORGANELLECLASS'][0]

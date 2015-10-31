@@ -12,8 +12,10 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 - **0.0.16** (October 31 2015)
     - RAMON Downloads
     - HDF5-to-RAMON conversion
+    - Add support for RAMONNeuron
 - **0.0.15**
     - Bug fixes
+    - Prepare for RAMON import from HDF5 (0.0.16)
 - **0.0.14** (October 29 2015)
     - Remove excess code for RAMON downloads
     - Fix some old docstrings so everything's pretty again

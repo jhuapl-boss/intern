@@ -26,18 +26,6 @@ class RAMONBase(object):
         self._status = status
         self.author = author
 
-
-    @property
-    def id(self):
-        return self._id
-    @id.setter
-    def id(self, value):
-        if type(value) is not int or value <= 0:
-            raise InvalidIDException("Invalid ID {0}".format(value))
-        self._id = value
-        return value
-
-
     @property
     def status(self):
         return self._status
