@@ -1,9 +1,13 @@
 # ndio
 A Python interface to neurodata.
 
+[![](https://img.shields.io/badge/SfN-2015-blue.svg)](http://www.sfn.org/annual-meeting/neuroscience-2015)
+[![Neurodata.io](https://img.shields.io/badge/Visit-neurodata.io-ff69b4.svg)](http://neurodata.io/)
+
 [![](https://img.shields.io/pypi/dm/ndio.svg)](https://pypi.python.org/pypi/ndio)
 [![](https://img.shields.io/pypi/v/ndio.svg)](https://pypi.python.org/pypi/ndio)
-[![](https://img.shields.io/badge/SfN-2015-blue.svg)](http://www.sfn.org/annual-meeting/neuroscience-2015)
+
+![](https://img.shields.io/circleci/project/openconnectome/ndio.svg)
 
 Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 

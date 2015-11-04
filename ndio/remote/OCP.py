@@ -65,14 +65,15 @@ class OCP(Remote):
     ############################################################################ SECTION:
     ############################################################################ Data Download
 
-    def get_image(self, token, channel,
+    def get_xy_slice(self, token, channel,
                   x_start, x_stop,
                   y_start, y_stop,
-                  z_index, resolution=0):
+                  z_index,
+                  resolution=0):
         """
-        Return a binary-encoded, decompressed image. You should probably
-        check to see that your token has an `image` channel before running this,
-        or it won't do anything interesting.
+        Return a binary-encoded, decompressed 2d image. You should
+        specify a 'token' and 'channel' pair.  For image data, users
+        should use the channel 'image.'  Only xy slices are currently supported.
 
         Arguments:
             token (str): Token to identify data to download
@@ -85,16 +86,9 @@ class OCP(Remote):
         Returns:
             str: binary image data
         """
-        r = requests.get(self.url() +
-                "{}/image/xy/{}/{},{}/{},{}/{}/".format(token, resolution,
-                x_start, x_stop,
-                y_start, y_stop,
-                z_index))
-        if r.status_code == 200:
-            return r.content
-        else:
-            return r.status_code
-
+        im = self._get_cutout_no_chunking(token, channel, resolution,
+                            x_start, x_stop, y_start, y_stop, z_index, z_index+1)
+        return im
 
     def get_cutout(self, token, channel,
                  x_start, x_stop,
@@ -122,54 +116,70 @@ class OCP(Remote):
             NotImplementedError: If you try to crop... Sorry :(
         """
 
-        # Get an array-of-tuples of blocks to request.
-        from ndio.utils.parallel import block_compute, snap_to_cube
-        small_chunks = block_compute(x_start, x_stop,
-                                     y_start, y_stop,
-                                     z_start, z_stop)
+        nPix = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
-        # Each time we download a chunk, we'll store it in
-        # this, in the format (block_origin, data)
-        downloaded_chunks = []
-        for c in small_chunks:
-            downloaded_chunks.append((
-                c, self._get_cutout_no_chunking(token, channel, resolution,
-                        c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1])))
+        # for smaller cutouts, we directly access the data via restful call and disregard block alignment.
+        # when running at scale, users should compute block-aligned parameters
 
-        x_bounds = snap_to_cube(x_start, x_stop, chunk_depth=256, q_index=0)
-        y_bounds = snap_to_cube(y_start, y_stop, chunk_depth=256, q_index=0)
-        z_bounds = snap_to_cube(z_start, z_stop, chunk_depth=16,  q_index=1)
+        if nPix < 1E9: #1GB for now
+             r = self._get_cutout_no_chunking(token, channel, resolution,
+                            x_start, x_stop, y_start, y_stop, z_start, z_stop)
 
-        volume = numpy.zeros((
-                x_bounds[1]-x_bounds[0],
-                y_bounds[1]-y_bounds[0],
-                z_bounds[1]-z_bounds[0]))
+             import ndio.ramon as ramon
+             volume = ramon.RAMONVolume()
+             volume.xyz_offset = [x_start, y_start, z_start]
+             volume.cutout = r
+             volume.resolution = resolution
+             return volume
 
-
-        # TODO: Optimize.
-        for chunk in downloaded_chunks:
-            x_range, y_range, z_range = chunk[0]
-            xi = 0
-            for x in range(x_range[0], x_range[1]):
-                yi = 0
-                for y in range(y_range[0], y_range[1]):
-                    zi = 0
-                    for z in range(z_range[0], z_range[1]):
-                        volume[x-x_range[0]][y-y_range[0]][z-z_range[0]] = chunk[1][zi][xi][yi]
-                        zi += 1
-                    yi += 1
-                xi += 1
-
-        if crop is False:
-            return volume
         else:
-            raise NotImplementedError("Can't handle crops yet, sorry! :(")
-            # we have to go get the bounds, subtract what they asked for,
-            # and then return a sub-volume.
-            x_start_trim = x_start - x_bounds[0]
-            y_start_trim = y_start - y_bounds[0]
-            z_start_trim = z_start - z_bounds[0]
+            # Get an array-of-tuples of blocks to request.
+            from ndio.utils.parallel import block_compute, snap_to_cube
+            small_chunks = block_compute(x_start, x_stop,
+                                         y_start, y_stop,
+                                         z_start, z_stop)
 
+            # Each time we download a chunk, we'll store it in
+            # this, in the format (block_origin, data)
+            downloaded_chunks = []
+            for c in small_chunks:
+                downloaded_chunks.append((
+                    c, self._get_cutout_no_chunking(token, channel, resolution,
+                            c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1])))
+
+            x_bounds = snap_to_cube(x_start, x_stop, chunk_depth=256, q_index=0)
+            y_bounds = snap_to_cube(y_start, y_stop, chunk_depth=256, q_index=0)
+            z_bounds = snap_to_cube(z_start, z_stop, chunk_depth=16,  q_index=1)
+
+            volume = numpy.zeros((
+                    x_bounds[1]-x_bounds[0],
+                    y_bounds[1]-y_bounds[0],
+                    z_bounds[1]-z_bounds[0]))
+
+
+            # TODO: Optimize.
+            for chunk in downloaded_chunks:
+                x_range, y_range, z_range = chunk[0]
+                xi = 0
+                for x in range(x_range[0], x_range[1]):
+                    yi = 0
+                    for y in range(y_range[0], y_range[1]):
+                        zi = 0
+                        for z in range(z_range[0], z_range[1]):
+                            volume[x-x_range[0]][y-y_range[0]][z-z_range[0]] = chunk[1][zi][xi][yi]
+                            zi += 1
+                        yi += 1
+                    xi += 1
+
+            if crop is False:
+                return volume
+            else:
+                raise NotImplementedError("Can't handle crops yet, sorry! :(")
+                # we have to go get the bounds, subtract what they asked for,
+                # and then return a sub-volume.
+                x_start_trim = x_start - x_bounds[0]
+                y_start_trim = y_start - y_bounds[0]
+                z_start_trim = z_start - z_bounds[0]
 
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
