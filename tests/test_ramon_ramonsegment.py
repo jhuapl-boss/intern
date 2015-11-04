@@ -9,8 +9,6 @@ class TestRAMONSegment(unittest.TestCase):
         self.ramon_segment = self.oo.get_ramon('kasthuri2015_ramon_v1', 'neurons', 3, 3)
         self.default_ramon_segment = ndio.ramon.RAMONSynapse()
 
-    def test_defaults(self):
-        self.assertEqual(self.default_ramon_segment.id, -1, "Unexpected default RAMON id.")
 
     def test_metadata(self):
         self.assertEqual(str(self.ramon_segment.id), '3')
