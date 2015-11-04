@@ -388,6 +388,36 @@ class OCP(Remote):
     ############################################################################ SECTION:
     ############################################################################ RAMON Upload
 
+    def post_ramon(self, token, channel, r):
+        """
+        Posts a RAMON object to the Remote.
+
+        Arguments:
+            token (str): Project to use
+            channel (str): The channel to use
+            ramon (RAMON): The annotation to upload
+
+        Returns:
+            bool: Success = True
+
+        Throws:
+            RemoteDataUploadError if something goes wrong
+        """
+
+        # First, create the hdf5 file.
+        filename = str(r.id) + ".hdf5"
+        ramon.ramon_to_hdf5(r)
+
+        with open(filename, 'rb') as hdf5_data:
+
+            req = requests.post(self.url("{}/{}/".format(token, channel)),
+                                headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                                data=hdf5_data)
+            if req.status_code is not 200:
+                return False
+            else:
+                return True
+
 
     ############################################################################ SECTION:
     ############################################################################ Channels
