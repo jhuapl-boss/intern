@@ -15,6 +15,12 @@ Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
 
 ## Changelog
 
+- **0.0.17** (November 15 2015)
+    - Add a bunch more support for RAMON downloads
+    - Add remaining RAMON datatypes
+    - Documentation! docs.neurodata.io/ndio
+    - Tutorials! docs.neurodata.io/nddocs/ndio
+    - Fix tests, add support for CircleCI (see badge on GitHub)
 - **0.0.16** (October 31 2015)
     - RAMON Downloads
     - HDF5-to-RAMON conversion
