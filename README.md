@@ -1,6 +1,8 @@
 # ndio
 A Python interface to neurodata.
 
+To get started, view [the documentation](http://docs.neurodata.io/ndio/). You can also see some examples of usage at [ndio-demos](https://github.com/openconnectome/ndio-demos).
+
 [![](https://img.shields.io/badge/SfN-2015-blue.svg)](http://www.sfn.org/annual-meeting/neuroscience-2015)
 [![Neurodata.io](https://img.shields.io/badge/Visit-neurodata.io-ff69b4.svg)](http://neurodata.io/)
 
