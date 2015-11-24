@@ -99,7 +99,7 @@ class OCP(Remote):
         """
         Alias for the `get_xy_slice` function for backwards compatibility.
         """
-        return get_xy_slice(token, channel,
+        return self.get_xy_slice(token, channel,
                       x_start, x_stop,
                       y_start, y_stop,
                       z_index,
