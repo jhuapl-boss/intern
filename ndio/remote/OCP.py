@@ -73,7 +73,7 @@ class OCP(Remote):
         """
         Return a binary-encoded, decompressed 2d image. You should
         specify a 'token' and 'channel' pair.  For image data, users
-        should use the channel 'image.'  Only xy slices are currently supported.
+        should use the channel 'image.'
 
         Arguments:
             token (str): Token to identify data to download
@@ -114,7 +114,7 @@ class OCP(Remote):
                  block_size=(256, 256, 16),
                  crop=False):
         """
-        Get data from the OCP server.
+        Get a RAMONVolume volumetric cutout from the OCP server.
 
         Arguments:
             token (str): Token to identify data to download
@@ -126,7 +126,7 @@ class OCP(Remote):
             crop (bool): whether or not to crop the volume before returning it
 
         Returns:
-            numpy.ndarray: Downloaded data.
+            ndio.ramon.RAMONVolume: Downloaded data.
 
         Raises:
             NotImplementedError: If you try to crop... Sorry :(
@@ -150,7 +150,7 @@ class OCP(Remote):
                  block_size=(256, 256, 16),
                  crop=False):
         """
-        Get data from the OCP server.
+        Get volumetric cutout data from the OCP server.
 
         Arguments:
             token (str): Token to identify data to download
