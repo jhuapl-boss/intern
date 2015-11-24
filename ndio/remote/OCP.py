@@ -87,8 +87,60 @@ class OCP(Remote):
             str: binary image data
         """
         im = self._get_cutout_no_chunking(token, channel, resolution,
-                            x_start, x_stop, y_start, y_stop, z_index, z_index+1)
+                                          x_start, x_stop, y_start, y_stop,
+                                          z_index, z_index+1)[0]
         return im
+
+    def get_image(self, token, channel,
+                  x_start, x_stop,
+                  y_start, y_stop,
+                  z_index,
+                  resolution=0):
+        """
+        Alias for the `get_xy_slice` function for backwards compatibility.
+        """
+        return get_xy_slice(token, channel,
+                      x_start, x_stop,
+                      y_start, y_stop,
+                      z_index,
+                      resolution)
+
+
+    def get_volume(self, token, channel,
+                 x_start, x_stop,
+                 y_start, y_stop,
+                 z_start, z_stop,
+                 resolution=1,
+                 block_size=(256, 256, 16),
+                 crop=False):
+        """
+        Get data from the OCP server.
+
+        Arguments:
+            token (str): Token to identify data to download
+            channel (str): Channel
+            resolution (int): Resolution level
+            Q_start (int):` The lower bound of dimension 'Q'
+            Q_stop (int): The upper bound of dimension 'Q'
+            block_size (int[3]): Block size of this dataset
+            crop (bool): whether or not to crop the volume before returning it
+
+        Returns:
+            numpy.ndarray: Downloaded data.
+
+        Raises:
+            NotImplementedError: If you try to crop... Sorry :(
+        """
+
+        size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
+        volume = ramon.RAMONVolume()
+        volume.xyz_offset = [x_start, y_start, z_start]
+        volume.resolution = resolution
+        volume.cutout = self.get_cutout(token, channel, x_start, x_stop,
+                                        y_start, y_stop, z_start, z_stop,
+                                        resolution=resolution)
+        return volume
+
 
     def get_cutout(self, token, channel,
                  x_start, x_stop,
@@ -116,21 +168,14 @@ class OCP(Remote):
             NotImplementedError: If you try to crop... Sorry :(
         """
 
-        nPix = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
+        if crop is True:
+            raise NotImplementedError("Can't handle crops yet, sorry! :(")
 
-        # for smaller cutouts, we directly access the data via restful call and disregard block alignment.
-        # when running at scale, users should compute block-aligned parameters
+        size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
-        if nPix < 1E9: #1GB for now
-             r = self._get_cutout_no_chunking(token, channel, resolution,
+        if size < 1E9: #1GB for now
+             return self._get_cutout_no_chunking(token, channel, resolution,
                             x_start, x_stop, y_start, y_stop, z_start, z_stop)
-
-             import ndio.ramon as ramon
-             volume = ramon.RAMONVolume()
-             volume.xyz_offset = [x_start, y_start, z_start]
-             volume.cutout = r
-             volume.resolution = resolution
-             return volume
 
         else:
             # Get an array-of-tuples of blocks to request.
@@ -170,16 +215,7 @@ class OCP(Remote):
                             zi += 1
                         yi += 1
                     xi += 1
-
-            if crop is False:
-                return volume
-            else:
-                raise NotImplementedError("Can't handle crops yet, sorry! :(")
-                # we have to go get the bounds, subtract what they asked for,
-                # and then return a sub-volume.
-                x_start_trim = x_start - x_bounds[0]
-                y_start_trim = y_start - y_bounds[0]
-                z_start_trim = z_start - z_bounds[0]
+            return volume
 
 
     def _get_cutout_no_chunking(self, token, channel, resolution,

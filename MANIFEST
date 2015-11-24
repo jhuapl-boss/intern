@@ -16,7 +16,7 @@ ndio/ramon/RAMONSynapse.py
 ndio/ramon/RAMONVolume.py
 ndio/ramon/__init__.py
 ndio/ramon/enums.py
-ndio/ramon/exceptions.py
+ndio/ramon/errors.py
 ndio/remote/OCP.py
 ndio/remote/OCPMeta.py
 ndio/remote/Remote.py
