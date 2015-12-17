@@ -16,8 +16,8 @@ DEFAULT_PROTOCOL = "http"
 
 class OCP(Remote):
 
-    ############################################################################ SECTION:
-    ############################################################################ Enumerables
+    # SECTION:
+    # Enumerables
 
     IMAGE = IMG = 'image'
     ANNOTATION = ANNO = 'annotation'
@@ -25,15 +25,14 @@ class OCP(Remote):
     def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL):
         super(OCP, self).__init__(hostname, protocol)
 
-
     def ping(self):
         return super(OCP, self).ping('public_tokens/')
 
     def url(self, suffix=""):
         return super(OCP, self).url('/ocp/ca/' + suffix)
 
-    ############################################################################ SECTION:
-    ############################################################################ Metadata
+    # SECTION:
+    # Metadata
 
     def get_public_tokens(self):
         """
@@ -48,7 +47,6 @@ class OCP(Remote):
         r = requests.get(self.url() + "public_tokens/")
         return r.json()
 
-
     def get_proj_info(self, token):
         """
         Returns the project info for a given token.
@@ -62,14 +60,14 @@ class OCP(Remote):
         r = requests.get(self.url() + "{}/info/".format(token))
         return r.json()
 
-    ############################################################################ SECTION:
-    ############################################################################ Data Download
+    # SECTION:
+    # Data Download
 
     def get_xy_slice(self, token, channel,
-                  x_start, x_stop,
-                  y_start, y_stop,
-                  z_index,
-                  resolution=0):
+                     x_start, x_stop,
+                     y_start, y_stop,
+                     z_index,
+                     resolution=0):
         """
         Return a binary-encoded, decompressed 2d image. You should
         specify a 'token' and 'channel' pair.  For image data, users
@@ -100,19 +98,18 @@ class OCP(Remote):
         Alias for the `get_xy_slice` function for backwards compatibility.
         """
         return self.get_xy_slice(token, channel,
-                      x_start, x_stop,
-                      y_start, y_stop,
-                      z_index,
-                      resolution)
-
+                                 x_start, x_stop,
+                                 y_start, y_stop,
+                                 z_index,
+                                 resolution)
 
     def get_volume(self, token, channel,
-                 x_start, x_stop,
-                 y_start, y_stop,
-                 z_start, z_stop,
-                 resolution=1,
-                 block_size=(256, 256, 16),
-                 crop=False):
+                   x_start, x_stop,
+                   y_start, y_stop,
+                   z_start, z_stop,
+                   resolution=1,
+                   block_size=(256, 256, 16),
+                   crop=False):
         """
         Get a RAMONVolume volumetric cutout from the OCP server.
 
@@ -141,14 +138,13 @@ class OCP(Remote):
                                         resolution=resolution)
         return volume
 
-
     def get_cutout(self, token, channel,
-                 x_start, x_stop,
-                 y_start, y_stop,
-                 z_start, z_stop,
-                 resolution=1,
-                 block_size=(256, 256, 16),
-                 crop=False):
+                   x_start, x_stop,
+                   y_start, y_stop,
+                   z_start, z_stop,
+                   resolution=1,
+                   block_size=(256, 256, 16),
+                   crop=False):
         """
         Get volumetric cutout data from the OCP server.
 
@@ -173,9 +169,12 @@ class OCP(Remote):
 
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
-        if size < 1E9: #1GB for now
-             return self._get_cutout_no_chunking(token, channel, resolution,
-                            x_start, x_stop, y_start, y_stop, z_start, z_stop)
+        # For now, max out at 1GB
+        if size < 1E9:
+            return self._get_cutout_no_chunking(token, channel, resolution,
+                                                x_start, x_stop,
+                                                y_start, y_stop,
+                                                z_start, z_stop)
 
         else:
             # Get an array-of-tuples of blocks to request.
@@ -190,17 +189,21 @@ class OCP(Remote):
             for c in small_chunks:
                 downloaded_chunks.append((
                     c, self._get_cutout_no_chunking(token, channel, resolution,
-                            c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1])))
+                                                    c[0][0], c[0][1],
+                                                    c[1][0], c[1][1],
+                                                    c[2][0], c[2][1])))
 
-            x_bounds = snap_to_cube(x_start, x_stop, chunk_depth=256, q_index=0)
-            y_bounds = snap_to_cube(y_start, y_stop, chunk_depth=256, q_index=0)
-            z_bounds = snap_to_cube(z_start, z_stop, chunk_depth=16,  q_index=1)
+            x_bounds = snap_to_cube(x_start, x_stop,
+                                    chunk_depth=256, q_index=0)
+            y_bounds = snap_to_cube(y_start, y_stop,
+                                    chunk_depth=256, q_index=0)
+            z_bounds = snap_to_cube(z_start, z_stop,
+                                    chunk_depth=16,  q_index=1)
 
             volume = numpy.zeros((
                     x_bounds[1]-x_bounds[0],
                     y_bounds[1]-y_bounds[0],
                     z_bounds[1]-z_bounds[0]))
-
 
             # TODO: Optimize.
             for chunk in downloaded_chunks:
@@ -211,22 +214,22 @@ class OCP(Remote):
                     for y in range(y_range[0], y_range[1]):
                         zi = 0
                         for z in range(z_range[0], z_range[1]):
-                            volume[x-x_range[0]][y-y_range[0]][z-z_range[0]] = chunk[1][zi][xi][yi]
+                            volume[x-x_range[0]][y-y_range[0]][z-z_range[0]] =\
+                                chunk[1][zi][xi][yi]
                             zi += 1
                         yi += 1
                     xi += 1
             return volume
 
-
     def _get_cutout_no_chunking(self, token, channel, resolution,
                                 x_start, x_stop, y_start, y_stop,
                                 z_start, z_stop):
         req = requests.get(self.url() +
-                "{}/{}/hdf5/{}/{},{}/{},{}/{},{}/".format(
-                    token, channel, resolution,
-                    x_start, x_stop,
-                    y_start, y_stop,
-                    z_start, z_stop
+                           "{}/{}/hdf5/{}/{},{}/{},{}/{},{}/".format(
+                           token, channel, resolution,
+                           x_start, x_stop,
+                           y_start, y_stop,
+                           z_start, z_stop
                 ))
         if req.status_code is not 200:
             raise IOError("Bad server response: {}".format(req.status_code))
@@ -238,9 +241,8 @@ class OCP(Remote):
             return h5file.get(channel).get('CUTOUT')[:]
         raise IOError("Failed to make tempfile.")
 
-
-    ############################################################################ SECTION:
-    ############################################################################ Data Upload
+    # SECTION:
+    # Data Upload
 
     def post_cutout(self, token, channel,
                     x_start, x_stop,
@@ -260,8 +262,8 @@ class OCP(Remote):
             q_stop (int)
             data:           A numpy array of data. Pass in (x, y, z)
             resolution:     Default resolution of the data
-            roll_axis:      Default True. Pass False if you're supplying data in
-                            (z, x, y) order.
+            roll_axis:      Default True. Pass False if you're supplying data
+                            in (z, x, y) order.
             dtype:          Pass in datatype if you know it. Otherwise we'll
                             check the projinfo.
         Returns:
@@ -293,16 +295,17 @@ class OCP(Remote):
             z_start, z_stop
         )
 
-        req = requests.post(url, data=compressed, headers={'Content-Type': 'application/octet-stream'})
+        req = requests.post(url, data=compressed, headers={
+            'Content-Type': 'application/octet-stream'
+        })
 
         if req.status_code is not 200:
             raise RemoteDataUploadError(req.text)
         else:
             return True
 
-
-    ############################################################################ SECTION:
-    ############################################################################ RAMON Download
+    # SECTION:
+    # RAMON Download
 
     def get_ramon_ids(self, token, channel='annotation'):
         """
@@ -321,7 +324,8 @@ class OCP(Remote):
         req = requests.get(self.url() + "{}/{}/query/".format(token, channel))
 
         if req.status_code is not 200:
-            raise RemoteDataNotFoundError('No query results for token {}.'.format(token))
+            raise RemoteDataNotFoundError('No query results for token {}.'
+                                          .format(token))
         else:
             with tempfile.NamedTemporaryFile() as tmpfile:
                 tmpfile.write(req.content)
@@ -330,9 +334,8 @@ class OCP(Remote):
                 return [i for i in h5file['ANNOIDS']]
             raise IOError("Could not successfully mock HDF5 file for parsing.")
 
-
-
-    def get_ramon(self, token, channel, anno_id, resolution, metadata_only=False):
+    def get_ramon(self, token, channel, anno_id, resolution,
+                  metadata_only=False):
         """
         Download a RAMON object by ID.
 
@@ -341,7 +344,7 @@ class OCP(Remote):
             channel (str): The channel to use
             anno_id (int, str): The ID of a RAMON object to gather. Coerced str
             resolution (int): Resolution (if not working, try a higher num)
-            metadata_only (bool):  If true, returns `get_ramon_metadata` instead
+            metadata_only (bool):  True = returns `get_ramon_metadata` instead
 
         Returns:
             ndio.ramon.RAMON
@@ -357,11 +360,10 @@ class OCP(Remote):
 
         metadata = metadata[str(anno_id)]
 
-
         # Download the data itself
         req = requests.get(self.url() +
-                "{}/{}/{}/cutout/{}".format(token, channel,
-                anno_id, resolution))
+                           "{}/{}/{}/cutout/{}".format(token, channel,
+                                                       anno_id, resolution))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
@@ -375,12 +377,12 @@ class OCP(Remote):
                 r = ramon.hdf5_to_ramon(h5file)
                 return r
 
-
     def get_ramon_metadata(self, token, channel, anno_id):
         """
         Download a RAMON object by ID. `anno_id` can be a string `"123"`, an
         int `123`, an array of ints `[123, 234, 345]`, an array of strings
-        `["123", "234", "345"]`, or a comma-separated string list `"123,234,345"`.
+        `["123", "234", "345"]`, or a comma-separated string list
+        `"123,234,345"`.
 
         Arguments:
             token (str): Project to use
@@ -388,10 +390,10 @@ class OCP(Remote):
             anno_id: An int, a str, or a list of ids to gather
 
         Returns:
-            JSON. If you pass a single id in str or int, returns a single datum.
+            JSON. If you pass a single id in str or int, returns a single datum
             If you pass a list of int or str or a comma-separated string, will
-            return a dict with keys from the list and the values are the server-
-            returned JSON.
+            return a dict with keys from the list and the values are the JSON
+            returned from the server.
 
         Raises:
             RemoteDataNotFoundError: If the data cannot be found on the Remote
@@ -399,40 +401,42 @@ class OCP(Remote):
 
         if type(anno_id) is int:
             # there's just one ID to download
-            return self._get_single_ramon_metadata(token, channel, str(anno_id))
+            return self._get_single_ramon_metadata(token, channel,
+                                                   str(anno_id))
         elif type(anno_id) is str:
             # either "id" or "id,id,id":
             if (len(anno_id.split(',')) > 1):
                 results = {}
                 for i in anno_id.split(','):
-                    results[i] = self._get_single_ramon_metadata(token, channel,
-                                                            anno_id.strip())
+                    results[i] = self._get_single_ramon_metadata(
+                        token, channel, anno_id.strip()
+                    )
                 return results
             else:
                 # "id"
-                return self._get_single_ramon_metadata(token, channel, anno_id.strip())
+                return self._get_single_ramon_metadata(token, channel,
+                                                       anno_id.strip())
         elif type(anno_id) is list:
             # [id, id] or ['id', 'id']
             results = {}
             for i in anno_id:
                 results[i] = self._get_single_ramon_metadata(token, channel,
-                                                        str(anno_id).strip())
+                                                             str(anno_id)
+                                                             .strip())
             return results
-
 
     def _get_single_ramon_metadata(self, token, channel, anno_id):
         req = requests.get(self.url() +
-                "{}/{}/{}/json/".format(token, channel,
-                anno_id))
+                           "{}/{}/{}/json/".format(token, channel,
+                                                   anno_id))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
         else:
             return req.json()
 
-
-    ############################################################################ SECTION:
-    ############################################################################ RAMON Upload
+    # SECTION:
+    # RAMON Upload
 
     def post_ramon(self, token, channel, r):
         """
@@ -456,17 +460,17 @@ class OCP(Remote):
 
         with open(filename, 'rb') as hdf5_data:
 
-            req = requests.post(self.url("{}/{}/".format(token, channel)),
-                                headers={'Content-Type': 'application/x-www-form-urlencoded'},
-                                data=hdf5_data)
+            req = requests.post(self.url("{}/{}/"
+                                .format(token, channel)), headers={
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }, data=hdf5_data)
             if req.status_code is not 200:
                 return False
             else:
                 return True
 
-
-    ############################################################################ SECTION:
-    ############################################################################ Channels
+    # SECTION:
+    # Channels
 
     def create_channel(self, token, name, channel_type, dtype, readonly):
         """
@@ -493,7 +497,7 @@ class OCP(Remote):
                 raise ValueError("Name cannot contain character {}.".format(c))
 
         if channel_type not in ['image', 'annotation']:
-            raise ValueError('Type must be either OCP.IMAGE or OCP.ANNOTATION.')
+            raise ValueError('Type must be OCP.IMAGE or OCP.ANNOTATION.')
 
         if readonly * 1 not in [0, 1]:
             raise ValueError("readonly must be 0 (False) or 1 (True).")
@@ -511,10 +515,9 @@ class OCP(Remote):
         })
 
         if req.status_code is not 200:
-            raise RemoteDataUploadError('Could not upload. {}'.format(req.text))
+            raise RemoteDataUploadError('Could not upload {}'.format(req.text))
         else:
             return True
-
 
     def delete_channel(self, token, name):
         """
@@ -536,6 +539,6 @@ class OCP(Remote):
         })
 
         if req.status_code is not 200:
-            raise RemoteDataUploadError('Could not delete. {}'.format(req.text))
+            raise RemoteDataUploadError('Could not delete {}'.format(req.text))
         else:
             return True
