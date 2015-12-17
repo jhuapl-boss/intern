@@ -3,6 +3,7 @@ import numpy
 import os
 import glob
 
+
 def import_tiff(tiff_filename):
     """
     Import a TIFF file into a numpy array.
@@ -24,7 +25,6 @@ def import_tiff(tiff_filename):
         raise
 
     return numpy.array(img)
-
 
 
 def export_tiff(tiff_filename, numpy_data):
@@ -49,7 +49,7 @@ def export_tiff(tiff_filename, numpy_data):
         return png_filename
 
     if numpy_data.dtype.name is not 'uint8':
-        print("Datatype is not uint8, you may experience a known PIL bug. Continuing...")
+        print("Datatype is not uint8, you may experience a known PIL bug.")
 
     if os.path.exists(tiff_filename):
         print("File {0} already exists, stopping...".format(tiff_filename))
@@ -62,7 +62,6 @@ def export_tiff(tiff_filename, numpy_data):
         print("Could not save TIFF file {0}.".format(tiff_filename))
 
     return tiff_filename
-
 
 
 def export_tiff_collection(tiff_filename_base, numpy_data, start_layers_at=1):
@@ -80,15 +79,15 @@ def export_tiff_collection(tiff_filename_base, numpy_data, start_layers_at=1):
         Array. A list of expanded filenames that hold TIFF data.
     """
 
-    file_extension = tiff_filename_base.split('.')[-1]
-    if file_extension in ['tif', 'tiff']:
+    file_ext = tiff_filename_base.split('.')[-1]
+    if file_ext in ['tif', 'tiff']:
         # Filename is "name*.tif[f]", set file_base to "name*".
         file_base = '.'.join(tiff_filename_base.split('.')[:-1])
     else:
         # Filename is "name*", set file_base to "name*".
         # That is, extension wasn't included.
         file_base = tiff_filename_base
-        file_extension = ".tiff"
+        file_ext = ".tiff"
 
     file_base_array = file_base.split('*')
 
@@ -98,11 +97,12 @@ def export_tiff_collection(tiff_filename_base, numpy_data, start_layers_at=1):
     # Filename 0-padding
     i = start_layers_at
     for layer in numpy_data:
-        layer_filename = (str(i).zfill(6)).join(file_base_array) + file_extension
+        layer_filename = (str(i).zfill(6)).join(file_base_array) + file_ext
         output_files.append(export_tiff(layer_filename, layer))
         i += 1
 
     return output_files
+
 
 def import_tiff_collection(tiff_filename_base):
     """

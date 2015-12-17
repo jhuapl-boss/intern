@@ -1,7 +1,9 @@
-import os, shutil
+import os
+import shutil
+
 
 FILE_FORMATS = {
-    # Format.lower()    # File extension. By convention, use the first by default
+    # Format.lower()    # File ext. By convention, use the first by default
     'hdf5':             ['hdf5', 'h5', 'hdf'],
     'tiff':             ['tiff', 'tif'],
     'png':              ['png'],
@@ -10,16 +12,11 @@ FILE_FORMATS = {
 }
 
 
-# This is not simply FILE_FORMATS in 'reverse', because while we may be able
-# to get the file extension for a RAMON object (.m) we can't guess a datatype
-# from the ambiguous extension ".m".
-
-
 def _fail_pair_conversion(i, o):
     """
     Helper-function to print failure and pass back False.
     """
-    print("Conversion from {0} to {1} is not currently supported.".format(i, o))
+    print "Conversion from {0} to {1} is not currently supported.".format(i, o)
     return False
 
 
@@ -40,7 +37,6 @@ def _get_extension_for_format(fmt):
 
     # Otherwise, we don't recognize the format...
     return False
-
 
 
 def _guess_format_from_extension(ext):
@@ -73,7 +69,6 @@ def _guess_format_from_extension(ext):
     return formats[0]
 
 
-
 def convert(in_file, out_file, in_fmt="", out_fmt=""):
     """
     Converts in_file to out_file, guessing datatype in the absence of
@@ -94,9 +89,11 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
     out_file = os.path.expanduser(out_file)
 
     if os.path.exists(out_file):
-        raise IOError("Output file {0} already exists, stopping...".format(out_file))
+        raise IOError("Output file {0} already exists, stopping..."
+                      .format(out_file))
     if not os.path.exists(in_file):
-        raise IOError("Input file {0} does not exist, stopping...".format(in_file))
+        raise IOError("Input file {0} does not exist, stopping..."
+                      .format(in_file))
 
     # Get formats, either by explicitly naming them or by guessing.
     # TODO: It'd be neat to check here if an explicit fmt matches the guess.
@@ -115,8 +112,7 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
         shutil.copyfileobj(in_file, out_file)
         return out_file
 
-
-    ## Import
+    # Import
     if in_fmt == 'hdf5':
         import hdf5
         data = hdf5.import_hdf5(in_file)
@@ -129,7 +125,7 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
     else:
         return _fail_pair_conversion(in_fmt, out_fmt)
 
-    ## Export
+    # Export
     if out_fmt == 'hdf5':
         import hdf5
         return hdf5.export_hdf5(out_file, data)
@@ -141,6 +137,5 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
         return png.export_png(out_file, data)
     else:
         return _fail_pair_conversion(in_fmt, out_fmt)
-
 
     return _fail_pair_conversion(in_fmt, out_fmt)

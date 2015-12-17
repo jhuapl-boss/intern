@@ -1,10 +1,11 @@
 
 class InvalidEnumerationException(Exception):
-    def __init__(self, msg = "Invalid Enumeration."):
+    def __init__(self, msg="Invalid Enumeration."):
         self.msg = msg
 
     def __str__(self):
         return self.msg
+
 
 def enum(*sequential, **named):
     enums = dict(zip(sequential, range(len(sequential))), **named)
@@ -18,8 +19,8 @@ eRAMONAnnoStatus = enum("DEFAULT",
                         PROCESSED=2,
                         IGNORED=3)
 
-DEFAULT_ID                  = -1
-DEFAULT_CONFIDENCE          = 00
-DEFAULT_DYNAMIC_METADATA    = {}
-DEFAULT_STATUS              = eRAMONAnnoStatus.DEFAULT
-DEFAULT_AUTHOR              = ''
+DEFAULT_ID = -1
+DEFAULT_CONFIDENCE = 0
+DEFAULT_DYNAMIC_METADATA = {}
+DEFAULT_STATUS = eRAMONAnnoStatus.DEFAULT
+DEFAULT_AUTHOR = ''

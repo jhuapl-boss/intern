@@ -3,6 +3,7 @@ import numpy
 import os
 import glob
 
+
 def import_png(png_filename):
     """
     Import a png file into a numpy array.
@@ -26,7 +27,6 @@ def import_png(png_filename):
     return numpy.array(img)
 
 
-
 def export_png(png_filename, numpy_data):
     """
     Export a numpy array to a png file.
@@ -41,7 +41,6 @@ def export_png(png_filename, numpy_data):
 
     # Expand filename to be absolute
     png_filename = os.path.expanduser(png_filename)
-
 
     if type(numpy_data) is str:
         fp = open(png_filename, "wb")
@@ -61,7 +60,6 @@ def export_png(png_filename, numpy_data):
     return png_filename
 
 
-
 def export_png_collection(png_filename_base, numpy_data, start_layers_at=1):
     """
     Export a numpy array to a set of png files, with each Z-index 2D
@@ -77,15 +75,15 @@ def export_png_collection(png_filename_base, numpy_data, start_layers_at=1):
         Array. A list of expanded filenames that hold png data.
     """
 
-    file_extension = png_filename_base.split('.')[-1]
-    if file_extension in ['png']:
+    file_ext = png_filename_base.split('.')[-1]
+    if file_ext in ['png']:
         # Filename is "name*.tif[f]", set file_base to "name*".
         file_base = '.'.join(png_filename_base.split('.')[:-1])
     else:
         # Filename is "name*", set file_base to "name*".
         # That is, extension wasn't included.
         file_base = png_filename_base
-        file_extension = ".png"
+        file_ext = ".png"
 
     file_base_array = file_base.split('*')
 
@@ -95,11 +93,12 @@ def export_png_collection(png_filename_base, numpy_data, start_layers_at=1):
     # Filename 0-padding
     i = start_layers_at
     for layer in numpy_data:
-        layer_filename = (str(i).zfill(6)).join(file_base_array) + file_extension
+        layer_filename = (str(i).zfill(6)).join(file_base_array) + file_ext
         output_files.append(export_png(layer_filename, layer))
         i += 1
 
     return output_files
+
 
 def import_png_collection(png_filename_base):
     """

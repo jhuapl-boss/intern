@@ -2,6 +2,7 @@ import h5py
 import numpy
 import os
 
+
 def import_hdf5(hdf5_filename):
     """
     Import a HDF5 file into a numpy array.
@@ -25,7 +26,6 @@ def import_hdf5(hdf5_filename):
         raise
 
     return numpy.array(data_layers)
-
 
 
 def export_hdf5(hdf5_filename, numpy_data):
