@@ -12,9 +12,3 @@ To get started, view [the documentation](http://docs.neurodata.io/ndio/). You ca
 ![](https://img.shields.io/circleci/project/openconnectome/ndio.svg)
 
 Submit bug reports [here](https://github.com/openconnectome/ndio/issues/new).
-
-## Recent Changes
-
-- Moved changelog to [changelog](changelog.md)
-- Added some unit-tests for downloads and exports
-- Fixed RAMONVolume/numpy.ndarray type errors
