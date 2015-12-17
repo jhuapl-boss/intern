@@ -1,5 +1,7 @@
 ## Changelog
 
+- **0.0.19**
+    - Fix `get_ramon_ids`
 - **0.0.18** (November 24 2015)
     - Added more unit tests
     - Fix get_cutout, add get_volume

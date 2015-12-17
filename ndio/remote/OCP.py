@@ -327,8 +327,8 @@ class OCP(Remote):
                 tmpfile.write(req.content)
                 tmpfile.seek(0)
                 h5file = h5py.File(tmpfile.name, "r")
-                # TODO
-                raise NotImplementedError()
+                return [i for i in h5file['ANNOIDS']]
+            raise IOError("Could not successfully mock HDF5 file for parsing.")
 
 
 
