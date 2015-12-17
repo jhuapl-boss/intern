@@ -4,6 +4,7 @@ import json
 from Remote import Remote
 from errors import *
 
+
 DEFAULT_HOSTNAME = "lims.neurodata.io"
 DEFAULT_PROTOCOL = "http"
 
@@ -22,7 +23,6 @@ class OCPMeta(Remote):
                  protocol=DEFAULT_PROTOCOL):
         super(OCPMeta, self).__init__(hostname, protocol)
 
-
     def get_metadata(self, token):
         """
         Get metadata via a project token.
@@ -37,16 +37,17 @@ class OCPMeta(Remote):
         req = requests.get(self.url("/metadata/ocp/get/" + token))
         return req.json()
 
-
     def set_metadata(self, token, data):
         """
         Insert new metadata into the OCP metadata database.
 
         Arguments:
-            token:      Token of the datum to set
-            data:       A dictionary to insert as metadata. Can include `secret`.
+            token (str): Token of the datum to set
+            data (str): A dictionary to insert as metadata. Include `secret`.
+
         Returns:
             JSON of the inserted ID (convenience) or an error message.
+
         Throws:
             RemoteDataUploadError: If the token is already populated, or if
                 there is an issue with your specified `secret` key.

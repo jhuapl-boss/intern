@@ -1,5 +1,6 @@
 import requests
 
+
 class Remote(object):
 
     def __init__(self, hostname, protocol):
@@ -10,7 +11,6 @@ class Remote(object):
         """
         self.protocol = protocol
         self.hostname = hostname
-
 
     def url(self, endpoint=''):
         """
@@ -24,7 +24,6 @@ class Remote(object):
         if not endpoint.startswith('/'):
             endpoint = "/" + endpoint
         return self.protocol + "://" + self.hostname + endpoint
-
 
     def ping(self, endpoint=''):
         """
