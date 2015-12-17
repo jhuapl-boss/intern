@@ -2,6 +2,8 @@
 
 - **0.0.19**
     - Fix `get_ramon_ids`
+    - Add support for DAE Collada export (Blender-friendly). Affects the
+    requirements.txt file!
 - **0.0.18** (November 24 2015)
     - Added more unit tests
     - Fix get_cutout, add get_volume
