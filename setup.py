@@ -26,10 +26,13 @@ setup(
     download_url = 'https://github.com/openconnectome/ndio/tarball/' + VERSION,
     keywords = [
         'brain',
+        'medicine',
+        'microscopy',
         'neuro',
         'neurodata',
         'neurodata.io',
         'neuroscience',
+        'ndio',
         'ocpy',
         'ocp',
         'ocp.me',
