@@ -353,12 +353,8 @@ class OCP(Remote):
             RemoteDataNotFoundError: If the requested anno_id cannot be found.
         """
 
-        metadata = self.get_ramon_metadata(token, channel, anno_id)
-
         if metadata_only:
-            return metadata
-
-        metadata = metadata[str(anno_id)]
+            return self.get_ramon_metadata(token, channel, anno_id)
 
         # Download the data itself
         req = requests.get(self.url() +
