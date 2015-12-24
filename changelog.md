@@ -1,5 +1,6 @@
 ## Changelog
 
+- **0.0.20**
 - **0.0.19**
     - Fix `get_ramon_ids`
     - Add support for DAE Collada export (Blender-friendly). Affects the
