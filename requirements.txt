@@ -3,6 +3,5 @@ pillow
 numpy
 h5py
 requests
-cython
 # pymcubes
 # pycollada
