@@ -1,3 +1,0 @@
-dependencies:
-  override:
-    - pip install pymcubes
