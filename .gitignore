@@ -1,4 +1,7 @@
-# Compiled things
+# Private Things
+.coveralls.yml
+
+# Compiled Things
 *.pyc
 
 # Data
