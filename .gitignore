@@ -8,6 +8,7 @@
 *.hdf5
 *.png
 *.tif
+*.tiff
 
 # Temp Files
 *.swp
