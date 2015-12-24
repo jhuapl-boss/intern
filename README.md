@@ -9,7 +9,7 @@ To get started, view [the documentation](http://docs.neurodata.io/ndio/). You ca
 
 
 ## Testing & Coverage
-![](https://img.shields.io/circleci/project/openconnectome/ndio.svg)
+[![Build Status](https://travis-ci.org/openconnectome/ndio.svg?branch=master)](https://travis-ci.org/openconnectome/ndio)
 [![Coverage Status](https://coveralls.io/repos/openconnectome/ndio/badge.svg?branch=master&service=github)](https://coveralls.io/github/openconnectome/ndio?branch=master)
 ![](https://img.shields.io/badge/pep8-100%-green.svg?style=flat)
 
