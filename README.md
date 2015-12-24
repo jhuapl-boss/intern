@@ -8,8 +8,9 @@ To get started, view [the documentation](http://docs.neurodata.io/ndio/). You ca
 [![](https://img.shields.io/pypi/v/ndio.svg)](https://pypi.python.org/pypi/ndio)
 
 
-## Testing
+## Testing & Coverage
 ![](https://img.shields.io/circleci/project/openconnectome/ndio.svg)
+[![Coverage Status](https://coveralls.io/repos/openconnectome/ndio/badge.svg?branch=master&service=github)](https://coveralls.io/github/openconnectome/ndio?branch=master)
 ![](https://img.shields.io/badge/pep8-100%-green.svg?style=flat)
 
 ## Links
