@@ -3,5 +3,5 @@ numpy
 h5py
 requests
 cython
-pymcubes
-pycollada
+# pymcubes
+# pycollada
