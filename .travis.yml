@@ -8,6 +8,7 @@ install:
     - sudo apt-get install python-setuptools
     - sudo apt-get install python-numpy
     - sudo apt-get install libhdf5-serial-dev
+    - sudo apt-get install python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
     - sudo easy_install pip
     - sudo pip install cython
     - pip install .
