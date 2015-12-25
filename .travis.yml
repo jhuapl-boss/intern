@@ -14,7 +14,3 @@ install:
     - pip install .
     - pip install -r requirements.txt
 script: python -m unittest discover
-script:
-  - py.test tests/tests.py --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing
-after_success:
-  - coveralls
