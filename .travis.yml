@@ -7,8 +7,13 @@ install:
     - sudo apt-get install python-dev
     - sudo apt-get install python-setuptools
     - sudo apt-get install python-numpy
+    - sudo apt-get install libhdf5-serial-dev
     - sudo easy_install pip
     - sudo pip install cython
     - pip install .
     - pip install -r requirements.txt
 script: python -m unittest discover
+script:
+  - py.test tests/tests.py --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing
+after_success:
+  - coveralls
