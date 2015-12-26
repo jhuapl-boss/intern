@@ -341,14 +341,6 @@ class m2g(Remote):
         if not (os.path.exists(graph_file)):
             raise ValueError("No such file, {}!".format(graph_file))
 
-        tmpfile = tempfile.NamedTemporaryFile()
-        zfile = zipfile.ZipFile(tmpfile.name, "w", allowZip64=True)
-
-        zfile.write(result.fileToConvert)
-        zfile.close()
-
-        tmpfile.flush()
-        tmpfile.seek(0)
 
         url = "convert/{}/{}/{}/".format(
             email,
@@ -359,4 +351,38 @@ class m2g(Remote):
         if " " in url:
             raise ValueError("Spaces are not permitted in arguments.")
 
-        raise NotImplementedError()
+        if use_threads:
+            # Run in the background.
+            convert_thread = threading.Thread(
+                target=self._run_convert_graph,
+                args=[url, graph_file, callback]
+            )
+            convert_thread.start()
+        else:
+            # Run in the foreground.
+            return self._run_convert_graph(url, graph_file)
+        return
+
+    def _run_convert_graph(self, url, graph_file, callback=None):
+
+        try:
+            tmpfile = tempfile.NamedTemporaryFile()
+            zfile = zipfile.ZipFile(tmpfile.name, "w", allowZip64=True)
+            zfile.write(graph_file)
+            zfile.close()
+            tmpfile.flush()
+            tmpfile.seek(0)
+        except:
+            raise ValueError("Unable to zip graph file for upload.")
+
+        try:
+            req = urllib2.Request(self.url(url), tmpfile.read())
+            response = urllib2.urlopen(req)
+
+            if callback is not None:
+                callback(response.read())
+            else:
+                return response.read()
+        except:
+            raise RemoteDataUploadError("Failed to upload graph file. Try " +
+                                        "troubleshooting with a ping()?")
