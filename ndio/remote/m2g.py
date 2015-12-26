@@ -104,7 +104,7 @@ class m2g(Remote):
         self.email = email
 
     def build_graph(self, project, site, subject, session, scan,
-                    size, email=None, invariants=Invariants.ALL,
+                    size, email=self.email, invariants=Invariants.ALL,
                     fiber_file=DEFAULT_FIBER_FILE, atlas_file=None,
                     use_threads=False, callback=None):
         """
@@ -118,7 +118,7 @@ class m2g(Remote):
             scan (str): The scan identifier
             size (str): Whether to return a big or (m2g.BIG) small (m2g.SMALL)
                 graph. For a better explanation of each, see m2g.io.
-            email (str)*: An email to which to send the download link
+            email (str : self.email)*: An email to notify
             invariants (str[]: Invariants.ALL)*: An array of invariants to
                 compute. You can use the m2g.Invariants class to construct this
                 list, or simply pass m2g.Invariants.ALL to compute them all.
@@ -153,9 +153,6 @@ class m2g(Remote):
         # Once we get here, we know the callback is
         if size not in [self.BIG, self.SMALL]:
             raise ValueError("size must be either m2g.BIG or m2g.SMALL.")
-
-        if email is None:
-            email = self.email
 
         url = "buildgraph/{}/{}/{}/{}/{}/{}/{}/{}/".format(
             project,
@@ -211,7 +208,7 @@ class m2g(Remote):
             raise RemoteDataUploadError("Failed to upload data at " + url)
 
     def compute_invariants(self, graph_file, input_format,
-                           invariants=Invariants.ALL, email=None,
+                           invariants=Invariants.ALL, email=self.email,
                            use_threads=False, callback=None):
         """
         Compute invariants from an existing GraphML file using the remote
@@ -222,8 +219,8 @@ class m2g(Remote):
             input_format (str): One of m2g.GraphFormats
             invariants (str[]: Invariants.ALL)*: An array of m2g.Invariants to
                 compute on the graph
-            email (str)*: The email to notify upon completion
-            use_threads (bool: True)*: Whether to use Python threads to run the
+            email (str: self.email)*: The email to notify upon completion
+            use_threads (bool: False)*: Whether to use Python threads to run
                 computation in the background when waiting for the server to
                 return the invariants
             callback (function: None)*: The function to run upon completion of
