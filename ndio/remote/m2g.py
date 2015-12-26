@@ -31,6 +31,7 @@ class Invariants:
         self.EIGENS
     ]
 
+
 class InputFormats:
     GRAPHML = graphml = "graphml"
     NCOL = ncol = "ncol"
@@ -185,7 +186,7 @@ class m2g(Remote):
         return
 
     def _run_build_graph(self, url,
-                            fiber_file, atlas_file=None, callback=None):
+                         fiber_file, atlas_file=None, callback=None):
 
         try:
             tmpfile = tempfile.NamedTemporaryFile()
@@ -302,7 +303,7 @@ class m2g(Remote):
                                         "troubleshooting with a ping()?")
 
     def convert_graph(self, graph_file, input_format, output_formats,
-                     email=None, use_threads=False, callback=None):
+                      email=None, use_threads=False, callback=None):
         """
         Convert a graph from one GraphFormat to another.
 
@@ -311,7 +312,7 @@ class m2g(Remote):
             input_format (str): A m2g.GraphFormats
             output_formats (str[]): A m2g.GraphFormats
             email (str: self.email)*: The email to notify
-            use_threads (bool: False)*: Whether to use Python threads to run the
+            use_threads (bool: False)*: Whether to use Python threads to run
                 computation in the background when waiting for the server
             callback (function: None)*: The function to run upon completion of
                 the call, if using threads. (Will not be called if use_threads
@@ -340,7 +341,6 @@ class m2g(Remote):
 
         if not (os.path.exists(graph_file)):
             raise ValueError("No such file, {}!".format(graph_file))
-
 
         url = "convert/{}/{}/{}/".format(
             email,
