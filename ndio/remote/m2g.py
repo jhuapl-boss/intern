@@ -18,9 +18,8 @@ class Invariants:
     CLUSTERING = cc = "cc"              # the Clustering Coefficient
     MAX_AVG_DEGREE = mad = "mad"        # the Maximum Average Degree
     LOCAL_DEGREE = deg = "deg"          # The Local Degree Count
-    EIGENS = eig = "eig"                # the Top-k (100 or maximum
-                                        #   available/computable)
-                                        #   eigenvectors and eigenvalues
+    EIGENS = eig = "eig"                # top 100 or max avail eigvecs, eigvals
+
     ALL = [
         self.SCAN_STATISTIC
         self.TRIANGLE_COUNT
@@ -122,7 +121,6 @@ class m2g(Remote):
             return self._run_graph_download(url, fiber_file, atlas_file)
         return
 
-
     def _run_graph_download(url, fiber_file, atlas_file=None, callback=None):
 
         try:
@@ -137,7 +135,7 @@ class m2g(Remote):
                 tmpfile.seek(0)
         except:
             raise ValueError("Invalid atlas or fiber file. I don't have " +
-            "any more information than that, sorry!")
+                             "any more information than that, sorry!")
 
         try:
             # Call the URL
