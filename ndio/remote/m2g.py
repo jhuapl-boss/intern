@@ -167,7 +167,6 @@ class m2g(Remote):
                 args=[url, fiber_file, atlas_file, callback]
             )
             download_thread.start()
-
         else:
             # Run in the foreground.
             return self._run_build_graph(url, fiber_file, atlas_file)
@@ -177,7 +176,6 @@ class m2g(Remote):
                             fiber_file, atlas_file=None, callback=None):
 
         try:
-            # Create a temporary file to store zip contents in memory
             tmpfile = tempfile.NamedTemporaryFile()
             zfile = zipfile.ZipFile(tmpfile.name, "w", allowZip64=True)
             zfile.write(file_file)
@@ -263,10 +261,8 @@ class m2g(Remote):
         try:
             tmpfile = tempfile.NamedTemporaryFile()
             zfile = zipfile.ZipFile(tmpfile.name, "w", allowZip64=True)
-
             zfile.write(graph_file)
             zfile.close()
-
             tmpfile.flush()
             tmpfile.seek(0)
         except:
