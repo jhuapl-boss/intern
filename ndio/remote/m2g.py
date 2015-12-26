@@ -144,6 +144,9 @@ class m2g(Remote):
                 a server error.
         """
 
+        if not set(invariants) <= set(Invariants.ALL):
+            raise ValueError("Invariants must be a subset of Invariants.ALL.")
+
         if use_threads and callback is not None:
             if not hasattr(callback, '__call__'):
                 raise ValueError("callback must be a function.")
@@ -237,8 +240,17 @@ class m2g(Remote):
             RemoteError: If the server experiences difficulty computing invs
         """
 
-        if email is None:
-            email = self.email
+        if input_format not in GraphFormats._any:
+            raise ValueError("Invalid input format, {}.".format(input_format))
+
+        if not set(invariants) <= set(Invariants.ALL):
+            raise ValueError("Invariants must be a subset of Invariants.ALL.")
+
+        if use_threads and callback is not None:
+            if not hasattr(callback, '__call__'):
+                raise ValueError("callback must be a function.")
+            if len(inspect.getargspec(callback).args) != 1:
+                raise ValueError("callback must take exactly 1 argument.")
 
         url = "/graphupload/{}/{}/{}/".format(
             email,
@@ -287,3 +299,40 @@ class m2g(Remote):
         except:
             raise RemoteDataUploadError("Failed to upload graph file. Try " +
                                         "troubleshooting with a ping()?")
+
+    def convert_graph(self, graph_file, input_format, output_format,
+                     email=None, use_threads=False, callback=None):
+        """
+        Convert a graph from one GraphFormat to another.
+
+        Arguments:
+            graph_file (str): Filename of the file to convert
+            input_format (str): A m2g.GraphFormats
+            output_format (str): A m2g.GraphFormats
+            email (str: self.email)*: The email to notify
+            use_threads (bool: False)*: Whether to use Python threads to run the
+                computation in the background when waiting for the server
+            callback (function: None)*: The function to run upon completion of
+                the call, if using threads. (Will not be called if use_threads
+                is set to False.)
+
+        Returns:
+            HTTP Response if use_threads=False. Else, no return value.
+
+        Raises:
+            RemoteDataUploadError: If there's an issue uploading the data
+            RemoteError: If there's a server-side issue
+            ValueError: If there's a problem with the supplied arguments
+        """
+
+        if input_format not in GraphFormats._any:
+            raise ValueError("Invalid input format {}.".format(input_format))
+
+        if output_format not in GraphFormats._any:
+            raise ValueError("Invalid output format {}.".format(output_format))
+
+        if use_threads and callback is not None:
+            if not hasattr(callback, '__call__'):
+                raise ValueError("callback must be a function.")
+            if len(inspect.getargspec(callback).args) != 1:
+                raise ValueError("callback must take exactly 1 argument.")
