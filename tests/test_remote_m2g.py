@@ -20,7 +20,7 @@ class TestRemoteM2g(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.m2g.build_graph("project", "site",
                                  "subject", "session",
-                                 "scan", "M")
+                                 "scan", "M", "email@email.com")
 
     def test_build_graph_failures_spaces(self):
         """
@@ -29,11 +29,11 @@ class TestRemoteM2g(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.m2g.build_graph("pro ject", "site",
                                  "subject", "session",
-                                 "scan", m2g.SMALL)
+                                 "scan", m2g.SMALL, "email@email.com")
         with self.assertRaises(ValueError):
             self.m2g.build_graph("project", "site",
                                  "subject", "ses sion",
-                                 "scan", m2g.SMALL)
+                                 "scan", m2g.SMALL, "email@email.com")
 
 
 if __name__ == '__main__':
