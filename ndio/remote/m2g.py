@@ -40,6 +40,17 @@ class InputFormats:
     NUMPY = numpy = "numpy"
     MAT = mat = "mat"
 
+    _any = [
+        self.GRAPHML,
+        self.NCOL,
+        self.EDGELIST,
+        self.LGL,
+        self.PAJEK,
+        self.GRAPHDB,
+        self.NUMPY,
+        self.MAT
+    ]
+
 
 class m2g(Remote):
 
