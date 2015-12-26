@@ -1,4 +1,4 @@
-## Changelog
+# Changelog
 
 - **0.0.20**
     - Coveralls/TravisCI testing and coverage configuration
