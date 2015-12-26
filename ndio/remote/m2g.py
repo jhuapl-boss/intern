@@ -1,5 +1,3 @@
-import networkx
-
 from Remote import Remote
 from errors import *
 import ndio.ramon as ramon
