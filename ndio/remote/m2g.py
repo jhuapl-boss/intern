@@ -12,6 +12,7 @@ import ndio.ramon as ramon
 DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
 DEFAULT_EMAIL = ""
+DEFAULT_FIBER_FILE = "fiber.dat"
 
 
 class Invariants:
@@ -23,16 +24,16 @@ class Invariants:
     EIGENS = eig = "eig"                # top 100 or max avail eigvecs, eigvals
 
     ALL = [
-        self.SCAN_STATISTIC,
-        self.TRIANGLE_COUNT,
-        self.CLUSTERING,
-        self.MAX_AVG_DEGREE,
-        self.LOCAL_DEGREE,
-        self.EIGENS
+        SCAN_STATISTIC,
+        TRIANGLE_COUNT,
+        CLUSTERING,
+        MAX_AVG_DEGREE,
+        LOCAL_DEGREE,
+        EIGENS
     ]
 
 
-class InputFormats:
+class GraphFormats:
     GRAPHML = graphml = "graphml"
     NCOL = ncol = "ncol"
     EDGELIST = edgelist = "edgelist"
@@ -43,14 +44,14 @@ class InputFormats:
     MAT = mat = "mat"
 
     _any = [
-        self.GRAPHML,
-        self.NCOL,
-        self.EDGELIST,
-        self.LGL,
-        self.PAJEK,
-        self.GRAPHDB,
-        self.NUMPY,
-        self.MAT
+        GRAPHML,
+        NCOL,
+        EDGELIST,
+        LGL,
+        PAJEK,
+        GRAPHDB,
+        NUMPY,
+        MAT
     ]
 
 
@@ -106,7 +107,7 @@ class m2g(Remote):
         self.email = email
 
     def build_graph(self, project, site, subject, session, scan,
-                    size, email=self.email, invariants=Invariants.ALL,
+                    size, email=None, invariants=Invariants.ALL,
                     fiber_file=DEFAULT_FIBER_FILE, atlas_file=None,
                     use_threads=False, callback=None):
         """
@@ -145,6 +146,9 @@ class m2g(Remote):
             RemoteDataNotFoundError: When the data cannot be processed due to
                 a server error.
         """
+
+        if email is None:
+            email = self.email
 
         if not set(invariants) <= set(Invariants.ALL):
             raise ValueError("Invariants must be a subset of Invariants.ALL.")
@@ -213,7 +217,7 @@ class m2g(Remote):
             raise RemoteDataUploadError("Failed to upload data at " + url)
 
     def compute_invariants(self, graph_file, input_format,
-                           invariants=Invariants.ALL, email=self.email,
+                           invariants=Invariants.ALL, email=None,
                            use_threads=False, callback=None):
         """
         Compute invariants from an existing GraphML file using the remote
@@ -242,6 +246,9 @@ class m2g(Remote):
             RemoteError: If the server experiences difficulty computing invs
         """
 
+        if email is None:
+            email = self.email
+
         if input_format not in GraphFormats._any:
             raise ValueError("Invalid input format, {}.".format(input_format))
 
@@ -254,7 +261,7 @@ class m2g(Remote):
             if len(inspect.getargspec(callback).args) != 1:
                 raise ValueError("callback must take exactly 1 argument.")
 
-        url = "/graphupload/{}/{}/{}/".format(
+        url = "graphupload/{}/{}/{}/".format(
             email,
             input_format,
             "/".join(invariants)
@@ -276,7 +283,7 @@ class m2g(Remote):
 
         else:
             # Run in the foreground.
-            return self._run_compute_invariants(url, fiber_file)
+            return self._run_compute_invariants(url, graph_file)
         return
 
     def _run_compute_invariants(self, url, graph_file, callback=None):
@@ -297,7 +304,7 @@ class m2g(Remote):
             if callback is not None:
                 callback(response.read())
             else:
-                return response.read()
+                return response
         except:
             raise RemoteDataUploadError("Failed to upload graph file. Try " +
                                         "troubleshooting with a ping()?")
@@ -326,6 +333,9 @@ class m2g(Remote):
             RemoteError: If there's a server-side issue
             ValueError: If there's a problem with the supplied arguments
         """
+
+        if email is None:
+            email = self.email
 
         if input_format not in GraphFormats._any:
             raise ValueError("Invalid input format {}.".format(input_format))
@@ -382,7 +392,7 @@ class m2g(Remote):
             if callback is not None:
                 callback(response.read())
             else:
-                return response.read()
+                return response
         except:
             raise RemoteDataUploadError("Failed to upload graph file. Try " +
                                         "troubleshooting with a ping()?")
