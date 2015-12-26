@@ -31,6 +31,22 @@ class OCP(Remote):
     def url(self, suffix=""):
         return super(OCP, self).url('/ocp/ca/' + suffix)
 
+    def __repr__(self):
+        """
+        Returns a string representation that can be used to reproduce this
+        instance. `eval(repr(this))` should return an identical copy.
+
+        Arguments:
+            None
+
+        Returns:
+            str: Representation of reproducible instance.
+        """
+        return "ndio.remote.OCP({}, {})".format(
+            self.hostname,
+            self.protocol
+        )
+
     # SECTION:
     # Metadata
 

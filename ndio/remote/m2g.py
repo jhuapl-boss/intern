@@ -10,6 +10,7 @@ import ndio.ramon as ramon
 
 DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
+DEFAULT_EMAIL = ""
 
 
 class Invariants:
@@ -35,8 +36,27 @@ class m2g(Remote):
     SMALL = S = 's'
     BIG = B = 'b'
 
-    def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL):
+    def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL,
+                 email=DEFAULT_EMAIL):
         super(m2g, self).__init__(hostname, protocol)
+        self.email = email
+
+    def __repr__(self):
+        """
+        Returns a string representation that can be used to reproduce this
+        instance. `eval(repr(this))` should return an identical copy.
+
+        Arguments:
+            None
+
+        Returns:
+            str: Representation of reproducible instance.
+        """
+        return "ndio.remote.m2g({}, {}, {})".format(
+            self.hostname,
+            self.protocol,
+            self.email
+        )
 
     def ping(self):
         return super(m2g, self).ping()
@@ -44,9 +64,27 @@ class m2g(Remote):
     def url(self, suffix=""):
         return super(m2g, self).url('/graph-services/' + suffix)
 
+    def set_default_email(self, email):
+        """
+        Sets the default email to use for notifications if none is specified.
+        Does only basic error-checking.
+
+        Arguments:
+            email (str): The email to notify for all server graph services.
+
+        Returns:
+            None
+
+        Raises:
+            ValueError: If an invalid email is supplied.
+        """
+        if "@" not in email:
+            raise ValueError("Invalid email.")
+        self.email = email
+
     def build_graph(self, project, site, subject, session, scan,
-                    size, email, invariants,
-                    fiber_file, atlas_file=None,
+                    size, email=None, invariants=Invariants.ALL,
+                    fiber_file=DEFAULT_FIBER_FILE, atlas_file=None,
                     use_threads=True, callback=None):
         """
         Builds a graph using the graph-services endpoint.
@@ -59,18 +97,19 @@ class m2g(Remote):
             scan (str): The scan identifier
             size (str): Whether to return a big or (m2g.BIG) small (m2g.SMALL)
                 graph. For a better explanation of each, see m2g.io.
-            email (str): An email to which to send the download link
-            invariants (str[]: Invariants.ALL): An array of invariants to
+            email (str)*: An email to which to send the download link
+            invariants (str[]: Invariants.ALL)*: An array of invariants to
                 compute. You can use the m2g.Invariants class to construct this
                 list, or simply pass m2g.Invariants.ALL to compute them all.
-            fiber_file (str): A local filename of an MRI Studio .dat file
-            atlas_file (str: None): A local atlas file, in NIFTI .nii format.
+            fiber_file (str: DEFAULT_FIBER_FILE)*: A local filename of an
+                MRI Studio .dat file
+            atlas_file (str: None)*: A local atlas file, in NIFTI .nii format.
                 If none is specified, the Desikan atlas is used by default.
-            use_threads (bool: True): Whether to run the download in a Python
+            use_threads (bool: True)*: Whether to run the download in a Python
                 thread. If set to True, the call to `build_graph` will end
                 quickly, and the `callback` will be called with the returned
                 status-code of the restful call as its only argument.
-            callback (function: None): The function to run upon completion of
+            callback (function: None)*: The function to run upon completion of
                 the call, if using threads. (Will not be called if use_threads
                 is set to False.)
 
@@ -93,6 +132,9 @@ class m2g(Remote):
         # Once we get here, we know the callback is
         if size not in [self.BIG, self.SMALL]:
             raise ValueError("size must be either m2g.BIG or m2g.SMALL.")
+
+        if email is None:
+            email = self.email
 
         url = "buildgraph/{}/{}/{}/{}/{}/{}/{}/{}/".format(
             project,
@@ -121,7 +163,8 @@ class m2g(Remote):
             return self._run_graph_download(url, fiber_file, atlas_file)
         return
 
-    def _run_graph_download(url, fiber_file, atlas_file=None, callback=None):
+    def _run_graph_download(self, url,
+                            fiber_file, atlas_file=None, callback=None):
 
         try:
             # Create a temporary file to store zip contents in memory
@@ -149,3 +192,5 @@ class m2g(Remote):
 
         except:
             raise RemoteDataUploadError("Failed to upload data at " + url)
+
+    def compute_invariants(self, )
