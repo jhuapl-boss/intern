@@ -3,6 +3,7 @@ import tempfile
 import inspect
 import urllib2
 import threading
+import os
 
 from Remote import Remote
 from errors import *
@@ -289,7 +290,7 @@ class m2g(Remote):
             raise ValueError("Unable to zip graph file for upload.")
 
         try:
-            req = urllib2.Request(url, tmpfile.read())
+            req = urllib2.Request(self.url(url), tmpfile.read())
             response = urllib2.urlopen(req)
 
             if callback is not None:
@@ -300,7 +301,7 @@ class m2g(Remote):
             raise RemoteDataUploadError("Failed to upload graph file. Try " +
                                         "troubleshooting with a ping()?")
 
-    def convert_graph(self, graph_file, input_format, output_format,
+    def convert_graph(self, graph_file, input_format, output_formats,
                      email=None, use_threads=False, callback=None):
         """
         Convert a graph from one GraphFormat to another.
@@ -308,7 +309,7 @@ class m2g(Remote):
         Arguments:
             graph_file (str): Filename of the file to convert
             input_format (str): A m2g.GraphFormats
-            output_format (str): A m2g.GraphFormats
+            output_formats (str[]): A m2g.GraphFormats
             email (str: self.email)*: The email to notify
             use_threads (bool: False)*: Whether to use Python threads to run the
                 computation in the background when waiting for the server
@@ -328,11 +329,34 @@ class m2g(Remote):
         if input_format not in GraphFormats._any:
             raise ValueError("Invalid input format {}.".format(input_format))
 
-        if output_format not in GraphFormats._any:
-            raise ValueError("Invalid output format {}.".format(output_format))
+        if not set(output_formats) <= set(GraphFormats._any):
+            raise ValueError("Output formats must be a GraphFormats.")
 
         if use_threads and callback is not None:
             if not hasattr(callback, '__call__'):
                 raise ValueError("callback must be a function.")
             if len(inspect.getargspec(callback).args) != 1:
                 raise ValueError("callback must take exactly 1 argument.")
+
+        if not (os.path.exists(graph_file)):
+            raise ValueError("No such file, {}!".format(graph_file))
+
+        tmpfile = tempfile.NamedTemporaryFile()
+        zfile = zipfile.ZipFile(tmpfile.name, "w", allowZip64=True)
+
+        zfile.write(result.fileToConvert)
+        zfile.close()
+
+        tmpfile.flush()
+        tmpfile.seek(0)
+
+        url = "convert/{}/{}/{}/".format(
+            email,
+            input_format,
+            ','.join(output_formats)
+        )
+
+        if " " in url:
+            raise ValueError("Spaces are not permitted in arguments.")
+
+        raise NotImplementedError()
