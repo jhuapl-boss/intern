@@ -2,6 +2,7 @@ import zipfile
 import tempfile
 import inspect
 import urllib2
+import threading
 
 from Remote import Remote
 from errors import *
@@ -110,17 +111,19 @@ class m2g(Remote):
 
         if use_threads:
             # Run in the background.
+            download_thread = threading.Thread(
+                target=self._run_graph_download,
+                args=[url, fiber_file, atlas_file, callback]
+            )
+            download_thread.start()
 
-            # At the end, call the callback with the return status.
-            raise NotImplementedError(":(")
-            result = ??
-            callback(result)
         else:
             # Run in the foreground.
-            raise NotImplementedError(":(")
+            return self._run_graph_download(url, fiber_file, atlas_file)
+        return
 
 
-    def _run_graph_download(url, fiber_file, atlas_file=None):
+    def _run_graph_download(url, fiber_file, atlas_file=None, callback=None):
 
         try:
             # Create a temporary file to store zip contents in memory
@@ -140,6 +143,11 @@ class m2g(Remote):
             # Call the URL
             req = urllib2.Request(call_url, tmpfile.read())
             response = urllib2.urlopen(req)
+
+            if callback is not None:
+                callback(response)
+            else:
+                return response
 
         except:
             raise RemoteDataUploadError("Failed to upload data at " + url)
