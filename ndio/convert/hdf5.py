@@ -43,10 +43,6 @@ def export_hdf5(hdf5_filename, numpy_data):
     # Expand filename to be absolute
     hdf5_filename = os.path.expanduser(hdf5_filename)
 
-    if os.path.exists(hdf5_filename):
-        print("File {0} already exists, stopping...".format(hdf5_filename))
-        return False
-
     try:
         h = h5py.File(hdf5_filename, "w")
         h.create_dataset('CUTOUT', data=numpy_data)

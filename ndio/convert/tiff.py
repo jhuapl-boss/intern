@@ -51,10 +51,6 @@ def export_tiff(tiff_filename, numpy_data):
     if numpy_data.dtype.name is not 'uint8':
         print("Datatype is not uint8, you may experience a known PIL bug.")
 
-    if os.path.exists(tiff_filename):
-        print("File {0} already exists, stopping...".format(tiff_filename))
-        return False
-
     try:
         img = Image.fromarray(numpy_data)
         img.save(tiff_filename)

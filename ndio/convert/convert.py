@@ -88,9 +88,6 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
     in_file = os.path.expanduser(in_file)
     out_file = os.path.expanduser(out_file)
 
-    if os.path.exists(out_file):
-        raise IOError("Output file {0} already exists, stopping..."
-                      .format(out_file))
     if not os.path.exists(in_file):
         raise IOError("Input file {0} does not exist, stopping..."
                       .format(in_file))

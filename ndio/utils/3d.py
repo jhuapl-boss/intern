@@ -1,5 +1,6 @@
 import mcubes
 
+
 def export_to_dae(filename, data, level=0):
     """
     Converts a dense annotation to a DAE, using Marching Cubes (PyMCubes).

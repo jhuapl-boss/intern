@@ -22,7 +22,7 @@ class m2g(Remote):
     def url(self, suffix=""):
         return super(m2g, self).url('/graph-services/' + suffix)
 
-    def build_graph(project, site, subject, session, scan, size, email=None):
+    def build_graph(self, project, site, subject, session, scan, size, email):
         """
         Builds a graph using the graph-services endpoint.
 
@@ -34,7 +34,7 @@ class m2g(Remote):
             scan (str): The scan identifier
             size (str): Whether to return a big or (m2g.BIG) small (m2g.SMALL)
                 graph. For a better explanation of each, see m2g.io.
-            email (str : None): An email to which to send the download link
+            email (str): An email to which to send the download link
 
         Returns:
             networkx.Graph
