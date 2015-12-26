@@ -21,13 +21,13 @@ class TestDownload(unittest.TestCase):
 
         # if returns string, successful export
         self.assertEqual(
-                ndpng.export_png("download.png", image_download),
-                "download.png")
+                ndpng.export_png("tests/trash/download.png", image_download),
+                "tests/trash/download.png")
 
         # now confirm import works too
-        self.assertEqual(ndpng.import_png("download.png")[0][0],
+        self.assertEqual(ndpng.import_png("tests/trash/download.png")[0][0],
                          image_download[0][0])
-        self.assertEqual(ndpng.import_png("download.png")[10][10],
+        self.assertEqual(ndpng.import_png("tests/trash/download.png")[10][10],
                          image_download[10][10])
 
     def test_export_import_tiff(self):
@@ -40,13 +40,13 @@ class TestDownload(unittest.TestCase):
 
         # if returns string, successful export
         self.assertEqual(
-                ndtiff.export_tiff("download-1.tiff", image_download),
-                "download-1.tiff")
+                ndtiff.export_tiff("tests/trash/download-1.tiff", image_download),
+                "tests/trash/download-1.tiff")
 
         # now confirm import works too
-        self.assertEqual(ndtiff.import_tiff("download-1.tiff")[0][0],
+        self.assertEqual(ndtiff.import_tiff("tests/trash/download-1.tiff")[0][0],
                          image_download[0][0])
-        self.assertEqual(ndtiff.import_tiff("download-1.tiff")[10][10],
+        self.assertEqual(ndtiff.import_tiff("tests/trash/download-1.tiff")[10][10],
                          image_download[10][10])
 
 

@@ -21,7 +21,7 @@ class RAMONBase(object):
             status (string): Status of annotation in database
             author (string): Username of the person who created the annotation
         """
-        self._id = id
+        self.id = id
         self.confidence = confidence
         self.dynamic_metadata = dynamic_metadata
         self._status = status

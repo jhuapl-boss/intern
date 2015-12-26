@@ -175,6 +175,7 @@ def ramon_to_hdf5(ramon, hdf5=None):
 
     Arguments:
         ramon (RAMON): A subclass of RAMONBase
+        hdf5 (str): Export filename
 
     Returns:
         hdf5.File
