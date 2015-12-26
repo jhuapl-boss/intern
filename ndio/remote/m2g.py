@@ -22,13 +22,23 @@ class Invariants:
     EIGENS = eig = "eig"                # top 100 or max avail eigvecs, eigvals
 
     ALL = [
-        self.SCAN_STATISTIC
-        self.TRIANGLE_COUNT
-        self.CLUSTERING
-        self.MAX_AVG_DEGREE
-        self.LOCAL_DEGREE
+        self.SCAN_STATISTIC,
+        self.TRIANGLE_COUNT,
+        self.CLUSTERING,
+        self.MAX_AVG_DEGREE,
+        self.LOCAL_DEGREE,
         self.EIGENS
     ]
+
+class InputFormats:
+    GRAPHML = graphml = "graphml"
+    NCOL = ncol = "ncol"
+    EDGELIST = edgelist = "edgelist"
+    LGL = lgl = "lgl"
+    PAJEK = pajek = "pajek"
+    GRAPHDB = graphdb = "graphdb"
+    NUMPY = numpy = "numpy"
+    MAT = mat = "mat"
 
 
 class m2g(Remote):
@@ -52,7 +62,7 @@ class m2g(Remote):
         Returns:
             str: Representation of reproducible instance.
         """
-        return "ndio.remote.m2g({}, {}, {})".format(
+        return "ndio.remote.m2g('{}', '{}', '{}')".format(
             self.hostname,
             self.protocol,
             self.email
@@ -85,7 +95,7 @@ class m2g(Remote):
     def build_graph(self, project, site, subject, session, scan,
                     size, email=None, invariants=Invariants.ALL,
                     fiber_file=DEFAULT_FIBER_FILE, atlas_file=None,
-                    use_threads=True, callback=None):
+                    use_threads=False, callback=None):
         """
         Builds a graph using the graph-services endpoint.
 
@@ -105,7 +115,7 @@ class m2g(Remote):
                 MRI Studio .dat file
             atlas_file (str: None)*: A local atlas file, in NIFTI .nii format.
                 If none is specified, the Desikan atlas is used by default.
-            use_threads (bool: True)*: Whether to run the download in a Python
+            use_threads (bool: False)*: Whether to run the download in a Python
                 thread. If set to True, the call to `build_graph` will end
                 quickly, and the `callback` will be called with the returned
                 status-code of the restful call as its only argument.
@@ -114,7 +124,7 @@ class m2g(Remote):
                 is set to False.)
 
         Returns:
-            networkx.Graph
+            HTTP Response if use_threads is False. Otherwise, None
 
         Raises:
             ValueError: When the supplied values are invalid (contain invalid
@@ -153,17 +163,17 @@ class m2g(Remote):
         if use_threads:
             # Run in the background.
             download_thread = threading.Thread(
-                target=self._run_graph_download,
+                target=self._run_build_graph,
                 args=[url, fiber_file, atlas_file, callback]
             )
             download_thread.start()
 
         else:
             # Run in the foreground.
-            return self._run_graph_download(url, fiber_file, atlas_file)
+            return self._run_build_graph(url, fiber_file, atlas_file)
         return
 
-    def _run_graph_download(self, url,
+    def _run_build_graph(self, url,
                             fiber_file, atlas_file=None, callback=None):
 
         try:
@@ -181,16 +191,95 @@ class m2g(Remote):
                              "any more information than that, sorry!")
 
         try:
-            # Call the URL
-            req = urllib2.Request(call_url, tmpfile.read())
+            req = urllib2.Request(self.url(url), tmpfile.read())
             response = urllib2.urlopen(req)
 
             if callback is not None:
                 callback(response)
             else:
-                return response
-
+                return response.read()
         except:
             raise RemoteDataUploadError("Failed to upload data at " + url)
 
-    def compute_invariants(self, )
+    def compute_invariants(self, graph_file, input_format,
+                           invariants=Invariants.ALL, email=None,
+                           use_threads=False, callback=None):
+        """
+        Compute invariants from an existing GraphML file using the remote
+        m2g graph services.
+
+        Arguments:
+            graph_file (str): The filename of the graphml file
+            input_format (str): One of m2g.GraphFormats
+            invariants (str[]: Invariants.ALL)*: An array of m2g.Invariants to
+                compute on the graph
+            email (str)*: The email to notify upon completion
+            use_threads (bool: True)*: Whether to use Python threads to run the
+                computation in the background when waiting for the server to
+                return the invariants
+            callback (function: None)*: The function to run upon completion of
+                the call, if using threads. (Will not be called if use_threads
+                is set to False.)
+
+        Returns:
+            HTTP Response if use_threads is False. Otherwise, None
+
+        Raises:
+            ValueError: If the graph file does not exist, or if there are
+                issues with the passed arguments
+            RemoteDataUploadError: If there is an issue packing the file
+            RemoteError: If the server experiences difficulty computing invs
+        """
+
+        if email is None:
+            email = self.email
+
+        url = "/graphupload/{}/{}/{}/".format(
+            email,
+            input_format,
+            "/".join(invariants)
+        )
+
+        if " " in url:
+            raise ValueError("Arguments cannot have spaces in them.")
+
+        if not (os.path.exists(graph_file)):
+            raise ValueError("File {} does not exist.".format(graph_file))
+
+        if use_threads:
+            # Run in the background.
+            upload_thread = threading.Thread(
+                target=self._run_compute_invariants,
+                args=[url, graph_file, callback]
+            )
+            upload_thread.start()
+
+        else:
+            # Run in the foreground.
+            return self._run_compute_invariants(url, fiber_file)
+        return
+
+    def _run_compute_invariants(self, url, graph_file, callback=None):
+        try:
+            tmpfile = tempfile.NamedTemporaryFile()
+            zfile = zipfile.ZipFile(tmpfile.name, "w", allowZip64=True)
+
+            zfile.write(graph_file)
+            zfile.close()
+
+            tmpfile.flush()
+            tmpfile.seek(0)
+        except:
+            raise ValueError("Unable to zip graph file for upload.")
+
+        try:
+            req = urllib2.Request(url, tmpfile.read())
+            response = urllib2.urlopen(req)
+
+            if callback is not None:
+                callback(response.read())
+            else:
+                return response.read()
+        except:
+            raise RemoteDataUploadError("Failed to upload graph file. Try " +
+                                        "troubleshooting with a ping()?")

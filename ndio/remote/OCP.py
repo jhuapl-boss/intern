@@ -42,7 +42,7 @@ class OCP(Remote):
         Returns:
             str: Representation of reproducible instance.
         """
-        return "ndio.remote.OCP({}, {})".format(
+        return "ndio.remote.OCP('{}', '{}')".format(
             self.hostname,
             self.protocol
         )
