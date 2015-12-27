@@ -304,7 +304,7 @@ class m2g(Remote):
             if callback is not None:
                 callback(response.read())
             else:
-                return response
+                return response.read()
         except:
             raise RemoteDataUploadError("Failed to upload graph file. Try " +
                                         "troubleshooting with a ping()?")
@@ -352,7 +352,7 @@ class m2g(Remote):
         if not (os.path.exists(graph_file)):
             raise ValueError("No such file, {}!".format(graph_file))
 
-        url = "convert/{}/{}/{}/".format(
+        url = "convert/{}/{}/{}/l".format(
             email,
             input_format,
             ','.join(output_formats)
@@ -392,7 +392,7 @@ class m2g(Remote):
             if callback is not None:
                 callback(response.read())
             else:
-                return response
+                return response.read()
         except:
             raise RemoteDataUploadError("Failed to upload graph file. Try " +
                                         "troubleshooting with a ping()?")
