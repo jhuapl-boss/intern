@@ -8,6 +8,7 @@
     - Add support for 3D mesh export
     - `OCP.get_channels` for a token
     - `OCP.get_token_dataset` and `OCP.get_token_info`
+    - `OCP.get_public_datasets`
 - **0.0.19**
     - Fix `get_ramon_ids`
     - Add support for DAE Collada export (Blender-friendly). Affects the
