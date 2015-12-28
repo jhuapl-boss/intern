@@ -58,10 +58,39 @@ class OCP(Remote):
             None
 
         Returns:
-            `str[]` list of public tokens
+            str[]: list of public tokens
         """
         r = requests.get(self.url() + "public_tokens/")
         return r.json()
+
+    def get_public_datasets(self):
+        """
+        NOTE: VERY SLOW!
+        Gets a list of public datasets. Different than public tokens!
+
+        Arguments:
+            None
+
+        Returns:
+            str[]: list of public datasets
+        """
+        datasets = set()
+        tokens = self.get_public_tokens()
+        for t in tokens:
+            datasets.add(self.get_token_dataset(t))
+        return list(datasets)
+
+    def get_token_dataset(self, token):
+        """
+        Get the dataset for a given token.
+
+        Arguments:
+            token (str): The token to inspect
+
+        Returns:
+            str: The name of the dataset
+        """
+        return self.get_proj_info(token)['dataset']['description']
 
     def get_proj_info(self, token):
         """
@@ -75,6 +104,12 @@ class OCP(Remote):
         """
         r = requests.get(self.url() + "{}/info/".format(token))
         return r.json()
+
+    def get_token_info(self, token):
+        """
+        An alias for get_proj_info.
+        """
+        return self.get_proj_info(token)
 
     def get_channels(self, token):
         """
