@@ -6,6 +6,7 @@
     - Add m2g skeleton and basic testing
     - Remove safety-check for overwriting files (careful!)
     - Add support for 3D mesh export
+    - `OCP.get_channels` for a token
 - **0.0.19**
     - Fix `get_ramon_ids`
     - Add support for DAE Collada export (Blender-friendly). Affects the
