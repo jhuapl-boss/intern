@@ -76,6 +76,19 @@ class OCP(Remote):
         r = requests.get(self.url() + "{}/info/".format(token))
         return r.json()
 
+    def get_channels(self, token):
+        """
+        Wraps get_proj_info to return a dictionary of just the channels of
+        a given project.
+
+        Arguments:
+            token (str): Token to return channels for
+
+        Returns:
+            JSON: dictionary of channels.
+        """
+        return self.get_proj_info(token)['channels']
+
     # SECTION:
     # Data Download
 
