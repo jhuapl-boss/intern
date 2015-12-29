@@ -9,6 +9,7 @@
     - `OCP.get_channels` for a token
     - `OCP.get_token_dataset` and `OCP.get_token_info`
     - `OCP.get_public_datasets`
+    - `OCP.get_public_datasets_and_tokens`, a function that returns a dictionary relating keys (datasets) to a list of tokens that use it.
 - **0.0.19**
     - Fix `get_ramon_ids`
     - Add support for DAE Collada export (Blender-friendly). Affects the

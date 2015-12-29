@@ -74,11 +74,29 @@ class OCP(Remote):
         Returns:
             str[]: list of public datasets
         """
-        datasets = set()
+        return self.get_public_datasets_and_tokens().keys()
+
+    def get_public_datasets_and_tokens(self):
+        """
+        NOTE: VERY SLOW!
+        Gets a dictionary relating key:dataset to value:[tokens] that rely
+        on that dataset.
+
+        Arguments:
+            None
+
+        Returns:
+            dict: relating key:dataset to value:[tokens]
+        """
+        datasets = {}
         tokens = self.get_public_tokens()
         for t in tokens:
-            datasets.add(self.get_token_dataset(t))
-        return list(datasets)
+            dataset = self.get_token_dataset(t)
+            if dataset in datasets:
+                datasets[dataset].append(t)
+            else:
+                datasets[dataset] = [t]
+        return datasets
 
     def get_token_dataset(self, token):
         """
