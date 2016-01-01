@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.0.21**
+    - Better nested-dictionary support in ndlims
 - **0.0.20**
     - Coveralls/TravisCI testing and coverage configuration
     - Organized badges, which shouldn't deserve a slot in the changelog except that I added Travis and Coveralls badges
