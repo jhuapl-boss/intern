@@ -52,8 +52,8 @@ class OCPMeta(Remote):
             RemoteDataUploadError: If the token is already populated, or if
                 there is an issue with your specified `secret` key.
         """
-
-        req = requests.post(self.url("/metadata/ocp/set/" + token), data=data)
+        print data
+        req = requests.post(self.url("/metadata/ocp/set/" + token), json=data)
 
         if req.status_code != 200:
             raise RemoteDataUploadError(

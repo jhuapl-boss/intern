@@ -22,6 +22,7 @@ ndio/remote/OCPMeta.py
 ndio/remote/Remote.py
 ndio/remote/__init__.py
 ndio/remote/errors.py
+ndio/remote/m2g.py
 ndio/utils/3d.py
 ndio/utils/__init__.py
 ndio/utils/parallel.py
