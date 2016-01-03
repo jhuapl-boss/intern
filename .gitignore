@@ -14,7 +14,6 @@
 *.png
 *.tif
 *.tiff
-tests/trash/
 
 
 # Temp Files
