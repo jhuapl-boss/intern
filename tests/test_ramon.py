@@ -15,10 +15,10 @@ class TestRAMON(unittest.TestCase):
         if os.path.exists("1.hdf5"):
             os.remove("1.hdf5")
 
-    def test_create_ramon_file(self):
-        r = ramon.RAMONSegment(id=self.ramon_id)
-        r.cutout = numpy.zeros((3, 3, 3))
-        self.h = ramon.ramon_to_hdf5(r)
+    # def test_create_ramon_file(self):
+        # r = ramon.RAMONSegment(id=self.ramon_id)
+        # r.cutout = numpy.zeros((3, 3, 3))
+        # self.h = ramon.ramon_to_hdf5(r)
         # self.assertEqual(type(self.h), h5py.File)
 
     # Need to write to disk before this'll work
