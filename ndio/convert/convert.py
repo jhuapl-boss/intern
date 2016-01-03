@@ -16,8 +16,8 @@ def _fail_pair_conversion(i, o):
     """
     Helper-function to print failure and pass back False.
     """
-    print "Conversion from {0} to {1} is not currently supported.".format(i, o)
-    return False
+    raise ValueError("Conversion from {0} to {1} " +
+                     "is not currently supported.".format(i, o))
 
 
 def _get_extension_for_format(fmt):
