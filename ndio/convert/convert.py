@@ -1,5 +1,6 @@
 import os
 import shutil
+import Image
 
 
 FILE_FORMATS = {
@@ -67,6 +68,28 @@ def _guess_format_from_extension(ext):
         return False
 
     return formats[0]
+
+
+def open(in_file, in_fmt=None):
+    """
+    Reads in a file from disk.
+
+    Arguments:
+        in_file: The name of the file to read in
+        in_fmt: The format of in_file, if you want to be explicit
+
+    Returns:
+        numpy.ndarray
+    """
+    fmt = in_file.split('.')[-1]
+    if in_fmt:
+        fmt = in_fmt
+    fmt = fmt.lower()
+
+    if fmt in ['png', 'jpg', 'tiff', 'tif', 'jpeg']:
+        return Image.open(in_file)
+    else:
+        raise NotImplementedError("Cannot open file of type {fmt}".format(fmt))
 
 
 def convert(in_file, out_file, in_fmt="", out_fmt=""):
