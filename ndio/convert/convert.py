@@ -1,6 +1,6 @@
 import os
 import shutil
-import Image
+from PIL import Image
 
 
 FILE_FORMATS = {
