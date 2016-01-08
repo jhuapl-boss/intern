@@ -21,7 +21,7 @@ def import_png(png_filename):
     try:
         img = Image.open(png_filename)
     except Exception as e:
-        print("Could not load file {0} for conversion.".format(png_filename))
+        raise ValueError("Could not load file {0} for conversion.".format(png_filename))
         raise
 
     return numpy.array(img)
@@ -56,7 +56,7 @@ def export_png(png_filename, numpy_data):
             img = Image.fromarray(numpy_data)
         img.save(png_filename)
     except Exception as e:
-        print("Could not save png file {0}.".format(png_filename))
+        raise ValueError("Could not save png file {0}.".format(png_filename))
     return png_filename
 
 

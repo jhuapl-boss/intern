@@ -5,6 +5,7 @@
     - Rename some modules to improve importing experience
     - Add PIL-style open() for arbitrary image files
     - Fix test-suite to run in TravisCI
+    - Begin converting printouts to exceptions
 - **0.0.20**
     - Coveralls/TravisCI testing and coverage configuration
     - Organized badges, which shouldn't deserve a slot in the changelog except that I added Travis and Coveralls badges

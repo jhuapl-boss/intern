@@ -22,7 +22,7 @@ def import_hdf5(hdf5_filename):
         # OCP stores data inside the 'cutout' h5 dataset
         data_layers = f.get('image').get('CUTOUT')
     except Exception as e:
-        print("Could not load file {0} for conversion.".format(hdf5_filename))
+        raise ValueError("Could not load file {0} for conversion.".format(hdf5_filename))
         raise
 
     return numpy.array(data_layers)
@@ -48,6 +48,6 @@ def export_hdf5(hdf5_filename, numpy_data):
         h.create_dataset('CUTOUT', data=numpy_data)
         h.close()
     except Exception as e:
-        print("Could not save HDF5 file {0}.".format(hdf5_filename))
+        raise ValueError("Could not save HDF5 file {0}.".format(hdf5_filename))
 
     return hdf5_filename

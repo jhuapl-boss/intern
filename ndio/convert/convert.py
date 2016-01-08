@@ -123,7 +123,7 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
               out_file.split('.')[-1].lower())
 
     if not in_fmt or not out_fmt:
-        print("Cannot determine conversion formats.")
+        raise new ValueError("Cannot determine conversion formats.")
         return False
 
     if in_fmt is out_fmt:

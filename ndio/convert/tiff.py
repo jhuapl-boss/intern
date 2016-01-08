@@ -21,7 +21,7 @@ def import_tiff(tiff_filename):
     try:
         img = Image.open(tiff_filename)
     except Exception as e:
-        print("Could not load file {0} for conversion.".format(tiff_filename))
+        raise ValueError("Could not load file {0} for conversion.".format(tiff_filename))
         raise
 
     return numpy.array(img)
@@ -49,13 +49,13 @@ def export_tiff(tiff_filename, numpy_data):
         return png_filename
 
     if numpy_data.dtype.name is not 'uint8':
-        print("Datatype is not uint8, you may experience a known PIL bug.")
+        raise ValueError("Datatype is not uint8, you may experience a known PIL bug.")
 
     try:
         img = Image.fromarray(numpy_data)
         img.save(tiff_filename)
     except Exception as e:
-        print("Could not save TIFF file {0}.".format(tiff_filename))
+        raise ValueError("Could not save TIFF file {0}.".format(tiff_filename))
 
     return tiff_filename
 
