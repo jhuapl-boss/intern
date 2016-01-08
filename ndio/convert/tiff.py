@@ -48,8 +48,8 @@ def export_tiff(tiff_filename, numpy_data):
         fp.close()
         return png_filename
 
-    if numpy_data.dtype.name is not 'uint8':
-        raise ValueError("Datatype is not uint8, you may experience a known PIL bug.")
+    # if numpy_data.dtype.name is not 'uint8':
+    #     raise ValueError("Datatype is not uint8, you may experience a known PIL bug.")
 
     try:
         img = Image.fromarray(numpy_data)
