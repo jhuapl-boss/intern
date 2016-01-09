@@ -16,7 +16,7 @@
   ```
   coverage run -m unittest discover
   ```
-  
+
 ## Contributing Code
 It is highly recommended that you reach out to the development team at ndio@neurodata.io before beginning on a project, as it may already be under development.
 
@@ -28,5 +28,4 @@ It is highly recommended that you reach out to the development team at ndio@neur
 - Make your changes and push to your fork. Then, take out a pull-request against the master branch of the official openconnectome/ndio repository. Be sure your code subscribes to our style guide (below)!
 
 # Style Guide
-
-We adhere to the [Google Style Guide](https://google.github.io/styleguide/pyguide.html) whenever possible, and use the Google docstring styleguide as well.
+We adhere to the [Google Style Guide](https://google.github.io/styleguide/pyguide.html) whenever possible, and use the Google docstring styleguide as well. Optional arguments can be 'defaulted' with the syntax: `param_name (type: Default): Description`.
