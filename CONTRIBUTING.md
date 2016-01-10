@@ -29,3 +29,9 @@ It is highly recommended that you reach out to the development team at ndio@neur
 
 # Style Guide
 We adhere to the [Google Style Guide](https://google.github.io/styleguide/pyguide.html) whenever possible, and use the Google docstring styleguide as well. Optional arguments can be 'defaulted' with the syntax: `param_name (type: Default): Description`.
+
+For instance:
+
+```
+    answer (int: 42): The universal answer to supply to the function
+```
