@@ -181,7 +181,7 @@ def ramon_to_hdf5(ramon, hdf5=None):
         hdf5.File
 
     Raises:
-        InvalidRAMONError if you pass a non-RAMON object
+        InvalidRAMONError: if you pass a non-RAMON object
     """
 
     if issubclass(type(ramon), RAMONBase) is False:
