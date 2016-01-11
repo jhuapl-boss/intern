@@ -23,7 +23,7 @@ ndio/remote/Remote.py
 ndio/remote/__init__.py
 ndio/remote/errors.py
 ndio/remote/m2g.py
-ndio/utils/3d.py
 ndio/utils/__init__.py
+ndio/utils/mesh.py
 ndio/utils/parallel.py
 ndio/utils/stats.py
