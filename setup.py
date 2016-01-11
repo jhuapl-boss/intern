@@ -37,7 +37,12 @@ setup(
         'ocp',
         'ocp.me',
         'connectome',
-        'connectomics'
+        'connectomics',
+        'spatial',
+        'EM',
+        'MRI',
+        'fMRI',
+        'calcium'
     ],
     classifiers = [],
 )
