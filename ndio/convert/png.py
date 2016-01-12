@@ -52,9 +52,9 @@ def export_png(png_filename, numpy_data):
     try:
         if numpy_data.dtype.name != 'uint8':
             m = 'I'
-            img = Image.fromarray(numpy_data.astype(int), mode=m)
+            img = Image.fromarray(numpy_data, mode=m)
         else:
-            img = Image.fromarray(numpy_data.astype(int))
+            img = Image.fromarray(numpy_data)
         img.save(png_filename)
     except Exception as e:
         raise ValueError("Could not save png file {0}.".format(png_filename))
