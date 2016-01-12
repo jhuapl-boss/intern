@@ -1,3 +1,4 @@
+urllib2
 pillow
 numpy
 h5py

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from ndio.ramon.RAMONBase import *
 from ndio.ramon.RAMONGeneric import *
 from ndio.ramon.RAMONNeuron import *
@@ -6,7 +7,7 @@ from ndio.ramon.RAMONSegment import *
 from ndio.ramon.RAMONSynapse import *
 from ndio.ramon.RAMONVolume import *
 
-from errors import *
+from .errors import *
 
 """
 
@@ -50,7 +51,7 @@ _types = {
     "VOLUME": 8
 }
 
-_reverse_types = {v: k for k, v in _types.items()}
+_reverse_types = {v: k for k, v in list(_types.items())}
 
 _ramon_types = {
     _types["GENERIC"]: RAMONGeneric,
@@ -63,7 +64,7 @@ _ramon_types = {
     _types["VOLUME"]: RAMONVolume
 }
 
-_reverse_ramon_types = {v: k for k, v in _ramon_types.items()}
+_reverse_ramon_types = {v: k for k, v in list(_ramon_types.items())}
 
 
 class AnnotationType:
@@ -110,14 +111,14 @@ def hdf5_to_ramon(hdf5, anno_id=None):
 
     if anno_id is None:
         # The user just wants the first item we find, so... Yeah.
-        return hdf5_to_ramon(hdf5, hdf5.keys()[0])
+        return hdf5_to_ramon(hdf5, list(hdf5.keys())[0])
 
     # First, get the actual object we're going to download.
     anno_id = str(anno_id)
-    if anno_id not in hdf5.keys():
+    if anno_id not in list(hdf5.keys()):
         raise ValueError("ID {} is not in this file. Options are: {}".format(
             anno_id,
-            ", ".join(hdf5.keys())
+            ", ".join(list(hdf5.keys()))
         ))
 
     anno = hdf5[anno_id]

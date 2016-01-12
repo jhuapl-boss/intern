@@ -1,5 +1,6 @@
-from enums import *
-from errors import *
+from __future__ import absolute_import
+from .enums import *
+from .errors import *
 
 
 class RAMONBase(object):

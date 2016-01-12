@@ -1,8 +1,9 @@
+from __future__ import absolute_import
 import requests
 import json
 
-from Remote import Remote
-from errors import *
+from .Remote import Remote
+from .errors import *
 
 
 DEFAULT_HOSTNAME = "lims.neurodata.io"

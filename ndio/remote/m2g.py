@@ -1,12 +1,19 @@
+from __future__ import absolute_import
+
+try:
+    # For Python 3:
+    import urllib.request as urllib2
+except ImportError:
+    import urllib2
+
 import zipfile
 import tempfile
 import inspect
-import urllib2
 import threading
 import os
 
-from Remote import Remote
-from errors import *
+from .Remote import Remote
+from .errors import *
 import ndio.ramon as ramon
 
 DEFAULT_HOSTNAME = "openconnecto.me"

@@ -1,8 +1,9 @@
-from enums import *
-from errors import *
+from __future__ import absolute_import
+from .enums import *
+from .errors import *
 import numpy
 
-from RAMONVolume import RAMONVolume
+from .RAMONVolume import RAMONVolume
 
 
 class RAMONGeneric(RAMONVolume):
