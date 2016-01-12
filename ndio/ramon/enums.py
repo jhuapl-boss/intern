@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+import six
+from six.moves import range
+from six.moves import zip
 
 class InvalidEnumerationException(Exception):
     def __init__(self, msg="Invalid Enumeration."):
@@ -8,8 +12,8 @@ class InvalidEnumerationException(Exception):
 
 
 def enum(*sequential, **named):
-    enums = dict(zip(sequential, range(len(sequential))), **named)
-    reverse = dict((value, key) for key, value in enums.iteritems())
+    enums = dict(list(zip(sequential, list(range(len(sequential))))), **named)
+    reverse = dict((value, key) for key, value in six.iteritems(enums))
     enums['reverse_mapping'] = reverse
     return type('Enum', (), enums)
 

@@ -1,4 +1,6 @@
+from __future__ import absolute_import
 import numpy
+from six.moves import range
 
 
 def snap_to_cube(q_start, q_stop, chunk_depth=16, q_index=1):

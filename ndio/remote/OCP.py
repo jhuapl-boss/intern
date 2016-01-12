@@ -1,14 +1,19 @@
+from __future__ import absolute_import
 import requests
 import h5py
 import os
 import numpy
-from cStringIO import StringIO
+try:
+    from io import StringIO
+except ImportError:
+    from cStringIO import StringIO
 import zlib
 import tempfile
 
-from Remote import Remote
-from errors import *
+from .Remote import Remote
+from .errors import *
 import ndio.ramon as ramon
+from six.moves import range
 
 DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
@@ -74,7 +79,7 @@ class OCP(Remote):
         Returns:
             str[]: list of public datasets
         """
-        return self.get_public_datasets_and_tokens().keys()
+        return list(self.get_public_datasets_and_tokens().keys())
 
     def get_public_datasets_and_tokens(self):
         """

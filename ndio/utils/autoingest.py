@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 # Copyright 2014 Open Connectome Project (http://openconnecto.me)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +19,8 @@ import argparse
 import requests
 import os
 import requests
+import six
+from six.moves import range
 
 class AutoIngest:
 
@@ -156,7 +160,7 @@ class AutoIngest:
         ocp_dict['project'] = self.project_dict(*project)
         ocp_dict['metadata'] = metadata
         ocp_dict['channels'] = {}
-        for channel_name, value in channel_list.iteritems():
+        for channel_name, value in six.iteritems(channel_list):
             ocp_dict['channels'][channel_name] = self.channel_dict(*value)
 
         return json.dumps(ocp_dict, sort_keys=True, indent=4)
@@ -219,7 +223,7 @@ class AutoIngest:
         except:
             token_name = data["project"]["project_name"]
 
-        channel_names = data["channels"].keys()
+        channel_names = list(data["channels"].keys())
 
         for i in range(0, len(channel_names)):
             channel_type = data["channels"][channel_names[i]]["channel_type"]
@@ -227,7 +231,7 @@ class AutoIngest:
 
             if (channel_type == "timeseries"):
                 timerange = data["dataset"]["timerange"]
-                for j in xrange(timerange[0], timerange[1] + 1):
+                for j in range(timerange[0], timerange[1] + 1):
                     # Test for tifs or such? Currently test for just not empty
                     work_path = "{}{}/{}/time{}/".format(
                         path, token_name, channel_names[i], j)
@@ -247,7 +251,7 @@ class AutoIngest:
         try:
             r = requests.post(URLPath, data=data)
         except:
-            print "Error in accessing JSON file"
+            print("Error in accessing JSON file")
 
     def post_data(self, site_host):
         """
