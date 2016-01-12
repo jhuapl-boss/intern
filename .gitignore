@@ -8,6 +8,7 @@
 
 # Compiled Things
 *.pyc
+*.bak
 
 # Data
 *.hdf5

@@ -1,6 +1,7 @@
 # Changelog
 
 - **0.0.22**
+    - Update (mostly) to Python 3 compatibility
     - Add auto-ingest scripts
     - Fix PNG-export bug
 - **0.0.21**
