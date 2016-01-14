@@ -8,10 +8,10 @@ SERVER_SITE = 'http://openconnecto.me'
 DATA_SITE = 'http://54.200.215.161/'
 
 class TestAutoIngest(unittest.TestCase):
-    
+
     def setUp(self):
         self.ai_1 = AutoIngest.AutoIngest()
-        self.ai_1.add_channel('image', 'uint32', 'image',
+        self.ai_1.add_channel('ndio_test', 'uint32', 'image',
                     DATA_SITE, 'SLICE', 'tif')
 
         self.ai_1.add_project('ndio_test', 'ndio_test')
@@ -35,7 +35,7 @@ class TestAutoIngest(unittest.TestCase):
 
     def test_post_json(self):
         ai_2 = AutoIngest.AutoIngest()
-        ai_2.add_channel('image', 'uint32', 'image',
+        ai_2.add_channel('ndio_test_2', 'uint32', 'image',
                     DATA_SITE, 'SLICE', 'tif')
 
         ai_2.add_project('ndio_test_2', 'ndio_test_2')
