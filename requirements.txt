@@ -7,3 +7,4 @@ networkx
 scipy
 pymcubes
 pycollada
+jsonschema
