@@ -9,20 +9,43 @@ class TestAutoIngest(unittest.TestCase):
     SERVER_SITE = ''
     DATA_SITE = 'http://54.200.215.161/'
     def setUp(self):
-        self.ai = autoingest.AutoIngest()
-        self.ai.add_channel('image', 'uint32', 'image',
+        self.ai_1 = autoingest.AutoIngest()
+        self.ai_1.add_channel('image', 'uint32', 'image',
                     DATA_SITE, 'SLICE', 'tif')
 
-        self.ai.add_project('ndio_test', 'ndio_test')
-        self.ai.add_dataset('ndio_test', (660, 528, 1), (0, 0, 0))
-        self.ai.add_metadata('')
+        self.ai_1.add_project('ndio_test', 'ndio_test')
+        self.ai_1.add_dataset('ndio_test', (660, 528, 1), (0, 0, 0))
+        self.ai_1.add_metadata('')
 
-        self.ai.post_data(SERVER_SITE)
+        self.ai_1.post_data(SERVER_SITE)
 
 
     def test_pull_data(self):
 
         self.oo = OCP(SERVER_SITE)
+        numpy_download = self.oo.get_cutout('ndio_test', 'image',
+                                            0, 660,
+                                            0, 528,
+                                            0, 0,
+                                            resolution=0)
+
+        self.assertEqual(type(numpy_download), numpy.ndarray)
+        #Verify its the same image?
+
+    def test_post_json(self):
+        ai_2 = autoingest.AutoIngest()
+        ai_2.add_channel('image', 'uint32', 'image',
+                    DATA_SITE, 'SLICE', 'tif')
+
+        ai_2.add_project('ndio_test_2', 'ndio_test_2')
+        ai_2.add_dataset('ndio_test_2', (660, 528, 1), (0, 0, 0))
+        ai_2.add_metadata('')
+
+        ai_2.output_json()
+
+        ai_3 = autoingest.AutoIngest()
+        ai_3.post_data(SITE_HOST, "/tmp/ND.json")
+
         numpy_download = self.oo.get_cutout('ndio_test', 'image',
                                             0, 660,
                                             0, 528,

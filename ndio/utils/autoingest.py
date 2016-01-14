@@ -345,11 +345,11 @@ class AutoIngest:
 
         self.put_data(data, site_host)
 
-    def output_json(self, file_name='/tmp/ND,json'):
+    def output_json(self, file_name='/tmp/ND.json'):
         """
         Arguements:
             file_name(str): The file name to store the json to, by default
-            /tmp/ND,json
+            /tmp/ND.json
 
         Returns:
             None
@@ -357,6 +357,7 @@ class AutoIngest:
         complete_example = (
             self.dataset, self.project, self.channels, self.metadata)
         data = self.nd_json(*complete_example)
+        self.verify_json(json.loads(data))
 
         f = open(file_name, 'w')
         f.write(data)
