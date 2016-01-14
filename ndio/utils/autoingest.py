@@ -164,29 +164,29 @@ class AutoIngest:
             None
         """
 
-    def ocp_json(self, dataset, project, channel_list, metadata):
-        """Genarate OCP json object"""
-        ocp_dict = {}
-        ocp_dict['dataset'] = self.dataset_dict(*dataset)
-        ocp_dict['project'] = self.project_dict(*project)
-        ocp_dict['metadata'] = metadata
-        ocp_dict['channels'] = {}
+    def nd_json(self, dataset, project, channel_list, metadata):
+        """Genarate ND json object"""
+        nd_dict = {}
+        nd_dict['dataset'] = self.dataset_dict(*dataset)
+        nd_dict['project'] = self.project_dict(*project)
+        nd_dict['metadata'] = metadata
+        nd_dict['channels'] = {}
         for channel_name, value in channel_list.iteritems():
-            ocp_dict['channels'][channel_name] = self.channel_dict(*value)
+            nd_dict['channels'][channel_name] = self.channel_dict(*value)
 
-        return json.dumps(ocp_dict, sort_keys=True, indent=4)
+        return json.dumps(nd_dict, sort_keys=True, indent=4)
 
-    def ocp_json_list(self, dataset, project, channel_list, metadata):
-        """Genarate OCP json object"""
-        ocp_dict = {}
-        ocp_dict['dataset'] = self.dataset_dict(*dataset)
-        ocp_dict['project'] = self.project_dict(*project)
-        ocp_dict['metadata'] = metadata
-        ocp_dict['channels'] = {}
+    def nd_json_list(self, dataset, project, channel_list, metadata):
+        """Genarate ND json object"""
+        nd_dict = {}
+        nd_dict['dataset'] = self.dataset_dict(*dataset)
+        nd_dict['project'] = self.project_dict(*project)
+        nd_dict['metadata'] = metadata
+        nd_dict['channels'] = {}
         for channel_name, value in channel_list.iteritems():
-            ocp_dict['channels'].append(self.channel_dict(*value))
+            nd_dict['channels'].append(self.channel_dict(*value))
 
-        return json.dumps(ocp_dict, sort_keys=True, indent=4)
+        return json.dumps(nd_dict, sort_keys=True, indent=4)
 
     def dataset_dict(
         self, dataset_name, imagesize, voxelres,
@@ -269,15 +269,42 @@ class AutoIngest:
                 resp = requests.head(work_path)
                 print(work_path)
                 assert(resp.status_code == 200)
-                
+
     def verify_json(self, data_formatted):
-        with open('ingest_schema.json ') as schema_file:
+        #Channels
+        with open('channel_schema.json ') as schema_file:
             schema = json.load(schema_file)
+
+        channel_names = data["channels"].keys()
+        for i in range(0, len(channel_names)):
+            channel_object = data["channels"][channel_names[i]]
+            try:
+                validate(channel_object, schema)
+            except:
+                print 'Check inputted variables. Dumping to /tmp/'
+                self.output_json('/tmp/ND_{}.json'.format(channel_names[i])
+
+        #Dataset
+        with open('dataset_schema.json ') as schema_file:
+            schema = json.load(schema_file)
+
+        dataset_object = data["dataset"]
         try:
-            validate(data_formatted, schema)
+            validate(dataset_object, schema)
         except:
-            print "Check inputted variables. Dumping to /tmp/OCP.json"
-            self.output_json('/tmp/OCP.json')
+            print "Check inputted variables. Dumping to /tmp/"
+            self.output_json('/tmp/ND_dataset.json')
+
+        #Project
+        with open('project_schema.json ') as schema_file:
+            schema = json.load(schema_file)
+
+        project_object = data["project"]
+        try:
+            validate(project_object, schema)
+        except:
+            print "Check inputted variables. Dumping to /tmp/"
+            self.output_json('/tmp/ND_project.json')
 
     def put_data(self, data, site_host):
         # try to post data to the server
@@ -287,27 +314,49 @@ class AutoIngest:
         except:
             print "Error in posting JSON file"
 
-    def post_data(self, site_host):
+    def post_data(self, site_host='http://openconnectome.me', file_name=None):
         """
         Arguements:
-            metadata(str): Any metadata as appropriate from the LIMS schema
+            site_host(str): The site host to post the data to, by default
+            http://openconnectome.me.
+
+            file_name(str): The file name of the json file to post (optional).
+            If this is left unspecified it is assumed the data is in the
+            AutoIngets object.
+
+        Returns:
+            None
+        """
+
+        if (file_name is None):
+            complete_example = (
+                self.dataset, self.project, self.channels, self.metadata)
+            data = self.nd_json(*complete_example)
+
+        else:
+            try:
+                with open(file_name) as data_file:
+                    data = json.load(data_file)
+            except:
+                print "Error opening file"
+
+        self.verify_path(json.loads(data))
+        self.verify_json(json.loads(data))
+
+        self.put_data(data, site_host)
+
+    def output_json(self, file_name='/tmp/ND,json'):
+        """
+        Arguements:
+            file_name(str): The file name to store the json to, by default
+            /tmp/ND,json
 
         Returns:
             None
         """
         complete_example = (
             self.dataset, self.project, self.channels, self.metadata)
-        data = self.ocp_json(*complete_example)
-
-        self.verify_path(json.loads(data))
-        self.verify_json(json.loads(self.ocp_json_list(*complete_example)))
-
-        self.put_data(data, siteHost)
-
-    def output_json(self, file_name):
-        complete_example = (
-            self.dataset, self.project, self.channels, self.metadata)
-        data = self.ocp_json(*complete_example)
+        data = self.nd_json(*complete_example)
 
         f = open(file_name, 'w')
         f.write(data)
