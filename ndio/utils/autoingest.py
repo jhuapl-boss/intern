@@ -125,7 +125,7 @@ class AutoIngest:
             voxels per unit pixel. We store X,Y,Z voxel resolution separately.
 
             offset (int, int, int): If your data is not well aligned and
-            there is “excess” image data you do not wish to examine, but
+            there is "excess" image data you do not wish to examine, but
             are present in your images, offset is how you specify where your
             actual image starts. Offset is provided a pixel coordinate offset
             from origin which specifies the “actual” origin of the image.
