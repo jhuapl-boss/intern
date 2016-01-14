@@ -23,10 +23,10 @@ from jsonschema import validate
 class AutoIngest:
 
     def __init__(self):
-        self.channels
-        self.dataset
-        self.project
-        self.metadata
+        self.channels = {}
+        self.dataset = []
+        self.project = []
+        self.metadata = ''
 
     def add_channel(
         self, channel_name, datatype, channel_type, data_url, file_format,
