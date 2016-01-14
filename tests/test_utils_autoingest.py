@@ -4,10 +4,11 @@ import ndio.ramon
 import ndio.utils.autoingest as AutoIngest
 import numpy
 
-class TestAutoIngest(unittest.TestCase):
+SERVER_SITE = 'http://openconnecto.me'
+DATA_SITE = 'http://54.200.215.161/'
 
-    SERVER_SITE = 'http://openconnecto.me'
-    DATA_SITE = 'http://54.200.215.161/'
+class TestAutoIngest(unittest.TestCase):
+    
     def setUp(self):
         self.ai_1 = AutoIngest.AutoIngest()
         self.ai_1.add_channel('image', 'uint32', 'image',
