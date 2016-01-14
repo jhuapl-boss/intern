@@ -17,7 +17,7 @@ import argparse
 import requests
 import os
 import requests
-
+from jsonschema import validate
 
 class AutoIngest:
 
@@ -176,6 +176,18 @@ class AutoIngest:
 
         return json.dumps(ocp_dict, sort_keys=True, indent=4)
 
+    def ocp_json_list(self, dataset, project, channel_list, metadata):
+        """Genarate OCP json object"""
+        ocp_dict = {}
+        ocp_dict['dataset'] = self.dataset_dict(*dataset)
+        ocp_dict['project'] = self.project_dict(*project)
+        ocp_dict['metadata'] = metadata
+        ocp_dict['channels'] = {}
+        for channel_name, value in channel_list.iteritems():
+            ocp_dict['channels'].append(self.channel_dict(*value))
+
+        return json.dumps(ocp_dict, sort_keys=True, indent=4)
+
     def dataset_dict(
         self, dataset_name, imagesize, voxelres,
             offset=[0, 0, 0], timerange=[0, 0], scalinglevels=0, scaling=0):
@@ -257,6 +269,15 @@ class AutoIngest:
                 resp = requests.head(work_path)
                 print(work_path)
                 assert(resp.status_code == 200)
+                
+    def verify_json(self, data_formatted):
+        with open('ingest_schema.json ') as schema_file:
+            schema = json.load(schema_file)
+        try:
+            validate(data_formatted, schema)
+        except:
+            print "Check inputted variables. Dumping to /tmp/OCP.json"
+            self.output_json('/tmp/OCP.json')
 
     def put_data(self, data, site_host):
         # try to post data to the server
@@ -279,6 +300,8 @@ class AutoIngest:
         data = self.ocp_json(*complete_example)
 
         self.verify_path(json.loads(data))
+        self.verify_json(json.loads(self.ocp_json_list(*complete_example)))
+
         self.put_data(data, siteHost)
 
     def output_json(self, file_name):
