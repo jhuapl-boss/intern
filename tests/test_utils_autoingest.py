@@ -1,7 +1,7 @@
 import unittest
 import ndio.remote.OCP as OCP
 import ndio.ramon
-import ndio.utils.autoingest as AutoIngest
+import AutoIngest from ndio.utils.autoingest
 import numpy
 
 class TestAutoIngest(unittest.TestCase):
