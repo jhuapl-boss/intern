@@ -86,7 +86,7 @@ class AutoIngest:
         """
         Arguments:
             project_name (str): Project name is the specific project within
-            a dataset’s name. If there is only one project associated with
+            a dataset's name. If there is only one project associated with
             a dataset then standard convention is to name the project the
             same as its associated dataset.
 
