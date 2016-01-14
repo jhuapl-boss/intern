@@ -9,7 +9,7 @@ class TestAutoIngest(unittest.TestCase):
     SERVER_SITE = 'http://openconnecto.me'
     DATA_SITE = 'http://54.200.215.161/'
     def setUp(self):
-        self.ai_1 = autoingest.AutoIngest()
+        self.ai_1 = AutoIngest()
         self.ai_1.add_channel('image', 'uint32', 'image',
                     DATA_SITE, 'SLICE', 'tif')
 
@@ -33,7 +33,7 @@ class TestAutoIngest(unittest.TestCase):
         #Verify its the same image?
 
     def test_post_json(self):
-        ai_2 = autoingest.AutoIngest()
+        ai_2 = AutoIngest()
         ai_2.add_channel('image', 'uint32', 'image',
                     DATA_SITE, 'SLICE', 'tif')
 
@@ -43,7 +43,7 @@ class TestAutoIngest(unittest.TestCase):
 
         ai_2.output_json()
 
-        ai_3 = autoingest.AutoIngest()
+        ai_3 = AutoIngest()
         ai_3.post_data(SITE_HOST, "/tmp/ND.json")
 
         numpy_download = self.oo.get_cutout('ndio_test', 'image',
