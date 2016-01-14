@@ -128,7 +128,7 @@ class AutoIngest:
             there is "excess" image data you do not wish to examine, but
             are present in your images, offset is how you specify where your
             actual image starts. Offset is provided a pixel coordinate offset
-            from origin which specifies the “actual” origin of the image.
+            from origin which specifies the "actual" origin of the image.
             The offset is for X,Y,Z dimensions.
 
             timerange (int, int): Time Range is a parameter to support
