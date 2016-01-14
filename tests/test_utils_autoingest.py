@@ -6,7 +6,7 @@ import numpy
 
 class TestAutoIngest(unittest.TestCase):
 
-    SERVER_SITE = ''
+    SERVER_SITE = 'http://openconnecto.me'
     DATA_SITE = 'http://54.200.215.161/'
     def setUp(self):
         self.ai_1 = autoingest.AutoIngest()

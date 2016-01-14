@@ -19,6 +19,7 @@ import os
 import requests
 from jsonschema import validate
 
+
 class AutoIngest:
 
     def __init__(self):
@@ -271,8 +272,9 @@ class AutoIngest:
                 assert(resp.status_code == 200)
 
     def verify_json(self, data_formatted):
-        #Channels
-        with open('channel_schema.json ') as schema_file:
+
+        # Channels
+        with open('channel_schema.json') as schema_file:
             schema = json.load(schema_file)
 
         channel_names = data["channels"].keys()
@@ -282,10 +284,10 @@ class AutoIngest:
                 validate(channel_object, schema)
             except:
                 print 'Check inputted variables. Dumping to /tmp/'
-                self.output_json('/tmp/ND_{}.json'.format(channel_names[i])
+                self.output_json('/tmp/ND_{}.json'.format(channel_names[i]))
 
-        #Dataset
-        with open('dataset_schema.json ') as schema_file:
+        # Dataset
+        with open('dataset_schema.json') as schema_file:
             schema = json.load(schema_file)
 
         dataset_object = data["dataset"]
@@ -295,8 +297,8 @@ class AutoIngest:
             print "Check inputted variables. Dumping to /tmp/"
             self.output_json('/tmp/ND_dataset.json')
 
-        #Project
-        with open('project_schema.json ') as schema_file:
+        # Project
+        with open('project_schema.json') as schema_file:
             schema = json.load(schema_file)
 
         project_object = data["project"]
