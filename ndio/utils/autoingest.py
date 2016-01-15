@@ -387,7 +387,7 @@ class AutoIngest:
                 print(work_path)
                 assert(resp.status_code == 200)
 
-    def verify_json(self, data_formatted):
+    def verify_json(self, data):
 
         # Channels
         channel_names = data["channels"].keys()
