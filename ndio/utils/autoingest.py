@@ -380,7 +380,6 @@ class AutoIngest:
                 assert(resp.status_code == 200)
 
     def verify_json(self, data):
-        import pdb; pdb.set_trace()
         # Channels
         channel_names = data["channels"].keys()
         for i in range(0, len(channel_names)):
