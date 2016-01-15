@@ -24,7 +24,7 @@ class TestAutoIngest(unittest.TestCase):
     def test_pull_data(self):
 
         self.oo = OCP(SERVER_SITE)
-        numpy_download = self.oo.get_cutout('ndio_test', 'image',
+        numpy_download = self.oo.get_cutout('ndio_test', 'ndio_test',
                                             0, 660,
                                             0, 528,
                                             0, 0,
@@ -45,7 +45,7 @@ class TestAutoIngest(unittest.TestCase):
         ai_2.output_json()
 
         ai_3 = AutoIngest.AutoIngest()
-        ai_3.post_data(SITE_HOST, "/tmp/ND.json")
+        ai_3.post_data(SERVER_SITE, "/tmp/ND.json")
 
         numpy_download = self.oo.get_cutout('ndio_test', 'image',
                                             0, 660,
