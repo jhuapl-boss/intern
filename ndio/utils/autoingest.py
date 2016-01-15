@@ -66,7 +66,6 @@ CHANNEL_SCHEMA = json.JSONEncoder().encode({
         },
     },
     "required": ["channel_name", "channel_type", "data_url", "datatype", "scalinglevels"]
-  }
 })
 
 DATASET_SCHEMA = json.JSONEncoder().encode({
