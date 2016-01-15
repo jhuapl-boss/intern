@@ -9,12 +9,12 @@ DATA_SITE = 'http://54.200.215.161/'
 
 class TestAutoIngest(unittest.TestCase):
 
-    def setUp(self):
+    def setUpClass(self):
         self.ai_1 = AutoIngest.AutoIngest()
         self.ai_1.add_channel('ndio_test', 'uint32', 'image',
                     DATA_SITE, 'SLICE', 'tif')
 
-        self.ai_1.add_project('ndio_test', 'ndio_test')
+        self.ai_1.add_project('ndio_test', 'ndio_test', 1)
         self.ai_1.add_dataset('ndio_test', (660, 528, 1), (0, 0, 0))
         self.ai_1.add_metadata('')
 
@@ -54,6 +54,10 @@ class TestAutoIngest(unittest.TestCase):
                                             resolution=0)
 
         self.assertEqual(type(numpy_download), numpy.ndarray)
+
+    def tearDownClass(self):
+        self.oo.delete_channel('ndio_test', 'ndio_test')
+        self.oo.delete_channel('ndio_test_2', 'ndio_test_2')
 
 if __name__ == '__main__':
     unittest.main()
