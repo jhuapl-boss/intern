@@ -7,4 +7,4 @@ networkx
 scipy
 pymcubes
 pycollada
-jsonschema
+json-spec

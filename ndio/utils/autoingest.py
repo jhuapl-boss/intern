@@ -17,9 +17,9 @@ import argparse
 import requests
 import os
 import requests
-from jsonschema import validate
+from jsonspec.validators import load
 
-CHANNEL_SCHEMA = json.JSONEncoder().encode({
+CHANNEL_SCHEMA = load({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Schema for Channel JSON object for ingest",
     "type": "object",
@@ -65,10 +65,10 @@ CHANNEL_SCHEMA = json.JSONEncoder().encode({
             "enum": [ "tif", "png", "tiff" ]
         },
     },
-    "required": ["channel_name", "channel_type", "data_url", "datatype", "scalinglevels"]
+    "required": ["channel_name", "channel_type", "data_url", "datatype", "file_format", "file_type"]
 })
 
-DATASET_SCHEMA = json.JSONEncoder().encode({
+DATASET_SCHEMA = load({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Schema for Dataset JSON object for ingest",
     "type": "object",
@@ -78,28 +78,20 @@ DATASET_SCHEMA = json.JSONEncoder().encode({
             "type": "string"
         },
         "imagesize": {
-            "properties" : {
-                "type": "array",
-                "description": "The image dimensions of the dataset",
-            }
+          	"type": "array",
+            "description": "The image dimensions of the dataset",
         },
         "voxelres": {
-            "properties" : {
-                "description": "The voxel resolutoin of the data",
-                "type": "array",
-            }
+          	"type": "array",
+            "description": "The voxel resolutoin of the data",
         },
         "offset": {
-            "properties" : {
-                "type": "array",
-                "description": "The dimensions offset from origin",
-            }
+            "type": "array",
+            "description": "The dimensions offset from origin",
         },
         "timerange": {
-            "properties" : {
-                "description": "The timerange of the data",
-                "type": "array",
-            }
+            "description": "The timerange of the data",
+              "type": "array",
         },
         "scalinglevels": {
             "description": "Required Scaling levels/ Zoom out levels",
@@ -113,7 +105,7 @@ DATASET_SCHEMA = json.JSONEncoder().encode({
     "required": ["dataset_name", "imagesize", "voxelres"]
 })
 
-PROJECT_SCHEMA = json.JSONEncoder().encode({
+PROJECT_SCHEMA = load({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Schema for Dataset JSON object for ingest",
     "type": "object",
@@ -388,13 +380,13 @@ class AutoIngest:
                 assert(resp.status_code == 200)
 
     def verify_json(self, data):
-
+        import pdb; pdb.set_trace()
         # Channels
         channel_names = data["channels"].keys()
         for i in range(0, len(channel_names)):
             channel_object = data["channels"][channel_names[i]]
             try:
-                validate(channel_object, CHANNEL_SCHEMA)
+                CHANNEL_SCHEMA.validate(channel_object)
             except:
                 print 'Check inputted variables. Dumping to /tmp/'
                 self.output_json('/tmp/ND_{}.json'.format(channel_names[i]))
@@ -402,7 +394,7 @@ class AutoIngest:
         # Dataset
         dataset_object = data["dataset"]
         try:
-            validate(dataset_object, DATASET_SCHEMA)
+            DATASET_SCHEMA.validate(dataset_object)
         except:
             print "Check inputted variables. Dumping to /tmp/"
             self.output_json('/tmp/ND_dataset.json')
@@ -410,7 +402,7 @@ class AutoIngest:
         # Project
         project_object = data["project"]
         try:
-            validate(project_object, PROJECT_SCHEMA)
+            PROJECT_SCHEMA.validate(project_object)
         except:
             print "Check inputted variables. Dumping to /tmp/"
             self.output_json('/tmp/ND_project.json')

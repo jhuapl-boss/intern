@@ -44,6 +44,6 @@
             "enum": [ "tif", "png", "tiff" ]
         },
     },
-    "required": ["channel_name", "channel_type", "data_url", "datatype", "scalinglevels"]
+    "required": ["channel_name", "channel_type", "data_url", "datatype", "file_format", "file_type"]
   }
 }
