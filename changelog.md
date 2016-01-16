@@ -4,6 +4,7 @@
     - Update (mostly) to Python 3 compatibility
     - Add auto-ingest scripts
     - Fix PNG-export bug
+    - some more bug-fixes and updates to documentation
 - **0.0.21**
     - Better nested-dictionary support in ndlims
     - Rename some modules to improve importing experience
