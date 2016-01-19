@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.0.23**
+    - Fix RAMONNeuron bug
 - **0.0.22**
     - Update (mostly) to Python 3 compatibility
     - Add auto-ingest scripts

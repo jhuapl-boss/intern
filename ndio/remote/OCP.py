@@ -548,7 +548,9 @@ class OCP(Remote):
                 'Content-Type': 'application/x-www-form-urlencoded'
             }, data=hdf5_data)
             if req.status_code is not 200:
-                return False
+                import pdb; pdb.set_trace()
+                
+                raise RemoteDataUploadError(req)
             else:
                 return True
 

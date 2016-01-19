@@ -201,12 +201,15 @@ def ramon_to_hdf5(ramon, hdf5=None):
             grp.create_dataset("ANNOTATION_TYPE", (1,),
                                numpy.uint32,
                                data=AnnotationType.get_int(type(ramon)))
-            grp.create_dataset('RESOLUTION', (1,),
-                               numpy.uint32, data=ramon.resolution)
-            grp.create_dataset('XYZOFFSET', (3,),
-                               numpy.uint32, data=ramon.xyz_offset)
-            grp.create_dataset('CUTOUT', ramon.cutout.shape,
-                               ramon.cutout.dtype, data=ramon.cutout)
+            if hasattr(ramon, 'resolution'):
+                grp.create_dataset('RESOLUTION', (1,),
+                                   numpy.uint32, data=ramon.resolution)
+            if hasattr(ramon, 'xyz_offset'):
+                grp.create_dataset('XYZOFFSET', (3,),
+                                   numpy.uint32, data=ramon.xyz_offset)
+            if hasattr(ramon, 'cutout'):
+                grp.create_dataset('CUTOUT', ramon.cutout.shape,
+                                   ramon.cutout.dtype, data=ramon.cutout)
 
             # Next, add general metadata.
             metadata = grp.create_group('METADATA')
@@ -222,8 +225,9 @@ def ramon_to_hdf5(ramon, hdf5=None):
             # Finally, add type-specific metadata:
 
             if hasattr(ramon, 'segments'):
-                metadata.create_dataset('SEGMENTS', (len(ramon.segments), 2),
-                                        numpy.uint32, data=ramon.segments)
+                # metadata.create_dataset('SEGMENTS', (len(ramon.segments), 2),
+                #                         numpy.uint32, data=ramon.segments)
+                metadata.create_dataset('SEGMENTS', data=numpy.ndarray(ramon.segments))
 
             if hasattr(ramon, 'synapse_type'):
                 metadata.create_dataset('SYNAPSETYPE', (1,), numpy.uint32,
