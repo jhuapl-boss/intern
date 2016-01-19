@@ -165,7 +165,32 @@ class OCP(Remote):
                 metadata at that resolution is unavailable in projinfo.
         """
         info = self.get_token_info(token)
+        res = str(resolution)
+        if res not in info['dataset']['imagesize']:
+            raise RemoteDataNotFoundError("Resolution " + res +
+                                          " is not available."))
         return info['dataset']['imagesize'][str(resolution)]
+
+    def get_image_offset(self, token, resolution=0):
+        """
+        Gets the image offset for a given token at a given resolution. For
+        instance, the `kasthuri11` dataset starts at (0, 0, 1), so its 1850th
+        slice is slice 1850, not 1849. When downloading a full dataset, the
+        result of this function should be your x/y/z starts.
+
+        Arguments:
+            token (str): The token to inspect
+            resolution (int : 0): The resolution at which to gather the offset
+
+        Returns:
+            int[3]: The origin of the dataset, as a list
+        """
+        info = self.get_token_info(token)
+        res = str(resolution)
+        if res not in info['dataset']['offset']:
+            raise RemoteDataNotFoundError("Resolution " + res +
+                                          " is not available."))
+        return info['dataset']['offset'][str(resolution)]
 
     # SECTION:
     # Data Download
