@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.0.24**
+    - Fix more RAMON inheritance bugs and resolve syntax error in OCP
 - **0.0.23**
     - Fix RAMONNeuron inheritance bug
     - OCP#get_image_offset
