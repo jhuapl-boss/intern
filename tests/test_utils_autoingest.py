@@ -11,18 +11,19 @@ class TestAutoIngest(unittest.TestCase):
 
     def setUp(self):
         self.oo = OCP(SERVER_SITE)
-        self.ai_1 = AutoIngest.AutoIngest()
-        self.ai_1.add_channel('ndio_test_1', 'uint32', 'image',
-                    DATA_SITE, 'SLICE', 'tif')
-
-        self.ai_1.add_project('ndio_test_1', 'ndio_test_1', 1)
-        self.ai_1.add_dataset('ndio_test_1', (660, 528, 1), (0, 0, 0))
-        self.ai_1.add_metadata('')
-
-        self.ai_1.post_data(SERVER_SITE)
 
 
     def test_pull_data(self):
+
+        ai_1 = AutoIngest.AutoIngest()
+        ai_1.add_channel('ndio_test_1', 'uint32', 'image',
+                    DATA_SITE, 'SLICE', 'tif')
+
+        ai_1.add_project('ndio_test_1', 'ndio_test_1', 1)
+        ai_1.add_dataset('ndio_test_1', (660, 528, 1), (0, 0, 0))
+        ai_1.add_metadata('')
+
+        ai_1.post_data(SERVER_SITE)
         numpy_download = self.oo.get_cutout('ndio_test_1', 'ndio_test_1',
                                             0, 660,
                                             0, 528,
