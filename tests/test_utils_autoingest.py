@@ -41,9 +41,9 @@ class TestAutoIngest(unittest.TestCase):
         ai_2.add_project('ndio_test_2', 'ndio_test_2')
         ai_2.add_dataset('ndio_test_2', (660, 528, 1), (0, 0, 0))
         ai_2.add_metadata('')
-
+ 
         ai_2.output_json()
-
+ 
         ai_3 = AutoIngest.AutoIngest()
         ai_3.post_data(SERVER_SITE, "/tmp/ND.json")
 
