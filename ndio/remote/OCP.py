@@ -147,6 +147,26 @@ class OCP(Remote):
         """
         return self.get_proj_info(token)['channels']
 
+    def get_image_size(self, token, resolution=0):
+        """
+        Returns the size of the volume (3D). Convenient for when you want
+        to download the entirety of a dataset.
+
+        Arguments:
+            token (str): The token for which to find the dataset image bounds
+            resolution (int : 0): The resolution at which to get image bounds.
+                Defaults to 0, to get the largest area available.
+
+        Returns:
+            int[3]: The size of the bounds. Should == get_volume.shape
+
+        Raises:
+            RemoteDataNotFoundError: If the token is invalid, or if the
+                metadata at that resolution is unavailable in projinfo.
+        """
+        info = self.get_token_info(token)
+        return info['dataset']['imagesize'][str(resolution)]
+
     # SECTION:
     # Data Download
 
@@ -548,9 +568,7 @@ class OCP(Remote):
                 'Content-Type': 'application/x-www-form-urlencoded'
             }, data=hdf5_data)
             if req.status_code is not 200:
-                import pdb; pdb.set_trace()
-                
-                raise RemoteDataUploadError(req)
+                raise RemoteDataUploadError(req + " " + req.text)
             else:
                 return True
 
