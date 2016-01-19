@@ -1,7 +1,9 @@
 # Changelog
 
 - **0.0.23**
-    - Fix RAMONNeuron bug
+    - Fix RAMONNeuron inheritance bug
+    - OCP#get_image_offset
+    - OCP#get_image_size
 - **0.0.22**
     - Update (mostly) to Python 3 compatibility
     - Add auto-ingest scripts
