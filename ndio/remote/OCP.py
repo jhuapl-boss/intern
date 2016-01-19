@@ -168,7 +168,7 @@ class OCP(Remote):
         res = str(resolution)
         if res not in info['dataset']['imagesize']:
             raise RemoteDataNotFoundError("Resolution " + res +
-                                          " is not available."))
+                                          " is not available.")
         return info['dataset']['imagesize'][str(resolution)]
 
     def get_image_offset(self, token, resolution=0):
@@ -189,7 +189,7 @@ class OCP(Remote):
         res = str(resolution)
         if res not in info['dataset']['offset']:
             raise RemoteDataNotFoundError("Resolution " + res +
-                                          " is not available."))
+                                          " is not available.")
         return info['dataset']['offset'][str(resolution)]
 
     # SECTION:
