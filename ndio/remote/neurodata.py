@@ -1,43 +1,3 @@
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-# Don't touch this file.
-# OCP is deprecated as of this release (0.1.0).
-# It is replaced by ndio.remote.neurodata
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-
 from __future__ import absolute_import
 import requests
 import h5py
@@ -59,7 +19,7 @@ DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
 
 
-class OCP(Remote):
+class neurodata(Remote):
 
     # SECTION:
     # Enumerables
@@ -68,15 +28,13 @@ class OCP(Remote):
     ANNOTATION = ANNO = 'annotation'
 
     def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL):
-        super(OCP, self).__init__(hostname, protocol)
-        print("ndio.remote.OCP will be deprecated in a future release. " +
-              "Instead, use ndio.remote.neurodata.")
+        super(neurodata, self).__init__(hostname, protocol)
 
     def ping(self):
-        return super(OCP, self).ping('public_tokens/')
+        return super(neurodata, self).ping('public_tokens/')
 
     def url(self, suffix=""):
-        return super(OCP, self).url('/ocp/ca/' + suffix)
+        return super(neurodata, self).url('/ocp/ca/' + suffix)
 
     def __repr__(self):
         """
@@ -89,7 +47,7 @@ class OCP(Remote):
         Returns:
             str: Representation of reproducible instance.
         """
-        return "ndio.remote.OCP('{}', '{}')".format(
+        return "ndio.remote.neurodata('{}', '{}')".format(
             self.hostname,
             self.protocol
         )
@@ -285,7 +243,7 @@ class OCP(Remote):
                    block_size=(256, 256, 16),
                    crop=False):
         """
-        Get a RAMONVolume volumetric cutout from the OCP server.
+        Get a RAMONVolume volumetric cutout from the neurodata server.
 
         Arguments:
             token (str): Token to identify data to download
@@ -320,7 +278,7 @@ class OCP(Remote):
                    block_size=(256, 256, 16),
                    crop=False):
         """
-        Get volumetric cutout data from the OCP server.
+        Get volumetric cutout data from the neurodata server.
 
         Arguments:
             token (str): Token to identify data to download
@@ -650,7 +608,7 @@ class OCP(Remote):
         Arguments:
             token (str): The token the new channel should be added to
             name (str): The name of the channel to add
-            type (str): Type of the channel to add (e.g. OCP.IMAGE)
+            type (str): Type of the channel to add (e.g. neurodata.IMAGE)
             dtype (str): The datatype of the channel's data (e.g. 'uint8')
             readonly (bool): Can others write to this channel?
 
@@ -668,7 +626,7 @@ class OCP(Remote):
                 raise ValueError("Name cannot contain character {}.".format(c))
 
         if channel_type not in ['image', 'annotation']:
-            raise ValueError('Type must be OCP.IMAGE or OCP.ANNOTATION.')
+            raise ValueError('Type must be neurodata.IMAGE or neurodata.ANNOTATION.')
 
         if readonly * 1 not in [0, 1]:
             raise ValueError("readonly must be 0 (False) or 1 (True).")

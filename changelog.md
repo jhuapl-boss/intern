@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.1.0**
+    - Deprecated OCP in favor of ndio.remote.neurodata
 - **0.0.24**
     - Fix more RAMON inheritance bugs and resolve syntax error in OCP
 - **0.0.23**
