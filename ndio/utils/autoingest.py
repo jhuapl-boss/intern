@@ -376,7 +376,6 @@ class AutoIngest:
                 work_path = "{}{}/{}/".format(
                     path, token_name, channel_names[i])
                 resp = requests.head(work_path)
-                print(work_path)
                 assert(resp.status_code == 200)
 
     def verify_json(self, data):
