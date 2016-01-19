@@ -342,10 +342,14 @@ class AutoIngest:
         project_dict = {}
         project_dict['project_name'] = project_name
         if token_name is not None:
-            project_dict['token_name'] = project_name \
-                if token_name == '' else token_name
-        if public is not None:
-            project_dict['public'] = public
+             if token_name == '':
+                 project_dict['token_name'] = project_name 
+             else:
+                 project_dict['token_name'] = token_name
+        else: 
+             project_dict['token_name'] = project_name 
+
+        project_dict['public'] = public
         return project_dict
 
     def verify_path(self, data):
