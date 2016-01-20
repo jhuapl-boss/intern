@@ -434,7 +434,7 @@ class AutoIngest:
         if (file_name is None):
             complete_example = (
                 self.dataset, self.project, self.channels, self.metadata)
-            data = self.nd_json(*complete_example)
+            data = json.loads(self.nd_json(*complete_example))
 
         else:
             try:
@@ -443,8 +443,8 @@ class AutoIngest:
             except:
                 print "Error opening file"
 
-        self.verify_path(json.loads(data))
-        self.verify_json(json.loads(data))
+        self.verify_path(data)
+        self.verify_json(data)
 
         self.put_data(data, site_host)
 
