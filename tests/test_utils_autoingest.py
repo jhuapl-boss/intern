@@ -32,6 +32,8 @@ class TestAutoIngest(unittest.TestCase):
 
         self.assertEqual(type(numpy_download), numpy.ndarray)
         #Verify its the same image?
+        self.oo.delete_channel('ndio_test_1', 'ndio_test_1')
+
 
     def test_post_json(self):
         ai_2 = AutoIngest.AutoIngest()
@@ -47,7 +49,7 @@ class TestAutoIngest(unittest.TestCase):
         ai_3 = AutoIngest.AutoIngest()
         ai_3.post_data(SERVER_SITE, "/tmp/ND.json")
 
-        numpy_download = self.oo.get_cutout('ndio_test_1', 'image',
+        numpy_download = self.oo.get_cutout('ndio_test_2', 'ndio_test_2',
                                             0, 660,
                                             0, 528,
                                             0, 0,
@@ -55,8 +57,6 @@ class TestAutoIngest(unittest.TestCase):
 
         self.assertEqual(type(numpy_download), numpy.ndarray)
 
-    def tearDown(self):
-        self.oo.delete_channel('ndio_test_1', 'ndio_test_1')
         self.oo.delete_channel('ndio_test_2', 'ndio_test_2')
 
 if __name__ == '__main__':

@@ -337,7 +337,7 @@ class AutoIngest:
         channel_dict['file_type'] = file_type
         return channel_dict
 
-    def project_dict(self, project_name, token_name='', public=0):
+    def project_dict(self, project_name, token_name=None, public=0):
         """Genarate the project dictionary"""
         project_dict = {}
         project_dict['project_name'] = project_name
