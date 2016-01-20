@@ -411,7 +411,7 @@ class AutoIngest:
 
     def put_data(self, data, site_host):
         # try to post data to the server
-        URLPath = "{}ca/autoIngest/".format(site_host)
+        URLPath = "{}ocp/ca/autoIngest/".format(site_host)
         try:
             r = requests.post(URLPath, data=data)
         except:
