@@ -3,6 +3,7 @@ import ndio.remote.OCP as OCP
 import ndio.ramon
 import ndio.utils.autoingest as AutoIngest
 import numpy
+import datetime
 
 SERVER_SITE = 'http://http://ec2-54-200-94-232.us-west-2.compute.amazonaws.com/'
 DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
