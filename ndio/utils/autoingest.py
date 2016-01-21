@@ -413,7 +413,8 @@ class AutoIngest:
         # try to post data to the server
         URLPath = "{}ocp/ca/autoIngest/".format(site_host)
         try:
-            r = requests.post(URLPath, data=data)
+            r = requests.post(URLPath, data=json.dumps(data))
+            assert( r.status_code == 200 )
         except:
             print "Error in posting JSON file"
 
