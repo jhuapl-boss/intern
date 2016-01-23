@@ -491,7 +491,7 @@ class neurodata(Remote):
 
         # Download the data itself
         req = requests.get(self.url() +
-                           "{}/{}/{}/cutout/{}".format(token, channel,
+                           "{}/{}/{}/cutout/{}/".format(token, channel,
                                                        anno_id, resolution))
 
         if req.status_code is not 200:

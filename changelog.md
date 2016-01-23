@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.1.1**
+    - Resolves RAMON download bug
 - **0.1.0**
     - Deprecated OCP in favor of ndio.remote.neurodata
 - **0.0.24**
