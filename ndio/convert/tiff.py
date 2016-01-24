@@ -122,4 +122,4 @@ def import_tiff_collection(tiff_filename_base):
     for f in files:
         numpy_data.append(import_tiff(f))
 
-    return numpy_data
+    return numpy.concatenate(numpy_data)

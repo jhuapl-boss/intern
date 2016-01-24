@@ -125,4 +125,4 @@ def import_png_collection(png_filename_base):
     for f in files:
         numpy_data.append(import_png(f))
 
-    return numpy_data
+    return numpy.concatenate(numpy_data)
