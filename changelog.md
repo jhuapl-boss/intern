@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.1.2**
+    - RAMON metadata lookups use hdf5 instead of json
 - **0.1.1**
     - Resolves RAMON download bug
     - Adds `ramon_type` filter to `remote.neurodata.get_ramon_ids`
