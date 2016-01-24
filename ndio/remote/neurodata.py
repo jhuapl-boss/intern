@@ -565,13 +565,29 @@ class neurodata(Remote):
 
     def _get_single_ramon_metadata(self, token, channel, anno_id):
         req = requests.get(self.url() +
-                           "{}/{}/{}/json/".format(token, channel,
+                           "{}/{}/{}/nodata/".format(token, channel,
                                                    anno_id))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
         else:
-            return req.json()
+            with tempfile.NamedTemporaryFile() as tmpfile:
+                tmpfile.write(req.content)
+                tmpfile.seek(0)
+                h5file = h5py.File(tmpfile.name, "r")
+
+                r = ramon.hdf5_to_ramon(h5file)
+                return r
+
+    # def _get_single_ramon_metadata(self, token, channel, anno_id):
+    #     req = requests.get(self.url() +
+    #                        "{}/{}/{}/json/".format(token, channel,
+    #                                                anno_id))
+    #
+    #     if req.status_code is not 200:
+    #         raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
+    #     else:
+    #         return req.json()
 
     # SECTION:
     # RAMON Upload
