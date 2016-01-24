@@ -440,10 +440,12 @@ class neurodata(Remote):
     # SECTION:
     # RAMON Download
 
-    def get_ramon_ids(self, token, channel='annotation'):
+    def get_ramon_ids(self, token, channel='annotation', ramon_type=None):
         """
         Return a list of all IDs available for download from this token and
         channel.
+
+        http://www.openconnecto.me/ocp/ca/test_ramonify_public/neuron/query/type/5/
 
         Arguments:
             token (str): Project to use
@@ -454,7 +456,14 @@ class neurodata(Remote):
             RemoteDataNotFoundError: If the channel or token is not found
         """
 
-        req = requests.get(self.url() + "{}/{}/query/".format(token, channel))
+        url = self.url("{}/{}/query/".format(token, channel))
+        if ramon_type is not None:
+            # User is requesting a specific ramon_type.
+            if type(ramon_type) is not int:
+                ramon_type = ramon.AnnotationType.get_int(ramon_type)
+            url += "type/{}/".format(str(ramon_type))
+
+        req = requests.get(url)
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No query results for token {}.'
