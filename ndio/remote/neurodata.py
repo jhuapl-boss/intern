@@ -293,15 +293,14 @@ class neurodata(Remote):
 
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
-        # For now, max out at 1GB
-        # if size < 1E9 / 2:
-        #     return self._get_cutout_no_chunking(token, channel, resolution,
-        #                                         x_start, x_stop,
-        #                                         y_start, y_stop,
-        #                                         z_start, z_stop)
-        #
-        # else:
-        if True:
+        # For now, max out at 512MB
+        if size < 1E9 / 2:
+            return self._get_cutout_no_chunking(token, channel, resolution,
+                                                x_start, x_stop,
+                                                y_start, y_stop,
+                                                z_start, z_stop)
+
+        else:
             # Get an array-of-tuples of blocks to request.
             from ndio.utils.parallel import block_compute, snap_to_cube
             blocks = block_compute(x_start, x_stop,
