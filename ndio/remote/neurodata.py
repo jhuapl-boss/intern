@@ -592,6 +592,27 @@ class neurodata(Remote):
     # SECTION:
     # RAMON Upload
 
+    def merge_ids(self, token, channel, ids):
+        """
+        Call the restful endpoint to merge two RAMON objects into one.
+
+        Arguments:
+            token
+            channel
+            ids: the list of the IDs to merge
+
+        Returns:
+            json
+        """
+        req = requests.get(self.url() + "/merge/{}/"
+                                    .format(','.join([str(i) for i in ids])))
+        if req.status_code is not 200:
+            raise RemoteDataUploadError('Could not merge ids {}'.format(
+                                        ','.join([str(i) for i in ids])
+            ))
+        else:
+            return True
+
     def post_ramon(self, token, channel, r):
         """
         Posts a RAMON object to the Remote.
