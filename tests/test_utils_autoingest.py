@@ -16,7 +16,7 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_pull_data(self):
-        data_name_1 = "ndio_test_1_%s:%s:%s:%s:%s:%s" % (self.i.day, self.i.month, self.i.year, self.i.hour, self.i.month, self.i.second)
+        data_name_1 = "ndio_test_1_%s_%s_%s_%s_%s_%s" % (self.i.day, self.i.month, self.i.year, self.i.hour, self.i.month, self.i.second)
 
         ai_1 = AutoIngest.AutoIngest()
         ai_1.add_channel(data_name_1, 'uint32', 'image',
@@ -39,7 +39,7 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_post_json(self):
-        data_name_2 = "ndio_test_2_%s:%s:%s:%s:%s:%s" % (self.i.day, self.i.month, self.i.year, self.i.hour, self.i.month, self.i.second)
+        data_name_2 = "ndio_test_2_%s_%s_%s_%s_%s_%s" % (self.i.day, self.i.month, self.i.year, self.i.hour, self.i.month, self.i.second)
 
         ai_2 = AutoIngest.AutoIngest()
         ai_2.add_channel(data_name_2, 'uint32', 'image',
