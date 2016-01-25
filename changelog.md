@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.1.3**
+    - chunk volumes correctly and then crop when you ask for something that hasn't been cube-aligned
 - **0.1.2**
     - RAMON metadata lookups use hdf5 instead of json
 - **0.1.1**

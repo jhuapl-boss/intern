@@ -275,8 +275,7 @@ class neurodata(Remote):
                    y_start, y_stop,
                    z_start, z_stop,
                    resolution=1,
-                   block_size=(256, 256, 16),
-                   crop=False):
+                   block_size=(256, 256, 16)):
         """
         Get volumetric cutout data from the neurodata server.
 
@@ -287,17 +286,10 @@ class neurodata(Remote):
             Q_start (int):` The lower bound of dimension 'Q'
             Q_stop (int): The upper bound of dimension 'Q'
             block_size (int[3]): Block size of this dataset
-            crop (bool): whether or not to crop the volume before returning it
 
         Returns:
             numpy.ndarray: Downloaded data.
-
-        Raises:
-            NotImplementedError: If you try to crop... Sorry :(
         """
-
-        if crop is True:
-            raise NotImplementedError("Can't handle crops yet, sorry! :(")
 
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
