@@ -13,8 +13,6 @@
 # limitations under the License.
 
 import json
-import argparse
-import requests
 import os
 import requests
 from jsonspec.validators import load
