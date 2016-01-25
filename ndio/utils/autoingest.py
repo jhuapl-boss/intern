@@ -445,7 +445,7 @@ class AutoIngest:
                 print "Error opening file"
 
         self.verify_path(data)
-        #self.verify_json(data)
+        self.verify_json(data)
 
         self.put_data(data, site_host)
 
