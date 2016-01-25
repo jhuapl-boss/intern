@@ -57,7 +57,7 @@ def block_compute(x_start, x_stop,
         [((x_start, x_stop), (y_start, y_stop), (z_start, z_stop)), ... ]
     """
 
-    ### x
+    # x
     x_bounds = range(origin[0], x_stop + block_size[0], block_size[0])
     x_bounds = [x for x in x_bounds if (x > x_start and x < x_stop)]
     if len(x_bounds) is 0:
@@ -69,7 +69,7 @@ def block_compute(x_start, x_stop,
         x_slices.append((x_start, x_bounds[0]))
         x_slices.append((x_bounds[-1], x_stop))
 
-    ### y
+    # y
     y_bounds = range(origin[1], x_stop + block_size[1], block_size[1])
     y_bounds = [y for y in y_bounds if (y > y_start and y < y_stop)]
     if len(y_bounds) is 0:
@@ -81,7 +81,7 @@ def block_compute(x_start, x_stop,
         y_slices.append((y_start, y_bounds[0]))
         y_slices.append((y_bounds[-1], y_stop))
 
-    ### z
+    # z
     z_bounds = range(origin[2], z_stop + block_size[2], block_size[2])
     z_bounds = [z for z in z_bounds if (z > z_start and z < z_stop)]
     if len(z_bounds) is 0:

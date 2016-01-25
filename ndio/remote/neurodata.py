@@ -307,9 +307,9 @@ class neurodata(Remote):
                                    y_start, y_stop,
                                    z_start, z_stop)
 
-            volume = numpy.zeros(((y_stop - y_start) + 1,
-                                  (x_stop - x_start) + 1,
-                                  (z_stop - z_start) + 1))
+            vol = numpy.zeros(((y_stop - y_start) + 1,
+                              (x_stop - x_start) + 1,
+                              (z_stop - z_start) + 1))
             for b in blocks:
                 data = self._get_cutout_no_chunking(
                                      token, channel, resolution,
@@ -317,9 +317,9 @@ class neurodata(Remote):
                                      b[1][0], b[1][1],
                                      b[2][0], b[2][1])
                 data = numpy.rollaxis(data, 0, 3)
-                volume[b[1][0]:b[1][1],b[0][0]:b[0][1],b[2][0]:b[2][1]] = data
+                vol[b[1][0]:b[1][1], b[0][0]:b[0][1], b[2][0]:b[2][1]] = data
 
-            return volume
+            return vol
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
                                 x_start, x_stop, y_start, y_stop,
@@ -471,7 +471,7 @@ class neurodata(Remote):
         # Download the data itself
         req = requests.get(self.url() +
                            "{}/{}/{}/cutout/{}/".format(token, channel,
-                                                       anno_id, resolution))
+                                                        anno_id, resolution))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
@@ -536,7 +536,7 @@ class neurodata(Remote):
     def _get_single_ramon_metadata(self, token, channel, anno_id):
         req = requests.get(self.url() +
                            "{}/{}/{}/nodata/".format(token, channel,
-                                                   anno_id))
+                                                     anno_id))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
@@ -562,11 +562,10 @@ class neurodata(Remote):
             json
         """
         req = requests.get(self.url() + "/merge/{}/"
-                                    .format(','.join([str(i) for i in ids])))
+                           .format(','.join([str(i) for i in ids])))
         if req.status_code is not 200:
             raise RemoteDataUploadError('Could not merge ids {}'.format(
-                                        ','.join([str(i) for i in ids])
-            ))
+                                        ','.join([str(i) for i in ids])))
         else:
             return True
 
@@ -629,7 +628,8 @@ class neurodata(Remote):
                 raise ValueError("Name cannot contain character {}.".format(c))
 
         if channel_type not in ['image', 'annotation']:
-            raise ValueError('Type must be neurodata.IMAGE or neurodata.ANNOTATION.')
+            raise ValueError('Channel type must be ' +
+                             'neurodata.IMAGE or neurodata.ANNOTATION.')
 
         if readonly * 1 not in [0, 1]:
             raise ValueError("readonly must be 0 (False) or 1 (True).")

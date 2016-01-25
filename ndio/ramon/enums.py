@@ -3,6 +3,7 @@ import six
 from six.moves import range
 from six.moves import zip
 
+
 class InvalidEnumerationException(Exception):
     def __init__(self, msg="Invalid Enumeration."):
         self.msg = msg

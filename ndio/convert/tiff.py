@@ -22,7 +22,8 @@ def import_tiff(tiff_filename):
     try:
         img = Image.open(tiff_filename)
     except Exception as e:
-        raise ValueError("Could not load file {0} for conversion.".format(tiff_filename))
+        raise ValueError("Could not load file {0} for conversion."
+                         .format(tiff_filename))
         raise
 
     return numpy.array(img)

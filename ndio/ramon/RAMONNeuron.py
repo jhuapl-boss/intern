@@ -22,8 +22,8 @@ class RAMONNeuron(RAMONBase):
             self.segments = segments
 
             RAMONBase.__init__(self,
-                                 id=id,
-                                 confidence=confidence,
-                                 dynamic_metadata=dynamic_metadata,
-                                 status=status,
-                                 author=author)
+                               id=id,
+                               confidence=confidence,
+                               dynamic_metadata=dynamic_metadata,
+                               status=status,
+                               author=author)

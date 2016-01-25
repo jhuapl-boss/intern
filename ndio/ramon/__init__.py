@@ -230,7 +230,8 @@ def ramon_to_hdf5(ramon, hdf5=None):
             if hasattr(ramon, 'segments'):
                 # metadata.create_dataset('SEGMENTS', (len(ramon.segments), 2),
                 #                         numpy.uint32, data=ramon.segments)
-                metadata.create_dataset('SEGMENTS', data=numpy.ndarray(ramon.segments))
+                metadata.create_dataset('SEGMENTS',
+                                        data=numpy.ndarray(ramon.segments))
 
             if hasattr(ramon, 'synapse_type'):
                 metadata.create_dataset('SYNAPSETYPE', (1,), numpy.uint32,
