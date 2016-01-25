@@ -302,8 +302,7 @@ class neurodata(Remote):
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
         # For now, max out at 1GB
-        # if size < 1E9:
-        if True:
+        if size < 1E9 / 2:
             return self._get_cutout_no_chunking(token, channel, resolution,
                                                 x_start, x_stop,
                                                 y_start, y_stop,
@@ -352,6 +351,12 @@ class neurodata(Remote):
                             zi += 1
                         yi += 1
                     xi += 1
+
+            # `volume` now holds the full volume, all in order, but with
+            # borders that need to be cropped out.
+            volume = volume[x_start - x_bounds[0] : x_stop - x_bounds[1],
+                            y_start - y_bounds[0] : y_stop - y_bounds[1],
+                            z_start - z_bounds[0] : z_stop - z_bounds[1]]
             return volume
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
