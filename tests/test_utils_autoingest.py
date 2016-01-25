@@ -5,7 +5,7 @@ import ndio.utils.autoingest as AutoIngest
 import numpy
 import datetime
 
-SERVER_SITE = 'http://ec2-54-200-191-148.us-west-2.compute.amazonaws.com/'
+SERVER_SITE = 'http://ec2-54-200-191-148.us-west-2.compute.amazonaws.com'
 DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
 
 class TestAutoIngest(unittest.TestCase):
@@ -16,7 +16,7 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_pull_data(self):
-        data_name_1 = "ndio_test_1_%s_%s_%s_%s_%s_%s" % (self.i.day, self.i.month, self.i.year, self.i.hour, self.i.month, self.i.second)
+        data_name_1 = "ndiotest1%s%s%s%s%s%s" % (self.i.day, self.i.month, self.i.year, self.i.hour, self.i.month, self.i.second)
 
         ai_1 = AutoIngest.AutoIngest()
         ai_1.add_channel(data_name_1, 'uint32', 'image',
@@ -39,7 +39,7 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_post_json(self):
-        data_name_2 = "ndio_test_2_%s_%s_%s_%s_%s_%s" % (self.i.day, self.i.month, self.i.year, self.i.hour, self.i.month, self.i.second)
+        data_name_2 = "ndiotest2%s%s%s%s%s%s" % (self.i.day, self.i.month, self.i.year, self.i.hour, self.i.month, self.i.second)
 
         ai_2 = AutoIngest.AutoIngest()
         ai_2.add_channel(data_name_2, 'uint32', 'image',
