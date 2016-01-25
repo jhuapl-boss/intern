@@ -308,8 +308,8 @@ class neurodata(Remote):
                                    y_start, y_stop,
                                    z_start, z_stop)
 
-            volume = numpy.zeros(((x_stop - x_start) + 1,
-                                  (y_stop - y_start) + 1,
+            volume = numpy.zeros(((y_stop - y_start) + 1,
+                                  (x_stop - x_start) + 1,
                                   (z_stop - z_start) + 1))
             for b in blocks:
                 data = self._get_cutout_no_chunking(
@@ -318,9 +318,6 @@ class neurodata(Remote):
                                      b[1][0], b[1][1],
                                      b[2][0], b[2][1])
                 data = numpy.rollaxis(data, 0, 3)
-                print b
-                print data.shape
-                print volume[b[1][0]:b[1][1],b[0][0]:b[0][1],b[2][0]:b[2][1]].shape
                 volume[b[1][0]:b[1][1],b[0][0]:b[0][1],b[2][0]:b[2][1]] = data
 
             return volume
