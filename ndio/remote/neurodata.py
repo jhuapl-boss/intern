@@ -579,19 +579,6 @@ class neurodata(Remote):
                 r = ramon.hdf5_to_ramon(h5file)
                 return r
 
-    # def _get_single_ramon_metadata(self, token, channel, anno_id):
-    #     req = requests.get(self.url() +
-    #                        "{}/{}/{}/json/".format(token, channel,
-    #                                                anno_id))
-    #
-    #     if req.status_code is not 200:
-    #         raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
-    #     else:
-    #         return req.json()
-
-    # SECTION:
-    # RAMON Upload
-
     def merge_ids(self, token, channel, ids):
         """
         Call the restful endpoint to merge two RAMON objects into one.
