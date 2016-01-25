@@ -294,75 +294,52 @@ class neurodata(Remote):
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
         # For now, max out at 1GB
-        if size < 1E9 / 2:
-            return self._get_cutout_no_chunking(token, channel, resolution,
-                                                x_start, x_stop,
-                                                y_start, y_stop,
-                                                z_start, z_stop)
-
-        else:
+        # if size < 1E9 / 2:
+        #     return self._get_cutout_no_chunking(token, channel, resolution,
+        #                                         x_start, x_stop,
+        #                                         y_start, y_stop,
+        #                                         z_start, z_stop)
+        #
+        # else:
+        if True:
             # Get an array-of-tuples of blocks to request.
             from ndio.utils.parallel import block_compute, snap_to_cube
-            small_chunks = block_compute(x_start, x_stop,
-                                         y_start, y_stop,
-                                         z_start, z_stop)
+            blocks = block_compute(x_start, x_stop,
+                                   y_start, y_stop,
+                                   z_start, z_stop)
 
-            # Each time we download a chunk, we'll store it in
-            # this, in the format (block_origin, data)
-            downloaded_chunks = []
-            for c in small_chunks:
-                downloaded_chunks.append((
-                    c, self._get_cutout_no_chunking(token, channel, resolution,
-                                                    c[0][0], c[0][1],
-                                                    c[1][0], c[1][1],
-                                                    c[2][0], c[2][1])))
+            volume = numpy.zeros(((x_stop - x_start) + 1,
+                                  (y_stop - y_start) + 1,
+                                  (z_stop - z_start) + 1))
+            for b in blocks:
+                data = self._get_cutout_no_chunking(
+                                     token, channel, resolution,
+                                     b[0][0], b[0][1],
+                                     b[1][0], b[1][1],
+                                     b[2][0], b[2][1])
+                data = numpy.rollaxis(data, 0, 3)
+                print b
+                print data.shape
+                print volume[b[1][0]:b[1][1],b[0][0]:b[0][1],b[2][0]:b[2][1]].shape
+                volume[b[1][0]:b[1][1],b[0][0]:b[0][1],b[2][0]:b[2][1]] = data
 
-            x_bounds = snap_to_cube(x_start, x_stop,
-                                    chunk_depth=256, q_index=0)
-            y_bounds = snap_to_cube(y_start, y_stop,
-                                    chunk_depth=256, q_index=0)
-            z_bounds = snap_to_cube(z_start, z_stop,
-                                    chunk_depth=16,  q_index=1)
-
-            volume = numpy.zeros((
-                    x_bounds[1]-x_bounds[0],
-                    y_bounds[1]-y_bounds[0],
-                    z_bounds[1]-z_bounds[0]))
-
-            # TODO: Optimize.
-            for chunk in downloaded_chunks:
-                x_range, y_range, z_range = chunk[0]
-                xi = 0
-                for x in range(x_range[0], x_range[1]):
-                    yi = 0
-                    for y in range(y_range[0], y_range[1]):
-                        zi = 0
-                        for z in range(z_range[0], z_range[1]):
-                            volume[x-x_range[0]][y-y_range[0]][z-z_range[0]] =\
-                                chunk[1][zi][xi][yi]
-                            zi += 1
-                        yi += 1
-                    xi += 1
-
-            # `volume` now holds the full volume, all in order, but with
-            # borders that need to be cropped out.
-            volume = volume[x_start - x_bounds[0] : x_stop - x_bounds[1],
-                            y_start - y_bounds[0] : y_stop - y_bounds[1],
-                            z_start - z_bounds[0] : z_stop - z_bounds[1]]
             return volume
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
                                 x_start, x_stop, y_start, y_stop,
                                 z_start, z_stop):
-        req = requests.get(self.url() +
-                           "{}/{}/hdf5/{}/{},{}/{},{}/{},{}/".format(
-                           token, channel, resolution,
-                           x_start, x_stop,
-                           y_start, y_stop,
-                           z_start, z_stop
-                ))
+        url = self.url() + "{}/{}/hdf5/{}/{},{}/{},{}/{},{}/".format(
+           token, channel, resolution,
+           x_start, x_stop,
+           y_start, y_stop,
+           z_start, z_stop
+        )
+        req = requests.get(url)
         if req.status_code is not 200:
-            raise IOError("Bad server response: {}".format(req.status_code))
+            raise IOError("Bad server response for {}: {}: {}".format(
+                          url,
+                          req.status_code,
+                          req.text))
 
         with tempfile.NamedTemporaryFile() as tmpfile:
             tmpfile.write(req.content)
