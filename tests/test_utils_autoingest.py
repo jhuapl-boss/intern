@@ -5,7 +5,7 @@ import ndio.utils.autoingest as AutoIngest
 import numpy
 import datetime
 
-SERVER_SITE = 'http://ec2-54-200-191-148.us-west-2.compute.amazonaws.com'
+SERVER_SITE = 'http://ec2-54-200-191-148.us-west-2.compute.amazonaws.com/'
 DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
 
 class TestAutoIngest(unittest.TestCase):
