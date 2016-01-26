@@ -66,8 +66,12 @@ class TestAutoIngest(unittest.TestCase):
 
         ai_3.output_json("/tmp/ND2.json")
 
-        test_json = json.load("/tmp/ND2.json")
-        truth_json = json.load("ND2.json")
+        with open("/tmp/ND2.json") as data_file:
+                    test_json  = json.load(data_file)
+
+        with open("ND2.json") as data_file:
+                    truth_json = json.load(data_file)
+                    
 
         try:
             self.assertEqual(test_json, truth_json)
