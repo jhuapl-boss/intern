@@ -16,8 +16,8 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_pull_data(self):
-        #data_name_1 = "ndiotest1%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
-        data_name_1 = "ndio_test_1"
+        data_name_1 = "ndiotest1%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
+        #data_name_1 = "ndio_test_1"
 
         ai_1 = AutoIngest.AutoIngest()
         ai_1.add_channel(data_name_1, 'uint32', 'image',
@@ -31,7 +31,7 @@ class TestAutoIngest(unittest.TestCase):
         numpy_download = self.oo.get_cutout(data_name_1, data_name_1,
                                             0, 660,
                                             0, 528,
-                                            0, 0,
+                                            0, 1,
                                             resolution=0)
 
         self.assertEqual(type(numpy_download), numpy.ndarray)
@@ -40,8 +40,8 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_post_json(self):
-        #data_name_2 = "ndiotest2%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
-        data_name_2 = "ndio_test_2"
+        data_name_2 = "ndiotest2%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
+        #data_name_2 = "ndio_test_2"
 
         ai_2 = AutoIngest.AutoIngest()
         ai_2.add_channel(data_name_2, 'uint32', 'image',
@@ -59,7 +59,7 @@ class TestAutoIngest(unittest.TestCase):
         numpy_download = self.oo.get_cutout(data_name_2, data_name_2,
                                             0, 660,
                                             0, 528,
-                                            0, 0,
+                                            0, 1,
                                             resolution=0)
 
         self.assertEqual(type(numpy_download), numpy.ndarray)
