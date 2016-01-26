@@ -13,24 +13,131 @@
 # limitations under the License.
 
 import json
-import argparse
-import requests
 import os
 import requests
+from jsonspec.validators import load
+
+CHANNEL_SCHEMA = load({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Schema for Channel JSON object for ingest",
+    "type": "object",
+    "properties": {
+        "channel_name": {
+            "description": "Channel name for the channel",
+            "type": "string"
+        },
+        "datatype": {
+            "description": "Datatype of the channel",
+            "enum": [ "uint8", "uint16", "uint32", "uint64", "float32" ]
+        },
+        "channel_type": {
+            "description": "Type of Scaling - Isotropic(1) or Normal(0)",
+            "enum": [ "image", "annotation", "probmap", "timeseries" ]
+        },
+        "exceptions": {
+            "description": "Enable exceptions - Yes(1) or No(0) (for annotation data)",
+            "type": "integer"
+        },
+        "resolution": {
+            "description": "Start Resolution (for annotation data)",
+            "type": "integer"
+        },
+        "windowrange": {
+            "description": "Window clamp function for 16-bit channels with low max value of pixels",
+            "type": "array"
+        },
+        "readonly": {
+            "description": "Read-only Channel(1) or Not(0). You can remotely post to channel if it is not readonly and overwrite data",
+            "type": "integer"
+        },
+        "data_url": {
+            "description": "This url points to the root directory of the files. Dropbox is not an acceptable HTTP Server.",
+            "type": "string"
+        },
+        "file_format": {
+            "description": "This is the file format type. For now we support only Slice stacks and CATMAID tiles.",
+            "enum": [ "SLICE", "CATMAID" ]
+        },
+        "file_type": {
+            "description": "This the file type the data is stored in",
+            "enum": [ "tif", "png", "tiff" ]
+        },
+    },
+    "required": ["channel_name", "channel_type", "data_url", "datatype", "file_format", "file_type"]
+})
+
+DATASET_SCHEMA = load({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Schema for Dataset JSON object for ingest",
+    "type": "object",
+    "properties": {
+        "dataset_name": {
+            "description": "The name of the dataset",
+            "type": "string"
+        },
+        "imagesize": {
+          	"type": "array",
+            "description": "The image dimensions of the dataset",
+        },
+        "voxelres": {
+          	"type": "array",
+            "description": "The voxel resolutoin of the data",
+        },
+        "offset": {
+            "type": "array",
+            "description": "The dimensions offset from origin",
+        },
+        "timerange": {
+            "description": "The timerange of the data",
+              "type": "array",
+        },
+        "scalinglevels": {
+            "description": "Required Scaling levels/ Zoom out levels",
+            "type": "integer"
+        },
+        "scaling": {
+            "description": "Type of Scaling - Isotropic(1) or Normal(0)",
+            "type": "integer"
+        },
+    },
+    "required": ["dataset_name", "imagesize", "voxelres"]
+})
+
+PROJECT_SCHEMA = load({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Schema for Dataset JSON object for ingest",
+    "type": "object",
+    "properties": {
+        "project_name": {
+            "description": "The name of the project",
+            "type": "string"
+        },
+        "public": {
+            "description": "Whether or not the project is publicly viewable, by default not",
+            "type": "integer"
+        },
+        "token_name":  {
+            "description": "The token name for the project, by default same as project_name",
+            "type": "string"
+        },
+    },
+    "required": ["project_name"]
+})
+
 
 
 class AutoIngest:
 
     def __init__(self):
-        self.channels
-        self.dataset
-        self.project
-        self.metadata
+        self.channels = {}
+        self.dataset = []
+        self.project = []
+        self.metadata = ''
 
     def add_channel(
         self, channel_name, datatype, channel_type, data_url, file_format,
             file_type, exceptions=0, resolution=0,
-            windowrange=(0, 0), readonly=0):
+            windowrange=None, readonly=0):
         """
         Arguments:
             channel_name (str): Channel Name is the specific name of a
@@ -86,7 +193,7 @@ class AutoIngest:
         """
         Arguments:
             project_name (str): Project name is the specific project within
-            a dataset’s name. If there is only one project associated with
+            a dataset's name. If there is only one project associated with
             a dataset then standard convention is to name the project the
             same as its associated dataset.
 
@@ -125,10 +232,10 @@ class AutoIngest:
             voxels per unit pixel. We store X,Y,Z voxel resolution separately.
 
             offset (int, int, int): If your data is not well aligned and
-            there is “excess” image data you do not wish to examine, but
+            there is "excess" image data you do not wish to examine, but
             are present in your images, offset is how you specify where your
             actual image starts. Offset is provided a pixel coordinate offset
-            from origin which specifies the “actual” origin of the image.
+            from origin which specifies the "actual" origin of the image.
             The offset is for X,Y,Z dimensions.
 
             timerange (int, int): Time Range is a parameter to support
@@ -164,17 +271,29 @@ class AutoIngest:
             None
         """
 
-    def ocp_json(self, dataset, project, channel_list, metadata):
-        """Genarate OCP json object"""
-        ocp_dict = {}
-        ocp_dict['dataset'] = self.dataset_dict(*dataset)
-        ocp_dict['project'] = self.project_dict(*project)
-        ocp_dict['metadata'] = metadata
-        ocp_dict['channels'] = {}
-        for channel_name, value in channel_list.iteritems():
-            ocp_dict['channels'][channel_name] = self.channel_dict(*value)
+    def nd_json(self, dataset, project, channel_list, metadata):
+        """Genarate ND json object"""
+        nd_dict = {}
+        nd_dict['dataset'] = self.dataset_dict(*dataset)
+        nd_dict['project'] = self.project_dict(*project)
+        nd_dict['metadata'] = metadata
+        nd_dict['channels'] = {}
+        for channel_name, value in channel_list.items():
+            nd_dict['channels'][channel_name] = self.channel_dict(*value)
 
-        return json.dumps(ocp_dict, sort_keys=True, indent=4)
+        return json.dumps(nd_dict, sort_keys=True, indent=4)
+
+    def nd_json_list(self, dataset, project, channel_list, metadata):
+        """Genarate ND json object"""
+        nd_dict = {}
+        nd_dict['dataset'] = self.dataset_dict(*dataset)
+        nd_dict['project'] = self.project_dict(*project)
+        nd_dict['metadata'] = metadata
+        nd_dict['channels'] = {}
+        for channel_name, value in channel_list.items():
+            nd_dict['channels'].append(self.channel_dict(*value))
+
+        return json.dumps(nd_dict, sort_keys=True, indent=4)
 
     def dataset_dict(
         self, dataset_name, imagesize, voxelres,
@@ -216,15 +335,19 @@ class AutoIngest:
         channel_dict['file_type'] = file_type
         return channel_dict
 
-    def project_dict(self, project_name, token_name='', public=0):
+    def project_dict(self, project_name, token_name=None, public=0):
         """Genarate the project dictionary"""
         project_dict = {}
         project_dict['project_name'] = project_name
         if token_name is not None:
-            project_dict['token_name'] = project_name \
-                if token_name == '' else token_name
-        if public is not None:
-            project_dict['public'] = public
+             if token_name == '':
+                 project_dict['token_name'] = project_name
+             else:
+                 project_dict['token_name'] = token_name
+        else:
+             project_dict['token_name'] = project_name
+
+        project_dict['public'] = public
         return project_dict
 
     def verify_path(self, data):
@@ -234,7 +357,7 @@ class AutoIngest:
         except:
             token_name = data["project"]["project_name"]
 
-        channel_names = data["channels"].keys()
+        channel_names = list(data["channels"].copy().keys())
 
         for i in range(0, len(channel_names)):
             channel_type = data["channels"][
@@ -246,45 +369,97 @@ class AutoIngest:
                 for j in xrange(timerange[0], timerange[1] + 1):
                     # Test for tifs or such? Currently test for just not
                     # empty
-                    work_path = "{}{}/{}/time{}/".format(
+                    work_path = "{}/{}/{}/time{}/".format(
                         path, token_name, channel_names[i], j)
                     resp = requests.head(work_path)
                     assert(resp.status_code == 200)
             else:
                 # Test for tifs or such? Currently test for just not empty
-                work_path = "{}{}/{}/".format(
+                work_path = "{}/{}/{}/".format(
                     path, token_name, channel_names[i])
                 resp = requests.head(work_path)
-                print(work_path)
                 assert(resp.status_code == 200)
+
+    def verify_json(self, data):
+        # Channels
+        channel_names = list(data["channels"].copy().keys())
+        for i in range(0, len(channel_names)):
+            channel_object = data["channels"][channel_names[i]]
+            try:
+                CHANNEL_SCHEMA.validate(channel_object)
+            except:
+                print('Check inputted variables. Dumping to /tmp/')
+                self.output_json('/tmp/ND_{}.json'.format(channel_names[i]))
+
+        # Dataset
+        dataset_object = data["dataset"]
+        try:
+            DATASET_SCHEMA.validate(dataset_object)
+        except:
+            print("Check inputted variables. Dumping to /tmp/")
+            self.output_json('/tmp/ND_dataset.json')
+
+        # Project
+        project_object = data["project"]
+        try:
+            PROJECT_SCHEMA.validate(project_object)
+        except:
+            print("Check inputted variables. Dumping to /tmp/")
+            self.output_json('/tmp/ND_project.json')
 
     def put_data(self, data, site_host):
         # try to post data to the server
-        URLPath = "{}ca/autoIngest/".format(site_host)
+        URLPath = "{}/ocp/ca/autoIngest/".format(site_host)
         try:
-            r = requests.post(URLPath, data=data)
+            r = requests.post(URLPath, data=json.dumps(data))
+            assert( r.status_code == 200 )
         except:
-            print "Error in posting JSON file"
+            print("Error in posting JSON file")
 
-    def post_data(self, site_host):
+    def post_data(self, site_host='http://openconnectome.me', file_name=None):
         """
         Arguements:
-            metadata(str): Any metadata as appropriate from the LIMS schema
+            site_host(str): The site host to post the data to, by default
+            http://openconnectome.me.
+
+            file_name(str): The file name of the json file to post (optional).
+            If this is left unspecified it is assumed the data is in the
+            AutoIngets object.
+
+        Returns:
+            None
+        """
+
+        if (file_name is None):
+            complete_example = (
+                self.dataset, self.project, self.channels, self.metadata)
+            data = json.loads(self.nd_json(*complete_example))
+
+        else:
+            try:
+                with open(file_name) as data_file:
+                    data = json.load(data_file)
+            except:
+                print("Error opening file")
+
+        self.verify_path(data)
+        self.verify_json(data)
+
+        self.put_data(data, site_host)
+
+    def output_json(self, file_name='/tmp/ND.json'):
+        """
+        Arguements:
+            file_name(str): The file name to store the json to, by default
+            /tmp/ND.json
 
         Returns:
             None
         """
         complete_example = (
             self.dataset, self.project, self.channels, self.metadata)
-        data = self.ocp_json(*complete_example)
-
-        self.verify_path(json.loads(data))
-        self.put_data(data, siteHost)
-
-    def output_json(self, file_name):
-        complete_example = (
-            self.dataset, self.project, self.channels, self.metadata)
-        data = self.ocp_json(*complete_example)
+        data = self.nd_json(*complete_example)
+        self.verify_json(json.loads(data))
 
         f = open(file_name, 'w')
         f.write(data)
