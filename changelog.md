@@ -1,9 +1,27 @@
 # Changelog
 
+- **0.1.4**
+    - Bug fixes to requesting volume cutouts
+- **0.1.3**
+    - chunk volumes correctly and then crop when you ask for something that hasn't been cube-aligned
+- **0.1.2**
+    - RAMON metadata lookups use hdf5 instead of json
+- **0.1.1**
+    - Resolves RAMON download bug
+    - Adds `ramon_type` filter to `remote.neurodata.get_ramon_ids`
+- **0.1.0**
+    - Deprecated OCP in favor of ndio.remote.neurodata
+- **0.0.24**
+    - Fix more RAMON inheritance bugs and resolve syntax error in OCP
+- **0.0.23**
+    - Fix RAMONNeuron inheritance bug
+    - OCP#get_image_offset
+    - OCP#get_image_size
 - **0.0.22**
     - Update (mostly) to Python 3 compatibility
     - Add auto-ingest scripts
     - Fix PNG-export bug
+    - some more bug-fixes and updates to documentation
 - **0.0.21**
     - Better nested-dictionary support in ndlims
     - Rename some modules to improve importing experience

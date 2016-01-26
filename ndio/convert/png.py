@@ -22,7 +22,8 @@ def import_png(png_filename):
     try:
         img = Image.open(png_filename)
     except Exception as e:
-        raise ValueError("Could not load file {0} for conversion.".format(png_filename))
+        raise ValueError("Could not load file {0} for conversion."
+                         .format(png_filename))
         raise
 
     return numpy.array(img)
@@ -125,4 +126,4 @@ def import_png_collection(png_filename_base):
     for f in files:
         numpy_data.append(import_png(f))
 
-    return numpy_data
+    return numpy.concatenate(numpy_data)

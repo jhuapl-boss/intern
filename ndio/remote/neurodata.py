@@ -1,43 +1,3 @@
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-# Don't touch this file.
-# OCP is deprecated as of this release (0.1.0).
-# It is replaced by ndio.remote.neurodata
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-
 from __future__ import absolute_import
 import requests
 import h5py
@@ -59,7 +19,7 @@ DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
 
 
-class OCP(Remote):
+class neurodata(Remote):
 
     # SECTION:
     # Enumerables
@@ -68,15 +28,13 @@ class OCP(Remote):
     ANNOTATION = ANNO = 'annotation'
 
     def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL):
-        super(OCP, self).__init__(hostname, protocol)
-        print("ndio.remote.OCP will be deprecated in a future release. " +
-              "Instead, use ndio.remote.neurodata.")
+        super(neurodata, self).__init__(hostname, protocol)
 
     def ping(self):
-        return super(OCP, self).ping('public_tokens/')
+        return super(neurodata, self).ping('public_tokens/')
 
     def url(self, suffix=""):
-        return super(OCP, self).url('/ocp/ca/' + suffix)
+        return super(neurodata, self).url('/ocp/ca/' + suffix)
 
     def __repr__(self):
         """
@@ -89,7 +47,7 @@ class OCP(Remote):
         Returns:
             str: Representation of reproducible instance.
         """
-        return "ndio.remote.OCP('{}', '{}')".format(
+        return "ndio.remote.neurodata('{}', '{}')".format(
             self.hostname,
             self.protocol
         )
@@ -285,7 +243,7 @@ class OCP(Remote):
                    block_size=(256, 256, 16),
                    crop=False):
         """
-        Get a RAMONVolume volumetric cutout from the OCP server.
+        Get a RAMONVolume volumetric cutout from the neurodata server.
 
         Arguments:
             token (str): Token to identify data to download
@@ -317,10 +275,9 @@ class OCP(Remote):
                    y_start, y_stop,
                    z_start, z_stop,
                    resolution=1,
-                   block_size=(256, 256, 16),
-                   crop=False):
+                   block_size=(256, 256, 16)):
         """
-        Get volumetric cutout data from the OCP server.
+        Get volumetric cutout data from the neurodata server.
 
         Arguments:
             token (str): Token to identify data to download
@@ -329,23 +286,15 @@ class OCP(Remote):
             Q_start (int):` The lower bound of dimension 'Q'
             Q_stop (int): The upper bound of dimension 'Q'
             block_size (int[3]): Block size of this dataset
-            crop (bool): whether or not to crop the volume before returning it
 
         Returns:
             numpy.ndarray: Downloaded data.
-
-        Raises:
-            NotImplementedError: If you try to crop... Sorry :(
         """
-
-        if crop is True:
-            raise NotImplementedError("Can't handle crops yet, sorry! :(")
 
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
-        # For now, max out at 1GB
-        # if size < 1E9:
-        if True:
+        # For now, max out at 512MB
+        if size < 1E9 / 2:
             return self._get_cutout_no_chunking(token, channel, resolution,
                                                 x_start, x_stop,
                                                 y_start, y_stop,
@@ -354,60 +303,39 @@ class OCP(Remote):
         else:
             # Get an array-of-tuples of blocks to request.
             from ndio.utils.parallel import block_compute, snap_to_cube
-            small_chunks = block_compute(x_start, x_stop,
-                                         y_start, y_stop,
-                                         z_start, z_stop)
+            blocks = block_compute(x_start, x_stop,
+                                   y_start, y_stop,
+                                   z_start, z_stop)
 
-            # Each time we download a chunk, we'll store it in
-            # this, in the format (block_origin, data)
-            downloaded_chunks = []
-            for c in small_chunks:
-                downloaded_chunks.append((
-                    c, self._get_cutout_no_chunking(token, channel, resolution,
-                                                    c[0][0], c[0][1],
-                                                    c[1][0], c[1][1],
-                                                    c[2][0], c[2][1])))
+            vol = numpy.zeros(((y_stop - y_start) + 1,
+                              (x_stop - x_start) + 1,
+                              (z_stop - z_start) + 1))
+            for b in blocks:
+                data = self._get_cutout_no_chunking(
+                                     token, channel, resolution,
+                                     b[0][0], b[0][1],
+                                     b[1][0], b[1][1],
+                                     b[2][0], b[2][1])
+                data = numpy.rollaxis(data, 0, 3)
+                vol[b[1][0]:b[1][1], b[0][0]:b[0][1], b[2][0]:b[2][1]] = data
 
-            x_bounds = snap_to_cube(x_start, x_stop,
-                                    chunk_depth=256, q_index=0)
-            y_bounds = snap_to_cube(y_start, y_stop,
-                                    chunk_depth=256, q_index=0)
-            z_bounds = snap_to_cube(z_start, z_stop,
-                                    chunk_depth=16,  q_index=1)
-
-            volume = numpy.zeros((
-                    x_bounds[1]-x_bounds[0],
-                    y_bounds[1]-y_bounds[0],
-                    z_bounds[1]-z_bounds[0]))
-
-            # TODO: Optimize.
-            for chunk in downloaded_chunks:
-                x_range, y_range, z_range = chunk[0]
-                xi = 0
-                for x in range(x_range[0], x_range[1]):
-                    yi = 0
-                    for y in range(y_range[0], y_range[1]):
-                        zi = 0
-                        for z in range(z_range[0], z_range[1]):
-                            volume[x-x_range[0]][y-y_range[0]][z-z_range[0]] =\
-                                chunk[1][zi][xi][yi]
-                            zi += 1
-                        yi += 1
-                    xi += 1
-            return volume
+            return vol
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
                                 x_start, x_stop, y_start, y_stop,
                                 z_start, z_stop):
-        req = requests.get(self.url() +
-                           "{}/{}/hdf5/{}/{},{}/{},{}/{},{}/".format(
-                           token, channel, resolution,
-                           x_start, x_stop,
-                           y_start, y_stop,
-                           z_start, z_stop
-                ))
+        url = self.url() + "{}/{}/hdf5/{}/{},{}/{},{}/{},{}/".format(
+           token, channel, resolution,
+           x_start, x_stop,
+           y_start, y_stop,
+           z_start, z_stop
+        )
+        req = requests.get(url)
         if req.status_code is not 200:
-            raise IOError("Bad server response: {}".format(req.status_code))
+            raise IOError("Bad server response for {}: {}: {}".format(
+                          url,
+                          req.status_code,
+                          req.text))
 
         with tempfile.NamedTemporaryFile() as tmpfile:
             tmpfile.write(req.content)
@@ -482,10 +410,12 @@ class OCP(Remote):
     # SECTION:
     # RAMON Download
 
-    def get_ramon_ids(self, token, channel='annotation'):
+    def get_ramon_ids(self, token, channel='annotation', ramon_type=None):
         """
         Return a list of all IDs available for download from this token and
         channel.
+
+        http://www.openconnecto.me/ocp/ca/test_ramonify_public/neuron/query/type/5/
 
         Arguments:
             token (str): Project to use
@@ -496,7 +426,14 @@ class OCP(Remote):
             RemoteDataNotFoundError: If the channel or token is not found
         """
 
-        req = requests.get(self.url() + "{}/{}/query/".format(token, channel))
+        url = self.url("{}/{}/query/".format(token, channel))
+        if ramon_type is not None:
+            # User is requesting a specific ramon_type.
+            if type(ramon_type) is not int:
+                ramon_type = ramon.AnnotationType.get_int(ramon_type)
+            url += "type/{}/".format(str(ramon_type))
+
+        req = requests.get(url)
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No query results for token {}.'
@@ -533,8 +470,8 @@ class OCP(Remote):
 
         # Download the data itself
         req = requests.get(self.url() +
-                           "{}/{}/{}/cutout/{}".format(token, channel,
-                                                       anno_id, resolution))
+                           "{}/{}/{}/cutout/{}/".format(token, channel,
+                                                        anno_id, resolution))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
@@ -598,16 +535,39 @@ class OCP(Remote):
 
     def _get_single_ramon_metadata(self, token, channel, anno_id):
         req = requests.get(self.url() +
-                           "{}/{}/{}/json/".format(token, channel,
-                                                   anno_id))
+                           "{}/{}/{}/nodata/".format(token, channel,
+                                                     anno_id))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
         else:
-            return req.json()
+            with tempfile.NamedTemporaryFile() as tmpfile:
+                tmpfile.write(req.content)
+                tmpfile.seek(0)
+                h5file = h5py.File(tmpfile.name, "r")
 
-    # SECTION:
-    # RAMON Upload
+                r = ramon.hdf5_to_ramon(h5file)
+                return r
+
+    def merge_ids(self, token, channel, ids):
+        """
+        Call the restful endpoint to merge two RAMON objects into one.
+
+        Arguments:
+            token
+            channel
+            ids: the list of the IDs to merge
+
+        Returns:
+            json
+        """
+        req = requests.get(self.url() + "/merge/{}/"
+                           .format(','.join([str(i) for i in ids])))
+        if req.status_code is not 200:
+            raise RemoteDataUploadError('Could not merge ids {}'.format(
+                                        ','.join([str(i) for i in ids])))
+        else:
+            return True
 
     def post_ramon(self, token, channel, r):
         """
@@ -650,7 +610,7 @@ class OCP(Remote):
         Arguments:
             token (str): The token the new channel should be added to
             name (str): The name of the channel to add
-            type (str): Type of the channel to add (e.g. OCP.IMAGE)
+            type (str): Type of the channel to add (e.g. neurodata.IMAGE)
             dtype (str): The datatype of the channel's data (e.g. 'uint8')
             readonly (bool): Can others write to this channel?
 
@@ -668,7 +628,8 @@ class OCP(Remote):
                 raise ValueError("Name cannot contain character {}.".format(c))
 
         if channel_type not in ['image', 'annotation']:
-            raise ValueError('Type must be OCP.IMAGE or OCP.ANNOTATION.')
+            raise ValueError('Channel type must be ' +
+                             'neurodata.IMAGE or neurodata.ANNOTATION.')
 
         if readonly * 1 not in [0, 1]:
             raise ValueError("readonly must be 0 (False) or 1 (True).")

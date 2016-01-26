@@ -41,3 +41,22 @@ class RAMONVolume(RAMONBase):
         RAMONBase.__init__(self, id=id, confidence=confidence,
                            dynamic_metadata=dynamic_metadata,
                            status=status, author=author)
+
+    def data(self):
+        """
+        Gets the data from the volume and pumps it into a numpy.ndarray format,
+        regardless of whether it's stored in `cutout` or `voxels`. Returns it
+        as though it were stored in `cutout`.
+
+        This is useful for cases where you need to operate on a 3D matrix.
+
+        Arguments:
+            None
+
+        Returns:
+            numpy.ndarray
+        """
+        if self.cutout:
+            return self.cutout
+        else:
+            raise NotImplementedError("Cannot convert from voxel list yet.")

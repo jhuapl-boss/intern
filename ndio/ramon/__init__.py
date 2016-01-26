@@ -41,41 +41,41 @@ easier to use the prebuilt `hdf5_to_ramon()` function (below).
 """
 
 _types = {
-    "GENERIC": 1,
-    "SYNAPSE": 2,
-    "SEED": 3,
-    "SEGMENT": 4,
-    "NEURON": 5,
-    "ORGANELLE": 6,
-    "ATTRIBUTEDREGION": 7,
-    "VOLUME": 8
+    "generic": 1,
+    "synapse": 2,
+    "seed": 3,
+    "segment": 4,
+    "neuron": 5,
+    "organelle": 6,
+    "attributedregion": 7,
+    "volume": 8
 }
 
 _reverse_types = {v: k for k, v in list(_types.items())}
 
 _ramon_types = {
-    _types["GENERIC"]: RAMONGeneric,
-    _types["SYNAPSE"]: RAMONSynapse,
-    _types["SEED"]:  None,
-    _types["SEGMENT"]: RAMONSegment,
-    _types["NEURON"]: RAMONNeuron,
-    _types["ORGANELLE"]: RAMONOrganelle,
+    _types["generic"]: RAMONGeneric,
+    _types["synapse"]: RAMONSynapse,
+    _types["seed"]:  None,
+    _types["segment"]: RAMONSegment,
+    _types["neuron"]: RAMONNeuron,
+    _types["organelle"]: RAMONOrganelle,
     # _types["ATTRIBUTEDREGION"]: None,
-    _types["VOLUME"]: RAMONVolume
+    _types["volume"]: RAMONVolume
 }
 
 _reverse_ramon_types = {v: k for k, v in list(_ramon_types.items())}
 
 
 class AnnotationType:
-    GENERIC = _types["GENERIC"]
-    SYNAPSE = _types["SYNAPSE"]
-    SEED = _types["SEED"]
-    SEGMENT = _types["SEGMENT"]
-    NEURON = _types["NEURON"]
-    ORGANELLE = _types["ORGANELLE"]
-    ATTRIBUTEDREGION = _types["ATTRIBUTEDREGION"]
-    VOLUME = _types["VOLUME"]
+    GENERIC = _types["generic"]
+    SYNAPSE = _types["synapse"]
+    SEED = _types["seed"]
+    SEGMENT = _types["segment"]
+    NEURON = _types["neuron"]
+    ORGANELLE = _types["organelle"]
+    ATTRIBUTEDREGION = _types["attributedregion"]
+    VOLUME = _types["volume"]
 
     @staticmethod
     def get_str(type):
@@ -144,9 +144,12 @@ def hdf5_to_ramon(hdf5, anno_id=None):
         r.segments = metadata['SEGMENTS'][()]
 
     if issubclass(type(r), RAMONVolume):
-        r.cutout = anno['CUTOUT'][()]
-        r.xyz_offset = anno['XYZOFFSET'][()]
-        r.resolution = anno['RESOLUTION'][0]
+        if 'CUTOUT' in anno:
+            r.cutout = anno['CUTOUT'][()]
+        if 'XYZOFFSET' in anno:
+            r.cutout = anno['XYZOFFSET'][()]
+        if 'RESOLUTION' in anno:
+            r.cutout = anno['RESOLUTION'][()]
 
     if type(r) is RAMONSynapse:
         r.synapse_type = metadata['SYNAPSETYPE'][0]
@@ -201,12 +204,15 @@ def ramon_to_hdf5(ramon, hdf5=None):
             grp.create_dataset("ANNOTATION_TYPE", (1,),
                                numpy.uint32,
                                data=AnnotationType.get_int(type(ramon)))
-            grp.create_dataset('RESOLUTION', (1,),
-                               numpy.uint32, data=ramon.resolution)
-            grp.create_dataset('XYZOFFSET', (3,),
-                               numpy.uint32, data=ramon.xyz_offset)
-            grp.create_dataset('CUTOUT', ramon.cutout.shape,
-                               ramon.cutout.dtype, data=ramon.cutout)
+            if hasattr(ramon, 'resolution'):
+                grp.create_dataset('RESOLUTION', (1,),
+                                   numpy.uint32, data=ramon.resolution)
+            if hasattr(ramon, 'xyz_offset'):
+                grp.create_dataset('XYZOFFSET', (3,),
+                                   numpy.uint32, data=ramon.xyz_offset)
+            if hasattr(ramon, 'cutout'):
+                grp.create_dataset('CUTOUT', ramon.cutout.shape,
+                                   ramon.cutout.dtype, data=ramon.cutout)
 
             # Next, add general metadata.
             metadata = grp.create_group('METADATA')
@@ -222,8 +228,10 @@ def ramon_to_hdf5(ramon, hdf5=None):
             # Finally, add type-specific metadata:
 
             if hasattr(ramon, 'segments'):
-                metadata.create_dataset('SEGMENTS', (len(ramon.segments), 2),
-                                        numpy.uint32, data=ramon.segments)
+                # metadata.create_dataset('SEGMENTS', (len(ramon.segments), 2),
+                #                         numpy.uint32, data=ramon.segments)
+                metadata.create_dataset('SEGMENTS',
+                                        data=numpy.ndarray(ramon.segments))
 
             if hasattr(ramon, 'synapse_type'):
                 metadata.create_dataset('SYNAPSETYPE', (1,), numpy.uint32,
