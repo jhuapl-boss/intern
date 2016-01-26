@@ -70,6 +70,8 @@ class TestAutoIngest(unittest.TestCase):
         with open("/tmp/ND2.json") as data_file:
                     test_json  = json.load(data_file)
 
+        test_json = json.dumps(test_json)
+
         truth_json = {
             "channels": {
                 "ndio_test_3": {
@@ -121,7 +123,7 @@ class TestAutoIngest(unittest.TestCase):
         }
 
         try:
-            self.assertEqual(json.dumps(test_json), truth_json)
+            self.assertEqual(test_json, truth_json)
         except:
             print(test_json)
             print("\nVersus\n")
