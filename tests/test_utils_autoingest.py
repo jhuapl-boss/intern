@@ -20,9 +20,7 @@ class TestAutoIngest(unittest.TestCase):
         #data_name_1 = "ndio_test_1"
 
         ai_1 = AutoIngest.AutoIngest()
-        ai_1.add_channel(data_name_1, 'uint32', 'image',
-                    DATA_SITE, 'SLICE', 'tif')
-
+        ai_1.add_channel(data_name_1, 'uint32', 'image', DATA_SITE, 'SLICE', 'tif')
         ai_1.add_project(data_name_1, data_name_1, 1)
         ai_1.add_dataset(data_name_1, (660, 528, 1), (1.0, 1.0, 1.0))
         ai_1.add_metadata('')
