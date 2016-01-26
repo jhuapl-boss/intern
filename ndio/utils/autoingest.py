@@ -357,7 +357,7 @@ class AutoIngest:
         except:
             token_name = data["project"]["project_name"]
 
-        channel_names = data["channels"].keys()
+        channel_names = list(data["channels"].copy().keys())
 
         for i in range(0, len(channel_names)):
             channel_type = data["channels"][
@@ -382,7 +382,7 @@ class AutoIngest:
 
     def verify_json(self, data):
         # Channels
-        channel_names = data["channels"].keys()
+        channel_names = list(data["channels"].copy().keys())
         for i in range(0, len(channel_names)):
             channel_object = data["channels"][channel_names[i]]
             try:
