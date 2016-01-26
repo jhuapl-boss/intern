@@ -24,7 +24,7 @@ class TestAutoIngest(unittest.TestCase):
                     DATA_SITE, 'SLICE', 'tif')
 
         ai_1.add_project(data_name_1, data_name_1, 1)
-        ai_1.add_dataset(data_name_1, (660, 528, 1), (0, 0, 0))
+        ai_1.add_dataset(data_name_1, (660, 528, 1), (1, 1, 1))
         ai_1.add_metadata('')
 
         ai_1.post_data(SERVER_SITE)
@@ -48,7 +48,7 @@ class TestAutoIngest(unittest.TestCase):
                     DATA_SITE, 'SLICE', 'tif')
 
         ai_2.add_project(data_name_2, data_name_2, 1)
-        ai_2.add_dataset(data_name_2, (660, 528, 1), (0, 0, 0))
+        ai_2.add_dataset(data_name_2, (660, 528, 1), (1, 1, 1))
         ai_2.add_metadata('')
 
         ai_2.output_json()
