@@ -137,7 +137,7 @@ class AutoIngest:
     def add_channel(
         self, channel_name, datatype, channel_type, data_url, file_format,
             file_type, exceptions=0, resolution=0,
-            windowrange=(0, 0), readonly=0):
+            windowrange=None, readonly=0):
         """
         Arguments:
             channel_name (str): Channel Name is the specific name of a
