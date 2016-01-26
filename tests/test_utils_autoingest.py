@@ -121,7 +121,7 @@ class TestAutoIngest(unittest.TestCase):
         }
 
         try:
-            self.assertEqual(test_json, truth_json)
+            self.assertEqual(json.dumps(test_json), truth_json)
         except:
             print(test_json)
             print("\nVersus\n")
