@@ -278,7 +278,7 @@ class AutoIngest:
         nd_dict['project'] = self.project_dict(*project)
         nd_dict['metadata'] = metadata
         nd_dict['channels'] = {}
-        for channel_name, value in channel_list.iteritems():
+        for channel_name, value in channel_list.items():
             nd_dict['channels'][channel_name] = self.channel_dict(*value)
 
         return json.dumps(nd_dict, sort_keys=True, indent=4)
@@ -290,7 +290,7 @@ class AutoIngest:
         nd_dict['project'] = self.project_dict(*project)
         nd_dict['metadata'] = metadata
         nd_dict['channels'] = {}
-        for channel_name, value in channel_list.iteritems():
+        for channel_name, value in channel_list.items():
             nd_dict['channels'].append(self.channel_dict(*value))
 
         return json.dumps(nd_dict, sort_keys=True, indent=4)
