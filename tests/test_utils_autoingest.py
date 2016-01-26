@@ -9,7 +9,6 @@ DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
 class TestAutoIngest(unittest.TestCase):
 
     def setUp(self):
-        self.oo = OCP(SERVER_SITE)
         self.i = datetime.datetime.now()
 
 
@@ -27,7 +26,6 @@ class TestAutoIngest(unittest.TestCase):
 
         self.assertEqual(response.headers['content-type'], 'product/npz')
         #Verify its the same image?
-        self.oo.delete_channel(data_name_1, data_name_1)
 
 
     def test_post_json(self):
@@ -51,7 +49,6 @@ class TestAutoIngest(unittest.TestCase):
 
         self.assertEqual(response.headers['content-type'], 'product/npz')
 
-        self.oo.delete_channel(data_name_2, data_name_2)
 
 if __name__ == '__main__':
     unittest.main()
