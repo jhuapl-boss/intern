@@ -53,6 +53,29 @@ class TestAutoIngest(unittest.TestCase):
             print(response.content)
             print("{}/ocp/ca/{}/{}/npz/0/0,660/0,528/0,1/".format(SERVER_SITE,data_name_2, data_name_2))
 
+    def test_output_json(self):
+        data_name_3 = "ndio_test_3"
+
+        ai_3 = AutoIngest.AutoIngest()
+        ai_3.add_channel(data_name_3, 'uint32', 'image', DATA_SITE, 'SLICE', 'tif')
+
+        ai_3.add_project(data_name_3, data_name_3, 1)
+        ai_3.add_dataset(data_name_3, (660, 528, 1), (1.0, 1.0, 1.0))
+        ai_3.add_metadata('')
+
+        ai_3.output_json("/tmp/ND2.json")
+
+        test_json = json.load("/tmp/ND2.json")
+        truth_json = json.load("ND2.json")
+
+        try:
+            self.assertEqual(test_json, truth_json)
+        except:
+            print(test_json)
+            print("\nVersus\n")
+            print(truth_json)
+
+
 
 if __name__ == '__main__':
     unittest.main()
