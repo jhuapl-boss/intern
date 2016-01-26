@@ -25,14 +25,9 @@ class TestAutoIngest(unittest.TestCase):
         ai_1.add_dataset(data_name_1, (660, 528, 1), (1.0, 1.0, 1.0))
         ai_1.add_metadata('')
 
-        ai_1.post_data(SERVER_SITE)
-        numpy_download = self.oo.get_cutout(data_name_1, data_name_1,
-                                            0, 660,
-                                            0, 528,
-                                            0, 1,
-                                            resolution=0)
+        response = requests.get("{}/ocp/ca/{}/{}/npz/0/0,660/0,528/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
 
-        self.assertEqual(type(numpy_download), numpy.ndarray)
+        self.assertEqual(response.headers['content-type'], 'product/npz')
         #Verify its the same image?
         self.oo.delete_channel(data_name_1, data_name_1)
 
@@ -54,13 +49,9 @@ class TestAutoIngest(unittest.TestCase):
         ai_3 = AutoIngest.AutoIngest()
         ai_3.post_data(SERVER_SITE, "/tmp/ND.json")
 
-        numpy_download = self.oo.get_cutout(data_name_2, data_name_2,
-                                            0, 660,
-                                            0, 528,
-                                            0, 1,
-                                            resolution=0)
+        response = requests.get("{}/ocp/ca/{}/{}/npz/0/0,660/0,528/0,1/".format(SERVER_SITE,data_name_2, data_name_2))
 
-        self.assertEqual(type(numpy_download), numpy.ndarray)
+        self.assertEqual(response.headers['content-type'], 'product/npz')
 
         self.oo.delete_channel(data_name_2, data_name_2)
 
