@@ -388,7 +388,7 @@ class AutoIngest:
             try:
                 CHANNEL_SCHEMA.validate(channel_object)
             except:
-                print 'Check inputted variables. Dumping to /tmp/'
+                print('Check inputted variables. Dumping to /tmp/')
                 self.output_json('/tmp/ND_{}.json'.format(channel_names[i]))
 
         # Dataset
@@ -396,7 +396,7 @@ class AutoIngest:
         try:
             DATASET_SCHEMA.validate(dataset_object)
         except:
-            print "Check inputted variables. Dumping to /tmp/"
+            print("Check inputted variables. Dumping to /tmp/")
             self.output_json('/tmp/ND_dataset.json')
 
         # Project
@@ -404,7 +404,7 @@ class AutoIngest:
         try:
             PROJECT_SCHEMA.validate(project_object)
         except:
-            print "Check inputted variables. Dumping to /tmp/"
+            print("Check inputted variables. Dumping to /tmp/")
             self.output_json('/tmp/ND_project.json')
 
     def put_data(self, data, site_host):
@@ -414,7 +414,7 @@ class AutoIngest:
             r = requests.post(URLPath, data=json.dumps(data))
             assert( r.status_code == 200 )
         except:
-            print "Error in posting JSON file"
+            print("Error in posting JSON file")
 
     def post_data(self, site_host='http://openconnectome.me', file_name=None):
         """
@@ -440,7 +440,7 @@ class AutoIngest:
                 with open(file_name) as data_file:
                     data = json.load(data_file)
             except:
-                print "Error opening file"
+                print("Error opening file")
 
         self.verify_path(data)
         self.verify_json(data)
