@@ -21,6 +21,7 @@ class TestAutoIngest(unittest.TestCase):
         ai_1.add_project(data_name_1, data_name_1, 1)
         ai_1.add_dataset(data_name_1, (660, 528, 1), (1.0, 1.0, 1.0))
         ai_1.add_metadata('')
+        ai_1.post_data(SERVER_SITE)
 
         response = requests.get("{}/ocp/ca/{}/{}/npz/0/0,660/0,528/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
 
@@ -69,9 +70,55 @@ class TestAutoIngest(unittest.TestCase):
         with open("/tmp/ND2.json") as data_file:
                     test_json  = json.load(data_file)
 
-        with open("ND2.json") as data_file:
-                    truth_json = json.load(data_file)
-                    
+        truth_json = {
+            "channels": {
+                "ndio_test_3": {
+                    "channel_name": "ndio_test_3",
+                    "channel_type": "image",
+                    "data_url": "http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/",
+                    "datatype": "uint32",
+                    "exceptions": 0,
+                    "file_format": "SLICE",
+                    "file_type": "tif",
+                    "readonly": 0,
+                    "resolution": 0,
+                    "windowrange": [
+                        0,
+                        0
+                    ]
+                }
+            },
+            "dataset": {
+                "dataset_name": "ndio_test_3",
+                "imagesize": [
+                    660,
+                    528,
+                    1
+                ],
+                "offset": [
+                    0,
+                    0,
+                    0
+                ],
+                "scaling": 0,
+                "scalinglevels": 0,
+                "timerange": [
+                    0,
+                    0
+                ],
+                "voxelres": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "metadata": "",
+            "project": {
+                "project_name": "ndio_test_3",
+                "public": 1,
+                "token_name": "ndio_test_3"
+            }
+        }
 
         try:
             self.assertEqual(test_json, truth_json)
