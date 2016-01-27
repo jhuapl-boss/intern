@@ -1,9 +1,14 @@
 import unittest
+import ndio.remote.neurodata as nd
 import ndio.utils.autoingest as AutoIngest
 import datetime
 import requests
 import json
 import os
+import numpy
+import wget
+import matplotlib.pyplot as plt
+from PIL import Image
 
 SERVER_SITE = 'http://ec2-54-200-49-141.us-west-2.compute.amazonaws.com/'
 DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
@@ -13,9 +18,15 @@ class TestAutoIngest(unittest.TestCase):
 
     def setUp(self):
         self.i = datetime.datetime.now()
+        self.oo = nd('ec2-54-200-49-141.us-west-2.compute.amazonaws.com/')
 
 
     def test_pull_data(self):
+        try:
+            os.remove("/tmp/0000.tif")
+        except:
+            print("Nothing to remove (No Error)")
+
         data_name_1 = "ndiotest1%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
 
         ai_1 = AutoIngest.AutoIngest()
@@ -32,6 +43,20 @@ class TestAutoIngest(unittest.TestCase):
         except:
             print(response.content)
             print("{}/ocp/ca/{}/{}/npz/0/0,660/0,528/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
+
+        numpy_download = self.oo.get_cutout(data_name_1, data_name_1,
+                                            0, 600,
+                                            0, 500,
+                                            0, 1,
+                                            resolution=0)
+
+        """
+        filename = wget.download("{}/ndio_test_1/ndio_test_1/0000.tif".format(SERVER_SITE), out="/tmp")
+        #import pdb; pdb.set_trace()
+        I = plt.imread(str(filename))
+        # We know this is the image
+        self.assertEqual(numpy_download, I)
+        """
 
     def test_post_data(self):
         data_name_5 = "ndioawstest5%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)

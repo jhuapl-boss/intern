@@ -1,5 +1,5 @@
 import unittest
-import ndio.remote.OCP as OCP
+import ndio.remote.neurodata as neurodata
 import ndio.ramon as ramon
 import numpy
 import h5py
@@ -9,7 +9,7 @@ import os
 class TestRAMON(unittest.TestCase):
 
     def setUp(self):
-        self.oo = OCP()
+        self.oo = neurodata()
         self.ramon_id = 1
 
         if os.path.exists("1.hdf5"):

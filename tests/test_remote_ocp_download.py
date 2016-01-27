@@ -1,5 +1,5 @@
 import unittest
-import ndio.remote.OCP as OCP
+import ndio.remote.neurodata as neurodata
 import ndio.ramon
 import numpy
 
@@ -7,7 +7,7 @@ import numpy
 class TestDownload(unittest.TestCase):
 
     def setUp(self):
-        self.oo = OCP()
+        self.oo = neurodata()
 
     def test_get_cutout_type(self):
         # kasthuri11/image/xy/3/1000,1100/1000,1100/1000/

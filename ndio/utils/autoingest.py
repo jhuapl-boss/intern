@@ -412,9 +412,13 @@ class AutoIngest:
             print("Check inputted variables. Dumping to /tmp/")
             self.output_json('/tmp/ND_project.json')
 
-    def put_data(self, data, site_host):
+    def put_data(self, data, site_host, dev=False):
         # try to post data to the server
-        URLPath = "{}/ocp/ca/autoIngest/".format(site_host)
+        if dev:
+            URLPath = "{}/ca/autoIngest/".format(site_host)
+        else:
+            URLPath = "{}/ocp/ca/autoIngest/".format(site_host)
+
         try:
             r = requests.post(URLPath, data=json.dumps(data))
             assert( r.status_code == 200 )

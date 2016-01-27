@@ -11,6 +11,7 @@ install:
     - sudo apt-get install zlib1g-dev
     - sudo apt-get install libhdf5-serial-dev
     - sudo apt-get install python-scipy python-matplotlib python-nose
+    - sudo apt-get install python-wget
     - sudo easy_install pip
     - sudo pip install cython
     - pip install .
