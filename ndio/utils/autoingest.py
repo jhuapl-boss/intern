@@ -155,7 +155,9 @@ class AutoIngest:
 
             data_url (str): This url points to the root directory of the
             files. Dropbox (or any data requiring authentication to
-            download such as s3) is not an acceptable HTTP Server.
+            download such as private s3) is not an acceptable HTTP Server.
+            See additional instructions in documentation online to format
+            s3 properly so it is http accessible. 
 
             file_format (str): File format refers to the overarching kind
             of data, as in slices (normal image data) or catmaid
