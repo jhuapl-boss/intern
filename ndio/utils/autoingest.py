@@ -157,7 +157,7 @@ class AutoIngest:
             files. Dropbox (or any data requiring authentication to
             download such as private s3) is not an acceptable HTTP Server.
             See additional instructions in documentation online to format
-            s3 properly so it is http accessible. 
+            s3 properly so it is http accessible.
 
             file_format (str): File format refers to the overarching kind
             of data, as in slices (normal image data) or catmaid
@@ -419,7 +419,8 @@ class AutoIngest:
             r = requests.post(URLPath, data=json.dumps(data))
             assert( r.status_code == 200 )
         except:
-            print("Error in posting JSON file")
+            print("Error in posting JSON file, exiting with {}".format(r.status_code))
+            print(r.content)
 
     def post_data(self, site_host='http://openconnecto.me', file_name=None):
         """

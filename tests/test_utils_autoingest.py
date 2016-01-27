@@ -53,7 +53,11 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_post_json(self):
-        os.remove("/tmp/ND.json")
+	try:
+            os.remove("/tmp/ND.json")
+        except:
+            print("Nothing to remove (No Error)")
+
         data_name_2 = "ndiotest2%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
 
         ai_2 = AutoIngest.AutoIngest()
