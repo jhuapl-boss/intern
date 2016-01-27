@@ -419,7 +419,7 @@ class AutoIngest:
         except:
             print("Error in posting JSON file")
 
-    def post_data(self, site_host='http://openconnectome.me', file_name=None):
+    def post_data(self, site_host='http://openconnecto.me', file_name=None):
         """
         Arguements:
             site_host(str): The site host to post the data to, by default
