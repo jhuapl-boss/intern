@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.1.5**
+    - Bug fixes to autoingest and tests for the same
 - **0.1.4**
     - Bug fixes to requesting volume cutouts
 - **0.1.3**
