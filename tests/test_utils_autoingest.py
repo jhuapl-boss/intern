@@ -53,7 +53,7 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_post_json(self):
-	try:
+        try:
             os.remove("/tmp/ND.json")
         except:
             print("Nothing to remove (No Error)")
