@@ -3,6 +3,7 @@ import ndio.utils.autoingest as AutoIngest
 import datetime
 import requests
 import json
+import os
 
 SERVER_SITE = 'http://ec2-54-200-49-141.us-west-2.compute.amazonaws.com/'
 DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
@@ -33,14 +34,14 @@ class TestAutoIngest(unittest.TestCase):
             print("{}/ocp/ca/{}/{}/npz/0/0,660/0,528/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
 
     def test_post_data(self):
-        data_name_5 = "ndioawstest1%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
+        data_name_5 = "ndioawstest5%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
 
-        ai_1 = AutoIngest.AutoIngest()
-        ai_1.add_channel(data_name_5, 'uint32', 'image', S3_SITE, 'SLICE', 'tif')
-        ai_1.add_project(data_name_5, data_name_5, 1)
-        ai_1.add_dataset(data_name_5, (660, 528, 1), (1.0, 1.0, 1.0))
-        ai_1.add_metadata('')
-        ai_1.post_data(SERVER_SITE)
+        ai_5 = AutoIngest.AutoIngest()
+        ai_5.add_channel(data_name_5, 'uint32', 'image', S3_SITE, 'SLICE', 'tif')
+        ai_5.add_project(data_name_5, data_name_5, 1)
+        ai_5.add_dataset(data_name_5, (660, 528, 1), (1.0, 1.0, 1.0))
+        ai_5.add_metadata('')
+        ai_5.post_data(SERVER_SITE)
 
         response = requests.get("{}/ocp/ca/{}/{}/npz/0/0,660/0,528/0,1/".format(SERVER_SITE,data_name_5, data_name_5))
 
@@ -52,6 +53,7 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_post_json(self):
+        os.remove("/tmp/ND.json")
         data_name_2 = "ndiotest2%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
 
         ai_2 = AutoIngest.AutoIngest()
@@ -88,8 +90,6 @@ class TestAutoIngest(unittest.TestCase):
 
         with open("/tmp/ND2.json") as data_file:
                     test_json  = json.load(data_file)
-
-        test_json = json.dumps(test_json)
 
         truth_json = {
             "channels": {
