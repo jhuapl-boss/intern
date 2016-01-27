@@ -16,6 +16,7 @@ import json
 import os
 import requests
 from jsonspec.validators import load
+import re
 
 CHANNEL_SCHEMA = load({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -363,22 +364,24 @@ class AutoIngest:
             channel_type = data["channels"][
                 channel_names[i]]["channel_type"]
             path = data["channels"][channel_names[i]]["data_url"]
+            aws_pattern = re.compile("^(http:\/\/)(.+)(\.s3\.amazonaws\.com)")
 
-            if (channel_type == "timeseries"):
-                timerange = data["dataset"]["timerange"]
-                for j in xrange(timerange[0], timerange[1] + 1):
-                    # Test for tifs or such? Currently test for just not
-                    # empty
-                    work_path = "{}/{}/{}/time{}/".format(
-                        path, token_name, channel_names[i], j)
+            if not (aws_pattern.match(path)):
+                if (channel_type == "timeseries"):
+                    timerange = data["dataset"]["timerange"]
+                    for j in xrange(timerange[0], timerange[1] + 1):
+                        # Test for tifs or such? Currently test for just not
+                        # empty
+                        work_path = "{}/{}/{}/time{}/".format(
+                            path, token_name, channel_names[i], j)
+                        resp = requests.head(work_path)
+                        assert(resp.status_code == 200)
+                else:
+                    # Test for tifs or such? Currently test for just not empty
+                    work_path = "{}/{}/{}/".format(
+                        path, token_name, channel_names[i])
                     resp = requests.head(work_path)
                     assert(resp.status_code == 200)
-            else:
-                # Test for tifs or such? Currently test for just not empty
-                work_path = "{}/{}/{}/".format(
-                    path, token_name, channel_names[i])
-                resp = requests.head(work_path)
-                assert(resp.status_code == 200)
 
     def verify_json(self, data):
         # Channels
