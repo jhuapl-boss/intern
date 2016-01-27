@@ -73,52 +73,33 @@ class TestAutoIngest(unittest.TestCase):
         test_json = json.dumps(test_json)
 
         truth_json = {
-            'channels': {
-                'ndio_test_3': {
-                    'channel_name': 'ndio_test_3',
-                    'channel_type': 'image',
-                    'data_url': 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/',
-                    'datatype': 'uint32',
-                    'exceptions': 0,
-                    'file_format': 'SLICE',
-                    'file_type': 'tif',
-                    'readonly': 0,
-                    'resolution': 0,
-                    'windowrange': [
-                        0,
-                        0
-                    ]
+            "channels": {
+                "ndio_test_3": {
+                    "data_url": "http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/",
+                    "file_type": "tif",
+                    "file_format": "SLICE",
+                    "datatype": "uint32",
+                    "channel_type": "image",
+                    "channel_name": "ndio_test_3",
+                    "readonly": 0,
+                    "exceptions": 0,
+                    "resolution": 0
                 }
             },
-            'dataset': {
-                'dataset_name': 'ndio_test_3',
-                'imagesize': [
-                    660,
-                    528,
-                    1
-                ],
-                'offset': [
-                    0,
-                    0,
-                    0
-                ],
-                'scaling': 0,
-                'scalinglevels': 0,
-                'timerange': [
-                    0,
-                    0
-                ],
-                'voxelres': [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
+            "project": {
+                "project_name": "ndio_test_3",
+                "public": 1,
+                "token_name": "ndio_test_3"
             },
-            'metadata': '',
-            'project': {
-                'project_name': 'ndio_test_3',
-                'public': 1,
-                'token_name': 'ndio_test_3'
+            "metadata": "",
+            "dataset": {
+                "imagesize": [660, 528, 1],
+                "voxelres": [1.0, 1.0, 1.0],
+                "timerange": [0, 0],
+                "scaling": 0,
+                "scalinglevels": 0,
+                "offset": [0, 0, 0],
+                "dataset_name": "ndio_test_3"
             }
         }
 
