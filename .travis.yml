@@ -11,14 +11,13 @@ install:
     - sudo apt-get install zlib1g-dev
     - sudo apt-get install libhdf5-serial-dev
     - sudo apt-get install python-scipy python-matplotlib python-nose
-    - sudo apt-get install python-wget
     - sudo easy_install pip
     - sudo pip install cython
     - pip install .
     - pip install pillow numpy h5py requests
     - pip install coveralls
     - pip install json-spec
-    - pip install simplejson regex
+    - pip install simplejson regex wget
 script:
     - coverage run -m unittest discover
 after_success: coveralls
