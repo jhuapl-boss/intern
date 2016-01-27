@@ -107,9 +107,9 @@ class TestAutoIngest(unittest.TestCase):
             self.assertEqual(list(test_json.copy().keys()).sort(),
                 list(truth_json.copy().keys()).sort())
         except:
-            print(test_json)
+            print(list(test_json.copy().keys()).sort())
             print("\nVersus\n")
-            print(truth_json)
+            print(list(truth_json.copy().keys()).sort())
 
 
 
