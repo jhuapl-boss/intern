@@ -6,6 +6,7 @@ import json
 
 SERVER_SITE = 'http://ec2-54-200-49-141.us-west-2.compute.amazonaws.com/'
 DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
+S3_SITE = 'http://ndios3test.s3.amazonaws.com/'
 
 class TestAutoIngest(unittest.TestCase):
 
@@ -30,6 +31,16 @@ class TestAutoIngest(unittest.TestCase):
         except:
             print(response.content)
             print("{}/ocp/ca/{}/{}/npz/0/0,660/0,528/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
+
+    def test_post_data(self):
+        data_name_1 = "ndioawstest1%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
+
+        ai_1 = AutoIngest.AutoIngest()
+        ai_1.add_channel(data_name_1, 'uint32', 'image', S3_SITE, 'SLICE', 'tif')
+        ai_1.add_project(data_name_1, data_name_1, 1)
+        ai_1.add_dataset(data_name_1, (660, 528, 1), (1.0, 1.0, 1.0))
+        ai_1.add_metadata('')
+        ai_1.post_data(SERVER_SITE)
 
 
     def test_post_json(self):
