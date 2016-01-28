@@ -6,8 +6,6 @@ import requests
 import json
 import os
 import numpy
-import wget
-from PIL import Image
 
 SERVER_SITE = 'http://ec2-54-191-191-26.us-west-2.compute.amazonaws.com/'
 DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
