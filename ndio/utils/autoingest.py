@@ -147,46 +147,36 @@ class AutoIngest:
             channel_name (str): Channel Name is the specific name of a
             specific series of data. Standard naming convention is to do
             ImageTypeIterationNumber or NameSubProjectName.
-
             datatype (str): The data type is the storage method of data in
             the channel. It can be uint8, uint16, uint32, uint64, or
             float32.
-
             channel_type (str): The channel type is the kind of data being
             stored in the channel. It can be image, annotation, or
             timeseries.
-
             data_url (str): This url points to the root directory of the
             files. Dropbox (or any data requiring authentication to
             download such as private s3) is not an acceptable HTTP Server.
             See additional instructions in documentation online to format
             s3 properly so it is http accessible.
-
             file_format (str): File format refers to the overarching kind
             of data, as in slices (normal image data) or catmaid
             (tile-based).
-
             file_type (str): File type refers to the specific type of file
             that the data is stored in, as in, tiff, png, or tif.
-
             exceptions (int): Exceptions is an option to enable the
             possibility for annotations to contradict each other (assign
             different values to the same point). 1 corresponds to True, 0
             corresponds to False.
-
             resolution (int): Resolution is the starting resolution of the
             data being uploaded to the channel.
-
             windowrange (int, int): Window range is the maximum and minimum
             pixel values for a particular image. This is used so that the
             image can be displayed in a readable way for viewing through
             RESTful calls
-
             readonly (int): This option allows the user to control if,
             after the initial data commit, the channel is read-only.
             Generally this is suggested with data that will be publicly
             viewable.
-
         Returns:
             None
         """
@@ -202,16 +192,13 @@ class AutoIngest:
             a dataset's name. If there is only one project associated with
             a dataset then standard convention is to name the project the
             same as its associated dataset.
-
             token_name (str): The token name is the default token. If you
             do not wish to specify one, a default one will be created for
             you with the same name as the project name. However, if the
             project is private you must specify a token.
-
             public (int): This option allows users to specify if they want
             the project/channels to be publicly viewable/search-able.
             (1, 0) = (TRUE, FALSE)
-
         Returns:
             None
         """
@@ -228,40 +215,33 @@ class AutoIngest:
             dataset_name (str): Dataset Name is the overarching name of the
             research effort. Standard naming convention is to do
             LabNamePublicationYear or LeadResearcherCurrentYear.
-
             imagesize (int, int, int): Image size is the pixel count
             dimensions of the data. For example is the data is stored as a
             series of 100 slices each 2100x2000 pixel TIFF images, the X,Y,Z
             dimensions are (2100, 2000, 100).
-
             voxelres (flt, flt, flt): Voxel Resolution is the number of
             voxels per unit pixel. We store X,Y,Z voxel resolution separately.
-
             offset (int, int, int): If your data is not well aligned and
             there is "excess" image data you do not wish to examine, but
             are present in your images, offset is how you specify where your
             actual image starts. Offset is provided a pixel coordinate offset
             from origin which specifies the "actual" origin of the image.
             The offset is for X,Y,Z dimensions.
-
             timerange (int, int): Time Range is a parameter to support
             storage of Time Series data, so the value of the tuple is a 0
             to X range of how many images over time were taken. It takes 2
             inputs timeStepStart and timeStepStop.
-
             scalinglevels (int): Scaling levels is the number of levels the
             data is scalable to (how many zoom levels are present in the
             data). The highest resolution of the data is at scaling level 0,
             and for each level up the data is down sampled by 2x2
             (per slice). To learn more about the sampling service used,
             visit the the propagation service page.
-
             scaling (int): Scaling is the orientation of the data being
             stored, 0 corresponds to a Z-slice orientation (as in a
             collection of tiff images in which each tiff is a slice on the
             z plane) and 1 corresponds to an isotropic orientation (in
             which each tiff is a slice on the y plane).
-
         Returns:
             None
         """
@@ -272,7 +252,6 @@ class AutoIngest:
         """
         Arguements:
             metadata(str): Any metadata as appropriate from the LIMS schema
-
         Returns:
             None
         """
@@ -417,7 +396,7 @@ class AutoIngest:
             try:
                 CHANNEL_SCHEMA.validate(channel_object)
             except:
-                print('Check inputted variables. Dumping to /tmp/')
+                raise ValueError('Check inputted variables. Dumping to /tmp/')
                 self.output_json('/tmp/ND_{}.json'.format(channel_names[i]))
 
         # Dataset
@@ -425,7 +404,7 @@ class AutoIngest:
         try:
             DATASET_SCHEMA.validate(dataset_object)
         except:
-            print("Check inputted variables. Dumping to /tmp/")
+            raise ValueError("Check inputted variables. Dumping to /tmp/")
             self.output_json('/tmp/ND_dataset.json')
 
         # Project
@@ -433,7 +412,7 @@ class AutoIngest:
         try:
             PROJECT_SCHEMA.validate(project_object)
         except:
-            print("Check inputted variables. Dumping to /tmp/")
+            raise ValueError("Check inputted variables. Dumping to /tmp/")
             self.output_json('/tmp/ND_project.json')
 
     def put_data(self, data, site_host, dev):
@@ -449,9 +428,7 @@ class AutoIngest:
             response = requests.post(URLPath, data=json.dumps(data))
             assert( response.status_code == 200 )
         except:
-            print("Error in posting JSON file, exiting with \
-                {}".format(response.status_code))
-            print(response.content)
+            raise IOError("Error in posting JSON file {}".format(reponse.status_code)
 
     def post_data(self,
         site_host='http://openconnecto.me',
@@ -460,18 +437,14 @@ class AutoIngest:
         Arguements:
             site_host(str): The site host to post the data to, by default
             http://openconnectome.me.
-
             file_name(str): The file name of the json file to post (optional).
             If this is left unspecified it is assumed the data is in the
             AutoIngets object.
-
             dev(bool): If pushing to a microns dev branch server set this
             to True, if not leave False.
-
             verifytype(enum): Set http verification type, by checking the
             first slice is accessible or by checking channel folder. Enum:
             [Folder, Slice]
-
         Returns:
             None
         """
@@ -486,7 +459,7 @@ class AutoIngest:
                 with open(file_name) as data_file:
                     data = json.load(data_file)
             except:
-                print("Error opening file")
+                raise IOError("Error opening file")
 
         self.verify_path(data, verifytype)
         self.verify_json(data)
@@ -498,7 +471,6 @@ class AutoIngest:
         Arguements:
             file_name(str): The file name to store the json to, by default
             /tmp/ND.json
-
         Returns:
             None
         """
