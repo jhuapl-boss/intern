@@ -3,6 +3,7 @@ python:
     - "2.7"
     - "3.5"
 install:
+    - wget -O "/tmp/0000.tif" https://icme.hpc.msstate.edu/mediawiki/images/e/ee/SAND.TIF --no-check-certificate
     - sudo apt-get autoremove
     - sudo apt-get update
     - sudo apt-get install python-dev python3-dev
