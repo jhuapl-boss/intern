@@ -357,7 +357,6 @@ class AutoIngest:
         return project_dict
 
     def verify_path(self, data, verifytype):
-        #import pdb; pdb.set_trace()
         # Insert try and catch blocks
         try:
             token_name = data["project"]["token_name"]
@@ -389,7 +388,7 @@ class AutoIngest:
                         elif (verifytype==VERIFY_BY_SLICE):
                             work_path = "{}/{}/{}/time{}/{}.{}".format(
                                 path, token_name, channel_names[i], j,
-                                ("%05d" % offset), file_type)
+                                ("%04d" % offset), file_type)
                         else:
                             raise TypeError('Incorrect verify method')
 
@@ -403,7 +402,7 @@ class AutoIngest:
                     elif (verifytype==VERIFY_BY_SLICE):
                         work_path = "{}/{}/{}/{}.{}".format(
                             path, token_name, channel_names[i],
-                            ("%05d" % offset), file_type)
+                            ("%04d" % offset), file_type)
                     else:
                         raise TypeError('Incorrect verify method')
 
@@ -469,9 +468,9 @@ class AutoIngest:
             dev(bool): If pushing to a microns dev branch server set this
             to True, if not leave False.
 
-            verifytype(enum): Set http verification type, by checking slice
-            is accessible or by checking channel folder. Enum: [Folder,
-            Slice]
+            verifytype(enum): Set http verification type, by checking the
+            first slice is accessible or by checking channel folder. Enum:
+            [Folder, Slice]
 
         Returns:
             None

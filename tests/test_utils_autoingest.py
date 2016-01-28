@@ -30,7 +30,7 @@ class TestAutoIngest(unittest.TestCase):
         ai_1.add_project(data_name_1, data_name_1, 1)
         ai_1.add_dataset(data_name_1, (512, 512, 1), (1.0, 1.0, 10.0))
         ai_1.add_metadata('')
-        ai_1.post_data(site_host=SERVER_SITE, verifytype='Folder')
+        ai_1.post_data(site_host=SERVER_SITE, verifytype='Slice')
 
         response = requests.get("{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
 
@@ -42,7 +42,7 @@ class TestAutoIngest(unittest.TestCase):
 
 
     def test_post_data(self):
-        data_name_5 = "ndioawstest5%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
+        data_name_5 = "ndioawstest5%s%s%s%s%sf" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
 
         ai_5 = AutoIngest.AutoIngest()
         ai_5.add_channel(data_name_5, 'uint8', 'image', S3_SITE, 'SLICE', 'tif')
@@ -68,7 +68,7 @@ class TestAutoIngest(unittest.TestCase):
         except:
             print("Nothing to remove (No Error)")
 
-        data_name_2 = "ndiotest2%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
+        data_name_2 = "ndiotest2%s%s%s%s%sf" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
 
         ai_2 = AutoIngest.AutoIngest()
         ai_2.add_channel(data_name_2, 'uint8', 'image', DATA_SITE, 'SLICE', 'tif')
