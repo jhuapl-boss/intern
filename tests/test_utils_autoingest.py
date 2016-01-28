@@ -34,10 +34,6 @@ class TestAutoIngest(unittest.TestCase):
         try:
             self.assertEqual(response.headers['content-type'], 'product/npz')
         except:
-<<<<<<< HEAD
-=======
-            print(response.content)
->>>>>>> origin/master
             raise ValueError(response.content, "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
 
 
