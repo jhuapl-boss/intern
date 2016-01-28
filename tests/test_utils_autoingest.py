@@ -1,4 +1,3 @@
-import png
 import unittest
 import ndio.remote.neurodata as nd
 import ndio.utils.autoingest as AutoIngest
