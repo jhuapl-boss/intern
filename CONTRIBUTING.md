@@ -35,3 +35,28 @@ For instance:
 ```
     answer (int: 42): The universal answer to supply to the function
 ```
+
+## Code Conventions
+
+- **Raise exceptions, don't print.**
+  Raising exceptions sends  output to `stderr`, which is good — printing goes to `stdout`. Consider the following script:
+
+  ```
+  # print_csv.py
+  import ndio.remote.neurodata as ND
+  import sys
+  
+  nd = ND()
+  
+  print ",".join([i for i in nd.get_ramon_ids(sys.argv[1], sys.argv[2])])
+  ```
+  
+  This script accepts two command-line arguments and prints out a CSV of token/channel IDs:
+  
+  ```
+  python print_csv.py kasthuri2015_ramon_v1 neurons > out.csv
+  ```
+  
+  If you print warnings, you'll ruin the CSV schema!
+  
+- **Double-quotes unless you need double-quotes inside the quotes. Then, single quotes.**
