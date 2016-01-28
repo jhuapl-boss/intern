@@ -34,8 +34,7 @@ class TestAutoIngest(unittest.TestCase):
         try:
             self.assertEqual(response.headers['content-type'], 'product/npz')
         except:
-            print(response.content)
-            print("{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
+            raise ValueError(response.content, "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
 
 
     def test_post_data(self):
@@ -53,8 +52,7 @@ class TestAutoIngest(unittest.TestCase):
         try:
             self.assertEqual(response.headers['content-type'], 'product/npz')
         except:
-            print(response.content)
-            print("{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_5, data_name_5))
+            raise ValueError(response.content, "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_5, data_name_5))
 
         #self.assertEqual()
 
@@ -63,7 +61,7 @@ class TestAutoIngest(unittest.TestCase):
         try:
             os.remove("/tmp/ND.json")
         except:
-            print("Nothing to remove (No Error)")
+            print("")
 
         data_name_2 = "ndiotest2%s%s%s%s%sf" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
 
@@ -84,8 +82,7 @@ class TestAutoIngest(unittest.TestCase):
         try:
             self.assertEqual(response.headers['content-type'], 'product/npz')
         except:
-            print(response.content)
-            print("{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_2, data_name_2))
+            raise ValueError(response.content, "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_2, data_name_2))
 
     def test_output_json(self):
         data_name_3 = "ndio_test_3"
@@ -137,9 +134,7 @@ class TestAutoIngest(unittest.TestCase):
             self.assertEqual(list(test_json.copy().keys()).sort(),
                 list(truth_json.copy().keys()).sort())
         except:
-            print(list(test_json.copy().keys()).sort())
-            print("\nVersus\n")
-            print(list(truth_json.copy().keys()).sort())
+            raise ValueError(list(test_json.copy().keys()).sort(), "\nVersus\n", list(truth_json.copy().keys()).sort())
 
 
 

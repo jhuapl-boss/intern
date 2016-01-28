@@ -16,10 +16,6 @@ import json
 import os
 import requests
 from jsonspec.validators import load
-import re
-
-VERIFY_BY_FOLDER='Folder'
-VERIFY_BY_SLICE='Slice'
 
 CHANNEL_SCHEMA = load({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -158,9 +154,7 @@ class AutoIngest:
 
             data_url (str): This url points to the root directory of the
             files. Dropbox (or any data requiring authentication to
-            download such as private s3) is not an acceptable HTTP Server.
-            See additional instructions in documentation online to format
-            s3 properly so it is http accessible.
+            download such as s3) is not an acceptable HTTP Server.
 
             file_format (str): File format refers to the overarching kind
             of data, as in slices (normal image data) or catmaid
@@ -356,7 +350,7 @@ class AutoIngest:
         project_dict['public'] = public
         return project_dict
 
-    def verify_path(self, data, verifytype):
+    def verify_path(self, data):
         # Insert try and catch blocks
         try:
             token_name = data["project"]["token_name"]
@@ -369,45 +363,22 @@ class AutoIngest:
             channel_type = data["channels"][
                 channel_names[i]]["channel_type"]
             path = data["channels"][channel_names[i]]["data_url"]
-            aws_pattern = re.compile("^(http:\/\/)(.+)(\.s3\.amazonaws\.com)")
-            file_type = data["channels"][channel_names[i]]["file_type"]
-            if (data["dataset"]["scaling"]) == 0:
-                offset = data["dataset"]["offset"][0]
-            else:
-                offset = data["dataset"]["offset"][1]
 
-            if not (aws_pattern.match(path)):
-                if (channel_type == "timeseries"):
-                    timerange = data["dataset"]["timerange"]
-                    for j in xrange(timerange[0], timerange[1] + 1):
-                        # Test for tifs or such? Currently test for just not
-                        # empty
-                        if (verifytype==VERIFY_BY_FOLDER):
-                            work_path = "{}/{}/{}/time{}/".format(
-                                path, token_name, channel_names[i], j)
-                        elif (verifytype==VERIFY_BY_SLICE):
-                            work_path = "{}/{}/{}/time{}/{}.{}".format(
-                                path, token_name, channel_names[i], j,
-                                ("%04d" % offset), file_type)
-                        else:
-                            raise TypeError('Incorrect verify method')
-
-                        resp = requests.head(work_path)
-                        assert(resp.status_code == 200)
-                else:
-                    # Test for tifs or such? Currently test for just not empty
-                    if (verifytype==VERIFY_BY_FOLDER):
-                        work_path = "{}/{}/{}/".format(
-                            path, token_name, channel_names[i])
-                    elif (verifytype==VERIFY_BY_SLICE):
-                        work_path = "{}/{}/{}/{}.{}".format(
-                            path, token_name, channel_names[i],
-                            ("%04d" % offset), file_type)
-                    else:
-                        raise TypeError('Incorrect verify method')
-
+            if (channel_type == "timeseries"):
+                timerange = data["dataset"]["timerange"]
+                for j in xrange(timerange[0], timerange[1] + 1):
+                    # Test for tifs or such? Currently test for just not
+                    # empty
+                    work_path = "{}/{}/{}/time{}/".format(
+                        path, token_name, channel_names[i], j)
                     resp = requests.head(work_path)
                     assert(resp.status_code == 200)
+            else:
+                # Test for tifs or such? Currently test for just not empty
+                work_path = "{}/{}/{}/".format(
+                    path, token_name, channel_names[i])
+                resp = requests.head(work_path)
+                assert(resp.status_code == 200)
 
     def verify_json(self, data):
         # Channels
@@ -417,7 +388,7 @@ class AutoIngest:
             try:
                 CHANNEL_SCHEMA.validate(channel_object)
             except:
-                print('Check inputted variables. Dumping to /tmp/')
+                raise ValueError('Check inputted variables. Dumping to /tmp/')
                 self.output_json('/tmp/ND_{}.json'.format(channel_names[i]))
 
         # Dataset
@@ -425,7 +396,7 @@ class AutoIngest:
         try:
             DATASET_SCHEMA.validate(dataset_object)
         except:
-            print("Check inputted variables. Dumping to /tmp/")
+            raise ValueError("Check inputted variables. Dumping to /tmp/")
             self.output_json('/tmp/ND_dataset.json')
 
         # Project
@@ -433,29 +404,19 @@ class AutoIngest:
         try:
             PROJECT_SCHEMA.validate(project_object)
         except:
-            print("Check inputted variables. Dumping to /tmp/")
+            raise ValueError("Check inputted variables. Dumping to /tmp/")
             self.output_json('/tmp/ND_project.json')
 
-    def put_data(self, data, site_host, dev):
+    def put_data(self, data, site_host):
         # try to post data to the server
-        #import pdb; pdb.set_trace()
-
-        if dev:
-            URLPath = "{}/ca/autoIngest/".format(site_host)
-        else:
-            URLPath = "{}/ocp/ca/autoIngest/".format(site_host)
-
+        URLPath = "{}/ocp/ca/autoIngest/".format(site_host)
         try:
-            response = requests.post(URLPath, data=json.dumps(data))
-            assert( response.status_code == 200 )
+            r = requests.post(URLPath, data=json.dumps(data))
+            assert( r.status_code == 200 )
         except:
-            print("Error in posting JSON file, exiting with \
-                {}".format(response.status_code))
-            print(response.content)
+            raise IOError("Error in posting JSON file")
 
-    def post_data(self,
-        site_host='http://openconnecto.me',
-        file_name=None, dev=False, verifytype=VERIFY_BY_FOLDER):
+    def post_data(self, site_host='http://openconnectome.me', file_name=None):
         """
         Arguements:
             site_host(str): The site host to post the data to, by default
@@ -464,13 +425,6 @@ class AutoIngest:
             file_name(str): The file name of the json file to post (optional).
             If this is left unspecified it is assumed the data is in the
             AutoIngets object.
-
-            dev(bool): If pushing to a microns dev branch server set this
-            to True, if not leave False.
-
-            verifytype(enum): Set http verification type, by checking the
-            first slice is accessible or by checking channel folder. Enum:
-            [Folder, Slice]
 
         Returns:
             None
@@ -486,12 +440,12 @@ class AutoIngest:
                 with open(file_name) as data_file:
                     data = json.load(data_file)
             except:
-                print("Error opening file")
+                raise IOError("Error opening file")
 
-        self.verify_path(data, verifytype)
+        self.verify_path(data)
         self.verify_json(data)
 
-        self.put_data(data, site_host, dev)
+        self.put_data(data, site_host)
 
     def output_json(self, file_name='/tmp/ND.json'):
         """
