@@ -34,7 +34,6 @@ class TestAutoIngest(unittest.TestCase):
         try:
             self.assertEqual(response.headers['content-type'], 'product/npz')
         except:
-            print(response.content)
             raise ValueError(response.content, "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
 
 
@@ -67,7 +66,7 @@ class TestAutoIngest(unittest.TestCase):
         data_name_2 = "ndiotest2%s%s%s%s%sf" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.second)
 
         ai_2 = AutoIngest.AutoIngest()
-        ai_2.add_channel(data_name_2, 'uint8', 'image', DATA_SITE, 'SLICE', 'tif')
+        ai_2.add_channel(data_name_2, 'uint8', 'image', DATA_SITE, 'SLICE', 'tif') 
 
         ai_2.add_project(data_name_2, data_name_2, 1)
         ai_2.add_dataset(data_name_2, (512, 512, 1), (1.0, 1.0, 1.0))

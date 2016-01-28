@@ -186,6 +186,7 @@ class AutoIngest:
             after the initial data commit, the channel is read-only.
             Generally this is suggested with data that will be publicly
             viewable.
+
         Returns:
             None
         """
@@ -253,12 +254,13 @@ class AutoIngest:
             and for each level up the data is down sampled by 2x2
             (per slice). To learn more about the sampling service used,
             visit the the propagation service page.
-            
+
             scaling (int): Scaling is the orientation of the data being
             stored, 0 corresponds to a Z-slice orientation (as in a
             collection of tiff images in which each tiff is a slice on the
             z plane) and 1 corresponds to an isotropic orientation (in
             which each tiff is a slice on the y plane).
+
         Returns:
             None
         """
@@ -269,6 +271,7 @@ class AutoIngest:
         """
         Arguements:
             metadata(str): Any metadata as appropriate from the LIMS schema
+
         Returns:
             None
         """
@@ -445,7 +448,7 @@ class AutoIngest:
             response = requests.post(URLPath, data=json.dumps(data))
             assert( response.status_code == 200 )
         except:
-            raise IOError("Error in posting JSON file {}".format(reponse.status_code)
+            raise IOError("Error in posting JSON file {}".format(reponse.status_code))
 
     def post_data(self,
         site_host='http://openconnecto.me',
@@ -454,14 +457,18 @@ class AutoIngest:
         Arguements:
             site_host(str): The site host to post the data to, by default
             http://openconnectome.me.
+
             file_name(str): The file name of the json file to post (optional).
             If this is left unspecified it is assumed the data is in the
             AutoIngets object.
+
             dev(bool): If pushing to a microns dev branch server set this
             to True, if not leave False.
+
             verifytype(enum): Set http verification type, by checking the
             first slice is accessible or by checking channel folder. Enum:
             [Folder, Slice]
+
         Returns:
             None
         """
@@ -488,6 +495,7 @@ class AutoIngest:
         Arguements:
             file_name(str): The file name to store the json to, by default
             /tmp/ND.json
+
         Returns:
             None
         """
