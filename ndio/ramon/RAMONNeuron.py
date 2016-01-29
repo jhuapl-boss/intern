@@ -15,7 +15,7 @@ class RAMONNeuron(RAMONBase):
 
                  id=DEFAULT_ID,
                  confidence=DEFAULT_CONFIDENCE,
-                 dynamic_metadata=DEFAULT_DYNAMIC_METADATA,
+                 kvpairs=DEFAULT_DYNAMIC_METADATA,
                  status=DEFAULT_STATUS,
                  author=DEFAULT_AUTHOR):
 
@@ -24,6 +24,6 @@ class RAMONNeuron(RAMONBase):
             RAMONBase.__init__(self,
                                id=id,
                                confidence=confidence,
-                               dynamic_metadata=dynamic_metadata,
+                               kvpairs=kvpairs,
                                status=status,
                                author=author)
