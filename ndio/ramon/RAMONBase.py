@@ -9,7 +9,7 @@ class RAMONBase(object):
     """
     def __init__(self,  id=DEFAULT_ID,
                  confidence=DEFAULT_CONFIDENCE,
-                 dynamic_metadata=DEFAULT_DYNAMIC_METADATA,
+                 kvpairs=DEFAULT_DYNAMIC_METADATA,
                  status=DEFAULT_STATUS,
                  author=DEFAULT_AUTHOR):
         """
@@ -18,13 +18,13 @@ class RAMONBase(object):
         Arguments:
             id (int): Unique 32-bit ID value assigned by OCP database
             confidence (float): Value 0-1 indicating confidence in annotation
-            dynamic_metadata (dict): A collection of key-value pairs
+            kvpairs (dict): A collection of key-value pairs
             status (string): Status of annotation in database
             author (string): Username of the person who created the annotation
         """
         self.id = id
         self.confidence = confidence
-        self.dynamic_metadata = dynamic_metadata
+        self.kvpairs = kvpairs
         self._status = status
         self.author = author
 
