@@ -549,6 +549,18 @@ class neurodata(Remote):
                 r = ramon.hdf5_to_ramon(h5file)
                 return r
 
+    def reserve_ids(self, quantity):
+        """
+        Requests a list of next-available-IDs from the server.
+
+        Arguments:
+            quantity (int): The number of IDs to reserve
+
+        Returns:
+            int[quantity]: List of IDs you've been granted
+        """
+        raise NotImplementedError("No reserving yet, sorry!")
+
     def merge_ids(self, token, channel, ids):
         """
         Call the restful endpoint to merge two RAMON objects into one.
