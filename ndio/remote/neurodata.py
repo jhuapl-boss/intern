@@ -581,7 +581,7 @@ class neurodata(Remote):
         else:
             return True
 
-    def post_ramon(self, token, channel, r):
+    def post_ramon(self, token, channel, r, overwrite=True):
         """
         Posts a RAMON object to the Remote.
 
@@ -589,6 +589,8 @@ class neurodata(Remote):
             token (str): Project to use
             channel (str): The channel to use
             ramon (RAMON): The annotation to upload
+            overwrite (bool : True): Whether to overwrite by default. If False
+                and a collision occurs, raises a RemoteDataUploadError.
 
         Returns:
             bool: Success = True
@@ -599,17 +601,21 @@ class neurodata(Remote):
 
         # First, create the hdf5 file.
         filename = str(r.id) + ".hdf5"
-        ramon.ramon_to_hdf5(r)
+        tmp_h5 = ramon.ramon_to_hdf5(r)
+        import pdb; pdb.set_trace()
+        # tmp_h5
 
-        with open(filename, 'rb') as hdf5_data:
+        with open(tmp_h5.name, 'rb') as hdf5_data:
 
             req = requests.post(self.url("{}/{}/"
                                 .format(token, channel)), headers={
                 'Content-Type': 'application/x-www-form-urlencoded'
             }, data=hdf5_data)
             if req.status_code is not 200:
-                raise RemoteDataUploadError(req + " " + req.text)
+                tmp_h5.close()
+                raise RemoteDataUploadError(req.status_code + " " + req.text)
             else:
+                tmp_h5.close()
                 return True
 
     # SECTION:
