@@ -602,18 +602,21 @@ class neurodata(Remote):
         # First, create the hdf5 file.
         filename = str(r.id) + ".hdf5"
         tmp_h5 = ramon.ramon_to_hdf5(r)
-        import pdb; pdb.set_trace()
-        # tmp_h5
 
         with open(tmp_h5.name, 'rb') as hdf5_data:
 
-            req = requests.post(self.url("{}/{}/"
+            req = requests.post(self.url("{}/{}/overwrite/"
                                 .format(token, channel)), headers={
                 'Content-Type': 'application/x-www-form-urlencoded'
-            }, data=hdf5_data)
+            }, data=hdf5_data.read())
             if req.status_code is not 200:
+                print req.status_code
                 tmp_h5.close()
-                raise RemoteDataUploadError(req.status_code + " " + req.text)
+                if 404 == req.status_code:
+                    raise RemoteDataUploadError("KE 404: Duplicate upload.")
+                if 500 == req.status_code:
+                    raise RemoteDataUploadError("KE 500: Bad upload.")
+                raise RemoteDataUploadError(req.status_code)
             else:
                 tmp_h5.close()
                 return True
