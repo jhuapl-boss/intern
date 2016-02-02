@@ -610,7 +610,6 @@ class neurodata(Remote):
                 'Content-Type': 'application/x-www-form-urlencoded'
             }, data=hdf5_data.read())
             if req.status_code is not 200:
-                print req.status_code
                 tmp_h5.close()
                 if 404 == req.status_code:
                     raise RemoteDataUploadError("KE 404: Duplicate upload.")
