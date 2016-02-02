@@ -19,7 +19,11 @@ import shlex
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('../../ndio'))
+# sys.path.insert(0, os.path.abspath('../../ndio'))
+sys.path.insert(0, os.path.abspath('../../ndio/convert'))
+sys.path.insert(0, os.path.abspath('../../ndio/ramon'))
+sys.path.insert(0, os.path.abspath('../../ndio/remote'))
+sys.path.insert(0, os.path.abspath('../../ndio/utils'))
 
 # -- General configuration ------------------------------------------------
 
