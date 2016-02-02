@@ -549,14 +549,15 @@ class neurodata(Remote):
                 r = ramon.hdf5_to_ramon(h5file)
                 return r
 
-    def merge_ids(self, token, channel, ids):
+    def merge_ids(self, token, channel, ids, delete=False):
         """
         Call the restful endpoint to merge two RAMON objects into one.
 
         Arguments:
             token
             channel
-            ids: the list of the IDs to merge
+            ids (int[]): the list of the IDs to merge
+            delete (bool : False): Whether to delete after merging.
 
         Returns:
             json
@@ -566,6 +567,38 @@ class neurodata(Remote):
         if req.status_code is not 200:
             raise RemoteDataUploadError('Could not merge ids {}'.format(
                                         ','.join([str(i) for i in ids])))
+        else:
+            return True
+
+    def delete_ramon(self, token, channel, anno):
+        """
+        Deletes an annotation from the server. Probably you should be careful
+        with this function, it seems dangerous.
+
+        Arguments:
+            token
+            channel
+            anno (int OR list(int) OR RAMON): The annotation to delete. If a
+                RAMON object is supplied, the remote annotation will be deleted
+                by an ID lookup. If an int is supplied, the annotation will be
+                deleted for that ID. If a list of ints are provided, they will
+                all be deleted.
+
+        Returns:
+            bool: Success
+        """
+        if type(anno) is int:
+            a = anno
+        if type(anno) is str:
+            a = int(anno)
+        if type(anno) is list:
+            a = ",".join(anno)
+        else:
+            a = anno.id
+
+        req = requests.delete(self.url("{}/{}/{}/".format(token, channel, a)))
+        if req.status_code is not 200:
+            raise RemoteDataNotFoundError("Could not delete id {}.".format(a))
         else:
             return True
 
