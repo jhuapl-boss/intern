@@ -549,7 +549,19 @@ class neurodata(Remote):
                 r = ramon.hdf5_to_ramon(h5file)
                 return r
 
-    def merge_ids(self, token, channel, ids, delete=False):
+    def reserve_ids(self, quantity):
+        """
+        Requests a list of next-available-IDs from the server.
+
+        Arguments:
+            quantity (int): The number of IDs to reserve
+
+        Returns:
+            int[quantity]: List of IDs you've been granted
+        """
+        raise NotImplementedError("No reserving yet, sorry!")
+
+    def merge_ids(self, token, channel, ids):
         """
         Call the restful endpoint to merge two RAMON objects into one.
 
@@ -610,6 +622,8 @@ class neurodata(Remote):
             token (str): Project to use
             channel (str): The channel to use
             ramon (RAMON): The annotation to upload
+            overwrite (bool : True): Whether to overwrite by default. If False
+                and a collision occurs, raises a RemoteDataUploadError.
 
         Returns:
             bool: Success = True
@@ -620,17 +634,23 @@ class neurodata(Remote):
 
         # First, create the hdf5 file.
         filename = str(r.id) + ".hdf5"
-        ramon.ramon_to_hdf5(r)
+        tmp_h5 = ramon.ramon_to_hdf5(r)
 
-        with open(filename, 'rb') as hdf5_data:
+        with open(tmp_h5.name, 'rb') as hdf5_data:
 
-            req = requests.post(self.url("{}/{}/"
+            req = requests.post(self.url("{}/{}/overwrite/"
                                 .format(token, channel)), headers={
                 'Content-Type': 'application/x-www-form-urlencoded'
-            }, data=hdf5_data)
+            }, data=hdf5_data.read())
             if req.status_code is not 200:
-                raise RemoteDataUploadError(req + " " + req.text)
+                tmp_h5.close()
+                if 404 == req.status_code:
+                    raise RemoteDataUploadError("KE 404: Duplicate upload.")
+                if 500 == req.status_code:
+                    raise RemoteDataUploadError("KE 500: Bad upload.")
+                raise RemoteDataUploadError(req.status_code)
             else:
+                tmp_h5.close()
                 return True
 
     # SECTION:
