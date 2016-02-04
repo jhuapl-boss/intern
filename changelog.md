@@ -1,5 +1,13 @@
 # Changelog
 
+- **0.1.6**
+    - Updates to ramon/hdf5 conversion
+    - Export vert/faces to 3D formats (after running mcubes)
+        - obj
+        - ply
+        - dae
+    - Better handling of temp-files when generating hdf5
+    - Refactor for new neurodata/ndio location on GitHub
 - **0.1.5**
     - Bug fixes to autoingest and tests for the same
 - **0.1.4**
