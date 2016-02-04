@@ -1,10 +1,10 @@
 # Contributing
 
 ## Getting Started
-- Start by navigating to https://github.com/openconnectome/ndio and forking the project to your own GitHub account.
+- Start by navigating to https://github.com/neurodata/ndio and forking the project to your own GitHub account.
 
   ```
-  git clone https://github.com/openconnectome/ndio.git
+  git clone https://github.com/neurodata/ndio.git
   ```
 - Download the required packages. This can be done easily with pip:
 
@@ -25,7 +25,7 @@ It is highly recommended that you reach out to the development team at ndio@neur
   ```
   git checkout -b add-json-exports
   ```
-- Make your changes and push to your fork. Then, take out a pull-request against the master branch of the official openconnectome/ndio repository. Be sure your code subscribes to our style guide (below)!
+- Make your changes and push to your fork. Then, take out a pull-request against the master branch of the official neurodata/ndio repository. Be sure your code subscribes to our style guide (below)!
 
 # Style Guide
 We adhere to the [Google Style Guide](https://google.github.io/styleguide/pyguide.html) whenever possible, and use the Google docstring styleguide as well. Optional arguments can be 'defaulted' with the syntax: `param_name (type: Default): Description`.
