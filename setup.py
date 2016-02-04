@@ -22,8 +22,8 @@ setup(
     description = 'A Python library for open neuroscience data access and manipulation.',
     author = 'Jordan Matelsky',
     author_email = 'jordan@neurodata.io',
-    url = 'https://github.com/openconnectome/ndio',
-    download_url = 'https://github.com/openconnectome/ndio/tarball/' + VERSION,
+    url = 'https://github.com/neurodata/ndio',
+    download_url = 'https://github.com/neurodata/ndio/tarball/' + VERSION,
     keywords = [
         'brain',
         'medicine',
