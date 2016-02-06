@@ -354,7 +354,7 @@ class neurodata(Remote):
                     data,
                     dtype='',
                     resolution=0,
-                    roll_axis=True):
+                    roll_axis=False):
         """
         Post a cutout to the server.
 
@@ -365,8 +365,8 @@ class neurodata(Remote):
             q_stop (int)
             data:           A numpy array of data. Pass in (x, y, z)
             resolution:     Default resolution of the data
-            roll_axis:      Default True. Pass False if you're supplying data
-                            in (z, x, y) order.
+            roll_axis:      Default True. Pass True if you're supplying data
+                            in (z, x, y) order. maybe.
             dtype:          Pass in datatype if you know it. Otherwise we'll
                             check the projinfo.
         Returns:
