@@ -4,9 +4,9 @@ import h5py
 import os
 import numpy
 try:
-    from io import StringIO
+    from io import BytesIO as StringIO
 except ImportError:
-    from cStringIO import StringIO
+    from io import BytesIO as StringIO
 import zlib
 import tempfile
 
