@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.1.7**
+    - Fix `post_cutout` axis ordering
 - **0.1.6**
     - Updates to ramon/hdf5 conversion
     - Export vert/faces to 3D formats (after running mcubes)
