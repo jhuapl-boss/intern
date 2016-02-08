@@ -654,8 +654,6 @@ class neurodata(Remote):
             token (str): Project to use
             channel (str): The channel to use
             r (RAMON): The annotation to upload
-            # overwrite (bool : True): Whether to overwrite by default. If False
-                and a collision occurs, raises a RemoteDataUploadError.
 
         Returns:
             bool: Success = True
