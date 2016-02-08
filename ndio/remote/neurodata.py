@@ -15,6 +15,8 @@ from .errors import *
 import ndio.ramon as ramon
 from six.moves import range
 
+import urllib2
+
 DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
 
@@ -610,7 +612,8 @@ class neurodata(Remote):
 
         req = requests.delete(self.url("{}/{}/{}/".format(token, channel, a)))
         if req.status_code is not 200:
-            raise RemoteDataNotFoundError("Could not delete id {}.".format(a))
+            raise RemoteDataNotFoundError("Could not delete id {}: {}"
+                                          .format(a, req.text))
         else:
             return True
 
@@ -621,8 +624,8 @@ class neurodata(Remote):
         Arguments:
             token (str): Project to use
             channel (str): The channel to use
-            ramon (RAMON): The annotation to upload
-            overwrite (bool : True): Whether to overwrite by default. If False
+            r (RAMON): The annotation to upload
+            # overwrite (bool : True): Whether to overwrite by default. If False
                 and a collision occurs, raises a RemoteDataUploadError.
 
         Returns:
@@ -632,26 +635,14 @@ class neurodata(Remote):
             RemoteDataUploadError if something goes wrong
         """
 
-        # First, create the hdf5 file.
-        filename = str(r.id) + ".hdf5"
         tmp_h5 = ramon.ramon_to_hdf5(r)
 
-        with open(tmp_h5.name, 'rb') as hdf5_data:
+        with open(tmp_h5.name) as hdf5_data:
+            url = self.url("{}/{}/".format(token, channel))
 
-            req = requests.post(self.url("{}/{}/overwrite/"
-                                .format(token, channel)), headers={
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }, data=hdf5_data.read())
-            if req.status_code is not 200:
-                tmp_h5.close()
-                if 404 == req.status_code:
-                    raise RemoteDataUploadError("KE 404: Duplicate upload.")
-                if 500 == req.status_code:
-                    raise RemoteDataUploadError("KE 500: Bad upload.")
-                raise RemoteDataUploadError(req.status_code)
-            else:
-                tmp_h5.close()
-                return True
+            req = urllib2.Request(url, hdf5_data.read())
+            response = urllib2.urlopen(req)
+            tmp_h5.close()
 
     # SECTION:
     # Channels
