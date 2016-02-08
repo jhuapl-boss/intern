@@ -452,7 +452,7 @@ class neurodata(Remote):
             raise IOError("Could not successfully mock HDF5 file for parsing.")
 
     def get_ramon(self, token, channel, ids, resolution,
-                  metadata_only=False):
+                  metadata_only=False, sieve=None):
         """
         Download a RAMON object by ID.
 
@@ -464,6 +464,23 @@ class neurodata(Remote):
                 (["3", "4", "5"]).
             resolution (int): Resolution
             metadata_only (bool):  True = returns `get_ramon_metadata` instead
+            sieve (function): A function that accepts a single ramon object
+                and returns True or False depending on whether you want that
+                ramon object to be included in your response or not.
+
+                For example,
+
+                ```
+                def is_even_id(ramon):
+                    return ramon.id % 2 == 0
+                ```
+
+                You can then pass this to get_ramon like this:
+
+                ```
+                ndio.remote.neurodata.get_ramon( . . . , sieve=is_even_id)
+                ```
+
 
         Returns:
             ndio.ramon.RAMON[]
@@ -495,6 +512,8 @@ class neurodata(Remote):
                 h5file = h5py.File(tmpfile.name, "r")
 
                 rs = [ramon.hdf5_to_ramon(h5file, i) for i in ids]
+                if sieve is not None:
+                    return [r for r in rs if sieve(r)]
                 return rs
 
     def get_ramon_metadata(self, token, channel, anno_id):
