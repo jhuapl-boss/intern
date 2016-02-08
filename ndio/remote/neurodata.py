@@ -15,7 +15,10 @@ from .errors import *
 import ndio.ramon as ramon
 from six.moves import range
 
-import urllib2
+try:
+    import urllib.request as urllib2
+except ImportError:
+    import urllib2
 
 DEFAULT_HOSTNAME = "openconnecto.me"
 DEFAULT_PROTOCOL = "http"
@@ -448,7 +451,7 @@ class neurodata(Remote):
                 return [i for i in h5file['ANNOIDS']]
             raise IOError("Could not successfully mock HDF5 file for parsing.")
 
-    def get_ramon(self, token, channel, anno_id, resolution,
+    def get_ramon(self, token, channel, ids, resolution,
                   metadata_only=False):
         """
         Download a RAMON object by ID.
@@ -456,24 +459,31 @@ class neurodata(Remote):
         Arguments:
             token (str): Project to use
             channel (str): The channel to use
-            anno_id (int, str): The ID of a RAMON object to gather. Coerced str
-            resolution (int): Resolution (if not working, try a higher num)
+            ids (int, str, int[], str[]): The IDs of a RAMON object to gather.
+                Can be int (3), string ("3"), int[] ([3, 4, 5]), or string
+                (["3", "4", "5"]).
+            resolution (int): Resolution
             metadata_only (bool):  True = returns `get_ramon_metadata` instead
 
         Returns:
-            ndio.ramon.RAMON
+            ndio.ramon.RAMON[]
 
         Raises:
-            RemoteDataNotFoundError: If the requested anno_id cannot be found.
+            RemoteDataNotFoundError: If the requested ids cannot be found.
         """
 
         if metadata_only:
-            return self.get_ramon_metadata(token, channel, anno_id)
+            return self.get_ramon_metadata(token, channel, ids)
 
-        # Download the data itself
-        req = requests.get(self.url() +
-                           "{}/{}/{}/cutout/{}/".format(token, channel,
-                                                        anno_id, resolution))
+        if type(ids) is int:
+            ids = [ids]
+        if type(ids) is list:
+            ids = [str(i) for i in ids]
+        # now ids is a list of strings
+        req = requests.get(self.url("{}/{}/{}/cutout/{}/".format(token,
+                                                                 channel,
+                                                                 ",".join(ids),
+                                                                 resolution)))
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
@@ -484,8 +494,8 @@ class neurodata(Remote):
                 tmpfile.seek(0)
                 h5file = h5py.File(tmpfile.name, "r")
 
-                r = ramon.hdf5_to_ramon(h5file)
-                return r
+                rs = [ramon.hdf5_to_ramon(h5file, i) for i in ids]
+                return rs
 
     def get_ramon_metadata(self, token, channel, anno_id):
         """
