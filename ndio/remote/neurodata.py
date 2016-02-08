@@ -420,8 +420,6 @@ class neurodata(Remote):
         Return a list of all IDs available for download from this token and
         channel.
 
-        http://www.openconnecto.me/ocp/ca/test_ramonify_public/neuron/query/type/5/
-
         Arguments:
             token (str): Project to use
             channel (str): Channel to use (default 'annotation')
@@ -663,13 +661,18 @@ class neurodata(Remote):
         """
 
         tmp_h5 = ramon.ramon_to_hdf5(r)
+        url = self.url("{}/{}/".format(token, channel))
+        files = {'file':('report.xls', open(tmp_h5.name, 'rb'))}
+        res = requests.post(url, files=files)
 
-        with open(tmp_h5.name) as hdf5_data:
-            url = self.url("{}/{}/".format(token, channel))
+        if res.status_code == 404:
+            raise RemoteDataUploadError('[400] Could not upload {}'
+                                        .format(str(r)))
+        if res.status_code == 500:
+            raise RemoteDataUploadError('[500] Could not upload {}'
+                                        .format(str(r)))
 
-            req = urllib2.Request(url, hdf5_data.read())
-            response = urllib2.urlopen(req)
-            tmp_h5.close()
+        return True
 
     # SECTION:
     # Channels
