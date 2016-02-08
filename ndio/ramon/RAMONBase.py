@@ -7,7 +7,7 @@ class RAMONBase(object):
     """
     RAMONBase Object for storing neuroscience data
     """
-    def __init__(self,  id=DEFAULT_ID,
+    def __init__(self, id=DEFAULT_ID,
                  confidence=DEFAULT_CONFIDENCE,
                  kvpairs=DEFAULT_DYNAMIC_METADATA,
                  status=DEFAULT_STATUS,
@@ -27,6 +27,12 @@ class RAMONBase(object):
         self.kvpairs = kvpairs
         self._status = status
         self.author = author
+
+    def __str__(self):
+        """
+        String representation of a RAMON object for convenience.
+        """
+        return "<{} object. id={}>".format(type(self), self.id)
 
     @property
     def status(self):

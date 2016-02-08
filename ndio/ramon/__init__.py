@@ -145,12 +145,13 @@ def hdf5_to_ramon(hdf5, anno_id=None):
     if type(r) in [RAMONNeuron, RAMONSynapse]:
         r.segments = metadata['SEGMENTS'][()]
 
-    kvs = metadata['KVPAIRS'][()][0].split()
-    if len(kvs) != 0:
+    if 'KVPAIRS' in metadata:
+        kvs = metadata['KVPAIRS'][()][0].split()
+        if len(kvs) != 0:
 
-        for i in kvs:
-            k, v = str(i).split(',')
-            r.kvpairs[str(k)] = str(v)
+            for i in kvs:
+                k, v = str(i).split(',')
+                r.kvpairs[str(k)] = str(v)
 
     if issubclass(type(r), RAMONVolume):
         if 'CUTOUT' in anno:
