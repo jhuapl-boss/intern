@@ -503,7 +503,7 @@ class neurodata(Remote):
                                                                  resolution)))
 
         if req.status_code is not 200:
-            raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
+            raise RemoteDataNotFoundError('No data for id {}.'.format(ids))
         else:
 
             with tempfile.NamedTemporaryFile() as tmpfile:
