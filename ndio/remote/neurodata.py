@@ -490,10 +490,13 @@ class neurodata(Remote):
         if metadata_only:
             return self.get_ramon_metadata(token, channel, ids)
 
+        BATCH = False
         if type(ids) is int:
             ids = [ids]
         if type(ids) is list:
             ids = [str(i) for i in ids]
+            if len(ids) > 100:
+                BATCH = True
         # now ids is a list of strings
         req = requests.get(self.url("{}/{}/{}/cutout/{}/".format(token,
                                                                  channel,
