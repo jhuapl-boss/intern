@@ -498,10 +498,13 @@ class neurodata(Remote):
             if len(ids) > 100:
                 BATCH = True
         # now ids is a list of strings
-        req = requests.get(self.url("{}/{}/{}/cutout/{}/".format(token,
-                                                                 channel,
-                                                                 ",".join(ids),
-                                                                 resolution)))
+
+
+
+    def _get_single_ramon_batch(self, token, channel, ids, resolution):
+        url = self.url("{}/{}/{}/cutout/{}/".format(token, channel,
+                                                    ",".join(ids), resolution))
+        req = requests.get(url)
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(ids))
