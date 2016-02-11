@@ -576,11 +576,10 @@ class neurodata(Remote):
                                                        anno_id.strip())
         elif type(anno_id) is list:
             # [id, id] or ['id', 'id']
-            results = {}
+            results = []
             for i in anno_id:
-                results[i] = self._get_single_ramon_metadata(token, channel,
-                                                             str(anno_id)
-                                                             .strip())
+                results.append(self._get_single_ramon_metadata(token, channel,
+                                                             str(i)))
             return results
 
     def _get_single_ramon_metadata(self, token, channel, anno_id):
