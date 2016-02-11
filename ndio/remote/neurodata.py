@@ -450,7 +450,7 @@ class neurodata(Remote):
             raise IOError("Could not successfully mock HDF5 file for parsing.")
 
     def get_ramon(self, token, channel, ids, resolution,
-                  metadata_only=False, sieve=None):
+                  metadata_only=False, sieve=None, batch_size=100):
         """
         Download a RAMON object by ID.
 
@@ -461,8 +461,8 @@ class neurodata(Remote):
                 Can be int (3), string ("3"), int[] ([3, 4, 5]), or string
                 (["3", "4", "5"]).
             resolution (int): Resolution
-            metadata_only (bool):  True = returns `get_ramon_metadata` instead
-            sieve (function): A function that accepts a single ramon object
+            metadata_only (bool : False):  If True, returns get_ramon_metadata
+            sieve (function : None): A function that accepts a single ramon
                 and returns True or False depending on whether you want that
                 ramon object to be included in your response or not.
 
@@ -478,6 +478,10 @@ class neurodata(Remote):
                 ```
                 ndio.remote.neurodata.get_ramon( . . . , sieve=is_even_id)
                 ```
+            batch_size (int : 100): The amount of RAMON objects to download at
+                a time. If this is greater than 100, we anticipate things going
+                very poorly for you. So if you set it <100, ndio will use it.
+                If >=100, set it to 100.
 
 
         Returns:
@@ -487,18 +491,37 @@ class neurodata(Remote):
             RemoteDataNotFoundError: If the requested ids cannot be found.
         """
 
+        b_size = min(100, batch_size)
+
         if metadata_only:
             return self.get_ramon_metadata(token, channel, ids)
 
+        BATCH = False
         if type(ids) is int:
             ids = [ids]
         if type(ids) is list:
             ids = [str(i) for i in ids]
+            if len(ids) > b_size:
+                BATCH = True
         # now ids is a list of strings
-        req = requests.get(self.url("{}/{}/{}/cutout/{}/".format(token,
-                                                                 channel,
-                                                                 ",".join(ids),
-                                                                 resolution)))
+
+        if BATCH:
+            rs = []
+            id_batches = [ids[i:i+b_size] for i in xrange(0, len(ids), b_size)]
+            for batch in id_batches:
+                rs.extend(self._get_ramon_batch(token, channel,
+                                                batch, resolution))
+        else:
+            rs = self._get_ramon_batch(token, channel, ids, resolution)
+
+        if sieve is not None:
+            return [r for r in rs if sieve(r)]
+        return rs
+
+    def _get_ramon_batch(self, token, channel, ids, resolution):
+        url = self.url("{}/{}/{}/cutout/{}/".format(token, channel,
+                                                    ",".join(ids), resolution))
+        req = requests.get(url)
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(ids))
@@ -510,8 +533,6 @@ class neurodata(Remote):
                 h5file = h5py.File(tmpfile.name, "r")
 
                 rs = [ramon.hdf5_to_ramon(h5file, i) for i in ids]
-                if sieve is not None:
-                    return [r for r in rs if sieve(r)]
                 return rs
 
     def get_ramon_metadata(self, token, channel, anno_id):
@@ -555,11 +576,10 @@ class neurodata(Remote):
                                                        anno_id.strip())
         elif type(anno_id) is list:
             # [id, id] or ['id', 'id']
-            results = {}
+            results = []
             for i in anno_id:
-                results[i] = self._get_single_ramon_metadata(token, channel,
-                                                             str(anno_id)
-                                                             .strip())
+                results.append(self._get_single_ramon_metadata(token, channel,
+                                                             str(i)))
             return results
 
     def _get_single_ramon_metadata(self, token, channel, anno_id):
