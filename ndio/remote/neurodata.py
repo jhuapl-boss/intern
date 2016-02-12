@@ -610,7 +610,7 @@ class neurodata(Remote):
         """
         raise NotImplementedError("No reserving yet, sorry!")
 
-    def merge_ids(self, token, channel, ids):
+    def merge_ids(self, token, channel, ids, delete=False):
         """
         Call the restful endpoint to merge two RAMON objects into one.
 
@@ -628,8 +628,9 @@ class neurodata(Remote):
         if req.status_code is not 200:
             raise RemoteDataUploadError('Could not merge ids {}'.format(
                                         ','.join([str(i) for i in ids])))
-        else:
-            return True
+        if delete:
+            self.delete_ramon(token, channel, ids[1:])
+        return True
 
     def delete_ramon(self, token, channel, anno):
         """
