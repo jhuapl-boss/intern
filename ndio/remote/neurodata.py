@@ -703,7 +703,7 @@ class neurodata(Remote):
                 tmpfile = ramon.ramon_to_hdf5(i, tmpfile)
 
             url = self.url("{}/{}/".format(token, channel))
-            files = {'file':('report.xls', open(tmpfile.name, 'rb'))}
+            files = {'file':('ramon.hdf5', open(tmpfile.name, 'rb'))}
             res = requests.post(url, files=files)
 
             if res.status_code == 404:
