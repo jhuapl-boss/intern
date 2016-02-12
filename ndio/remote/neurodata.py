@@ -664,14 +664,17 @@ class neurodata(Remote):
         else:
             return True
 
-    def post_ramon(self, token, channel, r):
+    def post_ramon(self, token, channel, r, batch_size=100):
         """
         Posts a RAMON object to the Remote.
 
         Arguments:
             token (str): Project to use
             channel (str): The channel to use
-            r (RAMON): The annotation to upload
+            r (RAMON or RAMON[]): The annotation(s) to upload
+            batch_size (int : 100): The number of RAMONs to post simultaneously
+                at maximum in one file. If len(r) > batch_size, the batch will
+                be split and uploaded automatically. Must be less than 100.
 
         Returns:
             bool: Success = True
@@ -680,17 +683,35 @@ class neurodata(Remote):
             RemoteDataUploadError if something goes wrong
         """
 
-        tmp_h5 = ramon.ramon_to_hdf5(r)
-        url = self.url("{}/{}/".format(token, channel))
-        files = {'file':('report.xls', open(tmp_h5.name, 'rb'))}
-        res = requests.post(url, files=files)
+        # Max out batch-size at 100.
+        b_size = min(100, batch_size)
 
-        if res.status_code == 404:
-            raise RemoteDataUploadError('[400] Could not upload {}'
-                                        .format(str(r)))
-        if res.status_code == 500:
-            raise RemoteDataUploadError('[500] Could not upload {}'
-                                        .format(str(r)))
+        # Coerce incoming IDs to a list.
+        if type(r) is not list:
+            r = [r]
+
+        # If there are too many to fit in one batch, split here and call this
+        # function recursively.
+        if len(r) > batch_size:
+            batches = [r[i:i+b_size] for i in xrange(0, len(r), b_size)]
+            for batch in batches:
+                self.post_ramon(token, channel, batch, b_size)
+            return
+
+        with tempfile.NamedTemporaryFile(delete=False) as tmpfile:
+            for i in r:
+                tmpfile = ramon.ramon_to_hdf5(i, tmpfile)
+
+            url = self.url("{}/{}/".format(token, channel))
+            files = {'file':('ramon.hdf5', open(tmpfile.name, 'rb'))}
+            res = requests.post(url, files=files)
+
+            if res.status_code == 404:
+                raise RemoteDataUploadError('[400] Could not upload {}'
+                .format(str(r)))
+            if res.status_code == 500:
+                raise RemoteDataUploadError('[500] Could not upload {}'
+                .format(str(r)))
 
         return True
 
