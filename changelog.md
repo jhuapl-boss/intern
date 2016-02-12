@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.1.8**
+    - Merging RAMONs on the `Remote` now supports deleting 'stale' objects with the `delete` flag
+    - Uploading and downloading RAMONs now occurs in batches of size >=100, meaning that large-batch downloads no longer fail.
 - **0.1.7**
     - Fix `post_cutout` axis ordering
 - **0.1.6**
