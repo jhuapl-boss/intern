@@ -671,7 +671,7 @@ class neurodata(Remote):
         Arguments:
             token (str): Project to use
             channel (str): The channel to use
-            r (RAMON): The annotation to upload
+            r (RAMON or RAMON[]): The annotation(s) to upload
 
         Returns:
             bool: Success = True
@@ -680,17 +680,26 @@ class neurodata(Remote):
             RemoteDataUploadError if something goes wrong
         """
 
-        tmp_h5 = ramon.ramon_to_hdf5(r)
-        url = self.url("{}/{}/".format(token, channel))
-        files = {'file':('report.xls', open(tmp_h5.name, 'rb'))}
-        res = requests.post(url, files=files)
+        if type(r) is not list:
+            r = [r]
 
-        if res.status_code == 404:
-            raise RemoteDataUploadError('[400] Could not upload {}'
-                                        .format(str(r)))
-        if res.status_code == 500:
-            raise RemoteDataUploadError('[500] Could not upload {}'
-                                        .format(str(r)))
+        with tempfile.NamedTemporaryFile(delete=False) as tmpfile:
+            for i in r:
+                tmpfile = ramon.ramon_to_hdf5(i, tmpfile.name)
+
+            import pdb; pdb.set_trace()
+
+
+            url = self.url("{}/{}/".format(token, channel))
+            files = {'file':('report.xls', open(tmpfile.name, 'rb'))}
+            res = requests.post(url, files=files)
+
+            if res.status_code == 404:
+                raise RemoteDataUploadError('[400] Could not upload {}'
+                .format(str(r)))
+            if res.status_code == 500:
+                raise RemoteDataUploadError('[500] Could not upload {}'
+                .format(str(r)))
 
         return True
 

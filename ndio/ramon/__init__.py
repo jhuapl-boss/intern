@@ -205,74 +205,76 @@ def ramon_to_hdf5(ramon, hdf5=None):
     import numpy
 
     if hdf5 is None:
+        tmpfile = tempfile.NamedTemporaryFile(delete=False)
+    else:
+        tmpfile = hdf5
 
-        with tempfile.NamedTemporaryFile(delete=False) as tmpfile:
-            with h5py.File(tmpfile.name, "a") as hdf5:
+    with h5py.File(tmpfile.name, "a") as hdf5:
 
-                # First we'll export things that all RAMON objects have in
-                # common, starting with the Group that encompasses each ID:
-                grp = hdf5.create_group(str(ramon.id))
+        # First we'll export things that all RAMON objects have in
+        # common, starting with the Group that encompasses each ID:
+        grp = hdf5.create_group(str(ramon.id))
 
-                grp.create_dataset("ANNOTATION_TYPE", (1,),
-                                   numpy.uint32,
-                                   data=AnnotationType.get_int(type(ramon)))
-                if hasattr(ramon, 'resolution'):
-                    grp.create_dataset('RESOLUTION', (1,),
-                                       numpy.uint32, data=ramon.resolution)
-                if hasattr(ramon, 'xyz_offset'):
-                    grp.create_dataset('XYZOFFSET', (3,),
-                                       numpy.uint32, data=ramon.xyz_offset)
-                if hasattr(ramon, 'cutout'):
-                    grp.create_dataset('CUTOUT', ramon.cutout.shape,
-                                       ramon.cutout.dtype, data=ramon.cutout)
+        grp.create_dataset("ANNOTATION_TYPE", (1,),
+                           numpy.uint32,
+                           data=AnnotationType.get_int(type(ramon)))
+        if hasattr(ramon, 'resolution'):
+            grp.create_dataset('RESOLUTION', (1,),
+                               numpy.uint32, data=ramon.resolution)
+        if hasattr(ramon, 'xyz_offset'):
+            grp.create_dataset('XYZOFFSET', (3,),
+                               numpy.uint32, data=ramon.xyz_offset)
+        if hasattr(ramon, 'cutout'):
+            grp.create_dataset('CUTOUT', ramon.cutout.shape,
+                               ramon.cutout.dtype, data=ramon.cutout)
 
-                # Next, add general metadata.
-                metadata = grp.create_group('METADATA')
+        # Next, add general metadata.
+        metadata = grp.create_group('METADATA')
 
-                metadata.create_dataset('AUTHOR', (1,),
-                                        dtype=h5py.special_dtype(vlen=str),
-                                        data=ramon.author)
-                metadata.create_dataset('CONFIDENCE', (1,), numpy.float,
-                                        data=ramon.confidence)
-                metadata.create_dataset('STATUS', (1,), numpy.uint32,
-                                        data=ramon.status)
+        metadata.create_dataset('AUTHOR', (1,),
+                                dtype=h5py.special_dtype(vlen=str),
+                                data=ramon.author)
+        metadata.create_dataset('CONFIDENCE', (1,), numpy.float,
+                                data=ramon.confidence)
+        metadata.create_dataset('STATUS', (1,), numpy.uint32,
+                                data=ramon.status)
 
-                # Finally, add type-specific metadata:
+        # Finally, add type-specific metadata:
 
-                if hasattr(ramon, 'segments'):
-                    metadata.create_dataset('SEGMENTS',
-                                            data=numpy.ndarray(ramon.segments))
+        if hasattr(ramon, 'segments'):
+            metadata.create_dataset('SEGMENTS',
+                                    data=numpy.ndarray(ramon.segments))
 
-                if hasattr(ramon, 'synapse_type'):
-                    metadata.create_dataset('SYNAPSETYPE', (1,), numpy.uint32,
-                                            data=ramon.synapse_type)
+        if hasattr(ramon, 'synapse_type'):
+            metadata.create_dataset('SYNAPSETYPE', (1,), numpy.uint32,
+                                    data=ramon.synapse_type)
 
-                if hasattr(ramon, 'weight'):
-                    metadata.create_dataset('WEIGHT', (1,),
-                                            numpy.float, data=ramon.weight)
+        if hasattr(ramon, 'weight'):
+            metadata.create_dataset('WEIGHT', (1,),
+                                    numpy.float, data=ramon.weight)
 
-                if hasattr(ramon, 'neuron'):
-                    metadata.create_dataset('NEURON', (1,),
-                                            numpy.uint32, data=ramon.neuron)
+        if hasattr(ramon, 'neuron'):
+            metadata.create_dataset('NEURON', (1,),
+                                    numpy.uint32, data=ramon.neuron)
 
-                if hasattr(ramon, 'segment_class'):
-                    metadata.create_dataset('SEGMENTCLASS', (1,), numpy.uint32,
-                                            data=ramon.segment_class)
+        if hasattr(ramon, 'segment_class'):
+            metadata.create_dataset('SEGMENTCLASS', (1,), numpy.uint32,
+                                    data=ramon.segment_class)
 
-                if hasattr(ramon, 'synapses'):
-                    metadata.create_dataset('SYNAPSES', (len(ramon.synapses),),
-                                            numpy.uint32, data=ramon.synapses)
+        if hasattr(ramon, 'synapses'):
+            metadata.create_dataset('SYNAPSES', (len(ramon.synapses),),
+                                    numpy.uint32, data=ramon.synapses)
 
-                if hasattr(ramon, 'organelles'):
-                    metadata.create_dataset('ORGANELLES',
-                                            (len(ramon.organelles),),
-                                            numpy.uint32,
-                                            data=ramon.organelles)
+        if hasattr(ramon, 'organelles'):
+            metadata.create_dataset('ORGANELLES',
+                                    (len(ramon.organelles),),
+                                    numpy.uint32,
+                                    data=ramon.organelles)
 
-                if hasattr(ramon, 'organelle_class'):
-                    metadata.create_dataset('ORGANELLECLASS', (1,),
-                                            numpy.uint32,
-                                            data=ramon.organelle_class)
+        if hasattr(ramon, 'organelle_class'):
+            metadata.create_dataset('ORGANELLECLASS', (1,),
+                                    numpy.uint32,
+                                    data=ramon.organelle_class)
 
-                return tmpfile
-            return False
+        return tmpfile
+    return False
