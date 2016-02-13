@@ -11,51 +11,63 @@ SERVER_SITE = 'http://ec2-54-191-191-26.us-west-2.compute.amazonaws.com/'
 DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
 S3_SITE = 'http://ndios3test.s3.amazonaws.com/'
 
+
 class TestAutoIngest(unittest.TestCase):
 
     def setUp(self):
         self.i = datetime.datetime.now()
-        self.oo = nd('ec2-54-191-191-26.us-west-2.compute.amazonaws.com')
+        self.oo = nd(SERVER_SITE)
 
+    def test_remote_exists(self):
+        self.assertEqual(oo.ping(), 200)
 
     def test_pull_data(self):
 
-        data_name_1 = "ndiotest1%s%s%s%s%s%s" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.minute, self.i.second)
+        data_name_1 = "ndiotest1%s%s%s%s%s%s" % (self.i.year, self.i.month,
+                                                 self.i.day, self.i.hour,
+                                                 self.i.minute, self.i.second)
 
         ai_1 = AutoIngest.AutoIngest()
-        ai_1.add_channel(data_name_1, 'uint8', 'image', DATA_SITE, 'SLICE', 'tif')
+        ai_1.add_channel(data_name_1, 'uint8',
+                         'image', DATA_SITE, 'SLICE', 'tif')
         ai_1.add_project(data_name_1, data_name_1, 1)
         ai_1.add_dataset(data_name_1, (512, 512, 1), (1.0, 1.0, 10.0))
         ai_1.add_metadata('')
         ai_1.post_data(site_host=SERVER_SITE, verifytype='Slice')
 
-        response = requests.get("{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
+        url = "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,
+                                                              data_name_1,
+                                                              data_name_1)
+        response = requests.get(url)
 
         try:
             self.assertEqual(response.headers['content-type'], 'product/npz')
         except:
-            raise ValueError(response.content, "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_1, data_name_1))
-
+            raise ValueError(response.content, url)
 
     def test_post_data(self):
-        data_name_5 = "ndioawstest5%s%s%s%s%s%sf" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.minute, self.i.second)
+        data_name_5 = "ndioawstest5%s%s%s%s%s%sf" % (self.i.year, self.i.month,
+                                                     self.i.day, self.i.hour,
+                                                     self.i.minute,
+                                                     self.i.second)
 
         ai_5 = AutoIngest.AutoIngest()
-        ai_5.add_channel(data_name_5, 'uint8', 'image', S3_SITE, 'SLICE', 'tif')
+        ai_5.add_channel(data_name_5, 'uint8',
+                         'image', S3_SITE, 'SLICE', 'tif')
         ai_5.add_project(data_name_5, data_name_5, 1)
         ai_5.add_dataset(data_name_5, (512, 512, 1), (1.0, 1.0, 1.0))
         ai_5.add_metadata('')
         ai_5.post_data(site_host=SERVER_SITE, verifytype='Folder')
 
-        response = requests.get("{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_5, data_name_5))
+        url = "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,
+                                                              data_name_5,
+                                                              data_name_5)
+        response = requests.get(url)
 
         try:
             self.assertEqual(response.headers['content-type'], 'product/npz')
         except:
-            raise ValueError(response.content, "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_5, data_name_5))
-
-        #self.assertEqual()
-
+            raise ValueError(response.content, url)
 
     def test_post_json(self):
         try:
@@ -63,10 +75,13 @@ class TestAutoIngest(unittest.TestCase):
         except:
             print("")
 
-        data_name_2 = "ndiotest2%s%s%s%s%s%sf" % (self.i.year, self.i.month, self.i.day, self.i.hour, self.i.minute, self.i.second)
+        data_name_2 = "ndiotest2%s%s%s%s%s%sf" % (self.i.year, self.i.month,
+                                                  self.i.day, self.i.hour,
+                                                  self.i.minute, self.i.second)
 
         ai_2 = AutoIngest.AutoIngest()
-        ai_2.add_channel(data_name_2, 'uint8', 'image', DATA_SITE, 'SLICE', 'tif')
+        ai_2.add_channel(data_name_2, 'uint8', 'image',
+                         DATA_SITE, 'SLICE', 'tif')
 
         ai_2.add_project(data_name_2, data_name_2, 1)
         ai_2.add_dataset(data_name_2, (512, 512, 1), (1.0, 1.0, 1.0))
@@ -75,20 +90,26 @@ class TestAutoIngest(unittest.TestCase):
         ai_2.output_json()
 
         ai_3 = AutoIngest.AutoIngest()
-        ai_3.post_data(site_host=SERVER_SITE, verifytype='Folder', file_name="/tmp/ND.json")
+        ai_3.post_data(site_host=SERVER_SITE,
+                       verifytype='Folder',
+                       file_name="/tmp/ND.json")
 
-        response = requests.get("{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_2, data_name_2))
+        url = "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,
+                                                              data_name_2,
+                                                              data_name_2)
+        response = requests.get(url)
 
         try:
             self.assertEqual(response.headers['content-type'], 'product/npz')
         except:
-            raise ValueError(response.content, "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,data_name_2, data_name_2))
+            raise ValueError(response.content, url)
 
     def test_output_json(self):
         data_name_3 = "ndio_test_3"
 
         ai_3 = AutoIngest.AutoIngest()
-        ai_3.add_channel(data_name_3, 'uint8', 'image', DATA_SITE, 'SLICE', 'tif')
+        ai_3.add_channel(data_name_3, 'uint8',
+                         'image', DATA_SITE, 'SLICE', 'tif')
 
         ai_3.add_project(data_name_3, data_name_3, 1)
         ai_3.add_dataset(data_name_3, (512, 512, 1), (1.0, 1.0, 1.0))
@@ -97,12 +118,12 @@ class TestAutoIngest(unittest.TestCase):
         ai_3.output_json("/tmp/ND2.json")
 
         with open("/tmp/ND2.json") as data_file:
-                    test_json  = json.load(data_file)
+            test_json = json.load(data_file)
 
         truth_json = {
             "channels": {
                 "ndio_test_3": {
-                    "data_url": "http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/",
+                    "data_url": DATA_SITE,
                     "file_type": "tif",
                     "file_format": "SLICE",
                     "datatype": "uint32",
@@ -132,10 +153,11 @@ class TestAutoIngest(unittest.TestCase):
 
         try:
             self.assertEqual(list(test_json.copy().keys()).sort(),
-                list(truth_json.copy().keys()).sort())
+                             list(truth_json.copy().keys()).sort())
         except:
-            raise ValueError(list(test_json.copy().keys()).sort(), "\nVersus\n", list(truth_json.copy().keys()).sort())
-
+            raise ValueError(list(test_json.copy().keys()).sort(),
+                             "\nVersus\n",
+                             list(truth_json.copy().keys()).sort())
 
 
 if __name__ == '__main__':
