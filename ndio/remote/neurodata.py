@@ -579,7 +579,7 @@ class neurodata(Remote):
             results = []
             for i in anno_id:
                 results.append(self._get_single_ramon_metadata(token, channel,
-                                                             str(i)))
+                                                               str(i)))
             return results
 
     def _get_single_ramon_metadata(self, token, channel, anno_id):
@@ -704,15 +704,15 @@ class neurodata(Remote):
                 tmpfile = ramon.ramon_to_hdf5(i, tmpfile)
 
             url = self.url("{}/{}/".format(token, channel))
-            files = {'file':('ramon.hdf5', open(tmpfile.name, 'rb'))}
+            files = {'file': ('ramon.hdf5', open(tmpfile.name, 'rb'))}
             res = requests.post(url, files=files)
 
             if res.status_code == 404:
                 raise RemoteDataUploadError('[400] Could not upload {}'
-                .format(str(r)))
+                                            .format(str(r)))
             if res.status_code == 500:
                 raise RemoteDataUploadError('[500] Could not upload {}'
-                .format(str(r)))
+                                            .format(str(r)))
 
         return True
 
