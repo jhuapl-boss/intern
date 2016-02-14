@@ -18,6 +18,9 @@ install:
     - pip install coveralls
     - pip install json-spec
     - pip install simplejson regex wget
+cache:
+    - pip
+    - apt
 script:
     - coverage run -m unittest discover
 after_success: coveralls
