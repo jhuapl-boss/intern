@@ -16,7 +16,7 @@ class TestAutoIngest(unittest.TestCase):
 
     def setUp(self):
         self.i = datetime.datetime.now()
-        self.oo = nd(SERVER_SITE)
+        self.oo = nd(SERVER_SITE[len('http://'):])
 
     def test_remote_exists(self):
         self.assertEqual(self.oo.ping(), 200)
