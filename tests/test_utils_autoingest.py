@@ -19,7 +19,7 @@ class TestAutoIngest(unittest.TestCase):
         self.oo = nd(SERVER_SITE)
 
     def test_remote_exists(self):
-        self.assertEqual(oo.ping(), 200)
+        self.assertEqual(self.oo.ping(), 200)
 
     def test_pull_data(self):
 
