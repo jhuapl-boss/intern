@@ -40,14 +40,17 @@ class TestDownload(unittest.TestCase):
 
         # if returns string, successful export
         self.assertEqual(
-                ndtiff.export_tiff("tests/trash/download-1.tiff", image_download),
+                ndtiff.export_tiff("tests/trash/download-1.tiff",
+                                   image_download),
                 "tests/trash/download-1.tiff")
 
         # now confirm import works too
-        self.assertEqual(ndtiff.import_tiff("tests/trash/download-1.tiff")[0][0],
-                         image_download[0][0])
-        self.assertEqual(ndtiff.import_tiff("tests/trash/download-1.tiff")[10][10],
-                         image_download[10][10])
+        self.assertEqual(
+                ndtiff.import_tiff("tests/trash/download-1.tiff")[0][0],
+                image_download[0][0])
+        self.assertEqual(
+                ndtiff.import_tiff("tests/trash/download-1.tiff")[10][10],
+                image_download[10][10])
 
 
 if __name__ == '__main__':

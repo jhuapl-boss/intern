@@ -30,7 +30,8 @@ class TestDownloadRAMON(unittest.TestCase):
 
     def test_download_multi_ramon_file_metadata_only(self):
         token = 'kasthuri2015_ramon_v1'
-        r = self.nd.get_ramon(token, 'neurons', [3, 4], resolution=3, metadata_only=True)
+        r = self.nd.get_ramon(token, 'neurons', [3, 4],
+                              resolution=3, metadata_only=True)
         self.assertEqual(r[0].neuron, 10003)
         self.assertEqual(r[0].author, b'unspecified')
 
