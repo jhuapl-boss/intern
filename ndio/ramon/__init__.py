@@ -152,6 +152,8 @@ def hdf5_to_ramon(hdf5, anno_id=None):
             for i in kvs:
                 k, v = str(i).split(',')
                 r.kvpairs[str(k)] = str(v)
+        else:
+            r.kvpairs = {}
 
     if issubclass(type(r), RAMONVolume):
         if 'CUTOUT' in anno:
