@@ -366,7 +366,7 @@ class AutoIngest:
 
         try:
             response = requests.post(URLPath, data=json.dumps(data))
-            assert(response.content == "Token {} does not \
+            assert(str(response.content.decode("utf-8")) == "Token {} does not \
 exist".format(token_name))
         except:
             raise TypeError("Token {} already exists, Information: {}\
