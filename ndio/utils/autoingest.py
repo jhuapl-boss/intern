@@ -19,7 +19,7 @@ from jsonspec.validators import load
 import re
 import shutil
 
-VERIFY_BY_FOLDER = Folder'
+VERIFY_BY_FOLDER = 'Folder'
 VERIFY_BY_SLICE = 'Slice'
 
 CHANNEL_SCHEMA = load({
@@ -410,7 +410,7 @@ exist".format(token_name))
                         elif (verifytype == VERIFY_BY_SLICE):
                             resp = requests.get(work_path, stream=True)
                             with open('/tmp/img.{}'.format(channel_type),
-                                        'wb') as out_file:
+                                    'wb') as out_file:
                                 shutil.copyfileobj(response.raw, out_file)
                             assert(resp.status_code == 200)
                     except:
