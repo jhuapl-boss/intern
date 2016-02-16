@@ -11,7 +11,7 @@ ndio
 Getting Started
 ===============
 
-You can view a list of tutorials, and some information about getting started, over `here <http://docs.neurodata.io/nddocs/docs/cs/ndio/tutorials.html>`_. System- and library-requirements are listed `here <http://docs.neurodata.io/nddocs/docs/cs/ndio/importing.html>`_.
+You can view a list of tutorials, and some information about getting started, over `here <http://docs.neurodata.io/nddocs/ndio/tutorials.html>`_. System- and library-requirements are listed `here <http://docs.neurodata.io/nddocs/ndio/importing.html>`_.
 
 Contributing
 ============
@@ -26,7 +26,7 @@ ndio is fully documented `here <http://docs.neurodata.io/ndio/>`_.
 .. image:: http://docs.neurodata.io/nddocs/images/ndio.jpg
     :width: 200px
     :align: center
-    
+
 Submit bug reports `here <https://github.com/neurodata/ndio/issues/new>`_.
 
 .. toctree::
