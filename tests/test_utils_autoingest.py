@@ -46,18 +46,18 @@ class TestAutoIngest(unittest.TestCase):
             raise ValueError(response.content, url)
 
     def test_post_data(self):
-        data_name_5 = "ndioawstest5%s%s%s%s%s%sf" % (self.i.year, self.i.month,
+        data_name_5 = "s3ndioawstest5%s%s%s%s%s%sf" % (self.i.year, self.i.month,
                                                      self.i.day, self.i.hour,
                                                      self.i.minute,
                                                      self.i.second)
 
         ai_5 = AutoIngest.AutoIngest()
         ai_5.add_channel(data_name_5, 'uint8',
-                         'image', S3_SITE, 'SLICE', 'tif')
+                         'image', DATA_SITE, 'SLICE', 'tif')
         ai_5.add_project(data_name_5, data_name_5, 1)
         ai_5.add_dataset(data_name_5, (512, 512, 1), (1.0, 1.0, 1.0))
         ai_5.add_metadata('')
-        ai_5.post_data(site_host=SERVER_SITE, verifytype='Folder')
+        ai_5.post_data(site_host=SERVER_SITE, verifytype='Slice')
 
         url = "{}/ocp/ca/{}/{}/npz/0/0,500/0,500/0,1/".format(SERVER_SITE,
                                                               data_name_5,
@@ -105,7 +105,7 @@ class TestAutoIngest(unittest.TestCase):
             raise ValueError(response.content, url)
 
     def test_output_json(self):
-        data_name_3 = "ndio_test_3"
+        data_name_3 = "ndiotest3"
 
         ai_3 = AutoIngest.AutoIngest()
         ai_3.add_channel(data_name_3, 'uint8',
@@ -122,22 +122,22 @@ class TestAutoIngest(unittest.TestCase):
 
         truth_json = {
             "channels": {
-                "ndio_test_3": {
+                "ndiotest3": {
                     "data_url": DATA_SITE,
                     "file_type": "tif",
                     "file_format": "SLICE",
                     "datatype": "uint32",
                     "channel_type": "image",
-                    "channel_name": "ndio_test_3",
+                    "channel_name": "ndiotest3",
                     "readonly": 0,
                     "exceptions": 0,
                     "resolution": 0
                 }
             },
             "project": {
-                "project_name": "ndio_test_3",
+                "project_name": "ndiotest3",
                 "public": 1,
-                "token_name": "ndio_test_3"
+                "token_name": "ndiotest3"
             },
             "metadata": "",
             "dataset": {
@@ -147,7 +147,7 @@ class TestAutoIngest(unittest.TestCase):
                 "scaling": 0,
                 "scalinglevels": 0,
                 "offset": [0, 0, 0],
-                "dataset_name": "ndio_test_3"
+                "dataset_name": "ndiotest3"
             }
         }
 
