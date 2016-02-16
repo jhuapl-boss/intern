@@ -17,6 +17,7 @@ import os
 import requests
 from jsonspec.validators import load
 import re
+import shutil
 
 VERIFY_BY_FOLDER='Folder'
 VERIFY_BY_SLICE='Slice'
@@ -345,22 +346,33 @@ class AutoIngest:
         project_dict = {}
         project_dict['project_name'] = project_name
         if token_name is not None:
-             if token_name == '':
-                 project_dict['token_name'] = project_name
-             else:
-                 project_dict['token_name'] = token_name
+            if token_name == '':
+                project_dict['token_name'] = project_name
+            else:
+                project_dict['token_name'] = token_name
         else:
-             project_dict['token_name'] = project_name
+            project_dict['token_name'] = project_name
 
         project_dict['public'] = public
         return project_dict
 
-    def verify_path(self, data, verifytype):
+    def verify_path(self, data, site_host, verifytype):
         # Insert try and catch blocks
         try:
             token_name = data["project"]["token_name"]
         except:
             token_name = data["project"]["project_name"]
+
+        #Check if token exists
+        URLPath = "{}/ocp/ca/{}/info/".format(site_host, token_name)
+
+        try:
+            response = requests.post(URLPath, data=json.dumps(data))
+            assert(response.content=="Token {} does not \
+exist".format(token_name))
+        except:
+            raise TypeError("Token {} already exists, Information: {}\
+                ".format(token_name, response.content))
 
         channel_names = list(data["channels"].copy().keys())
 
@@ -375,40 +387,68 @@ class AutoIngest:
             else:
                 offset = data["dataset"]["offset"][1]
 
-            if not (aws_pattern.match(path)):
-                if (channel_type == "timeseries"):
-                    timerange = data["dataset"]["timerange"]
-                    for j in xrange(timerange[0], timerange[1] + 1):
-                        # Test for tifs or such? Currently test for just not
-                        # empty
-                        if (verifytype==VERIFY_BY_FOLDER):
-                            work_path = "{}/{}/{}/time{}/".format(
-                                path, token_name, channel_names[i], j)
-                        elif (verifytype==VERIFY_BY_SLICE):
-                            work_path = "{}/{}/{}/time{}/{}.{}".format(
-                                path, token_name, channel_names[i], j,
-                                ("%04d" % offset), file_type)
-                        else:
-                            raise TypeError('Incorrect verify method')
+            if (aws_pattern.match(path)):
+                verifytype=VERIFY_BY_SLICE
 
-                        resp = requests.head(work_path)
-                        assert(resp.status_code == 200)
-                else:
-                    # Test for tifs or such? Currently test for just not empty
+            if (channel_type == "timeseries"):
+                timerange = data["dataset"]["timerange"]
+                for j in xrange(timerange[0], timerange[1] + 1):
+                    # Test for tifs or such? Currently test for just not
+                    # empty
                     if (verifytype==VERIFY_BY_FOLDER):
-                        work_path = "{}/{}/{}/".format(
-                            path, token_name, channel_names[i])
+                        work_path = "{}/{}/{}/time{}/".format(
+                            path, token_name, channel_names[i], j)
                     elif (verifytype==VERIFY_BY_SLICE):
-                        work_path = "{}/{}/{}/{}.{}".format(
-                            path, token_name, channel_names[i],
+                        work_path = "{}/{}/{}/time{}/{}.{}".format(
+                            path, token_name, channel_names[i], j,
                             ("%04d" % offset), file_type)
                     else:
                         raise TypeError('Incorrect verify method')
 
-                    resp = requests.head(work_path)
-                    assert(resp.status_code == 200)
+                    #Check for accessibility
+                    try:
+                        if (verifytype==VERIFY_BY_FOLDER):
+                            resp = requests.head(work_path)
+                            assert(resp.status_code == 200)
+                        elif (verifytype==VERIFY_BY_SLICE):
+                            resp = requests.get(work_path, stream=True)
+                            with open('/tmp/img.{}'.format(channel_type),
+                                'wb') as out_file:
+                                shutil.copyfileobj(response.raw, out_file)
+                            assert(resp.status_code == 200)
+                    except:
+                        raise IOError('Files are not http accessible: \
+                            Error: {}'.format(resp.status_code))
+
+            else:
+                # Test for tifs or such? Currently test for just not empty
+                if (verifytype==VERIFY_BY_FOLDER):
+                    work_path = "{}/{}/{}/".format(
+                        path, token_name, channel_names[i])
+                elif (verifytype==VERIFY_BY_SLICE):
+                    work_path = "{}/{}/{}/{}.{}".format(
+                        path, token_name, channel_names[i],
+                        ("%04d" % offset), file_type)
+                else:
+                    raise TypeError('Incorrect verify method')
+
+                #Check for accessibility
+                try:
+                    if (verifytype==VERIFY_BY_FOLDER):
+                        resp = requests.head(work_path)
+                        assert(resp.status_code == 200)
+                    elif (verifytype==VERIFY_BY_SLICE):
+                        resp = requests.get(work_path, stream=True)
+                        with open('/tmp/img.{}'.format(channel_type),
+                            'wb') as out_file:
+                            shutil.copyfileobj(response.raw, out_file)
+                        assert(resp.status_code == 200)
+                except:
+                    raise IOError('Files are not http accessible: \
+                        URL: {}'.format(work_path))
 
     def verify_json(self, data):
+        names = []
         # Channels
         channel_names = list(data["channels"].copy().keys())
         for i in range(0, len(channel_names)):
@@ -416,24 +456,34 @@ class AutoIngest:
             try:
                 CHANNEL_SCHEMA.validate(channel_object)
             except:
-                raise ValueError('Check inputted variables. Dumping to /tmp/')
                 self.output_json('/tmp/ND_{}.json'.format(channel_names[i]))
-
+                raise ValueError('Check inputted variables. Dumping to /tmp/')
+            names.append(channel_object["channel_name"])
         # Dataset
         dataset_object = data["dataset"]
         try:
             DATASET_SCHEMA.validate(dataset_object)
         except:
-            raise ValueError("Check inputted variables. Dumping to /tmp/")
             self.output_json('/tmp/ND_dataset.json')
+            raise ValueError("Check inputted variables. Dumping to /tmp/")
+        names.append(dataset_object["dataset_name"])
 
         # Project
         project_object = data["project"]
         try:
             PROJECT_SCHEMA.validate(project_object)
         except:
-            raise ValueError("Check inputted variables. Dumping to /tmp/")
             self.output_json('/tmp/ND_project.json')
+            raise ValueError("Check inputted variables. Dumping to /tmp/")
+        names.append(project_object["project_name"])
+
+        #Check if names contain bad chars
+        spec_chars = re.compile(".*[$&+,:;=?@#|'<>._^*()%!-].*")
+        for i in names:
+            if(spec_chars.match(i)):
+                raise ValueError("No special characters allowed including:\
+                    $&+,:;=?@#|'<>._^*()%!-].*\" in names")
+
 
     def put_data(self, data, site_host, dev):
         # try to post data to the server
@@ -448,7 +498,10 @@ class AutoIngest:
             response = requests.post(URLPath, data=json.dumps(data))
             assert( response.status_code == 200 )
         except:
-            raise IOError("Error in posting JSON file {}".format(reponse.status_code))
+            raise IOError("Error in posting JSON file {}\
+".format(reponse.status_code))
+        finally:
+            print("From Ndio: {}".format(response.content))
 
     def post_data(self,
         site_host='http://openconnecto.me',
@@ -485,7 +538,7 @@ class AutoIngest:
             except:
                 raise IOError("Error opening file")
 
-        self.verify_path(data, verifytype)
+        self.verify_path(data, site_host, verifytype)
         self.verify_json(data)
 
         self.put_data(data, site_host, dev)
