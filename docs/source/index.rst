@@ -16,7 +16,7 @@ You can view a list of tutorials, and some information about getting started, ov
 Contributing
 ============
 
-Please submit bug reports, or get in touch at our `GitHub repository <https://github.com/neurodata/ndio`_. When contributing, please follow the `Contribution Guidelines <https://github.com/neurodata/ndio/blob/master/CONTRIBUTING.md>`_.
+Please submit bug reports, or get in touch at our `GitHub repository <https://github.com/neurodata/ndio`_. When contributing, please follow the `Contribution Guidelines  <https://github.com/neurodata/ndio/blob/master/CONTRIBUTING.md>`_.
 
 Documentation
 =============
