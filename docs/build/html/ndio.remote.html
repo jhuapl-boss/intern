@@ -1,0 +1,1348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ndio.remote package &mdash; ndio 0.1.9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ndio 0.1.9 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ndio-remote-package">
+<h1>ndio.remote package<a class="headerlink" href="#ndio-remote-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ndio.remote.OCP">
+<span id="ndio-remote-ocp-module"></span><h2>ndio.remote.OCP module<a class="headerlink" href="#module-ndio.remote.OCP" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ndio.remote.OCP.OCP">
+<em class="property">class </em><code class="descclassname">ndio.remote.OCP.</code><code class="descname">OCP</code><span class="sig-paren">(</span><em>hostname='openconnecto.me'</em>, <em>protocol='http'</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ndio.remote.Remote.Remote" title="ndio.remote.Remote.Remote"><code class="xref py py-class docutils literal"><span class="pre">ndio.remote.Remote.Remote</span></code></a></p>
+<dl class="attribute">
+<dt id="ndio.remote.OCP.OCP.ANNO">
+<code class="descname">ANNO</code><em class="property"> = 'annotation'</em><a class="headerlink" href="#ndio.remote.OCP.OCP.ANNO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.OCP.OCP.ANNOTATION">
+<code class="descname">ANNOTATION</code><em class="property"> = 'annotation'</em><a class="headerlink" href="#ndio.remote.OCP.OCP.ANNOTATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.OCP.OCP.IMAGE">
+<code class="descname">IMAGE</code><em class="property"> = 'image'</em><a class="headerlink" href="#ndio.remote.OCP.OCP.IMAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.OCP.OCP.IMG">
+<code class="descname">IMG</code><em class="property"> = 'image'</em><a class="headerlink" href="#ndio.remote.OCP.OCP.IMG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.create_channel">
+<code class="descname">create_channel</code><span class="sig-paren">(</span><em>token</em>, <em>name</em>, <em>channel_type</em>, <em>dtype</em>, <em>readonly</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.create_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new channel on the Remote, using channel_data.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): The token the new channel should be added to
+name (str): The name of the channel to add
+type (str): Type of the channel to add (e.g. OCP.IMAGE)
+dtype (str): The datatype of the channel&#8217;s data (e.g. &#8216;uint8&#8217;)
+readonly (bool): Can others write to this channel?</dd>
+<dt>Returns:</dt>
+<dd>bool: True if successful, False otherwise.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">ValueError: If your args were bad :(
+RemoteDataUploadError: If the channel data is valid but upload</p>
+<blockquote class="last">
+<div>fails for some other reason.</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.delete_channel">
+<code class="descname">delete_channel</code><span class="sig-paren">(</span><em>token</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.delete_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an existing channel on the Remote. Be careful!</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): The token the new channel should be deleted from
+name (str): The name of the channel to delete</dd>
+<dt>Returns:</dt>
+<dd>bool: True if successful, False otherwise.</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataUploadError: If the upload fails for some reason.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_channels">
+<code class="descname">get_channels</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps get_proj_info to return a dictionary of just the channels of
+a given project.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to return channels for</dd>
+<dt>Returns:</dt>
+<dd>JSON: dictionary of channels.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_cutout">
+<code class="descname">get_cutout</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_start</em>, <em>z_stop</em>, <em>resolution=1</em>, <em>block_size=(256</em>, <em>256</em>, <em>16)</em>, <em>crop=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_cutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get volumetric cutout data from the OCP server.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to identify data to download
+channel (str): Channel
+resolution (int): Resolution level
+Q_start (int):` The lower bound of dimension &#8216;Q&#8217;
+Q_stop (int): The upper bound of dimension &#8216;Q&#8217;
+block_size (int[3]): Block size of this dataset
+crop (bool): whether or not to crop the volume before returning it</dd>
+<dt>Returns:</dt>
+<dd>numpy.ndarray: Downloaded data.</dd>
+<dt>Raises:</dt>
+<dd>NotImplementedError: If you try to crop... Sorry :(</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_image">
+<code class="descname">get_image</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_index</em>, <em>resolution=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for the <cite>get_xy_slice</cite> function for backwards compatibility.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_image_offset">
+<code class="descname">get_image_offset</code><span class="sig-paren">(</span><em>token</em>, <em>resolution=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_image_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the image offset for a given token at a given resolution. For
+instance, the <cite>kasthuri11</cite> dataset starts at (0, 0, 1), so its 1850th
+slice is slice 1850, not 1849. When downloading a full dataset, the
+result of this function should be your x/y/z starts.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): The token to inspect
+resolution (int : 0): The resolution at which to gather the offset</dd>
+<dt>Returns:</dt>
+<dd>int[3]: The origin of the dataset, as a list</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_image_size">
+<code class="descname">get_image_size</code><span class="sig-paren">(</span><em>token</em>, <em>resolution=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_image_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the size of the volume (3D). Convenient for when you want
+to download the entirety of a dataset.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">token (str): The token for which to find the dataset image bounds
+resolution (int : 0): The resolution at which to get image bounds.</p>
+<blockquote class="last">
+<div>Defaults to 0, to get the largest area available.</div></blockquote>
+</dd>
+<dt>Returns:</dt>
+<dd>int[3]: The size of the bounds. Should == get_volume.shape</dd>
+<dt>Raises:</dt>
+<dd><dl class="first last docutils">
+<dt>RemoteDataNotFoundError: If the token is invalid, or if the</dt>
+<dd>metadata at that resolution is unavailable in projinfo.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_proj_info">
+<code class="descname">get_proj_info</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_proj_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the project info for a given token.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to return information for</dd>
+<dt>Returns:</dt>
+<dd>JSON: representation of proj_info</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_public_datasets">
+<code class="descname">get_public_datasets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_public_datasets" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: VERY SLOW!
+Gets a list of public datasets. Different than public tokens!</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd>str[]: list of public datasets</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_public_datasets_and_tokens">
+<code class="descname">get_public_datasets_and_tokens</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_public_datasets_and_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: VERY SLOW!
+Gets a dictionary relating key:dataset to value:[tokens] that rely
+on that dataset.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd>dict: relating key:dataset to value:[tokens]</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_public_tokens">
+<code class="descname">get_public_tokens</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_public_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of public tokens available on this server.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd>str[]: list of public tokens</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_ramon">
+<code class="descname">get_ramon</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>anno_id</em>, <em>resolution</em>, <em>metadata_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_ramon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a RAMON object by ID.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Project to use
+channel (str): The channel to use
+anno_id (int, str): The ID of a RAMON object to gather. Coerced str
+resolution (int): Resolution (if not working, try a higher num)
+metadata_only (bool):  True = returns <cite>get_ramon_metadata</cite> instead</dd>
+<dt>Returns:</dt>
+<dd>ndio.ramon.RAMON</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataNotFoundError: If the requested anno_id cannot be found.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_ramon_ids">
+<code class="descname">get_ramon_ids</code><span class="sig-paren">(</span><em>token</em>, <em>channel='annotation'</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_ramon_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all IDs available for download from this token and
+channel.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Project to use
+channel (str): Channel to use (default &#8216;annotation&#8217;)</dd>
+<dt>Returns:</dt>
+<dd>int[]: A list of the ids of the returned RAMON objects</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataNotFoundError: If the channel or token is not found</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_ramon_metadata">
+<code class="descname">get_ramon_metadata</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>anno_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_ramon_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a RAMON object by ID. <cite>anno_id</cite> can be a string <cite>&#8220;123&#8221;</cite>, an
+int <cite>123</cite>, an array of ints <cite>[123, 234, 345]</cite>, an array of strings
+<cite>[&#8220;123&#8221;, &#8220;234&#8221;, &#8220;345&#8221;]</cite>, or a comma-separated string list
+<cite>&#8220;123,234,345&#8221;</cite>.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Project to use
+channel (str): The channel to use
+anno_id: An int, a str, or a list of ids to gather</dd>
+<dt>Returns:</dt>
+<dd>JSON. If you pass a single id in str or int, returns a single datum
+If you pass a list of int or str or a comma-separated string, will
+return a dict with keys from the list and the values are the JSON
+returned from the server.</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataNotFoundError: If the data cannot be found on the Remote</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_token_dataset">
+<code class="descname">get_token_dataset</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_token_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dataset for a given token.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): The token to inspect</dd>
+<dt>Returns:</dt>
+<dd>str: The name of the dataset</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_token_info">
+<code class="descname">get_token_info</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_token_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alias for get_proj_info.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_volume">
+<code class="descname">get_volume</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_start</em>, <em>z_stop</em>, <em>resolution=1</em>, <em>block_size=(256</em>, <em>256</em>, <em>16)</em>, <em>crop=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a RAMONVolume volumetric cutout from the OCP server.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to identify data to download
+channel (str): Channel
+resolution (int): Resolution level
+Q_start (int):` The lower bound of dimension &#8216;Q&#8217;
+Q_stop (int): The upper bound of dimension &#8216;Q&#8217;
+block_size (int[3]): Block size of this dataset
+crop (bool): whether or not to crop the volume before returning it</dd>
+<dt>Returns:</dt>
+<dd>ndio.ramon.RAMONVolume: Downloaded data.</dd>
+<dt>Raises:</dt>
+<dd>NotImplementedError: If you try to crop... Sorry :(</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.get_xy_slice">
+<code class="descname">get_xy_slice</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_index</em>, <em>resolution=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.get_xy_slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a binary-encoded, decompressed 2d image. You should
+specify a &#8216;token&#8217; and &#8216;channel&#8217; pair.  For image data, users
+should use the channel &#8216;image.&#8217;</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to identify data to download
+channel (str): Channel
+resolution (int): Resolution level
+Q_start (int):` The lower bound of dimension &#8216;Q&#8217;
+Q_stop (int): The upper bound of dimension &#8216;Q&#8217;
+z_index (int): The z-slice to image</dd>
+<dt>Returns:</dt>
+<dd>str: binary image data</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.ping">
+<code class="descname">ping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.ping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.post_cutout">
+<code class="descname">post_cutout</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_start</em>, <em>z_stop</em>, <em>data</em>, <em>dtype=''</em>, <em>resolution=0</em>, <em>roll_axis=True</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.post_cutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post a cutout to the server.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">token (str)
+channel (str)
+q_start (int)
+q_stop (int)
+data:           A numpy array of data. Pass in (x, y, z)
+resolution:     Default resolution of the data
+roll_axis:      Default True. Pass False if you&#8217;re supplying data</p>
+<blockquote>
+<div>in (z, x, y) order.</div></blockquote>
+<dl class="last docutils">
+<dt>dtype:          Pass in datatype if you know it. Otherwise we&#8217;ll</dt>
+<dd>check the projinfo.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>bool: True on success</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataUploadError if there&#8217;s an issue during upload.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.post_ramon">
+<code class="descname">post_ramon</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>r</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.post_ramon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Posts a RAMON object to the Remote.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Project to use
+channel (str): The channel to use
+ramon (RAMON): The annotation to upload</dd>
+<dt>Returns:</dt>
+<dd>bool: Success = True</dd>
+<dt>Throws:</dt>
+<dd>RemoteDataUploadError if something goes wrong</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCP.OCP.url">
+<code class="descname">url</code><span class="sig-paren">(</span><em>suffix=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCP.OCP.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ndio.remote.OCPMeta">
+<span id="ndio-remote-ocpmeta-module"></span><h2>ndio.remote.OCPMeta module<a class="headerlink" href="#module-ndio.remote.OCPMeta" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ndio.remote.OCPMeta.OCPMeta">
+<em class="property">class </em><code class="descclassname">ndio.remote.OCPMeta.</code><code class="descname">OCPMeta</code><span class="sig-paren">(</span><em>hostname='lims.neurodata.io'</em>, <em>protocol='http'</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCPMeta.OCPMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ndio.remote.Remote.Remote" title="ndio.remote.Remote.Remote"><code class="xref py py-class docutils literal"><span class="pre">ndio.remote.Remote.Remote</span></code></a></p>
+<p>OCPMeta Remotes enable access to the Metadata-OCP API endpoints (which
+can be found at <cite>api.neurodata.io/metadata/ocp/</cite>). This class is useful
+for reading metadata for existing projects, or, if you specify a key,
+adding new metadata, manipulating your existing metadata, and archiving
+old metadata. Archived metadata is still stored by the LIMS system.</p>
+<dl class="method">
+<dt id="ndio.remote.OCPMeta.OCPMeta.get_metadata">
+<code class="descname">get_metadata</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCPMeta.OCPMeta.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get metadata via a project token.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str):      The project (token) to access</dd>
+<dt>Returns:</dt>
+<dd>JSON metadata associated with this project</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.OCPMeta.OCPMeta.set_metadata">
+<code class="descname">set_metadata</code><span class="sig-paren">(</span><em>token</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.OCPMeta.OCPMeta.set_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert new metadata into the OCP metadata database.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token of the datum to set
+data (str): A dictionary to insert as metadata. Include <cite>secret</cite>.</dd>
+<dt>Returns:</dt>
+<dd>JSON of the inserted ID (convenience) or an error message.</dd>
+<dt>Throws:</dt>
+<dd><dl class="first last docutils">
+<dt>RemoteDataUploadError: If the token is already populated, or if</dt>
+<dd>there is an issue with your specified <cite>secret</cite> key.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ndio.remote.Remote">
+<span id="ndio-remote-remote-module"></span><h2>ndio.remote.Remote module<a class="headerlink" href="#module-ndio.remote.Remote" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ndio.remote.Remote.Remote">
+<em class="property">class </em><code class="descclassname">ndio.remote.Remote.</code><code class="descname">Remote</code><span class="sig-paren">(</span><em>hostname</em>, <em>protocol</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.Remote.Remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="ndio.remote.Remote.Remote.ping">
+<code class="descname">ping</code><span class="sig-paren">(</span><em>endpoint=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.Remote.Remote.ping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ping the server to make sure that you can access the base URL.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd><cite>boolean</cite> Successful access of server (or status code)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.Remote.Remote.url">
+<code class="descname">url</code><span class="sig-paren">(</span><em>endpoint=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.Remote.Remote.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the base URL of the Remote.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd><cite>str</cite> base URL</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ndio.remote.errors">
+<span id="ndio-remote-errors-module"></span><h2>ndio.remote.errors module<a class="headerlink" href="#module-ndio.remote.errors" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="ndio.remote.errors.BadAPIKeyError">
+<em class="property">exception </em><code class="descclassname">ndio.remote.errors.</code><code class="descname">BadAPIKeyError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.errors.BadAPIKeyError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ndio.remote.errors.RemoteError" title="ndio.remote.errors.RemoteError"><code class="xref py py-class docutils literal"><span class="pre">ndio.remote.errors.RemoteError</span></code></a></p>
+<p>Called when you do not specify an API key and one is needed,
+or if you specify an API key that does not match the requirements
+to access/edit the data you&#8217;re accessing/editing.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ndio.remote.errors.RemoteDataNotFoundError">
+<em class="property">exception </em><code class="descclassname">ndio.remote.errors.</code><code class="descname">RemoteDataNotFoundError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.errors.RemoteDataNotFoundError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ndio.remote.errors.RemoteError" title="ndio.remote.errors.RemoteError"><code class="xref py py-class docutils literal"><span class="pre">ndio.remote.errors.RemoteError</span></code></a></p>
+<p>Called when data is requested from a Remote but the
+server either cannot access it (maybe a permissions issue?)
+or the data does not exist.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ndio.remote.errors.RemoteDataUploadError">
+<em class="property">exception </em><code class="descclassname">ndio.remote.errors.</code><code class="descname">RemoteDataUploadError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.errors.RemoteDataUploadError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ndio.remote.errors.RemoteError" title="ndio.remote.errors.RemoteError"><code class="xref py py-class docutils literal"><span class="pre">ndio.remote.errors.RemoteError</span></code></a></p>
+<p>Called when there&#8217;s an issue during data upload. Could be
+because you don&#8217;t have write access to this channel, or
+because there&#8217;s a problem with your data. (Check your bounds?)</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ndio.remote.errors.RemoteError">
+<em class="property">exception </em><code class="descclassname">ndio.remote.errors.</code><code class="descname">RemoteError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.errors.RemoteError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>A generic error arising from an issue pertaining
+to ndio Remotes.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ndio.remote.m2g">
+<span id="ndio-remote-m2g-module"></span><h2>ndio.remote.m2g module<a class="headerlink" href="#module-ndio.remote.m2g" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ndio.remote.m2g.GraphFormats">
+<em class="property">class </em><code class="descclassname">ndio.remote.m2g.</code><code class="descname">GraphFormats</code><a class="headerlink" href="#ndio.remote.m2g.GraphFormats" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.EDGELIST">
+<code class="descname">EDGELIST</code><em class="property"> = 'edgelist'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.EDGELIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.GRAPHDB">
+<code class="descname">GRAPHDB</code><em class="property"> = 'graphdb'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.GRAPHDB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.GRAPHML">
+<code class="descname">GRAPHML</code><em class="property"> = 'graphml'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.GRAPHML" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.LGL">
+<code class="descname">LGL</code><em class="property"> = 'lgl'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.LGL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.MAT">
+<code class="descname">MAT</code><em class="property"> = 'mat'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.MAT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.NCOL">
+<code class="descname">NCOL</code><em class="property"> = 'ncol'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.NCOL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.NUMPY">
+<code class="descname">NUMPY</code><em class="property"> = 'numpy'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.NUMPY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.PAJEK">
+<code class="descname">PAJEK</code><em class="property"> = 'pajek'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.PAJEK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.edgelist">
+<code class="descname">edgelist</code><em class="property"> = 'edgelist'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.edgelist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.graphdb">
+<code class="descname">graphdb</code><em class="property"> = 'graphdb'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.graphdb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.graphml">
+<code class="descname">graphml</code><em class="property"> = 'graphml'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.graphml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.lgl">
+<code class="descname">lgl</code><em class="property"> = 'lgl'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.lgl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.mat">
+<code class="descname">mat</code><em class="property"> = 'mat'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.mat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.ncol">
+<code class="descname">ncol</code><em class="property"> = 'ncol'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.ncol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.numpy">
+<code class="descname">numpy</code><em class="property"> = 'numpy'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.numpy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.GraphFormats.pajek">
+<code class="descname">pajek</code><em class="property"> = 'pajek'</em><a class="headerlink" href="#ndio.remote.m2g.GraphFormats.pajek" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ndio.remote.m2g.Invariants">
+<em class="property">class </em><code class="descclassname">ndio.remote.m2g.</code><code class="descname">Invariants</code><a class="headerlink" href="#ndio.remote.m2g.Invariants" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.ALL">
+<code class="descname">ALL</code><em class="property"> = ['ss1', 'tri', 'cc', 'mad', 'deg', 'eig']</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.ALL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.CLUSTERING">
+<code class="descname">CLUSTERING</code><em class="property"> = 'cc'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.CLUSTERING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.EIGENS">
+<code class="descname">EIGENS</code><em class="property"> = 'eig'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.EIGENS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.LOCAL_DEGREE">
+<code class="descname">LOCAL_DEGREE</code><em class="property"> = 'deg'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.LOCAL_DEGREE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.MAX_AVG_DEGREE">
+<code class="descname">MAX_AVG_DEGREE</code><em class="property"> = 'mad'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.MAX_AVG_DEGREE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.SCAN_STATISTIC">
+<code class="descname">SCAN_STATISTIC</code><em class="property"> = 'ss1'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.SCAN_STATISTIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.TRIANGLE_COUNT">
+<code class="descname">TRIANGLE_COUNT</code><em class="property"> = 'tri'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.TRIANGLE_COUNT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.cc">
+<code class="descname">cc</code><em class="property"> = 'cc'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.cc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.deg">
+<code class="descname">deg</code><em class="property"> = 'deg'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.deg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.eig">
+<code class="descname">eig</code><em class="property"> = 'eig'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.eig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.mad">
+<code class="descname">mad</code><em class="property"> = 'mad'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.mad" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.ss1">
+<code class="descname">ss1</code><em class="property"> = 'ss1'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.ss1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.Invariants.tri">
+<code class="descname">tri</code><em class="property"> = 'tri'</em><a class="headerlink" href="#ndio.remote.m2g.Invariants.tri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ndio.remote.m2g.m2g">
+<em class="property">class </em><code class="descclassname">ndio.remote.m2g.</code><code class="descname">m2g</code><span class="sig-paren">(</span><em>hostname='openconnecto.me'</em>, <em>protocol='http'</em>, <em>email=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.m2g.m2g" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ndio.remote.Remote.Remote" title="ndio.remote.Remote.Remote"><code class="xref py py-class docutils literal"><span class="pre">ndio.remote.Remote.Remote</span></code></a></p>
+<dl class="attribute">
+<dt id="ndio.remote.m2g.m2g.B">
+<code class="descname">B</code><em class="property"> = 'b'</em><a class="headerlink" href="#ndio.remote.m2g.m2g.B" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.m2g.BIG">
+<code class="descname">BIG</code><em class="property"> = 'b'</em><a class="headerlink" href="#ndio.remote.m2g.m2g.BIG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.m2g.S">
+<code class="descname">S</code><em class="property"> = 's'</em><a class="headerlink" href="#ndio.remote.m2g.m2g.S" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.m2g.m2g.SMALL">
+<code class="descname">SMALL</code><em class="property"> = 's'</em><a class="headerlink" href="#ndio.remote.m2g.m2g.SMALL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.m2g.m2g.build_graph">
+<code class="descname">build_graph</code><span class="sig-paren">(</span><em>project, site, subject, session, scan, size, email=None, invariants=['ss1', 'tri', 'cc', 'mad', 'deg', 'eig'], fiber_file='fiber.dat', atlas_file=None, use_threads=False, callback=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.m2g.m2g.build_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a graph using the graph-services endpoint.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">project (str): The project to use
+site (str): The site in question
+subject (str): The subject&#8217;s identifier
+session (str): The session (per subject)
+scan (str): The scan identifier
+size (str): Whether to return a big or (m2g.BIG) small (m2g.SMALL)</p>
+<blockquote>
+<div>graph. For a better explanation of each, see m2g.io.</div></blockquote>
+<p>email (str : self.email)*: An email to notify
+invariants (str[]: Invariants.ALL)*: An array of invariants to</p>
+<blockquote>
+<div>compute. You can use the m2g.Invariants class to construct this
+list, or simply pass m2g.Invariants.ALL to compute them all.</div></blockquote>
+<dl class="last docutils">
+<dt>fiber_file (str: DEFAULT_FIBER_FILE)*: A local filename of an</dt>
+<dd>MRI Studio .dat file</dd>
+<dt>atlas_file (str: None)*: A local atlas file, in NIFTI .nii format.</dt>
+<dd>If none is specified, the Desikan atlas is used by default.</dd>
+<dt>use_threads (bool: False)*: Whether to run the download in a Python</dt>
+<dd>thread. If set to True, the call to <cite>build_graph</cite> will end
+quickly, and the <cite>callback</cite> will be called with the returned
+status-code of the restful call as its only argument.</dd>
+<dt>callback (function: None)*: The function to run upon completion of</dt>
+<dd>the call, if using threads. (Will not be called if use_threads
+is set to False.)</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>HTTP Response if use_threads is False. Otherwise, None</dd>
+<dt>Raises:</dt>
+<dd><dl class="first last docutils">
+<dt>ValueError: When the supplied values are invalid (contain invalid</dt>
+<dd>characters, bad email address supplied, etc.)</dd>
+<dt>RemoteDataNotFoundError: When the data cannot be processed due to</dt>
+<dd>a server error.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.m2g.m2g.compute_invariants">
+<code class="descname">compute_invariants</code><span class="sig-paren">(</span><em>graph_file, input_format, invariants=['ss1', 'tri', 'cc', 'mad', 'deg', 'eig'], email=None, use_threads=False, callback=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.m2g.m2g.compute_invariants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute invariants from an existing GraphML file using the remote
+m2g graph services.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">graph_file (str): The filename of the graphml file
+input_format (str): One of m2g.GraphFormats
+invariants (str[]: Invariants.ALL)*: An array of m2g.Invariants to</p>
+<blockquote>
+<div>compute on the graph</div></blockquote>
+<p>email (str: self.email)*: The email to notify upon completion
+use_threads (bool: False)*: Whether to use Python threads to run</p>
+<blockquote>
+<div>computation in the background when waiting for the server to
+return the invariants</div></blockquote>
+<dl class="last docutils">
+<dt>callback (function: None)*: The function to run upon completion of</dt>
+<dd>the call, if using threads. (Will not be called if use_threads
+is set to False.)</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>HTTP Response if use_threads is False. Otherwise, None</dd>
+<dt>Raises:</dt>
+<dd><dl class="first docutils">
+<dt>ValueError: If the graph file does not exist, or if there are</dt>
+<dd>issues with the passed arguments</dd>
+</dl>
+<p class="last">RemoteDataUploadError: If there is an issue packing the file
+RemoteError: If the server experiences difficulty computing invs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.m2g.m2g.convert_graph">
+<code class="descname">convert_graph</code><span class="sig-paren">(</span><em>graph_file</em>, <em>input_format</em>, <em>output_formats</em>, <em>email=None</em>, <em>use_threads=False</em>, <em>callback=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.m2g.m2g.convert_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a graph from one GraphFormat to another.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">graph_file (str): Filename of the file to convert
+input_format (str): A m2g.GraphFormats
+output_formats (str[]): A m2g.GraphFormats
+email (str: self.email)*: The email to notify
+use_threads (bool: False)*: Whether to use Python threads to run</p>
+<blockquote>
+<div>computation in the background when waiting for the server</div></blockquote>
+<dl class="last docutils">
+<dt>callback (function: None)*: The function to run upon completion of</dt>
+<dd>the call, if using threads. (Will not be called if use_threads
+is set to False.)</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>HTTP Response if use_threads=False. Else, no return value.</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataUploadError: If there&#8217;s an issue uploading the data
+RemoteError: If there&#8217;s a server-side issue
+ValueError: If there&#8217;s a problem with the supplied arguments</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.m2g.m2g.ping">
+<code class="descname">ping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.m2g.m2g.ping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.m2g.m2g.set_default_email">
+<code class="descname">set_default_email</code><span class="sig-paren">(</span><em>email</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.m2g.m2g.set_default_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the default email to use for notifications if none is specified.
+Does only basic error-checking.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>email (str): The email to notify for all server graph services.</dd>
+<dt>Returns:</dt>
+<dd>None</dd>
+<dt>Raises:</dt>
+<dd>ValueError: If an invalid email is supplied.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.m2g.m2g.url">
+<code class="descname">url</code><span class="sig-paren">(</span><em>suffix=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.m2g.m2g.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ndio.remote.neurodata">
+<span id="ndio-remote-neurodata-module"></span><h2>ndio.remote.neurodata module<a class="headerlink" href="#module-ndio.remote.neurodata" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ndio.remote.neurodata.neurodata">
+<em class="property">class </em><code class="descclassname">ndio.remote.neurodata.</code><code class="descname">neurodata</code><span class="sig-paren">(</span><em>hostname='openconnecto.me'</em>, <em>protocol='http'</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ndio.remote.Remote.Remote" title="ndio.remote.Remote.Remote"><code class="xref py py-class docutils literal"><span class="pre">ndio.remote.Remote.Remote</span></code></a></p>
+<dl class="attribute">
+<dt id="ndio.remote.neurodata.neurodata.ANNO">
+<code class="descname">ANNO</code><em class="property"> = 'annotation'</em><a class="headerlink" href="#ndio.remote.neurodata.neurodata.ANNO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.neurodata.neurodata.ANNOTATION">
+<code class="descname">ANNOTATION</code><em class="property"> = 'annotation'</em><a class="headerlink" href="#ndio.remote.neurodata.neurodata.ANNOTATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.neurodata.neurodata.IMAGE">
+<code class="descname">IMAGE</code><em class="property"> = 'image'</em><a class="headerlink" href="#ndio.remote.neurodata.neurodata.IMAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ndio.remote.neurodata.neurodata.IMG">
+<code class="descname">IMG</code><em class="property"> = 'image'</em><a class="headerlink" href="#ndio.remote.neurodata.neurodata.IMG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.create_channel">
+<code class="descname">create_channel</code><span class="sig-paren">(</span><em>token</em>, <em>name</em>, <em>channel_type</em>, <em>dtype</em>, <em>readonly</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.create_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new channel on the Remote, using channel_data.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): The token the new channel should be added to
+name (str): The name of the channel to add
+type (str): Type of the channel to add (e.g. neurodata.IMAGE)
+dtype (str): The datatype of the channel&#8217;s data (e.g. &#8216;uint8&#8217;)
+readonly (bool): Can others write to this channel?</dd>
+<dt>Returns:</dt>
+<dd>bool: True if successful, False otherwise.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">ValueError: If your args were bad :(
+RemoteDataUploadError: If the channel data is valid but upload</p>
+<blockquote class="last">
+<div>fails for some other reason.</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.delete_channel">
+<code class="descname">delete_channel</code><span class="sig-paren">(</span><em>token</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.delete_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an existing channel on the Remote. Be careful!</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): The token the new channel should be deleted from
+name (str): The name of the channel to delete</dd>
+<dt>Returns:</dt>
+<dd>bool: True if successful, False otherwise.</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataUploadError: If the upload fails for some reason.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.delete_ramon">
+<code class="descname">delete_ramon</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>anno</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.delete_ramon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an annotation from the server. Probably you should be careful
+with this function, it seems dangerous.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">token
+channel
+anno (int OR list(int) OR RAMON): The annotation to delete. If a</p>
+<blockquote class="last">
+<div>RAMON object is supplied, the remote annotation will be deleted
+by an ID lookup. If an int is supplied, the annotation will be
+deleted for that ID. If a list of ints are provided, they will
+all be deleted.</div></blockquote>
+</dd>
+<dt>Returns:</dt>
+<dd>bool: Success</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_channels">
+<code class="descname">get_channels</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps get_proj_info to return a dictionary of just the channels of
+a given project.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to return channels for</dd>
+<dt>Returns:</dt>
+<dd>JSON: dictionary of channels.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_cutout">
+<code class="descname">get_cutout</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_start</em>, <em>z_stop</em>, <em>resolution=1</em>, <em>block_size=(256</em>, <em>256</em>, <em>16)</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_cutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get volumetric cutout data from the neurodata server.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to identify data to download
+channel (str): Channel
+resolution (int): Resolution level
+Q_start (int):` The lower bound of dimension &#8216;Q&#8217;
+Q_stop (int): The upper bound of dimension &#8216;Q&#8217;
+block_size (int[3]): Block size of this dataset</dd>
+<dt>Returns:</dt>
+<dd>numpy.ndarray: Downloaded data.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_image">
+<code class="descname">get_image</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_index</em>, <em>resolution=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for the <cite>get_xy_slice</cite> function for backwards compatibility.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_image_offset">
+<code class="descname">get_image_offset</code><span class="sig-paren">(</span><em>token</em>, <em>resolution=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_image_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the image offset for a given token at a given resolution. For
+instance, the <cite>kasthuri11</cite> dataset starts at (0, 0, 1), so its 1850th
+slice is slice 1850, not 1849. When downloading a full dataset, the
+result of this function should be your x/y/z starts.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): The token to inspect
+resolution (int : 0): The resolution at which to gather the offset</dd>
+<dt>Returns:</dt>
+<dd>int[3]: The origin of the dataset, as a list</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_image_size">
+<code class="descname">get_image_size</code><span class="sig-paren">(</span><em>token</em>, <em>resolution=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_image_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the size of the volume (3D). Convenient for when you want
+to download the entirety of a dataset.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">token (str): The token for which to find the dataset image bounds
+resolution (int : 0): The resolution at which to get image bounds.</p>
+<blockquote class="last">
+<div>Defaults to 0, to get the largest area available.</div></blockquote>
+</dd>
+<dt>Returns:</dt>
+<dd>int[3]: The size of the bounds. Should == get_volume.shape</dd>
+<dt>Raises:</dt>
+<dd><dl class="first last docutils">
+<dt>RemoteDataNotFoundError: If the token is invalid, or if the</dt>
+<dd>metadata at that resolution is unavailable in projinfo.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_proj_info">
+<code class="descname">get_proj_info</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_proj_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the project info for a given token.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to return information for</dd>
+<dt>Returns:</dt>
+<dd>JSON: representation of proj_info</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_public_datasets">
+<code class="descname">get_public_datasets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_public_datasets" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: VERY SLOW!
+Gets a list of public datasets. Different than public tokens!</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd>str[]: list of public datasets</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_public_datasets_and_tokens">
+<code class="descname">get_public_datasets_and_tokens</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_public_datasets_and_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: VERY SLOW!
+Gets a dictionary relating key:dataset to value:[tokens] that rely
+on that dataset.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd>dict: relating key:dataset to value:[tokens]</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_public_tokens">
+<code class="descname">get_public_tokens</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_public_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of public tokens available on this server.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd>str[]: list of public tokens</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_ramon">
+<code class="descname">get_ramon</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>ids</em>, <em>resolution</em>, <em>metadata_only=False</em>, <em>sieve=None</em>, <em>batch_size=100</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_ramon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a RAMON object by ID.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">token (str): Project to use
+channel (str): The channel to use
+ids (int, str, int[], str[]): The IDs of a RAMON object to gather.</p>
+<blockquote>
+<div>Can be int (3), string (&#8220;3&#8221;), int[] ([3, 4, 5]), or string
+([&#8220;3&#8221;, &#8220;4&#8221;, &#8220;5&#8221;]).</div></blockquote>
+<p>resolution (int): Resolution
+metadata_only (bool : False):  If True, returns get_ramon_metadata
+sieve (function : None): A function that accepts a single ramon</p>
+<blockquote>
+<div><p>and returns True or False depending on whether you want that
+ramon object to be included in your response or not.</p>
+<p>For example,</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+def is_even_id(ramon):</p>
+<blockquote>
+<div>return ramon.id % 2 == 0</div></blockquote>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<p>You can then pass this to get_ramon like this:</p>
+<p><code class="docutils literal"><span class="pre">`</span>
+<span class="pre">ndio.remote.neurodata.get_ramon(</span> <span class="pre">.</span> <span class="pre">.</span> <span class="pre">.</span> <span class="pre">,</span> <span class="pre">sieve=is_even_id)</span>
+<span class="pre">`</span></code></p>
+</div></blockquote>
+<dl class="last docutils">
+<dt>batch_size (int <span class="classifier-delimiter">:</span> <span class="classifier">100): The amount of RAMON objects to download at</span></dt>
+<dd>a time. If this is greater than 100, we anticipate things going
+very poorly for you. So if you set it &lt;100, ndio will use it.
+If &gt;=100, set it to 100.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>ndio.ramon.RAMON[]</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataNotFoundError: If the requested ids cannot be found.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_ramon_ids">
+<code class="descname">get_ramon_ids</code><span class="sig-paren">(</span><em>token</em>, <em>channel='annotation'</em>, <em>ramon_type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_ramon_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all IDs available for download from this token and
+channel.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Project to use
+channel (str): Channel to use (default &#8216;annotation&#8217;)</dd>
+<dt>Returns:</dt>
+<dd>int[]: A list of the ids of the returned RAMON objects</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataNotFoundError: If the channel or token is not found</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_ramon_metadata">
+<code class="descname">get_ramon_metadata</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>anno_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_ramon_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a RAMON object by ID. <cite>anno_id</cite> can be a string <cite>&#8220;123&#8221;</cite>, an
+int <cite>123</cite>, an array of ints <cite>[123, 234, 345]</cite>, an array of strings
+<cite>[&#8220;123&#8221;, &#8220;234&#8221;, &#8220;345&#8221;]</cite>, or a comma-separated string list
+<cite>&#8220;123,234,345&#8221;</cite>.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Project to use
+channel (str): The channel to use
+anno_id: An int, a str, or a list of ids to gather</dd>
+<dt>Returns:</dt>
+<dd>JSON. If you pass a single id in str or int, returns a single datum
+If you pass a list of int or str or a comma-separated string, will
+return a dict with keys from the list and the values are the JSON
+returned from the server.</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataNotFoundError: If the data cannot be found on the Remote</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_token_dataset">
+<code class="descname">get_token_dataset</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_token_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dataset for a given token.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): The token to inspect</dd>
+<dt>Returns:</dt>
+<dd>str: The name of the dataset</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_token_info">
+<code class="descname">get_token_info</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_token_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alias for get_proj_info.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_volume">
+<code class="descname">get_volume</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_start</em>, <em>z_stop</em>, <em>resolution=1</em>, <em>block_size=(256</em>, <em>256</em>, <em>16)</em>, <em>crop=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a RAMONVolume volumetric cutout from the neurodata server.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to identify data to download
+channel (str): Channel
+resolution (int): Resolution level
+Q_start (int):` The lower bound of dimension &#8216;Q&#8217;
+Q_stop (int): The upper bound of dimension &#8216;Q&#8217;
+block_size (int[3]): Block size of this dataset
+crop (bool): whether or not to crop the volume before returning it</dd>
+<dt>Returns:</dt>
+<dd>ndio.ramon.RAMONVolume: Downloaded data.</dd>
+<dt>Raises:</dt>
+<dd>NotImplementedError: If you try to crop... Sorry :(</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.get_xy_slice">
+<code class="descname">get_xy_slice</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_index</em>, <em>resolution=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.get_xy_slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a binary-encoded, decompressed 2d image. You should
+specify a &#8216;token&#8217; and &#8216;channel&#8217; pair.  For image data, users
+should use the channel &#8216;image.&#8217;</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token (str): Token to identify data to download
+channel (str): Channel
+resolution (int): Resolution level
+Q_start (int):` The lower bound of dimension &#8216;Q&#8217;
+Q_stop (int): The upper bound of dimension &#8216;Q&#8217;
+z_index (int): The z-slice to image</dd>
+<dt>Returns:</dt>
+<dd>str: binary image data</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.merge_ids">
+<code class="descname">merge_ids</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>ids</em>, <em>delete=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.merge_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the restful endpoint to merge two RAMON objects into one.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>token
+channel
+ids (int[]): the list of the IDs to merge
+delete (bool : False): Whether to delete after merging.</dd>
+<dt>Returns:</dt>
+<dd>json</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.ping">
+<code class="descname">ping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.ping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.post_cutout">
+<code class="descname">post_cutout</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>x_start</em>, <em>x_stop</em>, <em>y_start</em>, <em>y_stop</em>, <em>z_start</em>, <em>z_stop</em>, <em>data</em>, <em>dtype=''</em>, <em>resolution=0</em>, <em>roll_axis=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.post_cutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post a cutout to the server.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">token (str)
+channel (str)
+q_start (int)
+q_stop (int)
+data:           A numpy array of data. Pass in (x, y, z)
+resolution:     Default resolution of the data
+roll_axis:      Default True. Pass True if you&#8217;re supplying data</p>
+<blockquote>
+<div>in (z, x, y) order. maybe.</div></blockquote>
+<dl class="last docutils">
+<dt>dtype:          Pass in datatype if you know it. Otherwise we&#8217;ll</dt>
+<dd>check the projinfo.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>bool: True on success</dd>
+<dt>Raises:</dt>
+<dd>RemoteDataUploadError if there&#8217;s an issue during upload.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.post_ramon">
+<code class="descname">post_ramon</code><span class="sig-paren">(</span><em>token</em>, <em>channel</em>, <em>r</em>, <em>batch_size=100</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.post_ramon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Posts a RAMON object to the Remote.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">token (str): Project to use
+channel (str): The channel to use
+r (RAMON or RAMON[]): The annotation(s) to upload
+batch_size (int : 100): The number of RAMONs to post simultaneously</p>
+<blockquote class="last">
+<div>at maximum in one file. If len(r) &gt; batch_size, the batch will
+be split and uploaded automatically. Must be less than 100.</div></blockquote>
+</dd>
+<dt>Returns:</dt>
+<dd>bool: Success = True</dd>
+<dt>Throws:</dt>
+<dd>RemoteDataUploadError if something goes wrong</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.reserve_ids">
+<code class="descname">reserve_ids</code><span class="sig-paren">(</span><em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.reserve_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests a list of next-available-IDs from the server.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>quantity (int): The number of IDs to reserve</dd>
+<dt>Returns:</dt>
+<dd>int[quantity]: List of IDs you&#8217;ve been granted</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.remote.neurodata.neurodata.url">
+<code class="descname">url</code><span class="sig-paren">(</span><em>suffix=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.remote.neurodata.neurodata.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ndio.remote">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ndio.remote" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ndio.remote package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ndio.remote.OCP">ndio.remote.OCP module</a></li>
+<li><a class="reference internal" href="#module-ndio.remote.OCPMeta">ndio.remote.OCPMeta module</a></li>
+<li><a class="reference internal" href="#module-ndio.remote.Remote">ndio.remote.Remote module</a></li>
+<li><a class="reference internal" href="#module-ndio.remote.errors">ndio.remote.errors module</a></li>
+<li><a class="reference internal" href="#module-ndio.remote.m2g">ndio.remote.m2g module</a></li>
+<li><a class="reference internal" href="#module-ndio.remote.neurodata">ndio.remote.neurodata module</a></li>
+<li><a class="reference internal" href="#module-ndio.remote">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ndio.remote.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, neurodata.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/ndio.remote.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
