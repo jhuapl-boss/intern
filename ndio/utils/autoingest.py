@@ -19,8 +19,8 @@ from jsonspec.validators import load
 import re
 import shutil
 
-VERIFY_BY_FOLDER='Folder'
-VERIFY_BY_SLICE='Slice'
+VERIFY_BY_FOLDER = Folder'
+VERIFY_BY_SLICE = 'Slice'
 
 CHANNEL_SCHEMA = load({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -33,11 +33,11 @@ CHANNEL_SCHEMA = load({
         },
         "datatype": {
             "description": "Datatype of the channel",
-            "enum": [ "uint8", "uint16", "uint32", "uint64", "float32" ]
+            "enum": ["uint8", "uint16", "uint32", "uint64", "float32"]
         },
         "channel_type": {
             "description": "Type of Scaling - Isotropic(1) or Normal(0)",
-            "enum": [ "image", "annotation", "probmap", "timeseries" ]
+            "enum": ["image", "annotation", "probmap", "timeseries"]
         },
         "exceptions": {
             "description": "Enable exceptions - Yes(1) or No(0) (for annotation data)",
@@ -61,11 +61,11 @@ CHANNEL_SCHEMA = load({
         },
         "file_format": {
             "description": "This is the file format type. For now we support only Slice stacks and CATMAID tiles.",
-            "enum": [ "SLICE", "CATMAID" ]
+            "enum": ["SLICE", "CATMAID"]
         },
         "file_type": {
             "description": "This the file type the data is stored in",
-            "enum": [ "tif", "png", "tiff" ]
+            "enum": ["tif", "png", "tiff"]
         },
     },
     "required": ["channel_name", "channel_type", "data_url", "datatype", "file_format", "file_type"]
@@ -81,11 +81,11 @@ DATASET_SCHEMA = load({
             "type": "string"
         },
         "imagesize": {
-          	"type": "array",
+            "type": "array",
             "description": "The image dimensions of the dataset",
         },
         "voxelres": {
-          	"type": "array",
+            "type": "array",
             "description": "The voxel resolutoin of the data",
         },
         "offset": {
@@ -94,7 +94,7 @@ DATASET_SCHEMA = load({
         },
         "timerange": {
             "description": "The timerange of the data",
-              "type": "array",
+            "type": "array",
         },
         "scalinglevels": {
             "description": "Required Scaling levels/ Zoom out levels",
@@ -128,7 +128,6 @@ PROJECT_SCHEMA = load({
     },
     "required": ["project_name"]
 })
-
 
 
 class AutoIngest:
@@ -362,13 +361,12 @@ class AutoIngest:
             token_name = data["project"]["token_name"]
         except:
             token_name = data["project"]["project_name"]
-
         #Check if token exists
         URLPath = "{}/ocp/ca/{}/info/".format(site_host, token_name)
 
         try:
             response = requests.post(URLPath, data=json.dumps(data))
-            assert(response.content=="Token {} does not \
+            assert(response.content == "Token {} does not \
 exist".format(token_name))
         except:
             raise TypeError("Token {} already exists, Information: {}\
@@ -388,32 +386,31 @@ exist".format(token_name))
                 offset = data["dataset"]["offset"][1]
 
             if (aws_pattern.match(path)):
-                verifytype=VERIFY_BY_SLICE
+                verifytype = VERIFY_BY_SLICE
 
             if (channel_type == "timeseries"):
                 timerange = data["dataset"]["timerange"]
                 for j in xrange(timerange[0], timerange[1] + 1):
                     # Test for tifs or such? Currently test for just not
                     # empty
-                    if (verifytype==VERIFY_BY_FOLDER):
+                    if (verifytype == VERIFY_BY_FOLDER):
                         work_path = "{}/{}/{}/time{}/".format(
                             path, token_name, channel_names[i], j)
-                    elif (verifytype==VERIFY_BY_SLICE):
+                    elif (verifytype == VERIFY_BY_SLICE):
                         work_path = "{}/{}/{}/time{}/{}.{}".format(
                             path, token_name, channel_names[i], j,
                             ("%04d" % offset), file_type)
                     else:
                         raise TypeError('Incorrect verify method')
-
                     #Check for accessibility
                     try:
-                        if (verifytype==VERIFY_BY_FOLDER):
+                        if (verifytype == VERIFY_BY_FOLDER):
                             resp = requests.head(work_path)
                             assert(resp.status_code == 200)
-                        elif (verifytype==VERIFY_BY_SLICE):
+                        elif (verifytype == VERIFY_BY_SLICE):
                             resp = requests.get(work_path, stream=True)
                             with open('/tmp/img.{}'.format(channel_type),
-                                'wb') as out_file:
+                                        'wb') as out_file:
                                 shutil.copyfileobj(response.raw, out_file)
                             assert(resp.status_code == 200)
                     except:
@@ -422,25 +419,24 @@ exist".format(token_name))
 
             else:
                 # Test for tifs or such? Currently test for just not empty
-                if (verifytype==VERIFY_BY_FOLDER):
+                if (verifytype == VERIFY_BY_FOLDER):
                     work_path = "{}/{}/{}/".format(
                         path, token_name, channel_names[i])
-                elif (verifytype==VERIFY_BY_SLICE):
+                elif (verifytype == VERIFY_BY_SLICE):
                     work_path = "{}/{}/{}/{}.{}".format(
                         path, token_name, channel_names[i],
                         ("%04d" % offset), file_type)
                 else:
                     raise TypeError('Incorrect verify method')
-
                 #Check for accessibility
                 try:
-                    if (verifytype==VERIFY_BY_FOLDER):
+                    if (verifytype == VERIFY_BY_FOLDER):
                         resp = requests.head(work_path)
                         assert(resp.status_code == 200)
-                    elif (verifytype==VERIFY_BY_SLICE):
+                    elif (verifytype == VERIFY_BY_SLICE):
                         resp = requests.get(work_path, stream=True)
                         with open('/tmp/img.{}'.format(channel_type),
-                            'wb') as out_file:
+                                'wb') as out_file:
                             shutil.copyfileobj(response.raw, out_file)
                         assert(resp.status_code == 200)
                 except:
@@ -482,7 +478,7 @@ exist".format(token_name))
         for i in names:
             if(spec_chars.match(i)):
                 raise ValueError("No special characters allowed including:\
-                    $&+,:;=?@#|'<>._^*()%!-].*\" in names")
+                        $&+,:;=?@#|'<>._^*()%!-].*\" in names")
 
 
     def put_data(self, data, site_host, dev):
@@ -496,7 +492,7 @@ exist".format(token_name))
 
         try:
             response = requests.post(URLPath, data=json.dumps(data))
-            assert( response.status_code == 200 )
+            assert(response.status_code == 200)
         except:
             raise IOError("Error in posting JSON file {}\
 ".format(reponse.status_code))
