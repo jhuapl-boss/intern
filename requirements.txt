@@ -7,3 +7,4 @@ scipy
 pymcubes
 pycollada
 json-spec
+blosc
