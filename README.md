@@ -2,7 +2,6 @@
 
 [![](https://img.shields.io/pypi/v/ndio.svg)](https://pypi.python.org/pypi/ndio) —
 [![Build Status](https://travis-ci.org/neurodata/ndio.svg?branch=master)](https://travis-ci.org/neurodata/ndio)
-[![Coverage Status](https://coveralls.io/repos/neurodata/ndio/badge.svg?branch=master&service=github)](https://coveralls.io/github/neurodata/ndio?branch=master)
 ![](https://img.shields.io/badge/pep8-0E-green.svg?style=flat) —
 [![](https://img.shields.io/badge/SfN-2015-blue.svg)](http://www.sfn.org/annual-meeting/neuroscience-2015)
 [![Neurodata.io](https://img.shields.io/badge/Visit-neurodata.io-ff69b4.svg)](http://neurodata.io/)
