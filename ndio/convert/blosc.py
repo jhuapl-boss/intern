@@ -8,16 +8,16 @@ def import_blosc(raw_data):
     Import a blosc array into a numpy array.
 
     Arguments:
-        raw_data:  A blosc packed numpy array 
+        raw_data:  A blosc packed numpy array
 
     Returns:
         A numpy array with data from a blosc compressed array
     """
 
     try:
-      numpy_data = blosc.unpack_array(raw_array)
+        numpy_data = blosc.unpack_array(raw_array)
     except Exception as e:
-        raise ValueError("Could not load numpy data from raw data. {}".format(e))
+        raise ValueError("Could not load numpy data. {}".format(e))
         raise
 
     return numpy_data
@@ -35,8 +35,8 @@ def export_blosc(numpy_data):
     """
 
     try:
-      raw_data = blosc.pack_array(numpy_data)
+        raw_data = blosc.pack_array(numpy_data)
     except Exception as e:
-        raise ValueError("Could not compress data from numpy array. {}".format(e))
+        raise ValueError("Could not compress data from array. {}".format(e))
 
     return raw_data
