@@ -381,9 +381,8 @@ class neurodata(Remote):
                           req.status_code,
                           req.text))
 
-        # return numpy.squeeze(blosc.unpack_array(req.content))
-        return blosc.unpack_array(req.content)
-    
+        return blosc.unpack_array(req.content)[0] # TODO: 4D - 3D array
+        
         raise IOError("Failed to retrieve blosc cutout.")
 
     # SECTION:
