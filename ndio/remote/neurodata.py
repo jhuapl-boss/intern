@@ -15,6 +15,7 @@ from .Remote import Remote
 from .errors import *
 import ndio.ramon as ramon
 from six.moves import range
+import six
 
 try:
     import urllib.request as urllib2
@@ -307,7 +308,7 @@ class neurodata(Remote):
 
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
-        if size < 2E9 and memory:  # TODO
+        if size < 2E9 and memory and six.PY2:  # TODO
             return self._get_cutout_blosc_no_chunking(token, channel,
                                                       resolution, x_start,
                                                       x_stop, y_start, y_stop,
@@ -381,8 +382,8 @@ class neurodata(Remote):
                           req.status_code,
                           req.text))
 
-        return blosc.unpack_array(req.content)[0] # TODO: 4D - 3D array
-        
+        return blosc.unpack_array(req.content)[0]  # TODO: 4D - 3D array
+
         raise IOError("Failed to retrieve blosc cutout.")
 
     # SECTION:

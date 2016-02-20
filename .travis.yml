@@ -18,7 +18,7 @@ install:
     - pip install coveralls
     - pip install json-spec
     - pip install simplejson regex wget
-    - pip install blosc
+    - pip install python-blosc
 cache:
     - pip
     - apt
