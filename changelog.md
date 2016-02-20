@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.1.10**
+    - *Actually* fix kvpair bug... (thanks Will!)
+    - Use blosc interface because it is pretty clearly superior
 - **0.1.9**
     - Further-robustify the test-suite, and add some goodies for caching in Travis. (PRs now must pass in GitHub before being mergeable)
     - Fix *absurd* RAMON download bug with kvpairs
