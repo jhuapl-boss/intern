@@ -9,6 +9,7 @@ except ImportError:
     from io import BytesIO as StringIO
 import zlib
 import tempfile
+import blosc
 
 from .Remote import Remote
 from .errors import *
@@ -246,7 +247,8 @@ class neurodata(Remote):
                    z_start, z_stop,
                    resolution=1,
                    block_size=(256, 256, 16),
-                   crop=False):
+                   crop=False,
+                   memory=True):
         """
         Get a RAMONVolume volumetric cutout from the neurodata server.
 
@@ -258,7 +260,10 @@ class neurodata(Remote):
             Q_stop (int): The upper bound of dimension 'Q'
             block_size (int[3]): Block size of this dataset
             crop (bool): whether or not to crop the volume before returning it
-
+            memory (bool): if true, use blosc and return a numpy array without
+                           writing to disk.  Good for image only requests that
+                           fit in RAM.  Otherwise use existing hdf5 interface.
+                           TODO: chunking for this mode
         Returns:
             ndio.ramon.RAMONVolume: Downloaded data.
 
@@ -270,9 +275,12 @@ class neurodata(Remote):
         volume = ramon.RAMONVolume()
         volume.xyz_offset = [x_start, y_start, z_start]
         volume.resolution = resolution
-        volume.cutout = self.get_cutout(token, channel, x_start, x_stop,
-                                        y_start, y_stop, z_start, z_stop,
-                                        resolution=resolution)
+
+        volume.cutout = self.get_cutout(token, channel, x_start,
+                                        x_stop, y_start, y_stop,
+                                        z_start, z_stop,
+                                        resolution=resolution,
+                                        memory=memory)
         return volume
 
     def get_cutout(self, token, channel,
@@ -280,7 +288,8 @@ class neurodata(Remote):
                    y_start, y_stop,
                    z_start, z_stop,
                    resolution=1,
-                   block_size=(256, 256, 16)):
+                   block_size=(256, 256, 16),
+                   memory=True):
         """
         Get volumetric cutout data from the neurodata server.
 
@@ -298,33 +307,39 @@ class neurodata(Remote):
 
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
 
-        # For now, max out at 512MB
-        if size < 1E9 / 2:
-            return self._get_cutout_no_chunking(token, channel, resolution,
-                                                x_start, x_stop,
-                                                y_start, y_stop,
-                                                z_start, z_stop)
-
+        if size < 2E9 and memory:  # TODO
+            return self._get_cutout_blosc_no_chunking(token, channel,
+                                                      resolution, x_start,
+                                                      x_stop, y_start, y_stop,
+                                                      z_start, z_stop)
         else:
-            # Get an array-of-tuples of blocks to request.
-            from ndio.utils.parallel import block_compute, snap_to_cube
-            blocks = block_compute(x_start, x_stop,
-                                   y_start, y_stop,
-                                   z_start, z_stop)
+            # For now, max out at 512MB
+            if size < 1E9 / 2:
+                return self._get_cutout_no_chunking(token, channel, resolution,
+                                                    x_start, x_stop,
+                                                    y_start, y_stop,
+                                                    z_start, z_stop)
 
-            vol = numpy.zeros(((y_stop - y_start) + 1,
-                              (x_stop - x_start) + 1,
-                              (z_stop - z_start) + 1))
-            for b in blocks:
-                data = self._get_cutout_no_chunking(
-                                     token, channel, resolution,
-                                     b[0][0], b[0][1],
-                                     b[1][0], b[1][1],
-                                     b[2][0], b[2][1])
-                data = numpy.rollaxis(data, 0, 3)
-                vol[b[1][0]:b[1][1], b[0][0]:b[0][1], b[2][0]:b[2][1]] = data
+            else:
+                # Get an array-of-tuples of blocks to request.
+                from ndio.utils.parallel import block_compute, snap_to_cube
+                blocks = block_compute(x_start, x_stop,
+                                       y_start, y_stop,
+                                       z_start, z_stop)
 
-            return vol
+                vol = numpy.zeros(((y_stop - y_start) + 1,
+                                  (x_stop - x_start) + 1,
+                                  (z_stop - z_start) + 1))
+                for b in blocks:
+                    data = self._get_cutout_no_chunking(
+                                         token, channel, resolution,
+                                         b[0][0], b[0][1],
+                                         b[1][0], b[1][1],
+                                         b[2][0], b[2][1])
+                    data = numpy.rollaxis(data, 0, 3)
+                    vol[b[1][0]:b[1][1], b[0][0]:b[0][1], b[2][0]:b[2][1]] = data
+
+                return vol
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
                                 x_start, x_stop, y_start, y_stop,
@@ -348,6 +363,28 @@ class neurodata(Remote):
             h5file = h5py.File(tmpfile.name, "r")
             return h5file.get(channel).get('CUTOUT')[:]
         raise IOError("Failed to make tempfile.")
+
+    def _get_cutout_blosc_no_chunking(self, token, channel, resolution,
+                                      x_start, x_stop, y_start, y_stop,
+                                      z_start, z_stop):
+
+        url = self.url() + "{}/{}/blosc/{}/{},{}/{},{}/{},{}/".format(
+           token, channel, resolution,
+           x_start, x_stop,
+           y_start, y_stop,
+           z_start, z_stop
+        )
+        req = requests.get(url)
+        if req.status_code is not 200:
+            raise IOError("Bad server response for {}: {}: {}".format(
+                          url,
+                          req.status_code,
+                          req.text))
+
+        # return numpy.squeeze(blosc.unpack_array(req.content))
+        return blosc.unpack_array(req.content)
+    
+        raise IOError("Failed to retrieve blosc cutout.")
 
     # SECTION:
     # Data Upload
