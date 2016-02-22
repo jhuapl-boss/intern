@@ -3,8 +3,10 @@ setup.cfg
 setup.py
 ndio/__init__.py
 ndio/convert/__init__.py
+ndio/convert/blosc.py
 ndio/convert/convert.py
 ndio/convert/hdf5.py
+ndio/convert/nifti.py
 ndio/convert/png.py
 ndio/convert/tiff.py
 ndio/ramon/RAMONBase.py
@@ -17,8 +19,6 @@ ndio/ramon/RAMONVolume.py
 ndio/ramon/__init__.py
 ndio/ramon/enums.py
 ndio/ramon/errors.py
-ndio/remote/OCP.py
-ndio/remote/OCPMeta.py
 ndio/remote/Remote.py
 ndio/remote/__init__.py
 ndio/remote/errors.py
