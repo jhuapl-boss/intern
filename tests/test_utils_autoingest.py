@@ -6,6 +6,7 @@ import requests
 import json
 import os
 import numpy
+import sys
 
 SERVER_SITE = 'http://ec2-54-191-191-26.us-west-2.compute.amazonaws.com/'
 DATA_SITE = 'http://ec2-54-200-215-161.us-west-2.compute.amazonaws.com/'
@@ -23,9 +24,10 @@ class TestAutoIngest(unittest.TestCase):
 
     def test_pull_data(self):
 
-        data_name_1 = "ndiotest1%s%s%s%s%s%s" % (self.i.year, self.i.month,
+        data_name_1 = "ndiotest1%s%s%s%s%s%s%s" % (self.i.year, self.i.month,
                                                  self.i.day, self.i.hour,
-                                                 self.i.minute, self.i.second)
+                                                 self.i.minute, self.i.second,
+                                                 sys.version_info[0])
 
         ai_1 = AutoIngest.AutoIngest()
         ai_1.add_channel(data_name_1, 'uint8',
@@ -46,10 +48,10 @@ class TestAutoIngest(unittest.TestCase):
             raise ValueError(response.content, url)
 
     def test_post_data(self):
-        data_name_5 = "s3ndioawstest5%s%s%s%s%s%sf" % (self.i.year, self.i.month,
+        data_name_5 = "s3ndioawstest5%s%s%s%s%s%s%sf" % (self.i.year, self.i.month,
                                                      self.i.day, self.i.hour,
                                                      self.i.minute,
-                                                     self.i.second)
+                                                     self.i.second, sys.version_info[0])
 
         ai_5 = AutoIngest.AutoIngest()
         ai_5.add_channel(data_name_5, 'uint8',
@@ -75,9 +77,10 @@ class TestAutoIngest(unittest.TestCase):
         except:
             print("")
 
-        data_name_2 = "ndiotest2%s%s%s%s%s%sf" % (self.i.year, self.i.month,
+        data_name_2 = "ndiotest2%s%s%s%s%s%s%sf" % (self.i.year, self.i.month,
                                                   self.i.day, self.i.hour,
-                                                  self.i.minute, self.i.second)
+                                                  self.i.minute, self.i.second,
+                                                  sys.version_info[0])
 
         ai_2 = AutoIngest.AutoIngest()
         ai_2.add_channel(data_name_2, 'uint8', 'image',
