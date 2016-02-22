@@ -34,14 +34,35 @@ class neurodata(Remote):
     IMAGE = IMG = 'image'
     ANNOTATION = ANNO = 'annotation'
 
-    def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL):
+    def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL,
+                       meta_root="http://lims.neurodata.io/", meta_protocol=DEFAULT_PROTOCOL):
+        # Prepare meta url
+        self.meta_root = meta_root
+        if not self.meta_root.endswith('/'):
+            self.meta_root = self.meta_root + "/"
+        if self.meta_root.startswith('http'):
+            self.meta_root = self.meta_root[self.meta_root.index('://')+3:]
+        self.meta_protocol = meta_protocol
         super(neurodata, self).__init__(hostname, protocol)
 
     def ping(self):
+        """
+        Returns the status-code of the API (estimated using the public-tokens
+        lookup page).
+
+        Arguments:
+            None
+
+        Returns:
+            int status code
+        """
         return super(neurodata, self).ping('public_tokens/')
 
     def url(self, suffix=""):
         return super(neurodata, self).url('/ocp/ca/' + suffix)
+
+    def meta_url(self, suffix=""):
+        return self.meta_protocol + "://" + self.meta_root + suffix
 
     def __repr__(self):
         """
@@ -56,7 +77,9 @@ class neurodata(Remote):
         """
         return "ndio.remote.neurodata('{}', '{}')".format(
             self.hostname,
-            self.protocol
+            self.protocol,
+            self.meta_url,
+            self.meta_protocol
         )
 
     # SECTION:
@@ -133,7 +156,10 @@ class neurodata(Remote):
             JSON: representation of proj_info
         """
         r = requests.get(self.url() + "{}/info/".format(token))
-        return r.json()
+        r_dict = r.json()
+        r_dict['metadata'] = self._lims_shim_get_metadata(token)
+        return r_dict
+
 
     def get_token_info(self, token):
         """
@@ -177,6 +203,54 @@ class neurodata(Remote):
             raise RemoteDataNotFoundError("Resolution " + res +
                                           " is not available.")
         return info['dataset']['imagesize'][str(resolution)]
+
+    """
+    OCPMeta Remotes enable access to the Metadata-OCP API endpoints (which
+    can be found at `api.neurodata.io/metadata/ocp/`). This class is useful
+    for reading metadata for existing projects, or, if you specify a key,
+    adding new metadata, manipulating your existing metadata, and archiving
+    old metadata. Archived metadata is still stored by the LIMS system.
+    """
+
+    def _lims_shim_get_metadata(self, token):
+        """
+        Get metadata via a project token.
+
+        Arguments:
+            token (str):      The project (token) to access
+
+        Returns:
+            JSON metadata associated with this project
+        """
+
+        req = requests.get(self.meta_url("metadata/ocp/get/" + token))
+        return req.json()
+
+    def set_metadata(self, token, data):
+        """
+        Insert new metadata into the OCP metadata database.
+
+        Arguments:
+            token (str): Token of the datum to set
+            data (str): A dictionary to insert as metadata. Include `secret`.
+
+        Returns:
+            JSON of the inserted ID (convenience) or an error message.
+
+        Throws:
+            RemoteDataUploadError: If the token is already populated, or if
+                there is an issue with your specified `secret` key.
+        """
+        req = requests.post(self.meta_url("metadata/ocp/set/" + token),
+                            json=data)
+
+        if req.status_code != 200:
+            raise RemoteDataUploadError(
+                "Could not upload metadata: " + req.json()['message']
+            )
+        return req.json()
+
+    # Image Download
 
     def get_image_offset(self, token, resolution=0):
         """
