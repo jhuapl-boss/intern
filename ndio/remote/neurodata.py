@@ -346,9 +346,7 @@ class neurodata(Remote):
                    y_start, y_stop,
                    z_start, z_stop,
                    resolution=1,
-                   block_size=(256, 256, 16),
-                   crop=False,
-                   memory=True):
+                   block_size=(256, 256, 16)):
         """
         Get a RAMONVolume volumetric cutout from the neurodata server.
 
@@ -356,19 +354,11 @@ class neurodata(Remote):
             token (str): Token to identify data to download
             channel (str): Channel
             resolution (int): Resolution level
-            Q_start (int):` The lower bound of dimension 'Q'
+            Q_start (int): The lower bound of dimension 'Q'
             Q_stop (int): The upper bound of dimension 'Q'
             block_size (int[3]): Block size of this dataset
-            crop (bool): whether or not to crop the volume before returning it
-            memory (bool): if true, use blosc and return a numpy array without
-                           writing to disk.  Good for image only requests that
-                           fit in RAM.  Otherwise use existing hdf5 interface.
-                           TODO: chunking for this mode
         Returns:
             ndio.ramon.RAMONVolume: Downloaded data.
-
-        Raises:
-            NotImplementedError: If you try to crop... Sorry :(
         """
 
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
@@ -379,8 +369,7 @@ class neurodata(Remote):
         volume.cutout = self.get_cutout(token, channel, x_start,
                                         x_stop, y_start, y_stop,
                                         z_start, z_stop,
-                                        resolution=resolution,
-                                        memory=memory)
+                                        resolution=resolution)
         return volume
 
     def get_cutout(self, token, channel,
@@ -388,8 +377,7 @@ class neurodata(Remote):
                    y_start, y_stop,
                    z_start, z_stop,
                    resolution=1,
-                   block_size=(256, 256, 16),
-                   memory=True):
+                   block_size=(256, 256, 16)):
         """
         Get volumetric cutout data from the neurodata server.
 
@@ -397,7 +385,7 @@ class neurodata(Remote):
             token (str): Token to identify data to download
             channel (str): Channel
             resolution (int): Resolution level
-            Q_start (int):` The lower bound of dimension 'Q'
+            Q_start (int): The lower bound of dimension 'Q'
             Q_stop (int): The upper bound of dimension 'Q'
             block_size (int[3]): Block size of this dataset
 
@@ -405,46 +393,42 @@ class neurodata(Remote):
             numpy.ndarray: Downloaded data.
         """
 
-        size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
+        size = (x_stop - x_start) * (y_stop - y_start) * (z_stop - z_start)
 
-        if size < 2E9 and memory and six.PY2:  # TODO
-            return self._get_cutout_blosc_no_chunking(token, channel,
-                                                      resolution, x_start,
-                                                      x_stop, y_start, y_stop,
-                                                      z_start, z_stop)
+        if six.PY2:
+            dl_func = self._get_cutout_blosc_no_chunking
+        elif six.PY3:
+            dl_func = self._get_cutout_no_chunking
         else:
-            # For now, max out at 512MB
-            if size < 1E9 / 2:
-                return self._get_cutout_no_chunking(token, channel, resolution,
-                                                    x_start, x_stop,
-                                                    y_start, y_stop,
-                                                    z_start, z_stop)
+            raise ValueError("Invalid Python version.")
 
-            else:
-                # Get an array-of-tuples of blocks to request.
-                from ndio.utils.parallel import block_compute, snap_to_cube
-                blocks = block_compute(x_start, x_stop,
-                                       y_start, y_stop,
-                                       z_start, z_stop)
 
-                vol = numpy.zeros(((y_stop - y_start) + 1,
-                                  (x_stop - x_start) + 1,
-                                  (z_stop - z_start) + 1))
-                for b in blocks:
-                    data = self._get_cutout_no_chunking(
-                                         token, channel, resolution,
-                                         b[0][0], b[0][1],
-                                         b[1][0], b[1][1],
-                                         b[2][0], b[2][1])
-                    data = numpy.rollaxis(data, 0, 3)
+        if size < 1E9 / 2:
+            return dl_func(token, channel, resolution,
+                           x_start, x_stop, y_start, y_stop, z_start, z_stop)
 
-                    vol[
-                        b[1][0]-x_start:b[1][1]-x_start,
-                        b[0][0]-y_start:b[0][1]-y_start,
-                        b[2][0]-z_start:b[2][1]-z_start
-                                        ] = data
+        else:
+            # Get an array-of-tuples of blocks to request.
+            from ndio.utils.parallel import block_compute, snap_to_cube
+            blocks = block_compute(x_start, x_stop,
+                                   y_start, y_stop,
+                                   z_start, z_stop)
 
-                return vol
+            vol = numpy.zeros(((y_stop - y_start) + 1,
+                              (x_stop - x_start) + 1,
+                              (z_stop - z_start) + 1))
+            for b in blocks:
+                data = dl_func(token, channel, resolution,
+                               b[0][0], b[0][1],
+                               b[1][0], b[1][1],
+                               b[2][0], b[2][1])
+                data = numpy.rollaxis(data, 0, 3)
+
+                vol[b[1][0]-x_start : b[1][1]-x_start,
+                    b[0][0]-y_start : b[0][1]-y_start,
+                    b[2][0]-z_start : b[2][1]-z_start] = data
+
+            return vol
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
                                 x_start, x_stop, y_start, y_stop,
