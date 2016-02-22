@@ -34,8 +34,12 @@ class neurodata(Remote):
     IMAGE = IMG = 'image'
     ANNOTATION = ANNO = 'annotation'
 
-    def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL,
-                       meta_root="http://lims.neurodata.io/", meta_protocol=DEFAULT_PROTOCOL):
+    def __init__(self,
+                 hostname=DEFAULT_HOSTNAME,
+                 protocol=DEFAULT_PROTOCOL,
+                 meta_root="http://lims.neurodata.io/",
+                 meta_protocol=DEFAULT_PROTOCOL):
+
         # Prepare meta url
         self.meta_root = meta_root
         if not self.meta_root.endswith('/'):
@@ -43,6 +47,7 @@ class neurodata(Remote):
         if self.meta_root.startswith('http'):
             self.meta_root = self.meta_root[self.meta_root.index('://')+3:]
         self.meta_protocol = meta_protocol
+
         super(neurodata, self).__init__(hostname, protocol)
 
     def ping(self):
@@ -59,9 +64,29 @@ class neurodata(Remote):
         return super(neurodata, self).ping('public_tokens/')
 
     def url(self, suffix=""):
+        """
+        Returns a constructed URL, appending an optional suffix (uri path).
+
+        Arguments:
+            suffix (str : ""): The suffix to append to the end of the URL
+
+        Returns:
+            str: The complete URL
+        """
         return super(neurodata, self).url('/ocp/ca/' + suffix)
 
     def meta_url(self, suffix=""):
+        """
+        Returns a constructed URL, appending an optional suffix (uri path),
+        for the metadata server. (Should be temporary, until the LIMS shim
+        is fixed.)
+
+        Arguments:
+            suffix (str : ""): The suffix to append to the end of the URL
+
+        Returns:
+            str: The complete URL
+        """
         return self.meta_protocol + "://" + self.meta_root + suffix
 
     def __repr__(self):
@@ -161,7 +186,7 @@ class neurodata(Remote):
         return r_dict
 
 
-    def get_token_info(self, token):
+    def get_metadata(self, token):
         """
         An alias for get_proj_info.
         """
