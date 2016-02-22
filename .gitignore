@@ -9,6 +9,7 @@
 # Compiled Things
 *.pyc
 *.bak
+*.pickle
 
 # Data
 *.hdf5
@@ -16,7 +17,10 @@
 *.tif
 *.tiff
 
-
 # Temp Files
 *.swp
 *.swo
+
+# Docs
+*.html
+docs/build/
