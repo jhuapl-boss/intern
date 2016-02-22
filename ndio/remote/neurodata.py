@@ -414,7 +414,7 @@ class neurodata(Remote):
                                                       z_start, z_stop)
         else:
             # For now, max out at 512MB
-            if True:  # size < 1E9 / 2:
+            if size < 1E9 / 2:
                 return self._get_cutout_no_chunking(token, channel, resolution,
                                                     x_start, x_stop,
                                                     y_start, y_stop,
@@ -437,7 +437,12 @@ class neurodata(Remote):
                                          b[1][0], b[1][1],
                                          b[2][0], b[2][1])
                     data = numpy.rollaxis(data, 0, 3)
-                    vol[b[1][0]:b[1][1], b[0][0]:b[0][1], b[2][0]:b[2][1]] = data
+
+                    vol[
+                        b[1][0]-x_start:b[1][1]-x_start,
+                        b[0][0]-y_start:b[0][1]-y_start,
+                        b[2][0]-z_start:b[2][1]-z_start
+                                        ] = data
 
                 return vol
 
