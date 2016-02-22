@@ -2,7 +2,13 @@ import ndio
 
 VERSION = ndio.version
 """
-roll with
+update docs with:
+sphinx-apidoc -f -o ./docs/source/ ./ndio *.py
+cd docs
+make html
+
+roll with:
+
 git tag VERSION
 git push --tags
 python setup.py sdist upload -r pypi

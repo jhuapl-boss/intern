@@ -4,22 +4,6 @@ ndio.remote package
 Submodules
 ----------
 
-ndio.remote.OCP module
-----------------------
-
-.. automodule:: ndio.remote.OCP
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ndio.remote.OCPMeta module
---------------------------
-
-.. automodule:: ndio.remote.OCPMeta
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 ndio.remote.Remote module
 -------------------------
 
