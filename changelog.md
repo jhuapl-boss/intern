@@ -1,5 +1,11 @@
 # Changelog
 
+- **0.1.11**
+    - Token-check decorator in neurodata remote
+    - Fix download chunking bug
+    - Remove coveralls from travis because it's not working...
+    - Remove some dependencies from the install script
+    - Integrate LIMS shim
 - **0.1.10**
     - *Actually* fix kvpair bug... (thanks Will!)
     - Use blosc interface because it is pretty clearly superior
