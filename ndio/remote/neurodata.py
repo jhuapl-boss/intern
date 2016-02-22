@@ -40,7 +40,10 @@ class neurodata(Remote):
                  hostname=DEFAULT_HOSTNAME,
                  protocol=DEFAULT_PROTOCOL,
                  meta_root="http://lims.neurodata.io/",
-                 meta_protocol=DEFAULT_PROTOCOL):
+                 meta_protocol=DEFAULT_PROTOCOL, **kwargs):
+
+        self._check_tokens = kwargs.get('check_tokens', True)
+        self._chunk_threshold = kwargs.get('chunk_threshold', 1E9 / 2)
 
         # Prepare meta url
         self.meta_root = meta_root
@@ -56,12 +59,13 @@ class neurodata(Remote):
     def _check_token(f):
         @wraps(f)
         def wrapped(self, *args, **kwargs):
-            if 'token' in kwargs:
-                token = kwargs['token']
-            else:
-                token = args[0]
-            if self.ping('{}/info/'.format(token)) != 200:
-                raise RemoteDataNotFoundError("Bad token {}".format(token))
+            if self._check_tokens:
+                if 'token' in kwargs:
+                    token = kwargs['token']
+                else:
+                    token = args[0]
+                if self.ping('{}/info/'.format(token)) != 200:
+                    raise RemoteDataNotFoundError("Bad token {}".format(token))
             return f(self, *args, **kwargs)
         return wrapped
 
@@ -431,7 +435,7 @@ class neurodata(Remote):
             raise ValueError("Invalid Python version.")
 
 
-        if size < 1E9 / 2:
+        if size < self._chunk_threshold:
             return dl_func(token, channel, resolution,
                            x_start, x_stop, y_start, y_stop, z_start, z_stop)
 
@@ -452,8 +456,8 @@ class neurodata(Remote):
                                b[2][0], b[2][1])
                 data = numpy.rollaxis(data, 0, 3)
 
-                vol[b[1][0]-x_start : b[1][1]-x_start,
-                    b[0][0]-y_start : b[0][1]-y_start,
+                vol[b[0][0]-x_start : b[0][1]-x_start,
+                    b[1][0]-y_start : b[1][1]-y_start,
                     b[2][0]-z_start : b[2][1]-z_start] = data
 
             return vol
@@ -507,27 +511,26 @@ class neurodata(Remote):
 
     @_check_token
     def post_cutout(self, token, channel,
-                    x_start, x_stop,
-                    y_start, y_stop,
-                    z_start, z_stop,
+                    x_start,
+                    y_start,
+                    z_start,
                     data,
                     dtype='',
                     resolution=0,
-                    roll_axis=False):
+                    roll_axis=True):
         """
         Post a cutout to the server.
 
         Arguments:
             token (str)
             channel (str)
-            q_start (int)
-            q_stop (int)
-            data:           A numpy array of data. Pass in (x, y, z)
-            resolution:     Default resolution of the data
-            roll_axis:      Default True. Pass True if you're supplying data
-                            in (z, x, y) order. maybe.
-            dtype:          Pass in datatype if you know it. Otherwise we'll
-                            check the projinfo.
+            x_start (int)
+            y_start (int)
+            z_start (int)
+            data (numpy.ndarray): A numpy array of data. Pass in (x, y, z)
+            dtype (str : ''): Pass in explicit datatype, or we use projinfo
+            resolution (int : 0): Resolution at which to insert the data
+            roll_axis (bool : True): Pass False if data is in (z, x, y) order
         Returns:
             bool: True on success
 
@@ -543,19 +546,50 @@ class neurodata(Remote):
             # put the z-axis first
             data = numpy.rollaxis(data, 2)
 
+        if six.PY2:
+            ul_func = self._post_cutout_no_chunking
+        elif six.PY3:
+            ul_func = self._post_cutout_no_chunking
+        else:
+            raise ValueError("Invalid Python version.")
+
+        if data.size < self._chunk_threshold:
+            return ul_func(token, channel, x_start,
+                           y_start, z_start, data,
+                           resolution)
+        else:
+            # must chunk first
+            from ndio.utils.parallel import block_compute
+            blocks = block_compute(x_start, x_start + data.shape[0],
+                                   y_start, y_start + data.shape[1],
+                                   z_start, z_start + data.shape[2])
+
+            for b in blocks:
+                subvol = data[b[0][0]-x_start : b[0][1]-x_start,
+                              b[1][0]-y_start : b[1][1]-y_start,
+                              b[2][0]-z_start : b[2][1]-z_start]
+                # upload the chunk:
+                ul_func(token, channel, x_start,
+                        y_start, z_start, subvol,
+                        resolution)
+        return True
+
+    def _post_cutout_no_chunking(self, token, channel,
+                                 x_start, y_start, z_start,
+                                 data, resolution):
+
         data = numpy.expand_dims(data, axis=0)
         tempfile = StringIO()
         numpy.save(tempfile, data)
-
         compressed = zlib.compress(tempfile.getvalue())
 
-        url = self.url() + "{}/{}/npz/{}/{},{}/{},{}/{},{}/".format(
+        url = self.url("{}/{}/npz/{}/{},{}/{},{}/{},{}/".format(
             token, channel,
             resolution,
-            x_start, x_stop,
-            y_start, y_stop,
-            z_start, z_stop
-        )
+            x_start, x_start + data.shape[0],
+            y_start, y_start + data.shape[1],
+            z_start, z_start + data.shape[2]
+        ))
 
         req = requests.post(url, data=compressed, headers={
             'Content-Type': 'application/octet-stream'
@@ -873,7 +907,6 @@ class neurodata(Remote):
             if res.status_code == 500:
                 raise RemoteDataUploadError('[500] Could not upload {}'
                                             .format(str(r)))
-
         return True
 
     # SECTION:
