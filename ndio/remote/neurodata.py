@@ -950,5 +950,24 @@ class neurodata(Remote):
 
         if req.status_code is not 200:
             raise RemoteDataUploadError('Could not delete {}'.format(req.text))
-        else:
-            return True
+        return True
+
+    # Propagation
+
+    @_check_token
+    def propagate_token(self, token, channel):
+        if self.check_propagate_status(token, channel) is not 0:
+            return
+        url = self.url('{}/{}/setPropagate/1/'.format(token, channel))
+        req = requests.get(url)
+        if req.status_code is not 200:
+            raise RemoteDataUploadError('Propagate fail: {}'.format(req.text))
+        return True
+
+    @_check_token
+    def check_propagate_status(self, token, channel):
+        url = self.url('{}/{}/getPropagate/'.format(token, channel))
+        req = requests.get(url)
+        if req.status_code is not 200:
+            raise ValueError('Bad pair: {}/{}'.format(token, channel))
+        return req.text

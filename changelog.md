@@ -6,6 +6,10 @@
     - Remove coveralls from travis because it's not working...
     - Remove some dependencies from the install script
     - Integrate LIMS shim
+    - Improve uploads of cutouts by chunking intelligently
+    - Check for token-exist before trying operations (to improve error messages)
+    - Fix test-suite to allow autoingest synchronicity
+    - Add `propagate_token` and `check_propagate_status` to neurodata remote
 - **0.1.10**
     - *Actually* fix kvpair bug... (thanks Will!)
     - Use blosc interface because it is pretty clearly superior
