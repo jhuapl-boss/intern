@@ -452,8 +452,8 @@ class neurodata(Remote):
                                b[2][0], b[2][1])
                 data = numpy.rollaxis(data, 0, 3)
 
-                vol[b[1][0]-x_start : b[1][1]-x_start,
-                    b[0][0]-y_start : b[0][1]-y_start,
+                vol[b[0][0]-x_start : b[0][1]-x_start,
+                    b[1][0]-y_start : b[1][1]-y_start,
                     b[2][0]-z_start : b[2][1]-z_start] = data
 
             return vol
@@ -524,7 +524,7 @@ class neurodata(Remote):
             q_stop (int)
             data:           A numpy array of data. Pass in (x, y, z)
             resolution:     Default resolution of the data
-            roll_axis:      Default True. Pass True if you're supplying data
+            roll_axis:      Default True. Pass False if you're supplying data
                             in (z, x, y) order. maybe.
             dtype:          Pass in datatype if you know it. Otherwise we'll
                             check the projinfo.
@@ -542,6 +542,38 @@ class neurodata(Remote):
         if roll_axis:
             # put the z-axis first
             data = numpy.rollaxis(data, 2)
+
+        if six.PY2:
+            ul_func = self._post_cutout_no_chunking
+        elif six.PY3:
+            ul_func = self._post_cutout_no_chunking
+        else:
+            raise ValueError("Invalid Python version.")
+
+        if data.size < self.chunk_threshold:
+            return ul_func(token, channel, x_start,
+                           y_start, z_start, data,
+                           resolution)
+        else:
+            # must chunk first
+            from ndio.utils.parallel import block_compute
+            blocks = block_compute(x_start, x_start + data.shape[0],
+                                   y_start, y_start + data.shape[1],
+                                   z_start, z_start + data.shape[2])
+
+            for b in blocks:
+                subvol = [b[0][0]-x_start : b[0][1]-x_start,
+                          b[1][0]-y_start : b[1][1]-y_start,
+                          b[2][0]-z_start : b[2][1]-z_start]
+                # upload the chunk:
+                ul_func(token, channel, x_start,
+                        y_start, z_start, subvol,
+                        resolution)
+        return True
+
+    def _post_cutout_no_chunking(self, token, channel,
+                                 x_start, y_start, z_start,
+                                 data, resolution):
 
         data = numpy.expand_dims(data, axis=0)
         tempfile = StringIO()
@@ -873,7 +905,6 @@ class neurodata(Remote):
             if res.status_code == 500:
                 raise RemoteDataUploadError('[500] Could not upload {}'
                                             .format(str(r)))
-
         return True
 
     # SECTION:
