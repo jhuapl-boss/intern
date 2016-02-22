@@ -17,6 +17,8 @@ import ndio.ramon as ramon
 from six.moves import range
 import six
 
+from functools import wraps
+
 try:
     import urllib.request as urllib2
 except ImportError:
@@ -50,18 +52,32 @@ class neurodata(Remote):
 
         super(neurodata, self).__init__(hostname, protocol)
 
-    def ping(self):
+    # Decorators
+    def _check_token(f):
+        @wraps(f)
+        def wrapped(self, *args, **kwargs):
+            if 'token' in kwargs:
+                token = kwargs['token']
+            else:
+                token = args[0]
+            if self.ping('{}/info/'.format(token)) != 200:
+                raise RemoteDataNotFoundError("Bad token {}".format(token))
+            return f(self, *args, **kwargs)
+        return wrapped
+
+
+    def ping(self, suffix='public_tokens/'):
         """
         Returns the status-code of the API (estimated using the public-tokens
         lookup page).
 
         Arguments:
-            None
+            suffix (str : 'public_tokens/'): The url endpoint to check
 
         Returns:
             int status code
         """
-        return super(neurodata, self).ping('public_tokens/')
+        return super(neurodata, self).ping(suffix)
 
     def url(self, suffix=""):
         """
@@ -158,6 +174,7 @@ class neurodata(Remote):
                 datasets[dataset] = [t]
         return datasets
 
+    @_check_token
     def get_token_dataset(self, token):
         """
         Get the dataset for a given token.
@@ -170,6 +187,7 @@ class neurodata(Remote):
         """
         return self.get_proj_info(token)['dataset']['description']
 
+    @_check_token
     def get_proj_info(self, token):
         """
         Returns the project info for a given token.
@@ -186,12 +204,14 @@ class neurodata(Remote):
         return r_dict
 
 
+    @_check_token
     def get_metadata(self, token):
         """
         An alias for get_proj_info.
         """
         return self.get_proj_info(token)
 
+    @_check_token
     def get_channels(self, token):
         """
         Wraps get_proj_info to return a dictionary of just the channels of
@@ -205,6 +225,7 @@ class neurodata(Remote):
         """
         return self.get_proj_info(token)['channels']
 
+    @_check_token
     def get_image_size(self, token, resolution=0):
         """
         Returns the size of the volume (3D). Convenient for when you want
@@ -237,6 +258,7 @@ class neurodata(Remote):
     old metadata. Archived metadata is still stored by the LIMS system.
     """
 
+    @_check_token
     def _lims_shim_get_metadata(self, token):
         """
         Get metadata via a project token.
@@ -251,6 +273,7 @@ class neurodata(Remote):
         req = requests.get(self.meta_url("metadata/ocp/get/" + token))
         return req.json()
 
+    @_check_token
     def set_metadata(self, token, data):
         """
         Insert new metadata into the OCP metadata database.
@@ -277,6 +300,7 @@ class neurodata(Remote):
 
     # Image Download
 
+    @_check_token
     def get_image_offset(self, token, resolution=0):
         """
         Gets the image offset for a given token at a given resolution. For
@@ -301,6 +325,7 @@ class neurodata(Remote):
     # SECTION:
     # Data Download
 
+    @_check_token
     def get_xy_slice(self, token, channel,
                      x_start, x_stop,
                      y_start, y_stop,
@@ -327,6 +352,7 @@ class neurodata(Remote):
                                           z_index, z_index+1)[0]
         return im
 
+    @_check_token
     def get_image(self, token, channel,
                   x_start, x_stop,
                   y_start, y_stop,
@@ -341,6 +367,7 @@ class neurodata(Remote):
                                  z_index,
                                  resolution)
 
+    @_check_token
     def get_volume(self, token, channel,
                    x_start, x_stop,
                    y_start, y_stop,
@@ -372,6 +399,7 @@ class neurodata(Remote):
                                         resolution=resolution)
         return volume
 
+    @_check_token
     def get_cutout(self, token, channel,
                    x_start, x_stop,
                    y_start, y_stop,
@@ -477,6 +505,7 @@ class neurodata(Remote):
     # SECTION:
     # Data Upload
 
+    @_check_token
     def post_cutout(self, token, channel,
                     x_start, x_stop,
                     y_start, y_stop,
@@ -540,6 +569,7 @@ class neurodata(Remote):
     # SECTION:
     # RAMON Download
 
+    @_check_token
     def get_ramon_ids(self, token, channel='annotation', ramon_type=None):
         """
         Return a list of all IDs available for download from this token and
@@ -574,6 +604,7 @@ class neurodata(Remote):
                 return [i for i in h5file['ANNOIDS']]
             raise IOError("Could not successfully mock HDF5 file for parsing.")
 
+    @_check_token
     def get_ramon(self, token, channel, ids, resolution,
                   metadata_only=False, sieve=None, batch_size=100):
         """
@@ -660,6 +691,7 @@ class neurodata(Remote):
                 rs = [ramon.hdf5_to_ramon(h5file, i) for i in ids]
                 return rs
 
+    @_check_token
     def get_ramon_metadata(self, token, channel, anno_id):
         """
         Download a RAMON object by ID. `anno_id` can be a string `"123"`, an
@@ -735,6 +767,7 @@ class neurodata(Remote):
         """
         raise NotImplementedError("No reserving yet, sorry!")
 
+    @_check_token
     def merge_ids(self, token, channel, ids, delete=False):
         """
         Call the restful endpoint to merge two RAMON objects into one.
@@ -757,6 +790,7 @@ class neurodata(Remote):
             self.delete_ramon(token, channel, ids[1:])
         return True
 
+    @_check_token
     def delete_ramon(self, token, channel, anno):
         """
         Deletes an annotation from the server. Probably you should be careful
@@ -790,6 +824,7 @@ class neurodata(Remote):
         else:
             return True
 
+    @_check_token
     def post_ramon(self, token, channel, r, batch_size=100):
         """
         Posts a RAMON object to the Remote.
@@ -844,6 +879,7 @@ class neurodata(Remote):
     # SECTION:
     # Channels
 
+    @_check_token
     def create_channel(self, token, name, channel_type, dtype, readonly):
         """
         Create a new channel on the Remote, using channel_data.
@@ -892,6 +928,7 @@ class neurodata(Remote):
         else:
             return True
 
+    @_check_token
     def delete_channel(self, token, name):
         """
         Delete an existing channel on the Remote. Be careful!
