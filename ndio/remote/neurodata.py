@@ -389,7 +389,7 @@ class neurodata(Remote):
                                                       z_start, z_stop)
         else:
             # For now, max out at 512MB
-            if size < 1E9 / 2:
+            if True:  # size < 1E9 / 2:
                 return self._get_cutout_no_chunking(token, channel, resolution,
                                                     x_start, x_stop,
                                                     y_start, y_stop,
