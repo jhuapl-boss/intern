@@ -497,7 +497,7 @@ exist".format(token_name))
             raise IOError("Error in posting JSON file {}\
 ".format(reponse.status_code))
         finally:
-            print("From Ndio: {}".format(response.content))
+            print("From ndio: {}".format(response.content))
 
     def post_data(self,
         site_host='http://openconnecto.me',
