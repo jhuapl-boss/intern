@@ -1,6 +1,6 @@
 # Changelog
 
-- **0.1.11**
+- **0.1.11** (Feb 23 16)
     - Token-check decorator in neurodata remote
     - Fix download chunking bug
     - Remove coveralls from travis because it's not working...
