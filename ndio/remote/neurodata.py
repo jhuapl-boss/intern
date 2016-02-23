@@ -456,8 +456,8 @@ class neurodata(Remote):
                                b[2][0], b[2][1])
                 data = numpy.rollaxis(data, 0, 3)
 
-                vol[b[0][0]-x_start : b[0][1]-x_start,
-                    b[1][0]-y_start : b[1][1]-y_start,
+                vol[b[1][0]-x_start : b[1][1]-x_start,
+                    b[0][0]-y_start : b[0][1]-y_start,
                     b[2][0]-z_start : b[2][1]-z_start] = data
 
             return vol
