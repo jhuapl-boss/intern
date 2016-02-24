@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.1.12**
+    - Bug fixes to XYZ→ZYX formatting bugs
 - **0.1.11** (Feb 23 16)
     - Token-check decorator in neurodata remote
     - Fix download chunking bug

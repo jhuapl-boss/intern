@@ -462,6 +462,8 @@ class neurodata(Remote):
                     b[1][0]-y_start : b[1][1]-y_start,
                     b[0][0]-z_start : b[0][1]-z_start] = data
 
+            vol = numpy.rollaxis(vol, 0, 1)
+            vol = numpy.rollaxis(vol, 0, 2)
             return vol
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
