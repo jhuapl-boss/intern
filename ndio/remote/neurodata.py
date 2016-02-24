@@ -455,11 +455,12 @@ class neurodata(Remote):
                                b[1][0], b[1][1],
                                b[2][0], b[2][1])
 
-                data = numpy.rollaxis(data, 0, 3)
+                data = numpy.rollaxis(data, 0, 1)
+                data = numpy.rollaxis(data, 0, 2)
 
-                vol[b[1][0]-x_start : b[1][1]-x_start,
-                    b[0][0]-y_start : b[0][1]-y_start,
-                    b[2][0]-z_start : b[2][1]-z_start] = data
+                vol[b[2][0]-x_start : b[2][1]-x_start,
+                    b[1][0]-y_start : b[1][1]-y_start,
+                    b[0][0]-z_start : b[0][1]-z_start] = data
 
             return vol
 
@@ -517,8 +518,7 @@ class neurodata(Remote):
                     z_start,
                     data,
                     dtype='',
-                    resolution=0,
-                    roll_axis=True):
+                    resolution=0):
         """
         Post a cutout to the server.
 
@@ -531,7 +531,6 @@ class neurodata(Remote):
             data (numpy.ndarray): A numpy array of data. Pass in (x, y, z)
             dtype (str : ''): Pass in explicit datatype, or we use projinfo
             resolution (int : 0): Resolution at which to insert the data
-            roll_axis (bool : True): Pass False if data is in (z, x, y) order
         Returns:
             bool: True on success
 
@@ -543,9 +542,8 @@ class neurodata(Remote):
         if data.dtype.name != datatype:
             data = data.astype(datatype)
 
-        if roll_axis:
-            # put the z-axis first
-            data = numpy.rollaxis(data, 2)
+        data = numpy.rollaxis(data, 1)
+        data = numpy.rollaxis(data, 2)
 
         if six.PY2:
             ul_func = self._post_cutout_no_chunking
@@ -566,9 +564,9 @@ class neurodata(Remote):
                                    z_start, z_start + data.shape[2])
 
             for b in blocks:
-                subvol = data[b[0][0]-x_start : b[0][1]-x_start,
+                subvol = data[b[2][0]-x_start : b[2][1]-x_start,
                               b[1][0]-y_start : b[1][1]-y_start,
-                              b[2][0]-z_start : b[2][1]-z_start]
+                              b[0][0]-z_start : b[0][1]-z_start]
                 # upload the chunk:
                 ul_func(token, channel, x_start,
                         y_start, z_start, subvol,
