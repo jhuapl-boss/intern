@@ -247,7 +247,7 @@ class neurodata(Remote):
             RemoteDataNotFoundError: If the token is invalid, or if the
                 metadata at that resolution is unavailable in projinfo.
         """
-        info = self.get_token_info(token)
+        info = self.get_proj_info(token)
         res = str(resolution)
         if res not in info['dataset']['imagesize']:
             raise RemoteDataNotFoundError("Resolution " + res +
@@ -319,7 +319,7 @@ class neurodata(Remote):
         Returns:
             int[3]: The origin of the dataset, as a list
         """
-        info = self.get_token_info(token)
+        info = self.get_proj_info(token)
         res = str(resolution)
         if res not in info['dataset']['offset']:
             raise RemoteDataNotFoundError("Resolution " + res +
