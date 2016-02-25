@@ -18,8 +18,6 @@ class TestXYZZYX(unittest.TestCase):
         cutout[2,3,4] = 42
         self.nd.post_cutout(token, channel, 20, 20, 20, cutout, resolution=0)
         pulldown = self.nd.get_cutout(token, channel, 20, 25, 20, 25, 20, 25, resolution=0)
-        import pdb; pdb.set_trace()
-        
         self.assertEqual(cutout[2,3,4], pulldown[2,3,4])
 
 
