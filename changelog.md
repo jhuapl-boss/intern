@@ -2,6 +2,8 @@
 
 - **0.1.12**
     - Bug fixes to XYZ→ZYX formatting bugs
+    - Add tests for downloads and posts, with *and* without chunking
+    - Remove autoingest tests for now. @AEusman, that's on you for now
 - **0.1.11** (Feb 23 16)
     - Token-check decorator in neurodata remote
     - Fix download chunking bug
