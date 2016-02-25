@@ -69,7 +69,6 @@ class neurodata(Remote):
             return f(self, *args, **kwargs)
         return wrapped
 
-
     def ping(self, suffix='public_tokens/'):
         """
         Returns the status-code of the API (estimated using the public-tokens
@@ -206,7 +205,6 @@ class neurodata(Remote):
         r_dict = r.json()
         r_dict['metadata'] = self._lims_shim_get_metadata(token)
         return r_dict
-
 
     @_check_token
     def get_metadata(self, token):
@@ -493,7 +491,6 @@ class neurodata(Remote):
         else:
             raise ValueError("Invalid Python version.")
 
-
         if size < self._chunk_threshold:
             vol = dl_func(token, channel, resolution,
                           x_start, x_stop, y_start, y_stop, z_start, z_stop)
@@ -501,27 +498,26 @@ class neurodata(Remote):
             vol = numpy.rollaxis(vol, 2)
             return vol
         else:
-            # Get an array-of-tuples of blocks to request.
             from ndio.utils.parallel import block_compute, snap_to_cube
             blocks = block_compute(x_start, x_stop,
                                    y_start, y_stop,
                                    z_start, z_stop)
 
-            vol = numpy.zeros(((y_stop - y_start),
-                              (x_stop - x_start),
-                              (z_stop - z_start)))
+            vol = numpy.zeros(((z_stop - z_start),
+                              (y_stop - y_start),
+                              (x_stop - x_start)))
             for b in blocks:
                 data = dl_func(token, channel, resolution,
                                b[0][0], b[0][1],
                                b[1][0], b[1][1],
                                b[2][0], b[2][1])
-                data = numpy.rollaxis(data, 1)
-                data = numpy.rollaxis(data, 2)
 
-                vol[b[0][0]-x_start : b[0][1]-x_start,
+                vol[b[2][0]-z_start : b[2][1]-z_start,
                     b[1][0]-y_start : b[1][1]-y_start,
-                    b[2][0]-z_start : b[2][1]-z_start] = data
+                    b[0][0]-x_start : b[0][1]-x_start] = data
 
+            vol = numpy.rollaxis(vol, 1)
+            vol = numpy.rollaxis(vol, 2)
             return vol
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
