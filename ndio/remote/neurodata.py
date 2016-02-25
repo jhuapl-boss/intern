@@ -43,7 +43,7 @@ class neurodata(Remote):
                  meta_protocol=DEFAULT_PROTOCOL, **kwargs):
 
         self._check_tokens = kwargs.get('check_tokens', True)
-        self._chunk_threshold = kwargs.get('chunk_threshold', 1E9 / 2)
+        self._chunk_threshold = kwargs.get('chunk_threshold', 1E9 / 4)
 
         # Prepare meta url
         self.meta_root = meta_root
@@ -247,7 +247,7 @@ class neurodata(Remote):
             RemoteDataNotFoundError: If the token is invalid, or if the
                 metadata at that resolution is unavailable in projinfo.
         """
-        info = self.get_token_info(token)
+        info = self.get_proj_info(token)
         res = str(resolution)
         if res not in info['dataset']['imagesize']:
             raise RemoteDataNotFoundError("Resolution " + res +
@@ -319,7 +319,7 @@ class neurodata(Remote):
         Returns:
             int[3]: The origin of the dataset, as a list
         """
-        info = self.get_token_info(token)
+        info = self.get_proj_info(token)
         res = str(resolution)
         if res not in info['dataset']['offset']:
             raise RemoteDataNotFoundError("Resolution " + res +
@@ -436,9 +436,11 @@ class neurodata(Remote):
 
 
         if size < self._chunk_threshold:
-            return dl_func(token, channel, resolution,
-                           x_start, x_stop, y_start, y_stop, z_start, z_stop)
-
+            vol = dl_func(token, channel, resolution,
+                          x_start, x_stop, y_start, y_stop, z_start, z_stop)
+            vol = numpy.rollaxis(vol, 1)
+            vol = numpy.rollaxis(vol, 2)
+            return vol
         else:
             # Get an array-of-tuples of blocks to request.
             from ndio.utils.parallel import block_compute, snap_to_cube
@@ -446,19 +448,19 @@ class neurodata(Remote):
                                    y_start, y_stop,
                                    z_start, z_stop)
 
-            vol = numpy.zeros(((y_stop - y_start) + 1,
-                              (x_stop - x_start) + 1,
-                              (z_stop - z_start) + 1))
+            vol = numpy.zeros(((y_stop - y_start),
+                              (x_stop - x_start),
+                              (z_stop - z_start)))
             for b in blocks:
                 data = dl_func(token, channel, resolution,
                                b[0][0], b[0][1],
                                b[1][0], b[1][1],
                                b[2][0], b[2][1])
+                data = numpy.rollaxis(data, 1)
+                data = numpy.rollaxis(data, 2)
 
-                data = numpy.rollaxis(data, 0, 3)
-
-                vol[b[1][0]-x_start : b[1][1]-x_start,
-                    b[0][0]-y_start : b[0][1]-y_start,
+                vol[b[0][0]-x_start : b[0][1]-x_start,
+                    b[1][0]-y_start : b[1][1]-y_start,
                     b[2][0]-z_start : b[2][1]-z_start] = data
 
             return vol
@@ -517,8 +519,7 @@ class neurodata(Remote):
                     z_start,
                     data,
                     dtype='',
-                    resolution=0,
-                    roll_axis=True):
+                    resolution=0):
         """
         Post a cutout to the server.
 
@@ -531,7 +532,6 @@ class neurodata(Remote):
             data (numpy.ndarray): A numpy array of data. Pass in (x, y, z)
             dtype (str : ''): Pass in explicit datatype, or we use projinfo
             resolution (int : 0): Resolution at which to insert the data
-            roll_axis (bool : True): Pass False if data is in (z, x, y) order
         Returns:
             bool: True on success
 
@@ -543,9 +543,8 @@ class neurodata(Remote):
         if data.dtype.name != datatype:
             data = data.astype(datatype)
 
-        if roll_axis:
-            # put the z-axis first
-            data = numpy.rollaxis(data, 2)
+        data = numpy.rollaxis(data, 1)
+        data = numpy.rollaxis(data, 2)
 
         if six.PY2:
             ul_func = self._post_cutout_no_chunking
@@ -561,18 +560,19 @@ class neurodata(Remote):
         else:
             # must chunk first
             from ndio.utils.parallel import block_compute
-            blocks = block_compute(x_start, x_start + data.shape[0],
+            blocks = block_compute(x_start, x_start + data.shape[2],
                                    y_start, y_start + data.shape[1],
-                                   z_start, z_start + data.shape[2])
+                                   z_start, z_start + data.shape[0])
 
             for b in blocks:
-                subvol = data[b[0][0]-x_start : b[0][1]-x_start,
+                subvol = data[b[2][0]-z_start : b[2][1]-z_start,
                               b[1][0]-y_start : b[1][1]-y_start,
-                              b[2][0]-z_start : b[2][1]-z_start]
+                              b[0][0]-x_start : b[0][1]-x_start]
                 # upload the chunk:
                 ul_func(token, channel, x_start,
                         y_start, z_start, subvol,
                         resolution)
+
         return True
 
     def _post_cutout_no_chunking(self, token, channel,
