@@ -337,10 +337,10 @@ class neurodata(Remote):
             Boolean success
         """
         md = self.get_metadata(token)['metadata']
-        # if 'ROIs' in md:
-        #     rois = md['ROIs']
-        # else:
-        rois = []
+        if 'ROIs' in md:
+            rois = md['ROIs']
+        else:
+            rois = []
 
         rois.append({
             'token': token,
@@ -354,7 +354,7 @@ class neurodata(Remote):
             'resolution': resolution,
             'title': title,
             'notes': notes
-        })        
+        })
 
         return self.set_metadata(token, {
             'secret': secret,
