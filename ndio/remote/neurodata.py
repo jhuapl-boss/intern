@@ -434,7 +434,8 @@ class neurodata(Remote):
                    y_start, y_stop,
                    z_start, z_stop,
                    resolution=1,
-                   block_size=(256, 256, 16)):
+                   block_size=(256, 256, 16),
+                   neariso=False):
         """
         Get a RAMONVolume volumetric cutout from the neurodata server.
 
@@ -445,6 +446,9 @@ class neurodata(Remote):
             Q_start (int): The lower bound of dimension 'Q'
             Q_stop (int): The upper bound of dimension 'Q'
             block_size (int[3]): Block size of this dataset
+            neariso (bool : False): Passes the 'neariso' param to the cutout.
+                If you don't know what this means, ignore it!
+
         Returns:
             ndio.ramon.RAMONVolume: Downloaded data.
         """
@@ -457,7 +461,7 @@ class neurodata(Remote):
         volume.cutout = self.get_cutout(token, channel, x_start,
                                         x_stop, y_start, y_stop,
                                         z_start, z_stop,
-                                        resolution=resolution)
+                                        resolution=resolution, neariso=neariso)
         return volume
 
     @_check_token
@@ -466,7 +470,8 @@ class neurodata(Remote):
                    y_start, y_stop,
                    z_start, z_stop,
                    resolution=1,
-                   block_size=(256, 256, 16)):
+                   block_size=(256, 256, 16),
+                   neariso=False):
         """
         Get volumetric cutout data from the neurodata server.
 
@@ -477,6 +482,8 @@ class neurodata(Remote):
             Q_start (int): The lower bound of dimension 'Q'
             Q_stop (int): The upper bound of dimension 'Q'
             block_size (int[3]): Block size of this dataset
+            neariso (bool : False): Passes the 'neariso' param to the cutout.
+                If you don't know what this means, ignore it!
 
         Returns:
             numpy.ndarray: Downloaded data.
@@ -493,7 +500,9 @@ class neurodata(Remote):
 
         if size < self._chunk_threshold:
             vol = dl_func(token, channel, resolution,
-                          x_start, x_stop, y_start, y_stop, z_start, z_stop)
+                          x_start, x_stop,
+                          y_start, y_stop,
+                          z_start, z_stop, neariso)
             vol = numpy.rollaxis(vol, 1)
             vol = numpy.rollaxis(vol, 2)
             return vol
@@ -510,7 +519,7 @@ class neurodata(Remote):
                 data = dl_func(token, channel, resolution,
                                b[0][0], b[0][1],
                                b[1][0], b[1][1],
-                               b[2][0], b[2][1])
+                               b[2][0], b[2][1], neariso)
 
                 vol[b[2][0]-z_start : b[2][1]-z_start,
                     b[1][0]-y_start : b[1][1]-y_start,
@@ -522,13 +531,17 @@ class neurodata(Remote):
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
                                 x_start, x_stop, y_start, y_stop,
-                                z_start, z_stop):
+                                z_start, z_stop, neariso):
         url = self.url() + "{}/{}/hdf5/{}/{},{}/{},{}/{},{}/".format(
            token, channel, resolution,
            x_start, x_stop,
            y_start, y_stop,
            z_start, z_stop
         )
+
+        if neariso:
+            url += "neariso/"
+
         req = requests.get(url)
         if req.status_code is not 200:
             raise IOError("Bad server response for {}: {}: {}".format(
@@ -545,7 +558,7 @@ class neurodata(Remote):
 
     def _get_cutout_blosc_no_chunking(self, token, channel, resolution,
                                       x_start, x_stop, y_start, y_stop,
-                                      z_start, z_stop):
+                                      z_start, z_stop, neariso):
 
         url = self.url() + "{}/{}/blosc/{}/{},{}/{},{}/{},{}/".format(
            token, channel, resolution,
@@ -553,6 +566,10 @@ class neurodata(Remote):
            y_start, y_stop,
            z_start, z_stop
         )
+
+        if neariso:
+            url += "neariso/"
+
         req = requests.get(url)
         if req.status_code is not 200:
             raise IOError("Bad server response for {}: {}: {}".format(
