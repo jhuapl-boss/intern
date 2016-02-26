@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.1.13**
+    - `add_` and `get_subvolumes`, to read and write to LIMS. (These are good example volumes to download when you're looking at a new dataset.)
 - **0.1.12**
     - Bug fixes to XYZ→ZYX formatting bugs
     - Add tests for downloads and posts, with *and* without chunking
