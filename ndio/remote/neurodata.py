@@ -301,9 +301,9 @@ class neurodata(Remote):
         return req.json()
 
     @_check_token
-    def get_rois(self, token):
+    def get_subvolumes(self, token):
         """
-        Returns a list of ROIs taken from LIMS, if available.
+        Returns a list of subvolumes taken from LIMS, if available.
 
         Arguments:
             token (str): The token to read from in LIMS
@@ -312,35 +312,38 @@ class neurodata(Remote):
             dict, or None if unavailable
         """
         md = self.get_metadata(token)['metadata']
-        if 'ROIs' in md:
-            return md['ROIs']
+        if 'subvolumes' in md:
+            return md['subvolumes']
         else:
             return None
 
-    def add_roi(self, token, channel, secret, x_start, x_stop, y_start, y_stop,
-                z_start, z_stop, resolution, title, notes):
+    def add_subvolume(self, token, channel, secret,
+                      x_start, x_stop,
+                      y_start, y_stop,
+                      z_start, z_stop,
+                      resolution, title, notes):
         """
-        Adds a new ROI to a token/channel.
+        Adds a new subvolume to a token/channel.
 
         Arguments:
             token (str): The token to write to in LIMS
-            channel (str): Channel to add in the ROI. Can be `None`
+            channel (str): Channel to add in the subvolume. Can be `None`
             Q_start (int): The start of the Q dimension
             Q_stop (int): The top of the Q dimension,
-            resolution (int): The resolution at which this ROI is seen
-            title (str): The title to set for the ROI
-            notes (str): Optional extra thoughts on the ROI
+            resolution (int): The resolution at which this subvolume is seen
+            title (str): The title to set for the subvolume
+            notes (str): Optional extra thoughts on the subvolume
 
         Returns:
             Boolean success
         """
         md = self.get_metadata(token)['metadata']
-        if 'ROIs' in md:
-            rois = md['ROIs']
+        if 'subvolumes' in md:
+            subvols = md['subvolumes']
         else:
-            rois = []
+            subvols = []
 
-        rois.append({
+        subvols.append({
             'token': token,
             'channel': channel,
             'x_start': x_start,
@@ -356,7 +359,7 @@ class neurodata(Remote):
 
         return self.set_metadata(token, {
             'secret': secret,
-            'ROIs': rois
+            'subvolumes': subvols
         })
 
     # Image Download
