@@ -531,7 +531,7 @@ class neurodata(Remote):
 
     def _get_cutout_no_chunking(self, token, channel, resolution,
                                 x_start, x_stop, y_start, y_stop,
-                                z_start, z_stop, neariso):
+                                z_start, z_stop, neariso=False):
         url = self.url() + "{}/{}/hdf5/{}/{},{}/{},{}/{},{}/".format(
            token, channel, resolution,
            x_start, x_stop,
@@ -558,7 +558,7 @@ class neurodata(Remote):
 
     def _get_cutout_blosc_no_chunking(self, token, channel, resolution,
                                       x_start, x_stop, y_start, y_stop,
-                                      z_start, z_stop, neariso):
+                                      z_start, z_stop, neariso=False):
 
         url = self.url() + "{}/{}/blosc/{}/{},{}/{},{}/{},{}/".format(
            token, channel, resolution,
