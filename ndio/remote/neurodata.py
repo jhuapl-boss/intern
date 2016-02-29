@@ -874,7 +874,8 @@ class neurodata(Remote):
                 r = ramon.hdf5_to_ramon(h5file)
                 return r
 
-    def reserve_ids(self, quantity):
+    @_check_token
+    def reserve_ids(self, token, channel, quantity):
         """
         Requests a list of next-available-IDs from the server.
 
@@ -884,7 +885,14 @@ class neurodata(Remote):
         Returns:
             int[quantity]: List of IDs you've been granted
         """
-        raise NotImplementedError("No reserving yet, sorry!")
+        quantity = str(quantity)
+        url = self.url("{}/{}/reserve/{}/".format(token, channel, quantity))
+        req = requests.get(url)
+        if req.status_code is not 200:
+            raise RemoteDataNotFoundError('Invalid request: ' + req.status_code)
+        out = req.json()
+        return [out[0] + i for i in range(out[1])]
+
 
     @_check_token
     def merge_ids(self, token, channel, ids, delete=False):
