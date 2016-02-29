@@ -42,7 +42,7 @@ class neurodata(Remote):
                  meta_root="http://lims.neurodata.io/",
                  meta_protocol=DEFAULT_PROTOCOL, **kwargs):
 
-        self._check_tokens = kwargs.get('check_tokens', True)
+        self._check_tokens = kwargs.get('check_tokens', False)
         self._chunk_threshold = kwargs.get('chunk_threshold', 1E9 / 4)
 
         # Prepare meta url
