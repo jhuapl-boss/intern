@@ -202,9 +202,7 @@ class neurodata(Remote):
             JSON: representation of proj_info
         """
         r = requests.get(self.url() + "{}/info/".format(token))
-        r_dict = r.json()
-        r_dict['metadata'] = self._lims_shim_get_metadata(token)
-        return r_dict
+        return r.json()
 
     @_check_token
     def get_metadata(self, token):
@@ -251,29 +249,6 @@ class neurodata(Remote):
             raise RemoteDataNotFoundError("Resolution " + res +
                                           " is not available.")
         return info['dataset']['imagesize'][str(resolution)]
-
-    """
-    OCPMeta Remotes enable access to the Metadata-OCP API endpoints (which
-    can be found at `api.neurodata.io/metadata/ocp/`). This class is useful
-    for reading metadata for existing projects, or, if you specify a key,
-    adding new metadata, manipulating your existing metadata, and archiving
-    old metadata. Archived metadata is still stored by the LIMS system.
-    """
-
-    @_check_token
-    def _lims_shim_get_metadata(self, token):
-        """
-        Get metadata via a project token.
-
-        Arguments:
-            token (str):      The project (token) to access
-
-        Returns:
-            JSON metadata associated with this project
-        """
-
-        req = requests.get(self.meta_url("metadata/ocp/get/" + token))
-        return req.json()
 
     @_check_token
     def set_metadata(self, token, data):
