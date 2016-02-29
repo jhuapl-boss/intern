@@ -292,6 +292,7 @@ class neurodata(Remote):
         else:
             return None
 
+    @_check_token
     def add_subvolume(self, token, channel, secret,
                       x_start, x_stop,
                       y_start, y_stop,
@@ -338,6 +339,24 @@ class neurodata(Remote):
         })
 
     # Image Download
+
+    @_check_token
+    def get_block_size(self, token, resolution=None):
+        """
+        Gets the block-size for a given token at a given resolution.
+
+        Arguments:
+            token (str): The token to inspect
+            resolution (int : None): The resolution at which to inspect data.
+                If none is specified, uses the minimum available.
+
+        Returns:
+            int[3]: The xyz blocksize.
+        """
+        cdims =  self.get_metadata(token)['dataset']['cube_dimension']
+        if resolution is None:
+            resolution = min(cdims.keys())
+        return cdims[str(resolution)]
 
     @_check_token
     def get_image_offset(self, token, resolution=0):
@@ -448,7 +467,7 @@ class neurodata(Remote):
                    y_start, y_stop,
                    z_start, z_stop,
                    resolution=1,
-                   block_size=(256, 256, 16),
+                   block_size=None,
                    neariso=False):
         """
         Get volumetric cutout data from the neurodata server.
@@ -459,13 +478,18 @@ class neurodata(Remote):
             resolution (int): Resolution level
             Q_start (int): The lower bound of dimension 'Q'
             Q_stop (int): The upper bound of dimension 'Q'
-            block_size (int[3]): Block size of this dataset
+            block_size (int[3]): Block size of this dataset. If not provided,
+                ndio uses the metadata of this tokenchannel to set.
             neariso (bool : False): Passes the 'neariso' param to the cutout.
                 If you don't know what this means, ignore it!
 
         Returns:
             numpy.ndarray: Downloaded data.
         """
+
+        if block_size is None:
+            # look up block size from metadata
+            metadata = self.get_metadata('token')
 
         size = (x_stop - x_start) * (y_stop - y_start) * (z_stop - z_start)
 
