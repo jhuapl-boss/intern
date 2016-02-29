@@ -431,7 +431,7 @@ class neurodata(Remote):
                    y_start, y_stop,
                    z_start, z_stop,
                    resolution=1,
-                   block_size=(256, 256, 16),
+                   block_size=None,
                    neariso=False):
         """
         Get a RAMONVolume volumetric cutout from the neurodata server.
@@ -458,7 +458,9 @@ class neurodata(Remote):
         volume.cutout = self.get_cutout(token, channel, x_start,
                                         x_stop, y_start, y_stop,
                                         z_start, z_stop,
-                                        resolution=resolution, neariso=neariso)
+                                        resolution=resolution,
+                                        block_size=block_size,
+                                        neariso=neariso)
         return volume
 
     @_check_token
@@ -479,7 +481,9 @@ class neurodata(Remote):
             Q_start (int): The lower bound of dimension 'Q'
             Q_stop (int): The upper bound of dimension 'Q'
             block_size (int[3]): Block size of this dataset. If not provided,
-                ndio uses the metadata of this tokenchannel to set.
+                ndio uses the metadata of this tokenchannel to set. If you find
+                that your downloads are timing out or otherwise failing, it may
+                be wise to start off by making this smaller.
             neariso (bool : False): Passes the 'neariso' param to the cutout.
                 If you don't know what this means, ignore it!
 
@@ -489,10 +493,15 @@ class neurodata(Remote):
 
         if block_size is None:
             # look up block size from metadata
-            metadata = self.get_metadata('token')
+            block_size = self.get_block_size(token, resolution)
 
+        origin = self.get_image_offset(token, resolution)
+
+        # Calculate size of the data to be downloaded.
         size = (x_stop - x_start) * (y_stop - y_start) * (z_stop - z_start)
 
+        # Switch which download function to use based on which libraries are
+        # available in this version of python.
         if six.PY2:
             dl_func = self._get_cutout_blosc_no_chunking
         elif six.PY3:
@@ -504,15 +513,16 @@ class neurodata(Remote):
             vol = dl_func(token, channel, resolution,
                           x_start, x_stop,
                           y_start, y_stop,
-                          z_start, z_stop, neariso)
+                          z_start, z_stop, neariso=neariso)
             vol = numpy.rollaxis(vol, 1)
             vol = numpy.rollaxis(vol, 2)
             return vol
         else:
-            from ndio.utils.parallel import block_compute, snap_to_cube
+            from ndio.utils.parallel import block_compute
             blocks = block_compute(x_start, x_stop,
                                    y_start, y_stop,
-                                   z_start, z_stop)
+                                   z_start, z_stop,
+                                   origin, block_size)
 
             vol = numpy.zeros(((z_stop - z_start),
                               (y_stop - y_start),
@@ -521,7 +531,7 @@ class neurodata(Remote):
                 data = dl_func(token, channel, resolution,
                                b[0][0], b[0][1],
                                b[1][0], b[1][1],
-                               b[2][0], b[2][1], neariso)
+                               b[2][0], b[2][1], neariso=neariso)
 
                 vol[b[2][0]-z_start : b[2][1]-z_start,
                     b[1][0]-y_start : b[1][1]-y_start,
