@@ -9,7 +9,7 @@ import os
 class TestPropagate(unittest.TestCase):
 
     def setUp(self):
-        self.nd = neurodata()
+        self.nd = neurodata(check_tokens=True)
 
     def test_propagate_status_fails_on_bad_token(self):
         token = 'this is not a token'
