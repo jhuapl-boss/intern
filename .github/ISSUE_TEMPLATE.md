@@ -7,7 +7,7 @@ You can get the version of ndio using `import ndio; ndio.version`.
 -->
 
 | ndio version |  os  | python |
-|------------------|-------|----------|
-| *            | *  | *      |
+|-----|------|-------|
+| *   | *    | *     |
 
 <!-- start issue report after this line. -->
