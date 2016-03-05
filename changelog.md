@@ -3,6 +3,8 @@
 - **0.1.14**
     - Switch `check_tokens` to default to False, to prevent stalling the main thread all the time.
     - Add `neurodata#get_block_size` as a convenience function.
+    - Rename 3d-export functions to make more sense
+    - `neurodata#reserve_ids`
 - **0.1.13**
     - `add_` and `get_subvolumes`, to read and write to LIMS. (These are good example volumes to download when you're looking at a new dataset.)
 - **0.1.12**
