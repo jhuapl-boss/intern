@@ -2,13 +2,13 @@ from __future__ import absolute_import
 import mcubes
 
 
-def export_to_dae(filename, data, level=0):
+def export_dae(filename, cutout, level=0):
     """
     Converts a dense annotation to a DAE, using Marching Cubes (PyMCubes).
 
     Arguments:
         filename (str): The filename to write out to
-        data (numpy.ndarray): The dense annotation
+        cutout (numpy.ndarray): The dense annotation
         level (int): The level at which to run mcubes
 
     Returns:
@@ -22,13 +22,13 @@ def export_to_dae(filename, data, level=0):
     mcubes.export_mesh(vs, fs, filename, "ndioexport")
 
 
-def export_to_obj(filename, data, level=0):
+def export_obj(filename, cutout, level=0):
     """
     Converts a dense annotation to a obj, using Marching Cubes (PyMCubes).
 
     Arguments:
         filename (str): The filename to write out to
-        data (numpy.ndarray): The dense annotation
+        cutout (numpy.ndarray): The dense annotation
         level (int): The level at which to run mcubes
 
     Returns:
@@ -42,13 +42,13 @@ def export_to_obj(filename, data, level=0):
     mcubes.export_obj(vs, fs, filename)
 
 
-def export_to_ply(filename, data, level=0):
+def export_ply(filename, cutout, level=0):
     """
     Converts a dense annotation to a .PLY, using Marching Cubes (PyMCubes).
 
     Arguments:
         filename (str): The filename to write out to
-        data (numpy.ndarray): The dense annotation
+        cutout (numpy.ndarray): The dense annotation
         level (int): The level at which to run mcubes
 
     Returns:
