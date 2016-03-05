@@ -1,12 +1,10 @@
 from __future__ import absolute_import
+import ndio
 import requests
 import h5py
 import os
 import numpy
-try:
-    from io import BytesIO as StringIO
-except ImportError:
-    from io import BytesIO as StringIO
+from io import BytesIO as StringIO
 import zlib
 import tempfile
 import blosc
@@ -41,6 +39,14 @@ class neurodata(Remote):
                  protocol=DEFAULT_PROTOCOL,
                  meta_root="http://lims.neurodata.io/",
                  meta_protocol=DEFAULT_PROTOCOL, **kwargs):
+
+        r = requests.get('https://pypi.python.org/pypi/ndio/json').json()
+        r = r['info']['version']
+        if r != ndio.version and not kwargs.get('suppress_warnings', False):
+            print("A newer version of ndio is available. " +
+                  "'pip install -U ndio' to update. Pass " +
+                  "'suppress_warnings=True' to the neurodata " +
+                  "constructor to suppress this message.")
 
         self._check_tokens = kwargs.get('check_tokens', False)
         self._chunk_threshold = kwargs.get('chunk_threshold', 1E9 / 4)
