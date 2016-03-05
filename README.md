@@ -9,6 +9,8 @@
 
 **ndio** is a Python 2 and 3 module that enables big-data neuroscience, as well as direct interfacing with NeuroData workflows and servers. More complete documentation is available at [the ndio documentation website](http://docs.neurodata.io/nddocs/ndio).
 
+> Note that users of the (highly volitile) neurodata remote are notified of pip-installable updates.
+
 ## Getting Started
 You can view a list of tutorials, and some information about getting started, over [here](http://docs.neurodata.io/nddocs/ndio/tutorials.html). System- and library-requirements are listed [here](http://docs.neurodata.io/nddocs/ndio/importing.html).
 

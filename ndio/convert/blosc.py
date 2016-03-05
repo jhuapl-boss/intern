@@ -18,7 +18,6 @@ def import_blosc(raw_data):
         numpy_data = blosc.unpack_array(raw_array)
     except Exception as e:
         raise ValueError("Could not load numpy data. {}".format(e))
-        raise
 
     return numpy_data
 
