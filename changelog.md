@@ -2,6 +2,7 @@
 
 - **0.1.15**
     - kv pairs (?)
+    - Make `ocp` user-settable (`neurodata(suffix="ocp")`)
 - **0.1.14**
     - Switch `check_tokens` to default to False, to prevent stalling the main thread all the time.
     - Add `neurodata#get_block_size` as a convenience function.
