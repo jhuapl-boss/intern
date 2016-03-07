@@ -1,13 +1,15 @@
 from __future__ import absolute_import
 import ndio
 import requests
-import h5py
 import os
 import numpy
-from io import BytesIO as StringIO
+from io import BytesIO
 import zlib
 import tempfile
-import blosc
+try:
+    import blosc
+except:
+    import h5py
 
 from .Remote import Remote
 from .errors import *
@@ -670,7 +672,7 @@ class neurodata(Remote):
                                  data, resolution):
 
         data = numpy.expand_dims(data, axis=0)
-        tempfile = StringIO()
+        tempfile = BytesIO()
         numpy.save(tempfile, data)
         compressed = zlib.compress(tempfile.getvalue())
 
@@ -774,8 +776,10 @@ class neurodata(Remote):
 
         b_size = min(100, batch_size)
 
+        mdata = self.get_ramon_metadata(token, channel, ids)
+
         if metadata_only:
-            return self.get_ramon_metadata(token, channel, ids)
+            return mdata
 
         BATCH = False
         if type(ids) is int:
@@ -868,17 +872,9 @@ class neurodata(Remote):
         req = requests.get(self.url() +
                            "{}/{}/{}/nodata/".format(token, channel,
                                                      anno_id))
-
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
-        else:
-            with tempfile.NamedTemporaryFile() as tmpfile:
-                tmpfile.write(req.content)
-                tmpfile.seek(0)
-                h5file = h5py.File(tmpfile.name, "r")
-
-                r = ramon.hdf5_to_ramon(h5file)
-                return r
+        return ramon.json_to_ramon(req.json())
 
     @_check_token
     def reserve_ids(self, token, channel, quantity):
