@@ -164,7 +164,7 @@ def hdf5_to_ramon(hdf5, anno_id=None):
             r.cutout = anno['RESOLUTION'][()]
 
     if type(r) is RAMONSynapse:
-        r.synapse_type = metadata['SYNAPSETYPE'][0]
+        r.synapse_type = metadata['SYNAPSE_TYPE'][0]
         r.weight = metadata['WEIGHT'][0]
 
     if type(r) is RAMONSegment:
@@ -248,7 +248,7 @@ def ramon_to_hdf5(ramon, hdf5=None):
                                     data=numpy.ndarray(ramon.segments))
 
         if hasattr(ramon, 'synapse_type'):
-            metadata.create_dataset('SYNAPSETYPE', (1,), numpy.uint32,
+            metadata.create_dataset('SYNAPSE_TYPE', (1,), numpy.uint32,
                                     data=ramon.synapse_type)
 
         if hasattr(ramon, 'weight'):
