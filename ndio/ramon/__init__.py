@@ -92,6 +92,27 @@ class AnnotationType:
         return _reverse_ramon_types[type]
 
 
+def from_json(json, cutout=None):
+    """
+    Converts JSON to a RAMON object. if `cutout` is provided, the `cutout` of
+    the RAMON object is populated. Otherwise, it's left empty. `json` should
+    be an ID-level dictionary, like so:
+
+        {
+            16: {
+                type: "segment",
+                metadata: {
+                    . . .
+                }
+            }
+        }
+
+    NOTE: If more than one item is in the dictionary, then a Python list of
+    RAMON objects is returned instead of a single RAMON.
+    """
+    raise NotImplementedError
+
+
 def hdf5_to_ramon(hdf5, anno_id=None):
     """
     Converts an HDF5 file to a RAMON object. Returns an object that is a child-
