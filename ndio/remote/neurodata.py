@@ -6,10 +6,8 @@ import numpy
 from io import BytesIO
 import zlib
 import tempfile
-try:
-    import blosc
-except:
-    import h5py
+import blosc
+import h5py
 
 from .Remote import Remote
 from .errors import *
@@ -705,6 +703,8 @@ class neurodata(Remote):
         Arguments:
             token (str): Project to use
             channel (str): Channel to use (default 'annotation')
+            ramon_type (int : None): Optional. If set, filters IDs and only
+                returns those of RAMON objects of the requested type.
         Returns:
             int[]: A list of the ids of the returned RAMON objects
         Raises:
@@ -732,7 +732,7 @@ class neurodata(Remote):
             raise IOError("Could not successfully mock HDF5 file for parsing.")
 
     @_check_token
-    def get_ramon(self, token, channel, ids, resolution,
+    def get_ramon(self, token, channel, ids, resolution=None,
                   metadata_only=False, sieve=None, batch_size=100):
         """
         Download a RAMON object by ID.
@@ -743,7 +743,8 @@ class neurodata(Remote):
             ids (int, str, int[], str[]): The IDs of a RAMON object to gather.
                 Can be int (3), string ("3"), int[] ([3, 4, 5]), or string
                 (["3", "4", "5"]).
-            resolution (int): Resolution
+            resolution (int : None): Resolution. Defaults to the most granular
+                resolution (0 for now)
             metadata_only (bool : False):  If True, returns get_ramon_metadata
             sieve (function : None): A function that accepts a single ramon
                 and returns True or False depending on whether you want that
@@ -781,8 +782,12 @@ class neurodata(Remote):
         if metadata_only:
             return mdata
 
+        if resolution is None:
+            resolution = 0 # probably should be dynamic...
+
         BATCH = False
-        if type(ids) is int:
+
+        if type(ids) is not list:
             ids = [ids]
         if type(ids) is list:
             ids = [str(i) for i in ids]
@@ -804,21 +809,13 @@ class neurodata(Remote):
         return rs
 
     def _get_ramon_batch(self, token, channel, ids, resolution):
-        url = self.url("{}/{}/{}/cutout/{}/".format(token, channel,
-                                                    ",".join(ids), resolution))
+        url = self.url("{}/{}/{}/json/".format(token, channel, ",".join(ids)))
         req = requests.get(url)
 
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(ids))
         else:
-
-            with tempfile.NamedTemporaryFile() as tmpfile:
-                tmpfile.write(req.content)
-                tmpfile.seek(0)
-                h5file = h5py.File(tmpfile.name, "r")
-
-                rs = [ramon.hdf5_to_ramon(h5file, i) for i in ids]
-                return rs
+            return ramon.from_json(req.json())
 
     @_check_token
     def get_ramon_metadata(self, token, channel, anno_id):
@@ -870,7 +867,7 @@ class neurodata(Remote):
 
     def _get_single_ramon_metadata(self, token, channel, anno_id):
         req = requests.get(self.url() +
-                           "{}/{}/{}/nodata/".format(token, channel,
+                           "{}/{}/{}/json/".format(token, channel,
                                                      anno_id))
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))

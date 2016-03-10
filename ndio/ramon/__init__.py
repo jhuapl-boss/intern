@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import tempfile
+import copy
 
 from ndio.ramon.RAMONBase import *
 from ndio.ramon.RAMONGeneric import *
@@ -42,6 +43,7 @@ easier to use the prebuilt `hdf5_to_ramon()` function (below).
 
 """
 
+# str: int
 _types = {
     "generic": 1,
     "synapse": 2,
@@ -53,8 +55,10 @@ _types = {
     "volume": 8
 }
 
+# int: str
 _reverse_types = {v: k for k, v in list(_types.items())}
 
+# int: class type
 _ramon_types = {
     _types["generic"]: RAMONGeneric,
     _types["synapse"]: RAMONSynapse,
@@ -66,6 +70,7 @@ _ramon_types = {
     _types["volume"]: RAMONVolume
 }
 
+# class type: int
 _reverse_ramon_types = {v: k for k, v in list(_ramon_types.items())}
 
 
@@ -80,23 +85,33 @@ class AnnotationType:
     VOLUME = _types["volume"]
 
     @staticmethod
-    def get_str(type):
-        return _reverse_types[type]
+    def get_str(typ):
+        return _reverse_types[typ]
 
     @staticmethod
-    def get_class(type):
-        return _ramon_types[type]
+    def get_class(typ):
+        return _ramon_types[typ]
 
     @staticmethod
-    def get_int(type):
-        return _reverse_ramon_types[type]
+    def get_int(typ):
+        return _reverse_ramon_types[typ]
+
+    @staticmethod
+    def RAMON(typ):
+        """
+        Takes str or int, returns class type
+        """
+        if type(typ) is int:
+            return _ramon_types[typ]
+        elif type(typ) in [str, unicode]:
+            return _ramon_types[_types[typ]]
 
 
 def from_json(json, cutout=None):
     """
-    Converts JSON to a RAMON object. if `cutout` is provided, the `cutout` of
-    the RAMON object is populated. Otherwise, it's left empty. `json` should
-    be an ID-level dictionary, like so:
+    Converts JSON to a python list of RAMON objects. if `cutout` is provided,
+    the `cutout` attribute of the RAMON object is populated. Otherwise, it's
+    left empty. `json` should be an ID-level dictionary, like so:
 
         {
             16: {
@@ -104,13 +119,30 @@ def from_json(json, cutout=None):
                 metadata: {
                     . . .
                 }
-            }
+            },
         }
 
     NOTE: If more than one item is in the dictionary, then a Python list of
     RAMON objects is returned instead of a single RAMON.
     """
-    raise NotImplementedError
+    out_ramons = []
+    for (rid, rdata) in six.iteritems(json):
+        _md = rdata['metadata']
+        r = AnnotationType.RAMON(rdata['type'])(
+            id=rid,
+            author=_md['author'],
+            status=_md['status'],
+            confidence=_md['confidence'],
+            kvpairs=copy.deepcopy(_md['kvpairs'])
+        )
+
+        if rdata['type'] == 'segment':
+            r.neuron = _md['neuron']
+            r.segment_class = _md['segmentclass']
+
+        out_ramons.append(r)
+
+    return out_ramons
 
 
 def hdf5_to_ramon(hdf5, anno_id=None):
