@@ -12,6 +12,7 @@ class RAMONOrganelle(RAMONVolume):
     """
     def __init__(self,
                  organelle_class=0,
+
                  xyz_offset=(0, 0, 0),
                  resolution=0,
                  cutout=None,
