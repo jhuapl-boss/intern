@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import tempfile
+import json
 import copy
 
 from ndio.ramon.RAMONBase import *
@@ -114,7 +115,7 @@ def to_json(ramons):
     a single RAMON, it will still be exported with the ID as the key. In other
     words:
 
-        type(from_json(to_json(ramon))) → list
+        type(from_json(to_json(ramon))) # ALWAYS returns a list
 
     ...even if `type(ramon)` is a RAMON, not a list.
 
@@ -136,7 +137,15 @@ def to_json(ramons):
     Raises:
         ValueError: If an invalid RAMON is passed.
     """
-    raise NotImplementedError
+    if type(ramons) is not list:
+        ramons = [ramons]
+
+    out_ramons = {}
+    for r in ramons:
+        out_ramons[r.id] = vars(r)
+
+    return json.dumps(out_ramons)
+
 
 def from_json(json, cutout=None):
     """
