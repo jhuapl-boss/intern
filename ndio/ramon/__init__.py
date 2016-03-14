@@ -107,6 +107,37 @@ class AnnotationType:
             return _ramon_types[_types[typ]]
 
 
+def to_json(ramons):
+    """
+    Converts RAMON objects into a JSON string which can be directly written out
+    to a .json file. You can pass either a single RAMON or a list. If you pass
+    a single RAMON, it will still be exported with the ID as the key. In other
+    words:
+
+        type(from_json(to_json(ramon))) → list
+
+    ...even if `type(ramon)` is a RAMON, not a list.
+
+    Arguments:
+        ramons (RAMON or list): The RAMON object(s) to convert to JSON.
+
+    Returns:
+        str: The JSON representation of the RAMON objects, in the schema:
+
+            {
+                <id>: {
+                    type: . . . ,
+                    metadata: {
+                        . . .
+                    }
+                },
+            }
+
+    Raises:
+        ValueError: If an invalid RAMON is passed.
+    """
+    raise NotImplementedError
+
 def from_json(json, cutout=None):
     """
     Converts JSON to a python list of RAMON objects. if `cutout` is provided,
