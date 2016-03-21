@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 import tempfile
-import json
+import json as jsonlib
 import copy
 
 from ndio.ramon.RAMONBase import *
@@ -137,14 +137,19 @@ def to_json(ramons):
     Raises:
         ValueError: If an invalid RAMON is passed.
     """
+
     if type(ramons) is not list:
         ramons = [ramons]
 
     out_ramons = {}
     for r in ramons:
-        out_ramons[r.id] = vars(r)
+        out_ramons[r.id] = {
+            "id": r.id,
+            "type": _reverse_ramon_types[type(r)],
+            "metadata": vars(r)
+        }
 
-    return json.dumps(out_ramons)
+    return jsonlib.dumps(out_ramons)
 
 
 def from_json(json, cutout=None):
@@ -164,7 +169,18 @@ def from_json(json, cutout=None):
 
     NOTE: If more than one item is in the dictionary, then a Python list of
     RAMON objects is returned instead of a single RAMON.
+
+    Arguments:
+        json (str or dict): The JSON to import to RAMON objects
+        cutout: Currently not supported.
+
+    Returns:
+        [RAMON]
     """
+
+    if type(json) is str:
+        json = jsonlib.loads(json)
+
     out_ramons = []
     for (rid, rdata) in six.iteritems(json):
         _md = rdata['metadata']
