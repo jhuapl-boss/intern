@@ -11,8 +11,7 @@ install:
     - sudo apt-get install zlib1g-dev
     - sudo apt-get install libhdf5-serial-dev
     - sudo apt-get install python-nose
-    - sudo easy_install pip
-    - sudo pip install Cython
+    - sudo pip install --install-option='--no-cython-compile' cython
     - pip install .
     - pip install pillow numpy h5py requests
     - pip install coveralls
