@@ -1,5 +1,9 @@
 # Changelog
 
+- **0.1.16**
+    - Fix `synapse_type` keyerror bug.
+    - Un-nest RAMON metadata
+    - ? `get_ramon_metadata` fixes
 - **0.1.15**
     - kv pairs bug finally (definitely) resolved.
     - Make `ocp` user-settable (`neurodata(suffix="ocp")`)

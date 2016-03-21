@@ -873,7 +873,7 @@ class neurodata(Remote):
                                                      anno_id))
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
-        return ramon.from_json(req.json())
+        return ramon.from_json(req.json())[0]
 
     @_check_token
     def reserve_ids(self, token, channel, quantity):
