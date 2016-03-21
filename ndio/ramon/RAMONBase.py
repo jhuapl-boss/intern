@@ -38,4 +38,4 @@ class RAMONBase(object):
         """
         String representation of a RAMON object for convenience.
         """
-        return "<{} object. id={}>".format(type(self), self.id)
+        return "{} object. id={}".format(type(self), self.id)
