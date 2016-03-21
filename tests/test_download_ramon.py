@@ -33,7 +33,7 @@ class TestDownloadRAMON(unittest.TestCase):
         r = self.nd.get_ramon(token, 'neurons', [3], resolution=3)
 
         self.assertEqual(r[0].neuron, 10003)
-        self.assertEqual(r[0].author, b'unspecified')
+        self.assertEqual(True, r[0].author in ['unspecified', b'unspecified'])
 
 
 if __name__ == '__main__':
