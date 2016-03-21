@@ -7,7 +7,7 @@ class TestRAMONSegment(unittest.TestCase):
 
     def setUp(self):
         self.oo = neurodata()
-        self.ramon_segment = self.oo.get_ramon('kasthuri2015_ramon_v1',
+        self.ramon_segment = self.oo.get_ramon('kasthuri2015_ramon_v4',
                                                'neurons', 3, 3)[0]
         self.default_ramon_segment = ndio.ramon.RAMONSynapse()
 
