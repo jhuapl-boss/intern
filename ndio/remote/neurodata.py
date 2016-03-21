@@ -23,6 +23,7 @@ except ImportError:
     import urllib2
 
 DEFAULT_HOSTNAME = "openconnecto.me"
+DEFAULT_SUFFIX = "ocp"
 DEFAULT_PROTOCOL = "http"
 
 
@@ -50,6 +51,7 @@ class neurodata(Remote):
 
         self._check_tokens = kwargs.get('check_tokens', False)
         self._chunk_threshold = kwargs.get('chunk_threshold', 1E9 / 4)
+        self._ext = kwargs.get('suffix', DEFAULT_SUFFIX)
 
         # Prepare meta url
         self.meta_root = meta_root
@@ -98,7 +100,7 @@ class neurodata(Remote):
         Returns:
             str: The complete URL
         """
-        return super(neurodata, self).url('/ocp/ca/' + suffix)
+        return super(neurodata, self).url('{}/ca/'.format(self._ext) + suffix)
 
     def meta_url(self, suffix=""):
         """
