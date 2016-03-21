@@ -32,7 +32,7 @@ class TestDownload(unittest.TestCase):
 
     def test_get_big_cutout(self):
         # kasthuri11/image/xy/3/1000,1100/1000,1100/1000/
-        numpy_download = self.oo.get_cutout('kasthuri2015_ramon_v1', 'neurons',
+        numpy_download = self.oo.get_cutout('kasthuri2015_ramon_v4', 'neurons',
                                             1000, 2000,
                                             1000, 2000,
                                             1000, 1600,
