@@ -107,7 +107,7 @@ class AnnotationType:
             lookup = [str, unicode]
         elif six.PY3:
             lookup = [str]
-            
+
         if type(typ) is int:
             return _ramon_types[typ]
         elif type(typ) in lookup:
@@ -211,7 +211,7 @@ def from_json(json, cutout=None):
             r.organelle_class = _md['organelleclass'][:]
 
         elif rdata['type'] == 'synapse':
-            if 'synapse_type' in _md: r.synapse_type = _md['synapsetype']
+            if 'synapse_type' in _md: r.synapse_type = _md['synapse_type']
             if 'weight' in _md: r.weight = _md['weight']
             if 'segments' in _md: r.segments = _md['segments'][:]
 
