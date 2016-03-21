@@ -842,7 +842,7 @@ class neurodata(Remote):
             RemoteDataNotFoundError: If the data cannot be found on the Remote
         """
 
-        if type(anno_id) is int:
+        if type(anno_id) in [int, numpy.uint32]:
             # there's just one ID to download
             return self._get_single_ramon_metadata(token, channel,
                                                    str(anno_id))
@@ -873,7 +873,7 @@ class neurodata(Remote):
                                                      anno_id))
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
-        return ramon.from_json(req.json())
+        return ramon.from_json(req.json())[0]
 
     @_check_token
     def reserve_ids(self, token, channel, quantity):
