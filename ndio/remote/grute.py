@@ -126,11 +126,11 @@ class grute(Remote):
             subject (str): The subject's identifier
             session (str): The session (per subject)
             scan (str): The scan identifier
-            size (str): Whether to return a big or (grute.BIG) small (grute.SMALL)
-                graph. For a better explanation of each, see grute.io.
+            size (str): Whether to return a big (grute.BIG) or small
+                (grute.SMALL) graph. For a better explanation, see m2g.io.
             email (str : self.email)*: An email to notify
             invariants (str[]: Invariants.ALL)*: An array of invariants to
-                compute. You can use the grute.Invariants class to construct this
+                compute. You can use the grute.Invariants class to construct a
                 list, or simply pass grute.Invariants.ALL to compute them all.
             fiber_file (str: DEFAULT_FIBER_FILE)*: A local filename of an
                 MRI Studio .dat file
@@ -233,8 +233,8 @@ class grute(Remote):
         Arguments:
             graph_file (str): The filename of the graphml file
             input_format (str): One of grute.GraphFormats
-            invariants (str[]: Invariants.ALL)*: An array of grute.Invariants to
-                compute on the graph
+            invariants (str[]: Invariants.ALL)*: An array of grute.Invariants
+                to compute on the graph
             email (str: self.email)*: The email to notify upon completion
             use_threads (bool: False)*: Whether to use Python threads to run
                 computation in the background when waiting for the server to

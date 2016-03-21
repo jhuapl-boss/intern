@@ -199,10 +199,14 @@ def from_json(json, cutout=None):
         )
 
         if rdata['type'] == 'segment':
-            if 'segmentclass' in _md: r.segmentclass = _md['segmentclass']
-            if 'neuron' in _md: r.neuron = _md['neuron']
-            if 'synapses' in _md: r.synapses = _md['synapses'][:]
-            if 'organelles' in _md: r.organelles = _md['organelles'][:]
+            if 'segmentclass' in _md:
+                r.segmentclass = _md['segmentclass']
+            if 'neuron' in _md:
+                r.neuron = _md['neuron']
+            if 'synapses' in _md:
+                r.synapses = _md['synapses'][:]
+            if 'organelles' in _md:
+                r.organelles = _md['organelles'][:]
 
         elif rdata['type'] == 'neuron':
             r.segments = _md['segments'][:]
@@ -211,9 +215,12 @@ def from_json(json, cutout=None):
             r.organelle_class = _md['organelleclass'][:]
 
         elif rdata['type'] == 'synapse':
-            if 'synapse_type' in _md: r.synapse_type = _md['synapse_type']
-            if 'weight' in _md: r.weight = _md['weight']
-            if 'segments' in _md: r.segments = _md['segments'][:]
+            if 'synapse_type' in _md:
+                r.synapse_type = _md['synapse_type']
+            if 'weight' in _md:
+                r.weight = _md['weight']
+            if 'segments' in _md:
+                r.segments = _md['segments'][:]
 
         out_ramons.append(r)
 

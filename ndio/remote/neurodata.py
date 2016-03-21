@@ -361,7 +361,7 @@ class neurodata(Remote):
         Returns:
             int[3]: The xyz blocksize.
         """
-        cdims =  self.get_metadata(token)['dataset']['cube_dimension']
+        cdims = self.get_metadata(token)['dataset']['cube_dimension']
         if resolution is None:
             resolution = min(cdims.keys())
         return cdims[str(resolution)]
@@ -785,7 +785,8 @@ class neurodata(Remote):
             return mdata
 
         if resolution is None:
-            resolution = 0 # probably should be dynamic...
+            resolution = 0
+            # probably should be dynamic...
 
         BATCH = False
 
@@ -869,8 +870,7 @@ class neurodata(Remote):
 
     def _get_single_ramon_metadata(self, token, channel, anno_id):
         req = requests.get(self.url() +
-                           "{}/{}/{}/json/".format(token, channel,
-                                                     anno_id))
+                           "{}/{}/{}/json/".format(token, channel, anno_id))
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
         return ramon.from_json(req.json())[0]
@@ -890,10 +890,9 @@ class neurodata(Remote):
         url = self.url("{}/{}/reserve/{}/".format(token, channel, quantity))
         req = requests.get(url)
         if req.status_code is not 200:
-            raise RemoteDataNotFoundError('Invalid request: ' + req.status_code)
+            raise RemoteDataNotFoundError('Invalid req: ' + req.status_code)
         out = req.json()
         return [out[0] + i for i in range(out[1])]
-
 
     @_check_token
     def merge_ids(self, token, channel, ids, delete=False):
