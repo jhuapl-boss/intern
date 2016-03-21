@@ -842,7 +842,7 @@ class neurodata(Remote):
             RemoteDataNotFoundError: If the data cannot be found on the Remote
         """
 
-        if type(anno_id) is int:
+        if type(anno_id) in [int, numpy.uint32]:
             # there's just one ID to download
             return self._get_single_ramon_metadata(token, channel,
                                                    str(anno_id))
