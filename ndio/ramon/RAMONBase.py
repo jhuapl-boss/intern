@@ -25,7 +25,7 @@ class RAMONBase(object):
         self.id = id
         self.confidence = confidence
         self.kvpairs = kvpairs
-        self._status = status
+        self.status = status
         self.author = author
 
     def __str__(self):
@@ -34,15 +34,8 @@ class RAMONBase(object):
         """
         return "<{} object. id={}>".format(type(self), self.id)
 
-    @property
-    def status(self):
-        return self._status
-
-    @status.setter
-    def status(self, value):
-        try:
-            r = eRAMONAnnoStatus.reverse_mapping[value]
-        except:
-            raise InvalidEnumerationException()
-            return False
-        self._status = value
+    def __repr__(self):
+        """
+        String representation of a RAMON object for convenience.
+        """
+        return "{} object. id={}".format(type(self), self.id)

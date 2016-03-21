@@ -11,7 +11,7 @@ class RAMONSegment(RAMONVolume):
     RAMONSegment Object for storing neuroscience data with a voxel volume
     """
     def __init__(self,
-                 segment_class=0,
+                 segmentclass=0,
                  neuron=0,
                  synapses=[],
                  organelles=[],
@@ -27,7 +27,7 @@ class RAMONSegment(RAMONVolume):
                  status=DEFAULT_STATUS,
                  author=DEFAULT_AUTHOR):
 
-            self.segment_class = segment_class
+            self.segmentclass = segmentclass
             self.neuron = neuron
             self.synapses = synapses
             self.organelles = organelles

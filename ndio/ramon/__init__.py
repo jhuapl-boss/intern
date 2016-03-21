@@ -1,5 +1,8 @@
 from __future__ import absolute_import
 import tempfile
+import json as jsonlib
+import copy
+import six
 
 from ndio.ramon.RAMONBase import *
 from ndio.ramon.RAMONGeneric import *
@@ -42,6 +45,7 @@ easier to use the prebuilt `hdf5_to_ramon()` function (below).
 
 """
 
+# str: int
 _types = {
     "generic": 1,
     "synapse": 2,
@@ -53,8 +57,10 @@ _types = {
     "volume": 8
 }
 
+# int: str
 _reverse_types = {v: k for k, v in list(_types.items())}
 
+# int: class type
 _ramon_types = {
     _types["generic"]: RAMONGeneric,
     _types["synapse"]: RAMONSynapse,
@@ -66,6 +72,7 @@ _ramon_types = {
     _types["volume"]: RAMONVolume
 }
 
+# class type: int
 _reverse_ramon_types = {v: k for k, v in list(_ramon_types.items())}
 
 
@@ -80,16 +87,137 @@ class AnnotationType:
     VOLUME = _types["volume"]
 
     @staticmethod
-    def get_str(type):
-        return _reverse_types[type]
+    def get_str(typ):
+        return _reverse_types[typ]
 
     @staticmethod
-    def get_class(type):
-        return _ramon_types[type]
+    def get_class(typ):
+        return _ramon_types[typ]
 
     @staticmethod
-    def get_int(type):
-        return _reverse_ramon_types[type]
+    def get_int(typ):
+        return _reverse_ramon_types[typ]
+
+    @staticmethod
+    def RAMON(typ):
+        """
+        Takes str or int, returns class type
+        """
+        if six.PY2:
+            lookup = [str, unicode]
+        elif six.PY3:
+            lookup = [str]
+            
+        if type(typ) is int:
+            return _ramon_types[typ]
+        elif type(typ) in lookup:
+            return _ramon_types[_types[typ]]
+
+
+def to_json(ramons):
+    """
+    Converts RAMON objects into a JSON string which can be directly written out
+    to a .json file. You can pass either a single RAMON or a list. If you pass
+    a single RAMON, it will still be exported with the ID as the key. In other
+    words:
+
+        type(from_json(to_json(ramon))) # ALWAYS returns a list
+
+    ...even if `type(ramon)` is a RAMON, not a list.
+
+    Arguments:
+        ramons (RAMON or list): The RAMON object(s) to convert to JSON.
+
+    Returns:
+        str: The JSON representation of the RAMON objects, in the schema:
+
+            {
+                <id>: {
+                    type: . . . ,
+                    metadata: {
+                        . . .
+                    }
+                },
+            }
+
+    Raises:
+        ValueError: If an invalid RAMON is passed.
+    """
+
+    if type(ramons) is not list:
+        ramons = [ramons]
+
+    out_ramons = {}
+    for r in ramons:
+        out_ramons[r.id] = {
+            "id": r.id,
+            "type": _reverse_ramon_types[type(r)],
+            "metadata": vars(r)
+        }
+
+    return jsonlib.dumps(out_ramons)
+
+
+def from_json(json, cutout=None):
+    """
+    Converts JSON to a python list of RAMON objects. if `cutout` is provided,
+    the `cutout` attribute of the RAMON object is populated. Otherwise, it's
+    left empty. `json` should be an ID-level dictionary, like so:
+
+        {
+            16: {
+                type: "segment",
+                metadata: {
+                    . . .
+                }
+            },
+        }
+
+    NOTE: If more than one item is in the dictionary, then a Python list of
+    RAMON objects is returned instead of a single RAMON.
+
+    Arguments:
+        json (str or dict): The JSON to import to RAMON objects
+        cutout: Currently not supported.
+
+    Returns:
+        [RAMON]
+    """
+
+    if type(json) is str:
+        json = jsonlib.loads(json)
+
+    out_ramons = []
+    for (rid, rdata) in six.iteritems(json):
+        _md = rdata['metadata']
+        r = AnnotationType.RAMON(rdata['type'])(
+            id=rid,
+            author=_md['author'],
+            status=_md['status'],
+            confidence=_md['confidence'],
+            kvpairs=copy.deepcopy(_md['kvpairs'])
+        )
+
+        if rdata['type'] == 'segment':
+            if 'segmentclass' in _md: r.segmentclass = _md['segmentclass']
+            if 'neuron' in _md: r.neuron = _md['neuron']
+            if 'synapses' in _md: r.synapses = _md['synapses'][:]
+            if 'organelles' in _md: r.organelles = _md['organelles'][:]
+
+        elif rdata['type'] == 'neuron':
+            r.segments = _md['segments'][:]
+
+        elif rdata['type'] == 'organelle':
+            r.organelle_class = _md['organelleclass'][:]
+
+        elif rdata['type'] == 'synapse':
+            if 'synapse_type' in _md: r.synapse_type = _md['synapsetype']
+            if 'weight' in _md: r.weight = _md['weight']
+            if 'segments' in _md: r.segments = _md['segments'][:]
+
+        out_ramons.append(r)
+
+    return out_ramons
 
 
 def hdf5_to_ramon(hdf5, anno_id=None):
@@ -173,7 +301,7 @@ def hdf5_to_ramon(hdf5, anno_id=None):
         if 'PARENTSEED' in metadata:
             r.parent_seed = metadata['PARENTSEED'][0]
         if 'SEGMENTCLASS' in metadata:
-            r.segment_class = metadata['SEGMENTCLASS'][0]
+            r.segmentclass = metadata['SEGMENTCLASS'][0]
         if 'SYNAPSES' in metadata:
             r.synapses = metadata['SYNAPSES'][()]
         if 'ORGANELLES' in metadata:
@@ -259,9 +387,9 @@ def ramon_to_hdf5(ramon, hdf5=None):
             metadata.create_dataset('NEURON', (1,),
                                     numpy.uint32, data=ramon.neuron)
 
-        if hasattr(ramon, 'segment_class'):
+        if hasattr(ramon, 'segmentclass'):
             metadata.create_dataset('SEGMENTCLASS', (1,), numpy.uint32,
-                                    data=ramon.segment_class)
+                                    data=ramon.segmentclass)
 
         if hasattr(ramon, 'synapses'):
             metadata.create_dataset('SYNAPSES', (len(ramon.synapses),),
