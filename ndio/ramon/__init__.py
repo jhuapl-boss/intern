@@ -177,7 +177,7 @@ def from_json(json, cutout=None):
         )
 
         if rdata['type'] == 'segment':
-            if 'segmentclass' in _md: r.segment_class = _md['segmentclass']
+            if 'segmentclass' in _md: r.segmentclass = _md['segmentclass']
             if 'neuron' in _md: r.neuron = _md['neuron']
             if 'synapses' in _md: r.synapses = _md['synapses'][:]
             if 'organelles' in _md: r.organelles = _md['organelles'][:]
@@ -279,7 +279,7 @@ def hdf5_to_ramon(hdf5, anno_id=None):
         if 'PARENTSEED' in metadata:
             r.parent_seed = metadata['PARENTSEED'][0]
         if 'SEGMENTCLASS' in metadata:
-            r.segment_class = metadata['SEGMENTCLASS'][0]
+            r.segmentclass = metadata['SEGMENTCLASS'][0]
         if 'SYNAPSES' in metadata:
             r.synapses = metadata['SYNAPSES'][()]
         if 'ORGANELLES' in metadata:
@@ -365,9 +365,9 @@ def ramon_to_hdf5(ramon, hdf5=None):
             metadata.create_dataset('NEURON', (1,),
                                     numpy.uint32, data=ramon.neuron)
 
-        if hasattr(ramon, 'segment_class'):
+        if hasattr(ramon, 'segmentclass'):
             metadata.create_dataset('SEGMENTCLASS', (1,), numpy.uint32,
-                                    data=ramon.segment_class)
+                                    data=ramon.segmentclass)
 
         if hasattr(ramon, 'synapses'):
             metadata.create_dataset('SYNAPSES', (len(ramon.synapses),),
