@@ -62,14 +62,14 @@ class GraphFormats:
     ]
 
 
-class m2g(Remote):
+class grute(Remote):
 
     SMALL = S = 's'
     BIG = B = 'b'
 
     def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL,
                  email=DEFAULT_EMAIL):
-        super(m2g, self).__init__(hostname, protocol)
+        super(grute, self).__init__(hostname, protocol)
         self.email = email
 
     def __repr__(self):
@@ -83,17 +83,17 @@ class m2g(Remote):
         Returns:
             str: Representation of reproducible instance.
         """
-        return "ndio.remote.m2g('{}', '{}', '{}')".format(
+        return "ndio.remote.grute('{}', '{}', '{}')".format(
             self.hostname,
             self.protocol,
             self.email
         )
 
     def ping(self):
-        return super(m2g, self).ping()
+        return super(grute, self).ping()
 
     def url(self, suffix=""):
-        return super(m2g, self).url('/graph-services/' + suffix)
+        return super(grute, self).url('/graph-services/' + suffix)
 
     def set_default_email(self, email):
         """
@@ -126,12 +126,12 @@ class m2g(Remote):
             subject (str): The subject's identifier
             session (str): The session (per subject)
             scan (str): The scan identifier
-            size (str): Whether to return a big or (m2g.BIG) small (m2g.SMALL)
-                graph. For a better explanation of each, see m2g.io.
+            size (str): Whether to return a big or (grute.BIG) small (grute.SMALL)
+                graph. For a better explanation of each, see grute.io.
             email (str : self.email)*: An email to notify
             invariants (str[]: Invariants.ALL)*: An array of invariants to
-                compute. You can use the m2g.Invariants class to construct this
-                list, or simply pass m2g.Invariants.ALL to compute them all.
+                compute. You can use the grute.Invariants class to construct this
+                list, or simply pass grute.Invariants.ALL to compute them all.
             fiber_file (str: DEFAULT_FIBER_FILE)*: A local filename of an
                 MRI Studio .dat file
             atlas_file (str: None)*: A local atlas file, in NIFTI .nii format.
@@ -168,7 +168,7 @@ class m2g(Remote):
 
         # Once we get here, we know the callback is
         if size not in [self.BIG, self.SMALL]:
-            raise ValueError("size must be either m2g.BIG or m2g.SMALL.")
+            raise ValueError("size must be either grute.BIG or grute.SMALL.")
 
         url = "buildgraph/{}/{}/{}/{}/{}/{}/{}/{}/".format(
             project,
@@ -228,12 +228,12 @@ class m2g(Remote):
                            use_threads=False, callback=None):
         """
         Compute invariants from an existing GraphML file using the remote
-        m2g graph services.
+        grute graph services.
 
         Arguments:
             graph_file (str): The filename of the graphml file
-            input_format (str): One of m2g.GraphFormats
-            invariants (str[]: Invariants.ALL)*: An array of m2g.Invariants to
+            input_format (str): One of grute.GraphFormats
+            invariants (str[]: Invariants.ALL)*: An array of grute.Invariants to
                 compute on the graph
             email (str: self.email)*: The email to notify upon completion
             use_threads (bool: False)*: Whether to use Python threads to run
@@ -323,8 +323,8 @@ class m2g(Remote):
 
         Arguments:
             graph_file (str): Filename of the file to convert
-            input_format (str): A m2g.GraphFormats
-            output_formats (str[]): A m2g.GraphFormats
+            input_format (str): A grute.GraphFormats
+            output_formats (str[]): A grute.GraphFormats
             email (str: self.email)*: The email to notify
             use_threads (bool: False)*: Whether to use Python threads to run
                 computation in the background when waiting for the server

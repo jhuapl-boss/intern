@@ -1,5 +1,5 @@
 import unittest
-import ndio.remote.m2g as m2g
+import ndio.remote.grute as grute
 from ndio.remote.errors import *
 import ndio.ramon
 import numpy
@@ -8,10 +8,10 @@ import numpy
 class TestRemoteM2g(unittest.TestCase):
 
     def setUp(self):
-        self.m2g = m2g()
+        self.grute = grute()
 
     def test_ping(self):
-        self.assertEqual(self.m2g.ping(), 200)
+        self.assertEqual(self.grute.ping(), 200)
 
     # def test_build_graph_failures_bad_size(self):
     #     """
