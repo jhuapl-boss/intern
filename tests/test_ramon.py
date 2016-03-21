@@ -21,7 +21,7 @@ class TestRAMON(unittest.TestCase):
 
     def test_download_multi_ramon(self):
         r = self.nd.get_ramon(self.t, self.c, ["3", "4"])
-        self.assertEqual(r[0].id, "3")
+        self.assertEqual(True, '3' in [s.id for s in r])
 
     def test_download_ramon_of_type(self):
         ids = self.nd.get_ramon_ids(self.t, self.c, ramon.AnnotationType.SEGMENT)
