@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import tempfile
 import json as jsonlib
 import copy
+import six
 
 from ndio.ramon.RAMONBase import *
 from ndio.ramon.RAMONGeneric import *
@@ -102,9 +103,14 @@ class AnnotationType:
         """
         Takes str or int, returns class type
         """
+        if six.PY2:
+            lookup = [str, unicode]
+        elif six.PY3:
+            lookup = [str]
+            
         if type(typ) is int:
             return _ramon_types[typ]
-        elif type(typ) in [str, unicode]:
+        elif type(typ) in lookup:
             return _ramon_types[_types[typ]]
 
 
