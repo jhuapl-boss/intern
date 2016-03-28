@@ -789,8 +789,10 @@ class neurodata(Remote):
             # probably should be dynamic...
 
         BATCH = False
+        _return_first_only = False
 
         if type(ids) is not list:
+            _return_first_only = True
             ids = [ids]
         if type(ids) is list:
             ids = [str(i) for i in ids]
@@ -806,6 +808,9 @@ class neurodata(Remote):
                                                 batch, resolution))
         else:
             rs = self._get_ramon_batch(token, channel, ids, resolution)
+
+        if _return_first_only:
+            return rs[0]
 
         if sieve is not None:
             return [r for r in rs if sieve(r)]

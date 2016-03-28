@@ -114,7 +114,21 @@ class AnnotationType:
             return _ramon_types[_types[typ]]
 
 
-def to_json(ramons):
+def to_dict(ramons, flatten=False):
+    if type(ramons) is not list:
+        ramons = [ramons]
+
+    out_ramons = {}
+    for r in ramons:
+        out_ramons[r.id] = {
+            "id": r.id,
+            "type": _reverse_ramon_types[type(r)],
+            "metadata": vars(r)
+        }
+    return out_ramons
+
+
+def to_json(ramons, flatten=False):
     """
     Converts RAMON objects into a JSON string which can be directly written out
     to a .json file. You can pass either a single RAMON or a list. If you pass
@@ -127,6 +141,8 @@ def to_json(ramons):
 
     Arguments:
         ramons (RAMON or list): The RAMON object(s) to convert to JSON.
+        flatten (bool : False): If ID should be used as a key. If not, then
+            a single JSON document is returned.
 
     Returns:
         str: The JSON representation of the RAMON objects, in the schema:
@@ -154,6 +170,9 @@ def to_json(ramons):
             "type": _reverse_ramon_types[type(r)],
             "metadata": vars(r)
         }
+
+    if flatten:
+        return jsonlib.dumps(out_ramons.values()[0])
 
     return jsonlib.dumps(out_ramons)
 
