@@ -17,7 +17,7 @@ class TestRAMON(unittest.TestCase):
 
     def test_download_single_ramon(self):
         r = self.nd.get_ramon(self.t, self.c, "3")
-        self.assertEqual(r[0].id, "3")
+        self.assertEqual(r.id, "3")
 
     def test_download_multi_ramon(self):
         r = self.nd.get_ramon(self.t, self.c, ["3", "4"])
@@ -28,13 +28,13 @@ class TestRAMON(unittest.TestCase):
         randindex = random.randint(0, len(ids))
         # randomly pick one to check
         r = self.nd.get_ramon(self.t, self.c, ids[randindex])
-        self.assertEqual(type(r[0]), ramon.RAMONSegment)
+        self.assertEqual(type(r), ramon.RAMONSegment)
 
         ids = self.nd.get_ramon_ids(self.t, self.c, ramon.AnnotationType.NEURON)
         randindex = random.randint(0, len(ids))
         # randomly pick one to check
         rn = self.nd.get_ramon(self.t, self.c, ids[randindex])
-        self.assertEqual(type(rn[0]), ramon.RAMONNeuron)
+        self.assertEqual(type(rn), ramon.RAMONNeuron)
 
 
 
