@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.1.17**
+    - Standardize RAMON converter function names in `__init__`
+    - Fix RAMON uploads to incorporate kvpairs
 - **0.1.16**
     - Fix `synapse_type` keyerror bug.
     - Un-nest RAMON metadata
