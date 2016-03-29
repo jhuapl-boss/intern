@@ -40,7 +40,6 @@ class TestRAMON(unittest.TestCase):
 
     def test_downup_ramon(self):
         rr = self.nd.get_ramon(self.t, self.c, 3)
-        import pdb; pdb.set_trace()
         self.nd.post_ramon('ndio_demos', 'ramontests', rr)
 
 
