@@ -374,15 +374,15 @@ def to_hdf5(ramon, hdf5=None):
         grp.create_dataset("ANNOTATION_TYPE", (1,),
                            numpy.uint32,
                            data=AnnotationType.get_int(type(ramon)))
-        if hasattr(ramon, 'resolution'):
-            grp.create_dataset('RESOLUTION', (1,),
-                               numpy.uint32, data=ramon.resolution)
-        if hasattr(ramon, 'xyz_offset'):
-            grp.create_dataset('XYZOFFSET', (3,),
-                               numpy.uint32, data=ramon.xyz_offset)
+
         if hasattr(ramon, 'cutout'):
-            grp.create_dataset('CUTOUT', ramon.cutout.shape,
-                               ramon.cutout.dtype, data=ramon.cutout)
+            if ramon.cutout:
+                grp.create_dataset('CUTOUT', ramon.cutout.shape,
+                                   ramon.cutout.dtype, data=ramon.cutout)
+                grp.create_dataset('RESOLUTION', (1,),
+                                   numpy.uint32, data=ramon.resolution)
+                grp.create_dataset('XYZOFFSET', (3,),
+                                   numpy.uint32, data=ramon.xyz_offset)
 
         # Next, add general metadata.
         metadata = grp.create_group('METADATA')
@@ -390,6 +390,12 @@ def to_hdf5(ramon, hdf5=None):
         metadata.create_dataset('AUTHOR', (1,),
                                 dtype=h5py.special_dtype(vlen=str),
                                 data=ramon.author)
+        kvpairs = ' '.join(
+            ','.join([k,v]) for k, v in six.iteritems(ramon.kvpairs)
+        )
+        metadata.create_dataset('KVPAIRS', (1,),
+                                dtype=h5py.special_dtype(vlen=str),
+                                data=kvpairs)
         metadata.create_dataset('CONFIDENCE', (1,), numpy.float,
                                 data=ramon.confidence)
         metadata.create_dataset('STATUS', (1,), numpy.uint32,

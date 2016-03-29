@@ -38,6 +38,11 @@ class TestRAMON(unittest.TestCase):
         rn = self.nd.get_ramon(self.t, self.c, ids[randindex])
         self.assertEqual(type(rn), ramon.RAMONNeuron)
 
+    def test_downup_ramon(self):
+        rr = self.nd.get_ramon(self.t, self.c, 3)
+        import pdb; pdb.set_trace()
+        self.nd.post_ramon('ndio_demos', 'ramontests', rr)
+
 
 if __name__ == '__main__':
     unittest.main()

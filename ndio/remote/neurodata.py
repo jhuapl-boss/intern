@@ -979,6 +979,7 @@ class neurodata(Remote):
             url = self.url("{}/{}/".format(token, channel))
             files = {'file': ('ramon.hdf5', open(tmpfile.name, 'rb'))}
             res = requests.post(url, files=files)
+            import pdb; pdb.set_trace()
 
             if res.status_code == 404:
                 raise RemoteDataUploadError('[400] Could not upload {}'
