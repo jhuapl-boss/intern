@@ -60,3 +60,18 @@ For instance:
   If you print warnings, you'll ruin the CSV schema!
   
 - **Double-quotes unless you need double-quotes inside the quotes. Then, single quotes.**
+
+### Naming
+
+Because we anticipate users aliasing packages when they're imported instead of `import`ing `*` from a package, we can use that to our advantage and make our function names shorter. For instance:
+
+```
+import ndio.convert.png as png
+
+png.from_cutout( . . . )
+```
+
+Conventions are as follows:
+
+- Converters or exporters should be titled `from_{fmt}` or `to_{fmt}`, and their package predicate should elaborate on the source or target format. For instance, `ramon.to_hdf5()` quite clearly converts *from* RAMON *to* hdf5.
+- Filenames come first, then data. (Keeping with common python package tradition.)
