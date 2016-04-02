@@ -139,7 +139,7 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
         data = hdf5.to_array(in_file)
     elif in_fmt == 'tiff':
         from . import tiff
-        data = tiff.import_tiff(in_file)
+        data = tiff.load(in_file)
     elif in_fmt == 'png':
         from . import png
         data = png.load(in_file)
@@ -152,7 +152,7 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
         return hdf5.from_array(out_file, data)
     elif out_fmt == 'tiff':
         from . import tiff
-        return tiff.export_tiff(out_file, data)
+        return tiff.save(out_file, data)
     elif out_fmt == 'png':
         from . import png
         return png.export_png(out_file, data)

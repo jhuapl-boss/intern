@@ -5,7 +5,7 @@ import os
 import glob
 
 
-def import_tiff(tiff_filename):
+def load(tiff_filename):
     """
     Import a TIFF file into a numpy array.
 
@@ -29,7 +29,7 @@ def import_tiff(tiff_filename):
     return numpy.array(img)
 
 
-def export_tiff(tiff_filename, numpy_data):
+def save(tiff_filename, numpy_data):
     """
     Export a numpy array to a TIFF file.
 
@@ -59,7 +59,7 @@ def export_tiff(tiff_filename, numpy_data):
     return tiff_filename
 
 
-def export_tiff_collection(tiff_filename_base, numpy_data, start_layers_at=1):
+def save_collection(tiff_filename_base, numpy_data, start_layers_at=1):
     """
     Export a numpy array to a set of TIFF files, with each Z-index 2D
     array as its own 2D file.
@@ -93,18 +93,18 @@ def export_tiff_collection(tiff_filename_base, numpy_data, start_layers_at=1):
     i = start_layers_at
     for layer in numpy_data:
         layer_filename = (str(i).zfill(6)).join(file_base_array) + file_ext
-        output_files.append(export_tiff(layer_filename, layer))
+        output_files.append(save(layer_filename, layer))
         i += 1
 
     return output_files
 
 
-def import_tiff_collection(tiff_filename_base):
+def load_collection(tiff_filename_base):
     """
     Import all files matching the filename base given via `tiff_filename_base`.
     Images are ordered by alphabetical order, which means that you *MUST* 0-pad
     your numbers if they span a power of ten (e.g. 0999-1000 or 09-10). This is
-    handled automatically by the complement function, `export_tiff_collection`.
+    handled automatically by the complement function, `save_collection`.
     Also, look at how nicely these documentation lines are all the same length!
 
     Arguments:
@@ -121,6 +121,6 @@ def import_tiff_collection(tiff_filename_base):
 
     numpy_data = []
     for f in files:
-        numpy_data.append(import_tiff(f))
+        numpy_data.append(load(f))
 
     return numpy.concatenate(numpy_data)
