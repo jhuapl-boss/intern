@@ -769,7 +769,6 @@ class neurodata(Remote):
                 very poorly for you. So if you set it <100, ndio will use it.
                 If >=100, set it to 100.
 
-
         Returns:
             ndio.ramon.RAMON[]
 
