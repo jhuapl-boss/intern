@@ -142,7 +142,7 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
         data = tiff.import_tiff(in_file)
     elif in_fmt == 'png':
         from . import png
-        data = png.import_png(in_file)
+        data = png.load(in_file)
     else:
         return _fail_pair_conversion(in_fmt, out_fmt)
 
