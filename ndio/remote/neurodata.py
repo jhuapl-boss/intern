@@ -31,7 +31,6 @@ class neurodata(Remote):
 
     # SECTION:
     # Enumerables
-
     IMAGE = IMG = 'image'
     ANNOTATION = ANNO = 'annotation'
 
@@ -63,6 +62,7 @@ class neurodata(Remote):
 
         super(neurodata, self).__init__(hostname, protocol)
 
+    # SECTION:
     # Decorators
     def _check_token(f):
         @wraps(f)
@@ -77,6 +77,8 @@ class neurodata(Remote):
             return f(self, *args, **kwargs)
         return wrapped
 
+    # SECTION:
+    # Utilities
     def ping(self, suffix='public_tokens/'):
         """
         Returns the status-code of the API (estimated using the public-tokens
@@ -136,7 +138,6 @@ class neurodata(Remote):
 
     # SECTION:
     # Metadata
-
     def get_public_tokens(self):
         """
         Get a list of public tokens available on this server.
@@ -346,8 +347,8 @@ class neurodata(Remote):
             'subvolumes': subvols
         })
 
-    # Image Download
-
+    # SECTION:
+    # Data Download
     @_check_token
     def get_block_size(self, token, resolution=None):
         """
@@ -387,9 +388,6 @@ class neurodata(Remote):
             raise RemoteDataNotFoundError("Resolution " + res +
                                           " is not available.")
         return info['dataset']['offset'][str(resolution)]
-
-    # SECTION:
-    # Data Download
 
     @_check_token
     def get_xy_slice(self, token, channel,
@@ -603,7 +601,6 @@ class neurodata(Remote):
 
     # SECTION:
     # Data Upload
-
     @_check_token
     def post_cutout(self, token, channel,
                     x_start,
@@ -880,48 +877,6 @@ class neurodata(Remote):
         return ramon.from_json(req.json())[0]
 
     @_check_token
-    def reserve_ids(self, token, channel, quantity):
-        """
-        Requests a list of next-available-IDs from the server.
-
-        Arguments:
-            quantity (int): The number of IDs to reserve
-
-        Returns:
-            int[quantity]: List of IDs you've been granted
-        """
-        quantity = str(quantity)
-        url = self.url("{}/{}/reserve/{}/".format(token, channel, quantity))
-        req = requests.get(url)
-        if req.status_code is not 200:
-            raise RemoteDataNotFoundError('Invalid req: ' + req.status_code)
-        out = req.json()
-        return [out[0] + i for i in range(out[1])]
-
-    @_check_token
-    def merge_ids(self, token, channel, ids, delete=False):
-        """
-        Call the restful endpoint to merge two RAMON objects into one.
-
-        Arguments:
-            token
-            channel
-            ids (int[]): the list of the IDs to merge
-            delete (bool : False): Whether to delete after merging.
-
-        Returns:
-            json
-        """
-        req = requests.get(self.url() + "/merge/{}/"
-                           .format(','.join([str(i) for i in ids])))
-        if req.status_code is not 200:
-            raise RemoteDataUploadError('Could not merge ids {}'.format(
-                                        ','.join([str(i) for i in ids])))
-        if delete:
-            self.delete_ramon(token, channel, ids[1:])
-        return True
-
-    @_check_token
     def delete_ramon(self, token, channel, anno):
         """
         Deletes an annotation from the server. Probably you should be careful
@@ -1007,6 +962,51 @@ class neurodata(Remote):
         return True
 
     # SECTION:
+    # ID Manipulation
+
+    @_check_token
+    def reserve_ids(self, token, channel, quantity):
+        """
+        Requests a list of next-available-IDs from the server.
+
+        Arguments:
+            quantity (int): The number of IDs to reserve
+
+        Returns:
+            int[quantity]: List of IDs you've been granted
+        """
+        quantity = str(quantity)
+        url = self.url("{}/{}/reserve/{}/".format(token, channel, quantity))
+        req = requests.get(url)
+        if req.status_code is not 200:
+            raise RemoteDataNotFoundError('Invalid req: ' + req.status_code)
+        out = req.json()
+        return [out[0] + i for i in range(out[1])]
+
+    @_check_token
+    def merge_ids(self, token, channel, ids, delete=False):
+        """
+        Call the restful endpoint to merge two RAMON objects into one.
+
+        Arguments:
+            token
+            channel
+            ids (int[]): the list of the IDs to merge
+            delete (bool : False): Whether to delete after merging.
+
+        Returns:
+            json
+        """
+        req = requests.get(self.url() + "/merge/{}/"
+                           .format(','.join([str(i) for i in ids])))
+        if req.status_code is not 200:
+            raise RemoteDataUploadError('Could not merge ids {}'.format(
+                                        ','.join([str(i) for i in ids])))
+        if delete:
+            self.delete_ramon(token, channel, ids[1:])
+        return True
+
+    # SECTION:
     # Channels
 
     @_check_token
@@ -1085,8 +1085,8 @@ class neurodata(Remote):
     # Propagation
 
     @_check_token
-    def propagate_token(self, token, channel):
-        if self.check_propagate_status(token, channel) is not 0:
+    def propagate(self, token, channel):
+        if self.get_propagate_status(token, channel) is not 0:
             return
         url = self.url('{}/{}/setPropagate/1/'.format(token, channel))
         req = requests.get(url)
@@ -1095,7 +1095,7 @@ class neurodata(Remote):
         return True
 
     @_check_token
-    def check_propagate_status(self, token, channel):
+    def get_propagate_status(self, token, channel):
         url = self.url('{}/{}/getPropagate/'.format(token, channel))
         req = requests.get(url)
         if req.status_code is not 200:
