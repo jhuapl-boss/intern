@@ -246,7 +246,7 @@ def from_json(json, cutout=None):
     return out_ramons
 
 
-def hdf5_to_ramon(hdf5, anno_id=None):
+def from_hdf5(hdf5, anno_id=None):
     """
     Converts an HDF5 file to a RAMON object. Returns an object that is a child-
     -class of RAMON (though it's determined at run-time what type is returned).
@@ -339,7 +339,7 @@ def hdf5_to_ramon(hdf5, anno_id=None):
     return r
 
 
-def ramon_to_hdf5(ramon, hdf5=None):
+def to_hdf5(ramon, hdf5=None):
     """
     Exports a RAMON object to an HDF5 file object.
 
