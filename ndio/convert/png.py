@@ -5,12 +5,12 @@ import os
 import glob
 
 
-def import_png(png_filename):
+def load(png_filename):
     """
     Import a png file into a numpy array.
 
     Arguments:
-        :png_filename:  A string filename of a png datafile
+        png_filename (str): A string filename of a png datafile
 
     Returns:
         A numpy array with data from the png file
@@ -29,16 +29,22 @@ def import_png(png_filename):
     return numpy.array(img)
 
 
-def export_png(png_filename, numpy_data):
+def save(filename, numpy_data):
     """
     Export a numpy array to a png file.
 
     Arguments:
-        png_filename:   A filename to which to save the png data
-        numpy_data:     The numpy array to save to png. OR a string
+        filename (str): A filename to which to save the png data
+        numpy_data (numpy.ndarray OR str): The numpy array to save to png.
+            OR a string: If a string is provded, it should be a binary png str
 
     Returns:
-        String. The expanded filename that now holds the png data
+        str. The expanded filename that now holds the png data
+
+    Raises:
+        ValueError: If the save fails; for instance if the binary string data
+            cannot be coerced into a png, or perhaps your numpy.ndarray is
+            ill-formed?
     """
 
     # Expand filename to be absolute
@@ -62,7 +68,7 @@ def export_png(png_filename, numpy_data):
     return png_filename
 
 
-def export_png_collection(png_filename_base, numpy_data, start_layers_at=1):
+def save_collection(png_filename_base, numpy_data, start_layers_at=1):
     """
     Export a numpy array to a set of png files, with each Z-index 2D
     array as its own 2D file.
@@ -79,7 +85,7 @@ def export_png_collection(png_filename_base, numpy_data, start_layers_at=1):
 
     file_ext = png_filename_base.split('.')[-1]
     if file_ext in ['png']:
-        # Filename is "name*.tif[f]", set file_base to "name*".
+        # Filename is "name*.ext", set file_base to "name*".
         file_base = '.'.join(png_filename_base.split('.')[:-1])
     else:
         # Filename is "name*", set file_base to "name*".
@@ -102,18 +108,18 @@ def export_png_collection(png_filename_base, numpy_data, start_layers_at=1):
     return output_files
 
 
-def import_png_collection(png_filename_base):
+def load_collection(png_filename_base):
     """
-    Import all files matching the filename base given via `png_filename_base`.
+    Import all files matching the filename base given with `png_filename_base`.
     Images are ordered by alphabetical order, which means that you *MUST* 0-pad
     your numbers if they span a power of ten (e.g. 0999-1000 or 09-10). This is
-    handled automatically by the complement function, `export_png_collection`.
+    handled automatically by its complementary function, `png.save_collection`.
     Also, look at how nicely these documentation lines are all the same length!
 
     Arguments:
-        png_filename_base:     An asterisk-wildcard string that should refer
-                                to all TIFFs in the stack. All * are replaced
-                                according to command-line expansion rules.
+        png_filename_base (str): An asterisk-wildcard string that should refer
+            to all PNGs in the stack. All *s are replaced according to regular
+            cmd-line expansion rules. See the 'glob' documentation for details
     Returns:
         A numpy array holding a 3D dataset
     """
@@ -124,6 +130,6 @@ def import_png_collection(png_filename_base):
 
     numpy_data = []
     for f in files:
-        numpy_data.append(import_png(f))
+        numpy_data.append(load(f))
 
     return numpy.concatenate(numpy_data)

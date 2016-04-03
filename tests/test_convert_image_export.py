@@ -11,7 +11,7 @@
 #     def setUp(self):
 #         self.oo = neurodata()
 #
-#     def test_export_import_png(self):
+#     def test_export_load(self):
 #         # kasthuri11/image/xy/3/1000,1100/1000,1100/1000/
 #         image_download = self.oo.get_image('kasthuri11', 'image',
 #                                            1000, 1100,
@@ -25,12 +25,12 @@
 #                 "tests/trash/download.png")
 #
 #         # now confirm import works too
-#         self.assertEqual(ndpng.import_png("tests/trash/download.png")[0][0],
+#         self.assertEqual(ndpng.load("tests/trash/download.png")[0][0],
 #                          image_download[0][0])
-#         self.assertEqual(ndpng.import_png("tests/trash/download.png")[10][10],
+#         self.assertEqual(ndpng.load("tests/trash/download.png")[10][10],
 #                          image_download[10][10])
 #
-#     def test_export_import_tiff(self):
+#     def test_export_load(self):
 #         # kasthuri11/image/xy/3/1000,1100/1000,1100/1000/
 #         image_download = self.oo.get_image('kasthuri11', 'image',
 #                                            1000, 1100,
@@ -40,16 +40,16 @@
 #
 #         # if returns string, successful export
 #         self.assertEqual(
-#                 ndtiff.export_tiff("tests/trash/download-1.tiff",
+#                 ndtiff.save("tests/trash/download-1.tiff",
 #                                    image_download),
 #                 "tests/trash/download-1.tiff")
 #
 #         # now confirm import works too
 #         self.assertEqual(
-#                 ndtiff.import_tiff("tests/trash/download-1.tiff")[0][0],
+#                 ndtiff.load("tests/trash/download-1.tiff")[0][0],
 #                 image_download[0][0])
 #         self.assertEqual(
-#                 ndtiff.import_tiff("tests/trash/download-1.tiff")[10][10],
+#                 ndtiff.load("tests/trash/download-1.tiff")[10][10],
 #                 image_download[10][10])
 #
 #

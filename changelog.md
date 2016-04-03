@@ -3,11 +3,12 @@
 - **0.1.17**
     - Standardize RAMON converter function names in `__init__`
     - Fix RAMON uploads to incorporate kvpairs
+    - Standardize converter names in the `convert` module
 - **0.1.16**
     - Fix `synapse_type` keyerror bug.
     - Un-nest RAMON metadata
     - `get_ramon_metadata` returns single value if you pass a single ID as `int`
-    - Speed up the Travis CI build dramatically (3×)
+    - Speed up the Travis CI build dramatically (4×)
 - **0.1.15**
     - kv pairs bug finally (definitely) resolved.
     - Make `ocp` user-settable (`neurodata(suffix="ocp")`)

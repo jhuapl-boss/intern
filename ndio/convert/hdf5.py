@@ -4,7 +4,7 @@ import numpy
 import os
 
 
-def import_hdf5(hdf5_filename):
+def load(hdf5_filename):
     """
     Import a HDF5 file into a numpy array.
 
@@ -30,13 +30,13 @@ def import_hdf5(hdf5_filename):
     return numpy.array(data_layers)
 
 
-def export_hdf5(hdf5_filename, numpy_data):
+def save(hdf5_filename, array):
     """
     Export a numpy array to a HDF5 file.
 
     Arguments:
-        hdf5_filename:  A filename to which to save the HDF5 data
-        numpy_data:     The numpy array to save to HDF5
+        hdf5_filename (str): A filename to which to save the HDF5 data
+        array (numpy.ndarray): The numpy array to save to HDF5
 
     Returns:
         String. The expanded filename that now holds the HDF5 data
@@ -47,7 +47,7 @@ def export_hdf5(hdf5_filename, numpy_data):
 
     try:
         h = h5py.File(hdf5_filename, "w")
-        h.create_dataset('CUTOUT', data=numpy_data)
+        h.create_dataset('CUTOUT', data=array)
         h.close()
     except Exception as e:
         raise ValueError("Could not save HDF5 file {0}.".format(hdf5_filename))

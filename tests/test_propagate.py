@@ -14,11 +14,11 @@ class TestPropagate(unittest.TestCase):
     def test_propagate_status_fails_on_bad_token(self):
         token = 'this is not a token'
         with self.assertRaises(ndio.remote.errors.RemoteDataNotFoundError):
-            self.nd.check_propagate_status(token, 'channel')
+            self.nd.get_propagate_status(token, 'channel')
 
     def test_kasthuri11_is_propagated(self):
         token = 'kasthuri11'
-        self.assertEqual(self.nd.check_propagate_status(token, 'image'), '2')
+        self.assertEqual(self.nd.get_propagate_status(token, 'image'), '2')
 
 
 if __name__ == '__main__':

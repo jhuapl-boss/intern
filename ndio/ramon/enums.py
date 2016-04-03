@@ -24,7 +24,7 @@ eRAMONAnnoStatus = enum("DEFAULT",
                         PROCESSED=2,
                         IGNORED=3)
 
-DEFAULT_ID = -1
+DEFAULT_ID = 0
 DEFAULT_CONFIDENCE = 0
 DEFAULT_DYNAMIC_METADATA = {}
 DEFAULT_STATUS = eRAMONAnnoStatus.DEFAULT
