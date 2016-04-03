@@ -37,11 +37,11 @@ So you can create a new RAMON object of dynamic type like this:
     ndio.ramon.RAMONNeuron.RAMONNeuron
 
 NOTE! If you already have an HDF5 file that contains a RAMON object, it is far
-easier to use the prebuilt `hdf5_to_ramon()` function (below).
+easier to use the prebuilt `from_hdf5()` function (below).
 
     >>> import h5py
     >>> f = h5py.File('myfile.hdf5', 'r')
-    >>> r = hdf5_to_ramon(f)
+    >>> r = from_hdf5(f)
 
 """
 
@@ -246,7 +246,7 @@ def from_json(json, cutout=None):
     return out_ramons
 
 
-def hdf5_to_ramon(hdf5, anno_id=None):
+def from_hdf5(hdf5, anno_id=None):
     """
     Converts an HDF5 file to a RAMON object. Returns an object that is a child-
     -class of RAMON (though it's determined at run-time what type is returned).
@@ -267,7 +267,7 @@ def hdf5_to_ramon(hdf5, anno_id=None):
 
     if anno_id is None:
         # The user just wants the first item we find, so... Yeah.
-        return hdf5_to_ramon(hdf5, list(hdf5.keys())[0])
+        return from_hdf5(hdf5, list(hdf5.keys())[0])
 
     # First, get the actual object we're going to download.
     anno_id = str(anno_id)
@@ -339,7 +339,7 @@ def hdf5_to_ramon(hdf5, anno_id=None):
     return r
 
 
-def ramon_to_hdf5(ramon, hdf5=None):
+def to_hdf5(ramon, hdf5=None):
     """
     Exports a RAMON object to an HDF5 file object.
 
@@ -355,7 +355,7 @@ def ramon_to_hdf5(ramon, hdf5=None):
     """
 
     if issubclass(type(ramon), RAMONBase) is False:
-        raise InvalidRAMONError("Invalid RAMON supplied to ramon_to_hdf5.")
+        raise InvalidRAMONError("Invalid RAMON supplied to ramon.to_hdf5.")
 
     import h5py
     import numpy

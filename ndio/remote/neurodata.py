@@ -992,7 +992,7 @@ class neurodata(Remote):
 
         with tempfile.NamedTemporaryFile(delete=False) as tmpfile:
             for i in r:
-                tmpfile = ramon.ramon_to_hdf5(i, tmpfile)
+                tmpfile = ramon.to_hdf5(i, tmpfile)
 
             url = self.url("{}/{}/".format(token, channel))
             files = {'file': ('ramon.hdf5', open(tmpfile.name, 'rb'))}
