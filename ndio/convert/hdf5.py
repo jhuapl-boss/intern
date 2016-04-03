@@ -4,7 +4,7 @@ import numpy
 import os
 
 
-def to_array(hdf5_filename):
+def load(hdf5_filename):
     """
     Import a HDF5 file into a numpy array.
 
@@ -30,7 +30,7 @@ def to_array(hdf5_filename):
     return numpy.array(data_layers)
 
 
-def from_array(hdf5_filename, array):
+def save(hdf5_filename, array):
     """
     Export a numpy array to a HDF5 file.
 

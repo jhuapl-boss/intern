@@ -5,7 +5,7 @@ import os
 import glob
 
 
-def to_array(nifti_filename):
+def load(nifti_filename):
     """
     Import a nifti file into a numpy array. TODO:  Currently only
     transfers raw data for compatibility with annotation and ND formats
@@ -32,7 +32,7 @@ def to_array(nifti_filename):
     return numpy.array(img)
 
 
-def from_array(nifti_filename, numpy_data):
+def save(nifti_filename, numpy_data):
     """
     Export a numpy array to a nifti file.  TODO: currently using dummy
     headers and identity matrix affine transform. This can be expanded.
