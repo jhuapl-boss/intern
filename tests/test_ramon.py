@@ -24,18 +24,19 @@ class TestRAMON(unittest.TestCase):
         self.assertEqual(True, '3' in [s.id for s in r])
 
     def test_download_ramon_of_type(self):
-        ids = self.nd.get_ramon_ids(self.t, self.c, ramon.AnnotationType.SEGMENT)
+        ids = self.nd.get_ramon_ids(self.t, self.c,
+                                    ramon.AnnotationType.SEGMENT)
         randindex = random.randint(0, len(ids))
         # randomly pick one to check
         r = self.nd.get_ramon(self.t, self.c, ids[randindex])
         self.assertEqual(type(r), ramon.RAMONSegment)
 
-        ids = self.nd.get_ramon_ids(self.t, self.c, ramon.AnnotationType.NEURON)
+        ids = self.nd.get_ramon_ids(self.t, self.c,
+                                    ramon.AnnotationType.NEURON)
         randindex = random.randint(0, len(ids))
         # randomly pick one to check
         rn = self.nd.get_ramon(self.t, self.c, ids[randindex])
         self.assertEqual(type(rn), ramon.RAMONNeuron)
-
 
 
 if __name__ == '__main__':

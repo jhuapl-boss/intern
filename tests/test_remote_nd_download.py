@@ -30,17 +30,6 @@ class TestDownload(unittest.TestCase):
         # We know this pixel is 132
         self.assertEqual(numpy_download[0][0][0], 132)
 
-    # def test_get_big_cutout(self):
-    #     # kasthuri11/image/xy/3/1000,1100/1000,1100/1000/
-    #     numpy_download = self.oo.get_cutout('kasthuri2015_ramon_v4', 'neurons',
-    #                                         1000, 2000,
-    #                                         1000, 2000,
-    #                                         1000, 1600,
-    #                                         resolution=3)
-    #
-    #     # We know this pixel is 132
-    #     self.assertEqual(numpy_download.shape, (1000, 1000, 600))
-
     def test_get_volume_type(self):
         # kasthuri11/image/xy/3/1000,1100/1000,1100/1000/
         ramon_download = self.oo.get_volume('kasthuri11', 'image',
