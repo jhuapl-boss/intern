@@ -21,6 +21,3 @@
 *.swp
 *.swo
 
-# Docs
-*.html
-docs/build/
