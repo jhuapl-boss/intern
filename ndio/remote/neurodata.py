@@ -978,17 +978,20 @@ class neurodata(Remote):
             for i in r:
                 tmpfile = ramon.to_hdf5(i, tmpfile)
 
-            url = self.url("{}/{}/overwrite".format(token, channel))
+            url = self.url("{}/{}/overwrite/".format(token, channel))
             req = urllib2.Request(url, tmpfile.read())
-            import pdb; pdb.set_trace()
             res = urllib2.urlopen(req)
 
-            if res.status_code == 404:
+            import pdb; pdb.set_trace()
+
+            if res.code == 404:
                 raise RemoteDataUploadError('[400] Could not upload {}'
                                             .format(str(r)))
-            if res.status_code == 500:
+            if res.code == 500:
                 raise RemoteDataUploadError('[500] Could not upload {}'
                                             .format(str(r)))
+
+            return res.read()
         return True
 
     # SECTION:

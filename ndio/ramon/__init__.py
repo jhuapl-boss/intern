@@ -1,6 +1,8 @@
 from __future__ import absolute_import
 import tempfile
 import json as jsonlib
+import csv
+import cStringIO
 import copy
 import six
 
@@ -390,12 +392,18 @@ def to_hdf5(ramon, hdf5=None):
         metadata.create_dataset('AUTHOR', (1,),
                                 dtype=h5py.special_dtype(vlen=str),
                                 data=ramon.author)
-        kvpairs = ' '.join(
-            ','.join([k,v]) for k, v in six.iteritems(ramon.kvpairs)
-        )
+        # kvpairs = ' '.join(
+        #     ','.join([k,v]) for k, v in six.iteritems(ramon.kvpairs)
+        # )
+
+        fstring = cStringIO.StringIO()
+        csvw = csv.writer(fstring, delimiter=',')
+        csvw.writerows([r for r in six.iteritems(ramon.kvpairs)])
+
+
         metadata.create_dataset('KVPAIRS', (1,),
                                 dtype=h5py.special_dtype(vlen=str),
-                                data=kvpairs)
+                                data=fstring.getvalue())
         metadata.create_dataset('CONFIDENCE', (1,), numpy.float,
                                 data=ramon.confidence)
         metadata.create_dataset('STATUS', (1,), numpy.uint32,

@@ -41,7 +41,7 @@ class TestRAMON(unittest.TestCase):
     def test_downup_ramon(self):
         rr = self.nd.get_ramon(self.t, self.c, 10016)
         ids = self.nd.reserve_ids('ndio_demos', 'ramontests', 1)
-        rr.id = ids[0]
+        rr.id = 0
         self.nd.post_ramon('ndio_demos', 'ramontests', rr)
 
 
