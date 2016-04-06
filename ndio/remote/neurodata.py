@@ -989,7 +989,10 @@ class neurodata(Remote):
                 raise RemoteDataUploadError('[500] Could not upload {}'
                                             .format(str(r)))
 
-            return [int(rid) for rid in res.read().split(',')]
+            rets = res.read()
+            if six.PY3:
+                rets = rets.decode()
+            return [int(rid) for rid in rets.split(',')]
         return True
 
     # SECTION:
