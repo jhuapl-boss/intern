@@ -1,6 +1,11 @@
 from __future__ import absolute_import
 import tempfile
 import json as jsonlib
+import csv
+try:
+    from cStringIO import StringIO
+except:
+    from io import StringIO
 import copy
 import six
 
@@ -374,15 +379,15 @@ def to_hdf5(ramon, hdf5=None):
         grp.create_dataset("ANNOTATION_TYPE", (1,),
                            numpy.uint32,
                            data=AnnotationType.get_int(type(ramon)))
-        if hasattr(ramon, 'resolution'):
-            grp.create_dataset('RESOLUTION', (1,),
-                               numpy.uint32, data=ramon.resolution)
-        if hasattr(ramon, 'xyz_offset'):
-            grp.create_dataset('XYZOFFSET', (3,),
-                               numpy.uint32, data=ramon.xyz_offset)
+
         if hasattr(ramon, 'cutout'):
-            grp.create_dataset('CUTOUT', ramon.cutout.shape,
-                               ramon.cutout.dtype, data=ramon.cutout)
+            if ramon.cutout is not None:
+                grp.create_dataset('CUTOUT', ramon.cutout.shape,
+                                   ramon.cutout.dtype, data=ramon.cutout)
+                grp.create_dataset('RESOLUTION', (1,),
+                                   numpy.uint32, data=ramon.resolution)
+                grp.create_dataset('XYZOFFSET', (3,),
+                                   numpy.uint32, data=ramon.xyz_offset)
 
         # Next, add general metadata.
         metadata = grp.create_group('METADATA')
@@ -390,6 +395,18 @@ def to_hdf5(ramon, hdf5=None):
         metadata.create_dataset('AUTHOR', (1,),
                                 dtype=h5py.special_dtype(vlen=str),
                                 data=ramon.author)
+        # kvpairs = ' '.join(
+        #     ','.join([k,v]) for k, v in six.iteritems(ramon.kvpairs)
+        # )
+
+        fstring = StringIO()
+        csvw = csv.writer(fstring, delimiter=',')
+        csvw.writerows([r for r in six.iteritems(ramon.kvpairs)])
+
+
+        metadata.create_dataset('KVPAIRS', (1,),
+                                dtype=h5py.special_dtype(vlen=str),
+                                data=fstring.getvalue())
         metadata.create_dataset('CONFIDENCE', (1,), numpy.float,
                                 data=ramon.confidence)
         metadata.create_dataset('STATUS', (1,), numpy.uint32,
@@ -399,7 +416,7 @@ def to_hdf5(ramon, hdf5=None):
 
         if hasattr(ramon, 'segments'):
             metadata.create_dataset('SEGMENTS',
-                                    data=numpy.ndarray(ramon.segments))
+                                    data=numpy.asarray(ramon.segments, dtype=numpy.uint32))
 
         if hasattr(ramon, 'synapse_type'):
             metadata.create_dataset('SYNAPSE_TYPE', (1,), numpy.uint32,
@@ -431,6 +448,7 @@ def to_hdf5(ramon, hdf5=None):
             metadata.create_dataset('ORGANELLECLASS', (1,),
                                     numpy.uint32,
                                     data=ramon.organelle_class)
-
+        hdf5.flush()
+        tmpfile.seek(0)
         return tmpfile
     return False

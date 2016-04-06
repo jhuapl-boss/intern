@@ -483,7 +483,6 @@ exist".format(token_name))
 
     def put_data(self, data, site_host, dev):
         # try to post data to the server
-        #import pdb; pdb.set_trace()
 
         if dev:
             URLPath = "{}/ca/autoIngest/".format(site_host)
