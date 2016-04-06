@@ -982,8 +982,6 @@ class neurodata(Remote):
             req = urllib2.Request(url, tmpfile.read())
             res = urllib2.urlopen(req)
 
-            import pdb; pdb.set_trace()
-
             if res.code == 404:
                 raise RemoteDataUploadError('[400] Could not upload {}'
                                             .format(str(r)))
