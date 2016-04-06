@@ -405,7 +405,7 @@ def to_hdf5(ramon, hdf5=None):
 
         if hasattr(ramon, 'segments'):
             metadata.create_dataset('SEGMENTS',
-                                    data=numpy.ndarray(ramon.segments))
+                                    data=numpy.asarray(ramon.segments, dtype=numpy.uint32))
 
         if hasattr(ramon, 'synapse_type'):
             metadata.create_dataset('SYNAPSE_TYPE', (1,), numpy.uint32,
@@ -437,6 +437,7 @@ def to_hdf5(ramon, hdf5=None):
             metadata.create_dataset('ORGANELLECLASS', (1,),
                                     numpy.uint32,
                                     data=ramon.organelle_class)
-
+        hdf5.flush()
+        tmpfile.seek(0)
         return tmpfile
     return False
