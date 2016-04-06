@@ -754,6 +754,8 @@ class neurodata(Remote):
                 tmpfile.write(req.content)
                 tmpfile.seek(0)
                 h5file = h5py.File(tmpfile.name, "r")
+                if 'ANNOIDS' not in h5file:
+                    return []
                 return [i for i in h5file['ANNOIDS']]
             raise IOError("Could not successfully mock HDF5 file for parsing.")
 
@@ -976,9 +978,10 @@ class neurodata(Remote):
             for i in r:
                 tmpfile = ramon.to_hdf5(i, tmpfile)
 
-            url = self.url("{}/{}/".format(token, channel))
-            files = {'file': ('ramon.hdf5', open(tmpfile.name, 'rb'))}
-            res = requests.post(url, files=files)
+            url = self.url("{}/{}/overwrite".format(token, channel))
+            req = urllib2.Request(url, tmpfile.read())
+            import pdb; pdb.set_trace()
+            res = urllib2.urlopen(req)
 
             if res.status_code == 404:
                 raise RemoteDataUploadError('[400] Could not upload {}'
