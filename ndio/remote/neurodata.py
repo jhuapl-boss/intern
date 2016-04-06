@@ -662,13 +662,14 @@ class neurodata(Remote):
     def _post_cutout_no_chunking(self, token, channel,
                                  x_start, y_start, z_start,
                                  data, resolution):
+        """
+        Accepts data in zyx. !!!
+        """
 
         data = numpy.expand_dims(data, axis=0)
-        tempfile = BytesIO()
-        numpy.save(tempfile, data)
-        compressed = zlib.compress(tempfile.getvalue())
+        blosc_data = blosc.pack_array(data)
 
-        url = self.url("{}/{}/npz/{}/{},{}/{},{}/{},{}/".format(
+        url = self.url("{}/{}/blosc/{}/{},{}/{},{}/{},{}/".format(
             token, channel,
             resolution,
             x_start, x_start + data.shape[3],
@@ -676,7 +677,7 @@ class neurodata(Remote):
             z_start, z_start + data.shape[1]
         ))
 
-        req = requests.post(url, data=compressed, headers={
+        req = requests.post(url, data=blosc_data, headers={
             'Content-Type': 'application/octet-stream'
         })
 
