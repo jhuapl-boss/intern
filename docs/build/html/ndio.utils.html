@@ -129,200 +129,11 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ndio.utils.autoingest">
-<span id="ndio-utils-autoingest-module"></span><h2>ndio.utils.autoingest module<a class="headerlink" href="#module-ndio.utils.autoingest" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="ndio.utils.autoingest.AutoIngest">
-<em class="property">class </em><code class="descclassname">ndio.utils.autoingest.</code><code class="descname">AutoIngest</code><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.add_channel">
-<code class="descname">add_channel</code><span class="sig-paren">(</span><em>channel_name</em>, <em>datatype</em>, <em>channel_type</em>, <em>data_url</em>, <em>file_format</em>, <em>file_type</em>, <em>exceptions=0</em>, <em>resolution=0</em>, <em>windowrange=None</em>, <em>readonly=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.add_channel" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>channel_name</strong> (<em>str</em>) &#8211; Channel Name is the specific name of a</li>
-<li><strong>series of data. Standard naming convention is to do</strong> (<em>specific</em>) &#8211; </li>
-<li><strong>or NameSubProjectName.</strong> (<em>ImageTypeIterationNumber</em>) &#8211; </li>
-<li><strong>datatype</strong> (<em>str</em>) &#8211; The data type is the storage method of data in</li>
-<li><strong>channel. It can be uint8, uint16, uint32, uint64, or</strong> (<em>the</em>) &#8211; </li>
-<li><strong>float32.</strong> &#8211; </li>
-<li><strong>channel_type</strong> (<em>str</em>) &#8211; The channel type is the kind of data being</li>
-<li><strong>in the channel. It can be image, annotation, or</strong> (<em>stored</em>) &#8211; </li>
-<li><strong>timeseries.</strong> &#8211; </li>
-<li><strong>data_url</strong> (<em>str</em>) &#8211; This url points to the root directory of the</li>
-<li><strong>Dropbox (or any data requiring authentication to</strong> (<em>files.</em>) &#8211; </li>
-<li><strong>such as private s3) is not an acceptable HTTP Server.</strong> (<em>download</em>) &#8211; </li>
-<li><strong>additional instructions in documentation online to format</strong> (<em>See</em>) &#8211; </li>
-<li><strong>properly so it is http accessible.</strong> (<em>s3</em>) &#8211; </li>
-<li><strong>file_format</strong> (<em>str</em>) &#8211; File format refers to the overarching kind</li>
-<li><strong>data, as in slices</strong> (<em>of</em>) &#8211; </li>
-<li><strong>(tile-based).</strong> &#8211; </li>
-<li><strong>file_type</strong> (<em>str</em>) &#8211; File type refers to the specific type of file</li>
-<li><strong>the data is stored in, as in, tiff, png, or tif.</strong> (<em>that</em>) &#8211; </li>
-<li><strong>exceptions</strong> (<em>int</em>) &#8211; Exceptions is an option to enable the</li>
-<li><strong>for annotations to contradict each other (assign</strong> (<em>possibility</em>) &#8211; </li>
-<li><strong>values to the same point). 1 corresponds to True, 0</strong> (<em>different</em>) &#8211; </li>
-<li><strong>to False.</strong> (<em>corresponds</em>) &#8211; </li>
-<li><strong>resolution</strong> (<em>int</em>) &#8211; Resolution is the starting resolution of the</li>
-<li><strong>being uploaded to the channel.</strong> (<a class="reference internal" href="ndio.ramon.html#ndio.ramon.RAMONVolume.RAMONVolume.data" title="ndio.ramon.RAMONVolume.RAMONVolume.data"><em>data</em></a>) &#8211; </li>
-<li><strong>windowrange</strong> (<em>int, int</em>) &#8211; Window range is the maximum and minimum</li>
-<li><strong>values for a particular image. This is used so that the</strong> (<em>pixel</em>) &#8211; </li>
-<li><strong>can be displayed in a readable way for viewing through</strong> (<em>image</em>) &#8211; </li>
-<li><strong>calls</strong> (<em>RESTful</em>) &#8211; </li>
-<li><strong>readonly</strong> (<em>int</em>) &#8211; This option allows the user to control if,</li>
-<li><strong>the initial data commit, the channel is read-only.</strong> (<em>after</em>) &#8211; </li>
-<li><strong>this is suggested with data that will be publicly</strong> (<em>Generally</em>) &#8211; </li>
-<li><strong>viewable.</strong> &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.add_dataset">
-<code class="descname">add_dataset</code><span class="sig-paren">(</span><em>dataset_name</em>, <em>imagesize</em>, <em>voxelres</em>, <em>offset=(0</em>, <em>0</em>, <em>0)</em>, <em>timerange=(0</em>, <em>0)</em>, <em>scalinglevels=0</em>, <em>scaling=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.add_dataset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.add_metadata">
-<code class="descname">add_metadata</code><span class="sig-paren">(</span><em>metadata=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.add_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.add_project">
-<code class="descname">add_project</code><span class="sig-paren">(</span><em>project_name</em>, <em>token_name=''</em>, <em>public=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.add_project" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>project_name</strong> (<em>str</em>) &#8211; Project name is the specific project within</li>
-<li><strong>dataset's name. If there is only one project associated with</strong> (<em>a</em>) &#8211; </li>
-<li><strong>dataset then standard convention is to name the project the</strong> (<em>a</em>) &#8211; </li>
-<li><strong>as its associated dataset.</strong> (<em>same</em>) &#8211; </li>
-<li><strong>token_name</strong> (<em>str</em>) &#8211; The token name is the default token. If you</li>
-<li><strong>not wish to specify one, a default one will be created for</strong> (<em>do</em>) &#8211; </li>
-<li><strong>with the same name as the project name. However, if the</strong> (<em>you</em>) &#8211; </li>
-<li><strong>is private you must specify a token.</strong> (<em>project</em>) &#8211; </li>
-<li><strong>public</strong> (<em>int</em>) &#8211; This option allows users to specify if they want</li>
-<li><strong>project/channels to be publicly viewable/search-able.</strong> (<em>the</em>) &#8211; </li>
-<li><strong>0) =</strong> (<em>(1,</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.channel_dict">
-<code class="descname">channel_dict</code><span class="sig-paren">(</span><em>channel_name, datatype, channel_type, data_url, file_format, file_type, exceptions=0, resolution=0, windowrange=[0, 0], readonly=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.channel_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Genearte the project dictionary</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.dataset_dict">
-<code class="descname">dataset_dict</code><span class="sig-paren">(</span><em>dataset_name, imagesize, voxelres, offset=[0, 0, 0], timerange=[0, 0], scalinglevels=0, scaling=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.dataset_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the dataset dictionary</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.nd_json">
-<code class="descname">nd_json</code><span class="sig-paren">(</span><em>dataset</em>, <em>project</em>, <em>channel_list</em>, <em>metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.nd_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Genarate ND json object</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.nd_json_list">
-<code class="descname">nd_json_list</code><span class="sig-paren">(</span><em>dataset</em>, <em>project</em>, <em>channel_list</em>, <em>metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.nd_json_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Genarate ND json object</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.output_json">
-<code class="descname">output_json</code><span class="sig-paren">(</span><em>file_name='/tmp/ND.json'</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.output_json" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Arguements:</dt>
-<dd>file_name(str): The file name to store the json to, by default
-/tmp/ND.json</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.post_data">
-<code class="descname">post_data</code><span class="sig-paren">(</span><em>site_host='http://openconnecto.me'</em>, <em>file_name=None</em>, <em>dev=False</em>, <em>verifytype='Folder'</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.post_data" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Arguements:</dt>
-<dd><p class="first">site_host(str): The site host to post the data to, by default
-<a class="reference external" href="http://openconnectome.me">http://openconnectome.me</a>.</p>
-<p>file_name(str): The file name of the json file to post (optional).
-If this is left unspecified it is assumed the data is in the
-AutoIngets object.</p>
-<p>dev(bool): If pushing to a microns dev branch server set this
-to True, if not leave False.</p>
-<p class="last">verifytype(enum): Set http verification type, by checking the
-first slice is accessible or by checking channel folder. Enum:
-[Folder, Slice]</p>
-</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.project_dict">
-<code class="descname">project_dict</code><span class="sig-paren">(</span><em>project_name</em>, <em>token_name=None</em>, <em>public=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.project_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Genarate the project dictionary</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.put_data">
-<code class="descname">put_data</code><span class="sig-paren">(</span><em>data</em>, <em>site_host</em>, <em>dev</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.put_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.verify_json">
-<code class="descname">verify_json</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.verify_json" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ndio.utils.autoingest.AutoIngest.verify_path">
-<code class="descname">verify_path</code><span class="sig-paren">(</span><em>data</em>, <em>verifytype</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.autoingest.AutoIngest.verify_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-ndio.utils.mesh">
 <span id="ndio-utils-mesh-module"></span><h2>ndio.utils.mesh module<a class="headerlink" href="#module-ndio.utils.mesh" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="ndio.utils.mesh.export_to_dae">
-<code class="descclassname">ndio.utils.mesh.</code><code class="descname">export_to_dae</code><span class="sig-paren">(</span><em>filename</em>, <em>data</em>, <em>level=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.mesh.export_to_dae" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.utils.mesh.export_dae">
+<code class="descclassname">ndio.utils.mesh.</code><code class="descname">export_dae</code><span class="sig-paren">(</span><em>filename</em>, <em>cutout</em>, <em>level=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.mesh.export_dae" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a dense annotation to a DAE, using Marching Cubes (PyMCubes).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -330,7 +141,7 @@ first slice is accessible or by checking channel folder. Enum:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>filename</strong> (<em>str</em>) &#8211; The filename to write out to</li>
-<li><strong>data</strong> (<em>numpy.ndarray</em>) &#8211; The dense annotation</li>
+<li><strong>cutout</strong> (<em>numpy.ndarray</em>) &#8211; The dense annotation</li>
 <li><strong>level</strong> (<em>int</em>) &#8211; The level at which to run mcubes</li>
 </ul>
 </td>
@@ -343,8 +154,8 @@ first slice is accessible or by checking channel folder. Enum:
 </dd></dl>
 
 <dl class="function">
-<dt id="ndio.utils.mesh.export_to_obj">
-<code class="descclassname">ndio.utils.mesh.</code><code class="descname">export_to_obj</code><span class="sig-paren">(</span><em>filename</em>, <em>data</em>, <em>level=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.mesh.export_to_obj" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.utils.mesh.export_obj">
+<code class="descclassname">ndio.utils.mesh.</code><code class="descname">export_obj</code><span class="sig-paren">(</span><em>filename</em>, <em>cutout</em>, <em>level=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.mesh.export_obj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a dense annotation to a obj, using Marching Cubes (PyMCubes).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -352,7 +163,7 @@ first slice is accessible or by checking channel folder. Enum:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>filename</strong> (<em>str</em>) &#8211; The filename to write out to</li>
-<li><strong>data</strong> (<em>numpy.ndarray</em>) &#8211; The dense annotation</li>
+<li><strong>cutout</strong> (<em>numpy.ndarray</em>) &#8211; The dense annotation</li>
 <li><strong>level</strong> (<em>int</em>) &#8211; The level at which to run mcubes</li>
 </ul>
 </td>
@@ -365,8 +176,8 @@ first slice is accessible or by checking channel folder. Enum:
 </dd></dl>
 
 <dl class="function">
-<dt id="ndio.utils.mesh.export_to_ply">
-<code class="descclassname">ndio.utils.mesh.</code><code class="descname">export_to_ply</code><span class="sig-paren">(</span><em>filename</em>, <em>data</em>, <em>level=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.mesh.export_to_ply" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.utils.mesh.export_ply">
+<code class="descclassname">ndio.utils.mesh.</code><code class="descname">export_ply</code><span class="sig-paren">(</span><em>filename</em>, <em>cutout</em>, <em>level=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.utils.mesh.export_ply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a dense annotation to a .PLY, using Marching Cubes (PyMCubes).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -374,7 +185,7 @@ first slice is accessible or by checking channel folder. Enum:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>filename</strong> (<em>str</em>) &#8211; The filename to write out to</li>
-<li><strong>data</strong> (<em>numpy.ndarray</em>) &#8211; The dense annotation</li>
+<li><strong>cutout</strong> (<em>numpy.ndarray</em>) &#8211; The dense annotation</li>
 <li><strong>level</strong> (<em>int</em>) &#8211; The level at which to run mcubes</li>
 </ul>
 </td>

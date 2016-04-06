@@ -4,6 +4,14 @@ ndio.convert package
 Submodules
 ----------
 
+ndio.convert.blosc module
+-------------------------
+
+.. automodule:: ndio.convert.blosc
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ndio.convert.convert module
 ---------------------------
 
@@ -16,6 +24,14 @@ ndio.convert.hdf5 module
 ------------------------
 
 .. automodule:: ndio.convert.hdf5
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ndio.convert.nifti module
+-------------------------
+
+.. automodule:: ndio.convert.nifti
     :members:
     :undoc-members:
     :show-inheritance:

@@ -20,10 +20,10 @@ ndio.remote.errors module
     :undoc-members:
     :show-inheritance:
 
-ndio.remote.m2g module
-----------------------
+ndio.remote.grute module
+------------------------
 
-.. automodule:: ndio.remote.m2g
+.. automodule:: ndio.remote.grute
     :members:
     :undoc-members:
     :show-inheritance:

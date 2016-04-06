@@ -133,13 +133,20 @@
 <span id="ndio-ramon-ramonbase-module"></span><h2>ndio.ramon.RAMONBase module<a class="headerlink" href="#module-ndio.ramon.RAMONBase" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ndio.ramon.RAMONBase.RAMONBase">
-<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONBase.</code><code class="descname">RAMONBase</code><span class="sig-paren">(</span><em>id=-1</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONBase.RAMONBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONBase.</code><code class="descname">RAMONBase</code><span class="sig-paren">(</span><em>id=0</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONBase.RAMONBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>RAMONBase Object for storing neuroscience data</p>
-<dl class="attribute">
-<dt id="ndio.ramon.RAMONBase.RAMONBase.status">
-<code class="descname">status</code><a class="headerlink" href="#ndio.ramon.RAMONBase.RAMONBase.status" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="method">
+<dt id="ndio.ramon.RAMONBase.RAMONBase.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONBase.RAMONBase.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>String representation of a RAMON object for convenience.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndio.ramon.RAMONBase.RAMONBase.__str__">
+<code class="descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONBase.RAMONBase.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>String representation of a RAMON object for convenience.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -148,7 +155,7 @@
 <span id="ndio-ramon-ramongeneric-module"></span><h2>ndio.ramon.RAMONGeneric module<a class="headerlink" href="#module-ndio.ramon.RAMONGeneric" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ndio.ramon.RAMONGeneric.RAMONGeneric">
-<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONGeneric.</code><code class="descname">RAMONGeneric</code><span class="sig-paren">(</span><em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=-1</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONGeneric.RAMONGeneric" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONGeneric.</code><code class="descname">RAMONGeneric</code><span class="sig-paren">(</span><em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=0</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONGeneric.RAMONGeneric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ndio.ramon.RAMONVolume.RAMONVolume" title="ndio.ramon.RAMONVolume.RAMONVolume"><code class="xref py py-class docutils literal"><span class="pre">ndio.ramon.RAMONVolume.RAMONVolume</span></code></a></p>
 <p>RAMONGeneric Object for storing neuroscience data with a voxel volume</p>
 </dd></dl>
@@ -158,7 +165,7 @@
 <span id="ndio-ramon-ramonneuron-module"></span><h2>ndio.ramon.RAMONNeuron module<a class="headerlink" href="#module-ndio.ramon.RAMONNeuron" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ndio.ramon.RAMONNeuron.RAMONNeuron">
-<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONNeuron.</code><code class="descname">RAMONNeuron</code><span class="sig-paren">(</span><em>segments=None</em>, <em>id=-1</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONNeuron.RAMONNeuron" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONNeuron.</code><code class="descname">RAMONNeuron</code><span class="sig-paren">(</span><em>segments=None</em>, <em>id=0</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONNeuron.RAMONNeuron" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ndio.ramon.RAMONBase.RAMONBase" title="ndio.ramon.RAMONBase.RAMONBase"><code class="xref py py-class docutils literal"><span class="pre">ndio.ramon.RAMONBase.RAMONBase</span></code></a></p>
 <p>RAMONNeuron Object for storing neuroscience data with a voxel volume</p>
 </dd></dl>
@@ -168,7 +175,7 @@
 <span id="ndio-ramon-ramonorganelle-module"></span><h2>ndio.ramon.RAMONOrganelle module<a class="headerlink" href="#module-ndio.ramon.RAMONOrganelle" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ndio.ramon.RAMONOrganelle.RAMONOrganelle">
-<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONOrganelle.</code><code class="descname">RAMONOrganelle</code><span class="sig-paren">(</span><em>organelle_class=0</em>, <em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=-1</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONOrganelle.RAMONOrganelle" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONOrganelle.</code><code class="descname">RAMONOrganelle</code><span class="sig-paren">(</span><em>organelle_class=0</em>, <em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=0</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONOrganelle.RAMONOrganelle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ndio.ramon.RAMONVolume.RAMONVolume" title="ndio.ramon.RAMONVolume.RAMONVolume"><code class="xref py py-class docutils literal"><span class="pre">ndio.ramon.RAMONVolume.RAMONVolume</span></code></a></p>
 <p>RAMONOrganelle Object for storing neuroscience data with a voxel volume</p>
 </dd></dl>
@@ -178,7 +185,7 @@
 <span id="ndio-ramon-ramonsegment-module"></span><h2>ndio.ramon.RAMONSegment module<a class="headerlink" href="#module-ndio.ramon.RAMONSegment" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ndio.ramon.RAMONSegment.RAMONSegment">
-<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONSegment.</code><code class="descname">RAMONSegment</code><span class="sig-paren">(</span><em>segment_class=0</em>, <em>neuron=0</em>, <em>synapses=[]</em>, <em>organelles=[]</em>, <em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=-1</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONSegment.RAMONSegment" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONSegment.</code><code class="descname">RAMONSegment</code><span class="sig-paren">(</span><em>segmentclass=0</em>, <em>neuron=0</em>, <em>synapses=[]</em>, <em>organelles=[]</em>, <em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=0</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONSegment.RAMONSegment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ndio.ramon.RAMONVolume.RAMONVolume" title="ndio.ramon.RAMONVolume.RAMONVolume"><code class="xref py py-class docutils literal"><span class="pre">ndio.ramon.RAMONVolume.RAMONVolume</span></code></a></p>
 <p>RAMONSegment Object for storing neuroscience data with a voxel volume</p>
 </dd></dl>
@@ -188,7 +195,7 @@
 <span id="ndio-ramon-ramonsynapse-module"></span><h2>ndio.ramon.RAMONSynapse module<a class="headerlink" href="#module-ndio.ramon.RAMONSynapse" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ndio.ramon.RAMONSynapse.RAMONSynapse">
-<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONSynapse.</code><code class="descname">RAMONSynapse</code><span class="sig-paren">(</span><em>synapse_type=0</em>, <em>weight=0</em>, <em>segments=None</em>, <em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=-1</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONSynapse.RAMONSynapse" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONSynapse.</code><code class="descname">RAMONSynapse</code><span class="sig-paren">(</span><em>synapse_type=0</em>, <em>weight=0</em>, <em>segments=None</em>, <em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=0</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONSynapse.RAMONSynapse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ndio.ramon.RAMONVolume.RAMONVolume" title="ndio.ramon.RAMONVolume.RAMONVolume"><code class="xref py py-class docutils literal"><span class="pre">ndio.ramon.RAMONVolume.RAMONVolume</span></code></a></p>
 <p>RAMONSynapse Object for storing neuroscience data with a voxel volume</p>
 </dd></dl>
@@ -198,7 +205,7 @@
 <span id="ndio-ramon-ramonvolume-module"></span><h2>ndio.ramon.RAMONVolume module<a class="headerlink" href="#module-ndio.ramon.RAMONVolume" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ndio.ramon.RAMONVolume.RAMONVolume">
-<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONVolume.</code><code class="descname">RAMONVolume</code><span class="sig-paren">(</span><em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=-1</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONVolume.RAMONVolume" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ndio.ramon.RAMONVolume.</code><code class="descname">RAMONVolume</code><span class="sig-paren">(</span><em>xyz_offset=(0</em>, <em>0</em>, <em>0)</em>, <em>resolution=0</em>, <em>cutout=None</em>, <em>voxels=None</em>, <em>id=0</em>, <em>confidence=0</em>, <em>kvpairs={}</em>, <em>status=0</em>, <em>author=''</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.RAMONVolume.RAMONVolume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ndio.ramon.RAMONBase.RAMONBase" title="ndio.ramon.RAMONBase.RAMONBase"><code class="xref py py-class docutils literal"><span class="pre">ndio.ramon.RAMONBase.RAMONBase</span></code></a></p>
 <p>RAMONVolume Object for storing neuroscience data with a voxel volume</p>
 <dl class="method">
@@ -279,6 +286,12 @@ as though it were stored in <cite>cutout</cite>.</p>
 <code class="descname">ORGANELLE</code><em class="property"> = 6</em><a class="headerlink" href="#ndio.ramon.AnnotationType.ORGANELLE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="staticmethod">
+<dt id="ndio.ramon.AnnotationType.RAMON">
+<em class="property">static </em><code class="descname">RAMON</code><span class="sig-paren">(</span><em>typ</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.AnnotationType.RAMON" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes str or int, returns class type</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ndio.ramon.AnnotationType.SEED">
 <code class="descname">SEED</code><em class="property"> = 3</em><a class="headerlink" href="#ndio.ramon.AnnotationType.SEED" title="Permalink to this definition">¶</a></dt>
@@ -301,24 +314,24 @@ as though it were stored in <cite>cutout</cite>.</p>
 
 <dl class="staticmethod">
 <dt id="ndio.ramon.AnnotationType.get_class">
-<em class="property">static </em><code class="descname">get_class</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.AnnotationType.get_class" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_class</code><span class="sig-paren">(</span><em>typ</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.AnnotationType.get_class" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
 <dt id="ndio.ramon.AnnotationType.get_int">
-<em class="property">static </em><code class="descname">get_int</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.AnnotationType.get_int" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_int</code><span class="sig-paren">(</span><em>typ</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.AnnotationType.get_int" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
 <dt id="ndio.ramon.AnnotationType.get_str">
-<em class="property">static </em><code class="descname">get_str</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.AnnotationType.get_str" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_str</code><span class="sig-paren">(</span><em>typ</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.AnnotationType.get_str" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="function">
-<dt id="ndio.ramon.hdf5_to_ramon">
-<code class="descclassname">ndio.ramon.</code><code class="descname">hdf5_to_ramon</code><span class="sig-paren">(</span><em>hdf5</em>, <em>anno_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.hdf5_to_ramon" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.ramon.from_hdf5">
+<code class="descclassname">ndio.ramon.</code><code class="descname">from_hdf5</code><span class="sig-paren">(</span><em>hdf5</em>, <em>anno_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.from_hdf5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts an HDF5 file to a RAMON object. Returns an object that is a child-
 -class of RAMON (though it&#8217;s determined at run-time what type is returned).</p>
 <p>Accessing multiple IDs from the same file is not supported, because it&#8217;s
@@ -344,15 +357,62 @@ defaults to the first one (sorted) if none is specified.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ndio.ramon.ramon_to_hdf5">
-<code class="descclassname">ndio.ramon.</code><code class="descname">ramon_to_hdf5</code><span class="sig-paren">(</span><em>ramon</em>, <em>hdf5=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.ramon_to_hdf5" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.ramon.from_json">
+<code class="descclassname">ndio.ramon.</code><code class="descname">from_json</code><span class="sig-paren">(</span><em>json</em>, <em>cutout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts JSON to a python list of RAMON objects. if <cite>cutout</cite> is provided,
+the <cite>cutout</cite> attribute of the RAMON object is populated. Otherwise, it&#8217;s
+left empty. <cite>json</cite> should be an ID-level dictionary, like so:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>{</dt>
+<dd><dl class="first docutils">
+<dt>16: {</dt>
+<dd><p class="first">type: &#8220;segment&#8221;,
+metadata: {</p>
+<blockquote>
+<div>. . .</div></blockquote>
+<p class="last">}</p>
+</dd>
+</dl>
+<p class="last">},</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>NOTE: If more than one item is in the dictionary, then a Python list of
+RAMON objects is returned instead of a single RAMON.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>json</strong> (<em>str or dict</em>) &#8211; The JSON to import to RAMON objects</li>
+<li><strong>cutout</strong> &#8211; Currently not supported.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">[RAMON]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ndio.ramon.to_dict">
+<code class="descclassname">ndio.ramon.</code><code class="descname">to_dict</code><span class="sig-paren">(</span><em>ramons</em>, <em>flatten=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ndio.ramon.to_hdf5">
+<code class="descclassname">ndio.ramon.</code><code class="descname">to_hdf5</code><span class="sig-paren">(</span><em>ramon</em>, <em>hdf5=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.to_hdf5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports a RAMON object to an HDF5 file object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ramon</strong> (<em>RAMON</em>) &#8211; A subclass of RAMONBase</li>
+<li><strong>ramon</strong> (<a class="reference internal" href="#ndio.ramon.AnnotationType.RAMON" title="ndio.ramon.AnnotationType.RAMON"><em>RAMON</em></a>) &#8211; A subclass of RAMONBase</li>
 <li><strong>hdf5</strong> (<em>str</em>) &#8211; Export filename</li>
 </ul>
 </td>
@@ -360,7 +420,60 @@ defaults to the first one (sorted) if none is specified.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">hdf5.File</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">InvalidRAMONError</span></code> &#8211; if you pass a non-RAMON object</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">InvalidRAMONError</span></code> &#8211;
+if you pass a non-RAMON object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ndio.ramon.to_json">
+<code class="descclassname">ndio.ramon.</code><code class="descname">to_json</code><span class="sig-paren">(</span><em>ramons</em>, <em>flatten=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.ramon.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts RAMON objects into a JSON string which can be directly written out
+to a .json file. You can pass either a single RAMON or a list. If you pass
+a single RAMON, it will still be exported with the ID as the key. In other
+words:</p>
+<blockquote>
+<div>type(from_json(to_json(ramon))) # ALWAYS returns a list</div></blockquote>
+<p>...even if <cite>type(ramon)</cite> is a RAMON, not a list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ramons</strong> (<em>RAMON or list</em>) &#8211; The RAMON object(s) to convert to JSON.</li>
+<li><strong>(bool</strong> (<em>flatten</em>) &#8211; False): If ID should be used as a key. If not, then
+a single JSON document is returned.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>The JSON representation of the RAMON objects, in the schema:</p>
+<dl class="docutils">
+<dt>{</dt>
+<dd><dl class="first docutils">
+<dt>&lt;id&gt;: {</dt>
+<dd><p class="first">type: . . . ,
+metadata: {</p>
+<blockquote>
+<div><p>. . .</p>
+</div></blockquote>
+<p class="last">}</p>
+</dd>
+</dl>
+<p class="last">},</p>
+</dd>
+</dl>
+<p>}</p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+If an invalid RAMON is passed.</p>
 </td>
 </tr>
 </tbody>

@@ -31,8 +31,15 @@ sys.path.insert(0, os.path.abspath('../../ndio'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinxcontrib.napoleon'
+    'sphinx.ext.napoleon'
 ]
+
+from recommonmark.parser import CommonMarkParser
+
+source_parsers = {
+    '.md': CommonMarkParser,
+}
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

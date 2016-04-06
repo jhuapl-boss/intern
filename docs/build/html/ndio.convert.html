@@ -129,6 +129,41 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-ndio.convert.blosc">
+<span id="ndio-convert-blosc-module"></span><h2>ndio.convert.blosc module<a class="headerlink" href="#module-ndio.convert.blosc" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ndio.convert.blosc.from_array">
+<code class="descclassname">ndio.convert.blosc.</code><code class="descname">from_array</code><span class="sig-paren">(</span><em>array</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.blosc.from_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a numpy array to a blosc array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>array</strong> &#8211; The numpy array to compress to blosc array</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Bytes/String. A blosc compressed array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ndio.convert.blosc.to_array">
+<code class="descclassname">ndio.convert.blosc.</code><code class="descname">to_array</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.blosc.to_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import a blosc array into a numpy array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> &#8211; A blosc packed numpy array</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A numpy array with data from a blosc compressed array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-ndio.convert.convert">
 <span id="ndio-convert-convert-module"></span><h2>ndio.convert.convert module<a class="headerlink" href="#module-ndio.convert.convert" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -180,29 +215,8 @@ in_fmt and out_fmt.</p>
 <div class="section" id="module-ndio.convert.hdf5">
 <span id="ndio-convert-hdf5-module"></span><h2>ndio.convert.hdf5 module<a class="headerlink" href="#module-ndio.convert.hdf5" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="ndio.convert.hdf5.export_hdf5">
-<code class="descclassname">ndio.convert.hdf5.</code><code class="descname">export_hdf5</code><span class="sig-paren">(</span><em>hdf5_filename</em>, <em>numpy_data</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.hdf5.export_hdf5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export a numpy array to a HDF5 file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hdf5_filename</strong> &#8211; A filename to which to save the HDF5 data</li>
-<li><strong>numpy_data</strong> &#8211; The numpy array to save to HDF5</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">String. The expanded filename that now holds the HDF5 data</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ndio.convert.hdf5.import_hdf5">
-<code class="descclassname">ndio.convert.hdf5.</code><code class="descname">import_hdf5</code><span class="sig-paren">(</span><em>hdf5_filename</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.hdf5.import_hdf5" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.convert.hdf5.load">
+<code class="descclassname">ndio.convert.hdf5.</code><code class="descname">load</code><span class="sig-paren">(</span><em>hdf5_filename</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.hdf5.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import a HDF5 file into a numpy array.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -216,24 +230,132 @@ in_fmt and out_fmt.</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="ndio.convert.hdf5.save">
+<code class="descclassname">ndio.convert.hdf5.</code><code class="descname">save</code><span class="sig-paren">(</span><em>hdf5_filename</em>, <em>array</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.hdf5.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a numpy array to a HDF5 file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>hdf5_filename</strong> (<em>str</em>) &#8211; A filename to which to save the HDF5 data</li>
+<li><strong>array</strong> (<em>numpy.ndarray</em>) &#8211; The numpy array to save to HDF5</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">String. The expanded filename that now holds the HDF5 data</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ndio.convert.nifti">
+<span id="ndio-convert-nifti-module"></span><h2>ndio.convert.nifti module<a class="headerlink" href="#module-ndio.convert.nifti" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ndio.convert.nifti.load">
+<code class="descclassname">ndio.convert.nifti.</code><code class="descname">load</code><span class="sig-paren">(</span><em>nifti_filename</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.nifti.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import a nifti file into a numpy array. TODO:  Currently only
+transfers raw data for compatibility with annotation and ND formats</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nifti_filename</strong> (<em>str</em>) &#8211; A string filename of a nifti datafile</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A numpy array with data from the nifti file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ndio.convert.nifti.save">
+<code class="descclassname">ndio.convert.nifti.</code><code class="descname">save</code><span class="sig-paren">(</span><em>nifti_filename</em>, <em>numpy_data</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.nifti.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a numpy array to a nifti file.  TODO: currently using dummy
+headers and identity matrix affine transform. This can be expanded.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>nifti_filename</strong> (<em>str</em>) &#8211; A filename to which to save the nifti data</li>
+<li><strong>numpy_data</strong> (<em>numpy.ndarray</em>) &#8211; The numpy array to save to nifti</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">String. The expanded filename that now holds the nifti data</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-ndio.convert.png">
 <span id="ndio-convert-png-module"></span><h2>ndio.convert.png module<a class="headerlink" href="#module-ndio.convert.png" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="ndio.convert.png.export_png">
-<code class="descclassname">ndio.convert.png.</code><code class="descname">export_png</code><span class="sig-paren">(</span><em>png_filename</em>, <em>numpy_data</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.png.export_png" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.convert.png.load">
+<code class="descclassname">ndio.convert.png.</code><code class="descname">load</code><span class="sig-paren">(</span><em>png_filename</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.png.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import a png file into a numpy array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>png_filename</strong> (<em>str</em>) &#8211; A string filename of a png datafile</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A numpy array with data from the png file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ndio.convert.png.load_collection">
+<code class="descclassname">ndio.convert.png.</code><code class="descname">load_collection</code><span class="sig-paren">(</span><em>png_filename_base</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.png.load_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import all files matching the filename base given with <cite>png_filename_base</cite>.
+Images are ordered by alphabetical order, which means that you <em>MUST</em> 0-pad
+your numbers if they span a power of ten (e.g. 0999-1000 or 09-10). This is
+handled automatically by its complementary function, <cite>png.save_collection</cite>.
+Also, look at how nicely these documentation lines are all the same length!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>png_filename_base</strong> (<em>str</em>) &#8211; An asterisk-wildcard string that should refer
+to all PNGs in the stack. All <a href="#id1"><span class="problematic" id="id2">*</span></a>s are replaced according to regular
+cmd-line expansion rules. See the &#8216;glob&#8217; documentation for details</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A numpy array holding a 3D dataset</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ndio.convert.png.save">
+<code class="descclassname">ndio.convert.png.</code><code class="descname">save</code><span class="sig-paren">(</span><em>filename</em>, <em>numpy_data</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.png.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a numpy array to a png file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>png_filename</strong> &#8211; A filename to which to save the png data</li>
-<li><strong>numpy_data</strong> &#8211; The numpy array to save to png. OR a string</li>
+<li><strong>filename</strong> (<em>str</em>) &#8211; A filename to which to save the png data</li>
+<li><strong>numpy_data</strong> (<em>numpy.ndarray OR str</em>) &#8211; The numpy array to save to png.
+OR a string: If a string is provded, it should be a binary png str</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">String. The expanded filename that now holds the png data</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">str. The expanded filename that now holds the png data</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+If the save fails; for instance if the binary string data
+cannot be coerced into a png, or perhaps your numpy.ndarray is
+ill-formed?</p>
 </td>
 </tr>
 </tbody>
@@ -241,8 +363,8 @@ in_fmt and out_fmt.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ndio.convert.png.export_png_collection">
-<code class="descclassname">ndio.convert.png.</code><code class="descname">export_png_collection</code><span class="sig-paren">(</span><em>png_filename_base</em>, <em>numpy_data</em>, <em>start_layers_at=1</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.png.export_png_collection" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.convert.png.save_collection">
+<code class="descclassname">ndio.convert.png.</code><code class="descname">save_collection</code><span class="sig-paren">(</span><em>png_filename_base</em>, <em>numpy_data</em>, <em>start_layers_at=1</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.png.save_collection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a numpy array to a set of png files, with each Z-index 2D
 array as its own 2D file.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -250,7 +372,7 @@ array as its own 2D file.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>png_filename_base</strong> &#8211; A filename template, such as &#8220;my-image-<a href="#id1"><span class="problematic" id="id2">*</span></a>.png&#8221;
+<li><strong>png_filename_base</strong> &#8211; A filename template, such as &#8220;my-image-<a href="#id3"><span class="problematic" id="id4">*</span></a>.png&#8221;
 which will lead to a collection of files named
 &#8220;my-image-0.png&#8221;, &#8220;my-image-1.png&#8221;, etc.</li>
 <li><strong>numpy_data</strong> &#8211; The numpy array data to save to png.</li>
@@ -264,34 +386,38 @@ which will lead to a collection of files named
 </table>
 </dd></dl>
 
+</div>
+<div class="section" id="module-ndio.convert.tiff">
+<span id="ndio-convert-tiff-module"></span><h2>ndio.convert.tiff module<a class="headerlink" href="#module-ndio.convert.tiff" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="ndio.convert.png.import_png">
-<code class="descclassname">ndio.convert.png.</code><code class="descname">import_png</code><span class="sig-paren">(</span><em>png_filename</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.png.import_png" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import a png file into a numpy array.</p>
-<p>:param : png_filename:  A string filename of a png datafile</p>
+<dt id="ndio.convert.tiff.load">
+<code class="descclassname">ndio.convert.tiff.</code><code class="descname">load</code><span class="sig-paren">(</span><em>tiff_filename</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.tiff.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import a TIFF file into a numpy array.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A numpy array with data from the png file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tiff_filename</strong> &#8211; A string filename of a TIFF datafile</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A numpy array with data from the TIFF file</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="function">
-<dt id="ndio.convert.png.import_png_collection">
-<code class="descclassname">ndio.convert.png.</code><code class="descname">import_png_collection</code><span class="sig-paren">(</span><em>png_filename_base</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.png.import_png_collection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import all files matching the filename base given via <cite>png_filename_base</cite>.
+<dt id="ndio.convert.tiff.load_collection">
+<code class="descclassname">ndio.convert.tiff.</code><code class="descname">load_collection</code><span class="sig-paren">(</span><em>tiff_filename_base</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.tiff.load_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import all files matching the filename base given via <cite>tiff_filename_base</cite>.
 Images are ordered by alphabetical order, which means that you <em>MUST</em> 0-pad
 your numbers if they span a power of ten (e.g. 0999-1000 or 09-10). This is
-handled automatically by the complement function, <cite>export_png_collection</cite>.
+handled automatically by the complement function, <cite>save_collection</cite>.
 Also, look at how nicely these documentation lines are all the same length!</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>png_filename_base</strong> &#8211; An asterisk-wildcard string that should refer
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tiff_filename_base</strong> &#8211; An asterisk-wildcard string that should refer
 to all TIFFs in the stack. All * are replaced
 according to command-line expansion rules.</td>
 </tr>
@@ -301,12 +427,9 @@ according to command-line expansion rules.</td>
 </table>
 </dd></dl>
 
-</div>
-<div class="section" id="module-ndio.convert.tiff">
-<span id="ndio-convert-tiff-module"></span><h2>ndio.convert.tiff module<a class="headerlink" href="#module-ndio.convert.tiff" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="ndio.convert.tiff.export_tiff">
-<code class="descclassname">ndio.convert.tiff.</code><code class="descname">export_tiff</code><span class="sig-paren">(</span><em>tiff_filename</em>, <em>numpy_data</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.tiff.export_tiff" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.convert.tiff.save">
+<code class="descclassname">ndio.convert.tiff.</code><code class="descname">save</code><span class="sig-paren">(</span><em>tiff_filename</em>, <em>numpy_data</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.tiff.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a numpy array to a TIFF file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -326,8 +449,8 @@ according to command-line expansion rules.</td>
 </dd></dl>
 
 <dl class="function">
-<dt id="ndio.convert.tiff.export_tiff_collection">
-<code class="descclassname">ndio.convert.tiff.</code><code class="descname">export_tiff_collection</code><span class="sig-paren">(</span><em>tiff_filename_base</em>, <em>numpy_data</em>, <em>start_layers_at=1</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.tiff.export_tiff_collection" title="Permalink to this definition">¶</a></dt>
+<dt id="ndio.convert.tiff.save_collection">
+<code class="descclassname">ndio.convert.tiff.</code><code class="descname">save_collection</code><span class="sig-paren">(</span><em>tiff_filename_base</em>, <em>numpy_data</em>, <em>start_layers_at=1</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.tiff.save_collection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a numpy array to a set of TIFF files, with each Z-index 2D
 array as its own 2D file.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -335,7 +458,7 @@ array as its own 2D file.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tiff_filename_base</strong> &#8211; A filename template, such as &#8220;my-image-<a href="#id3"><span class="problematic" id="id4">*</span></a>.tiff&#8221;
+<li><strong>tiff_filename_base</strong> &#8211; A filename template, such as &#8220;my-image-<a href="#id5"><span class="problematic" id="id6">*</span></a>.tiff&#8221;
 which will lead to a collection of files named
 &#8220;my-image-0.tiff&#8221;, &#8220;my-image-1.tiff&#8221;, etc.</li>
 <li><strong>numpy_data</strong> &#8211; The numpy array data to save to TIFF.</li>
@@ -344,44 +467,6 @@ which will lead to a collection of files named
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Array. A list of expanded filenames that hold TIFF data.</p>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ndio.convert.tiff.import_tiff">
-<code class="descclassname">ndio.convert.tiff.</code><code class="descname">import_tiff</code><span class="sig-paren">(</span><em>tiff_filename</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.tiff.import_tiff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import a TIFF file into a numpy array.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tiff_filename</strong> &#8211; A string filename of a TIFF datafile</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A numpy array with data from the TIFF file</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ndio.convert.tiff.import_tiff_collection">
-<code class="descclassname">ndio.convert.tiff.</code><code class="descname">import_tiff_collection</code><span class="sig-paren">(</span><em>tiff_filename_base</em><span class="sig-paren">)</span><a class="headerlink" href="#ndio.convert.tiff.import_tiff_collection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import all files matching the filename base given via <cite>tiff_filename_base</cite>.
-Images are ordered by alphabetical order, which means that you <em>MUST</em> 0-pad
-your numbers if they span a power of ten (e.g. 0999-1000 or 09-10). This is
-handled automatically by the complement function, <cite>export_tiff_collection</cite>.
-Also, look at how nicely these documentation lines are all the same length!</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tiff_filename_base</strong> &#8211; An asterisk-wildcard string that should refer
-to all TIFFs in the stack. All * are replaced
-according to command-line expansion rules.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A numpy array holding a 3D dataset</td>
 </tr>
 </tbody>
 </table>
