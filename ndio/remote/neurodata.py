@@ -659,9 +659,9 @@ class neurodata(Remote):
 
         return True
 
-    def _post_cutout_no_chunking(self, token, channel,
-                                 x_start, y_start, z_start,
-                                 data, resolution):
+    def _post_cutout_no_chunking_blosc(self, token, channel,
+                                       x_start, y_start, z_start,
+                                       data, resolution):
         """
         Accepts data in zyx. !!!
         """
