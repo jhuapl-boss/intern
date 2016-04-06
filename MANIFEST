@@ -22,7 +22,7 @@ ndio/ramon/errors.py
 ndio/remote/Remote.py
 ndio/remote/__init__.py
 ndio/remote/errors.py
-ndio/remote/m2g.py
+ndio/remote/grute.py
 ndio/remote/neurodata.py
 ndio/utils/__init__.py
 ndio/utils/autoingest.py
