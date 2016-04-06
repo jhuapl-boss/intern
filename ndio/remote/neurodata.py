@@ -601,6 +601,7 @@ class neurodata(Remote):
 
     # SECTION:
     # Data Upload
+
     @_check_token
     def post_cutout(self, token, channel,
                     x_start,
@@ -721,14 +722,51 @@ class neurodata(Remote):
     # RAMON Download
 
     @_check_token
-    def get_ramon_ids(self, token, channel='annotation', ramon_type=None):
+    def get_ramon_bounding_box(self, token, channel, r_id, resolution=0):
+        """
+        Get the bounding box for a RAMON object (specified by ID).
+
+        Arguments:
+            token (str): Project to use
+            channel (str): Channel to use
+            r_id (int): Which ID to get a bounding box
+            resolution (int : 0): The resolution at which to download
+
+        Returns:
+            (x_start, x_stop, y_start, y_stop, z_start, z_stop) ints
+        """
+        url = self.url('{}/{}/{}/boundingbox/{}/'.format(token, channel,
+                                                         r_id, resolution))
+
+        r_id = str(r_id)
+        res = requests.get(url)
+
+        if res.status_code != 200:
+            rt = self.get_ramon_metadata(token, channel, r_id)[r_id]['type']
+            if rt in ['neuron']:
+                raise ValueError("ID {} is of type '{}'".format(r_id, rt))
+            raise RemoteDataNotFoundError("No such ID {}".format(r_id))
+
+        with tempfile.NamedTemporaryFile() as tmpfile:
+            tmpfile.write(res.content)
+            tmpfile.seek(0)
+            h5file = h5py.File(tmpfile.name, "r")
+            origin = h5file["{}/XYZOFFSET".format(r_id)][()]
+            size = h5file["{}/XYZDIMENSION".format(r_id)][()]
+            return (origin[0], origin[1], origin[2],
+                    origin[0] + size[0],
+                    origin[1] + size[1],
+                    origin[2] + size[2])
+
+    @_check_token
+    def get_ramon_ids(self, token, channel, ramon_type=None):
         """
         Return a list of all IDs available for download from this token and
         channel.
 
         Arguments:
             token (str): Project to use
-            channel (str): Channel to use (default 'annotation')
+            channel (str): Channel to use
             ramon_type (int : None): Optional. If set, filters IDs and only
                 returns those of RAMON objects of the requested type.
         Returns:
@@ -903,7 +941,7 @@ class neurodata(Remote):
                            "{}/{}/{}/json/".format(token, channel, anno_id))
         if req.status_code is not 200:
             raise RemoteDataNotFoundError('No data for id {}.'.format(anno_id))
-        return ramon.from_json(req.json())[0]
+        return req.json()
 
     @_check_token
     def delete_ramon(self, token, channel, anno):
