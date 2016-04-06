@@ -12,7 +12,7 @@ class TestRAMONSegment(unittest.TestCase):
     def test_get_bounding_box(self):
         self.assertEqual(
             self.n.get_ramon_bounding_box(self.t, self.c, 3555),
-            (10240, 15360, 1104, 11264, 17408, 1152)
+            (10240, 11264, 15360, 17408, 1104, 1152)
         )
 
 if __name__ == '__main__':

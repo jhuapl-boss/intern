@@ -753,10 +753,9 @@ class neurodata(Remote):
             h5file = h5py.File(tmpfile.name, "r")
             origin = h5file["{}/XYZOFFSET".format(r_id)][()]
             size = h5file["{}/XYZDIMENSION".format(r_id)][()]
-            return (origin[0], origin[1], origin[2],
-                    origin[0] + size[0],
-                    origin[1] + size[1],
-                    origin[2] + size[2])
+            return (origin[0], origin[0] + size[0],
+                    origin[1], origin[1] + size[1],
+                    origin[2], origin[2] + size[2])
 
     @_check_token
     def get_ramon_ids(self, token, channel, ramon_type=None):
@@ -876,7 +875,31 @@ class neurodata(Remote):
             return rs[0]
 
         if sieve is not None:
-            return [r for r in rs if sieve(r)]
+            rs = [r for r in rs if sieve(r)]
+
+        for r in rs:
+            if 'cutout' not in dir(r):
+                continue
+            origin = r.xyz_offset
+            # Get the bounding box (cube-aligned)
+            bbox = self.get_ramon_bounding_box(token, channel,
+                                               r.id, resolution=resolution)
+            # Get the cutout (cube-aligned)
+            cutout = self.get_cutout(token, channel,
+                                     *bbox, resolution=resolution)
+            cutout[cutout != int(r.id)] = 0
+
+            # Compute upper offset and crop
+            bounds = numpy.argwhere(cutout)
+            mins = [min([i[dim] for i in bounds]) for dim in range(3)]
+            maxs = [max([i[dim] for i in bounds]) for dim in range(3)]
+
+            r.cutout = cutout[
+                mins[0]:maxs[0],
+                mins[1]:maxs[1],
+                mins[2]:maxs[2]
+            ]
+
         return rs
 
     def _get_ramon_batch(self, token, channel, ids, resolution):
