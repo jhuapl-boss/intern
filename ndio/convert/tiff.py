@@ -111,7 +111,7 @@ def load_tiff_multipage(tiff_filename, dtype='float32'):
         Array containing contents from input tiff file in xyz order
     """
 
-    if not os.path.isfile(dataFile):
+    if not os.path.isfile(tiff_filename):
         raise RuntimeError('could not find file "%s"' % tiff_filename)
 
     # load the data from multi-layer TIF files
