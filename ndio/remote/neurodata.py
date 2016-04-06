@@ -989,7 +989,7 @@ class neurodata(Remote):
                 raise RemoteDataUploadError('[500] Could not upload {}'
                                             .format(str(r)))
 
-            return res.read()
+            return int(res.read())
         return True
 
     # SECTION:
