@@ -635,12 +635,7 @@ class neurodata(Remote):
         data = numpy.rollaxis(data, 1)
         data = numpy.rollaxis(data, 2)
 
-        if six.PY2:
-            ul_func = self._post_cutout_no_chunking
-        elif six.PY3:
-            ul_func = self._post_cutout_no_chunking
-        else:
-            raise ValueError("Invalid Python version.")
+        ul_func = self._post_cutout_no_chunking
 
         if data.size < self._chunk_threshold:
             return ul_func(token, channel, x_start,
@@ -676,9 +671,9 @@ class neurodata(Remote):
         url = self.url("{}/{}/npz/{}/{},{}/{},{}/{},{}/".format(
             token, channel,
             resolution,
-            x_start, x_start + data.shape[0],
-            y_start, y_start + data.shape[1],
-            z_start, z_start + data.shape[2]
+            x_start, x_start + data.shape[3],
+            y_start, y_start + data.shape[2],
+            z_start, z_start + data.shape[1]
         ))
 
         req = requests.post(url, data=compressed, headers={
