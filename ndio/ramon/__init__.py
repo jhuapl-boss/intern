@@ -2,7 +2,10 @@ from __future__ import absolute_import
 import tempfile
 import json as jsonlib
 import csv
-import cStringIO
+try:
+    from cStringIO import StringIO
+except:
+    from io import StringIO
 import copy
 import six
 
@@ -396,7 +399,7 @@ def to_hdf5(ramon, hdf5=None):
         #     ','.join([k,v]) for k, v in six.iteritems(ramon.kvpairs)
         # )
 
-        fstring = cStringIO.StringIO()
+        fstring = StringIO()
         csvw = csv.writer(fstring, delimiter=',')
         csvw.writerows([r for r in six.iteritems(ramon.kvpairs)])
 
