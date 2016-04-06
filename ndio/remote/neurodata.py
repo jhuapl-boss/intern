@@ -635,7 +635,12 @@ class neurodata(Remote):
         data = numpy.rollaxis(data, 1)
         data = numpy.rollaxis(data, 2)
 
-        ul_func = self._post_cutout_no_chunking
+        if six.PY3 or data.nbytes > 1.5e9:
+            ul_func = self._post_cutout_no_chunking_npz
+        elif six.PY2:
+            ul_func = self._post_cutout_no_chunking_blosc
+        else:
+            raise OSError("Check yo version of Python!")
 
         if data.size < self._chunk_threshold:
             return ul_func(token, channel, x_start,
@@ -659,9 +664,9 @@ class neurodata(Remote):
 
         return True
 
-    def _post_cutout_no_chunking(self, token, channel,
-                                 x_start, y_start, z_start,
-                                 data, resolution):
+    def _post_cutout_no_chunking_npz(self, token, channel,
+                                     x_start, y_start, z_start,
+                                     data, resolution):
 
         data = numpy.expand_dims(data, axis=0)
         tempfile = BytesIO()
@@ -677,6 +682,33 @@ class neurodata(Remote):
         ))
 
         req = requests.post(url, data=compressed, headers={
+            'Content-Type': 'application/octet-stream'
+        })
+
+        if req.status_code is not 200:
+            raise RemoteDataUploadError(req.text)
+        else:
+            return True
+
+    def _post_cutout_no_chunking_blosc(self, token, channel,
+                                       x_start, y_start, z_start,
+                                       data, resolution):
+        """
+        Accepts data in zyx. !!!
+        """
+
+        data = numpy.expand_dims(data, axis=0)
+        blosc_data = blosc.pack_array(data)
+
+        url = self.url("{}/{}/blosc/{}/{},{}/{},{}/{},{}/".format(
+            token, channel,
+            resolution,
+            x_start, x_start + data.shape[3],
+            y_start, y_start + data.shape[2],
+            z_start, z_start + data.shape[1]
+        ))
+
+        req = requests.post(url, data=blosc_data, headers={
             'Content-Type': 'application/octet-stream'
         })
 

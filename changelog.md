@@ -4,6 +4,7 @@
     - Standardize RAMON converter function names in `__init__`
     - Fix RAMON uploads to incorporate kvpairs
     - Standardize converter names in the `convert` module
+    - Fix post cutout's zyx bug
 - **0.1.16**
     - Fix `synapse_type` keyerror bug.
     - Un-nest RAMON metadata
