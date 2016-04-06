@@ -798,7 +798,7 @@ class neurodata(Remote):
 
     @_check_token
     def get_ramon(self, token, channel, ids, resolution=None,
-                  metadata_only=False, sieve=None, batch_size=100):
+                  include_cutout=False, sieve=None, batch_size=100):
         """
         Download a RAMON object by ID.
 
@@ -810,7 +810,7 @@ class neurodata(Remote):
                 (["3", "4", "5"]).
             resolution (int : None): Resolution. Defaults to the most granular
                 resolution (0 for now)
-            metadata_only (bool : False):  If True, returns get_ramon_metadata
+            include_cutout (bool : False):  If True, r.cutout is populated
             sieve (function : None): A function that accepts a single ramon
                 and returns True or False depending on whether you want that
                 ramon object to be included in your response or not.
@@ -843,9 +843,6 @@ class neurodata(Remote):
 
         mdata = self.get_ramon_metadata(token, channel, ids)
 
-        if metadata_only:
-            return mdata
-
         if resolution is None:
             resolution = 0
             # probably should be dynamic...
@@ -871,35 +868,35 @@ class neurodata(Remote):
         else:
             rs = self._get_ramon_batch(token, channel, ids, resolution)
 
-        if _return_first_only:
-            return rs[0]
-
         if sieve is not None:
             rs = [r for r in rs if sieve(r)]
 
-        for r in rs:
-            if 'cutout' not in dir(r):
-                continue
-            origin = r.xyz_offset
-            # Get the bounding box (cube-aligned)
-            bbox = self.get_ramon_bounding_box(token, channel,
-                                               r.id, resolution=resolution)
-            # Get the cutout (cube-aligned)
-            cutout = self.get_cutout(token, channel,
-                                     *bbox, resolution=resolution)
-            cutout[cutout != int(r.id)] = 0
+        if include_cutout:
+            for r in rs:
+                if 'cutout' not in dir(r):
+                    continue
+                origin = r.xyz_offset
+                # Get the bounding box (cube-aligned)
+                bbox = self.get_ramon_bounding_box(token, channel,
+                                                   r.id, resolution=resolution)
+                # Get the cutout (cube-aligned)
+                cutout = self.get_cutout(token, channel,
+                                         *bbox, resolution=resolution)
+                cutout[cutout != int(r.id)] = 0
 
-            # Compute upper offset and crop
-            bounds = numpy.argwhere(cutout)
-            mins = [min([i[dim] for i in bounds]) for dim in range(3)]
-            maxs = [max([i[dim] for i in bounds]) for dim in range(3)]
+                # Compute upper offset and crop
+                bounds = numpy.argwhere(cutout)
+                mins = [min([i[dim] for i in bounds]) for dim in range(3)]
+                maxs = [max([i[dim] for i in bounds]) for dim in range(3)]
 
-            r.cutout = cutout[
-                mins[0]:maxs[0],
-                mins[1]:maxs[1],
-                mins[2]:maxs[2]
-            ]
+                r.cutout = cutout[
+                    mins[0]:maxs[0],
+                    mins[1]:maxs[1],
+                    mins[2]:maxs[2]
+                ]
 
+        if _return_first_only:
+            return rs[0]
         return rs
 
     def _get_ramon_batch(self, token, channel, ids, resolution):
