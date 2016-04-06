@@ -1030,7 +1030,16 @@ class neurodata(Remote):
             rets = res.read()
             if six.PY3:
                 rets = rets.decode()
-            return [int(rid) for rid in rets.split(',')]
+            return_ids = [int(rid) for rid in rets.split(',')]
+
+            # Now post the cutout separately:
+            for ri in r:
+                if 'cutout' in dir(ri) and ri.cutout is not None:
+                    orig = ri.xyz_offset
+                    self.post_cutout(token, channel,
+                                     orig[0], orig[1], orig[2],
+                                     ri.cutout, resolution=r.resolution)
+            return return_ids
         return True
 
     # SECTION:
