@@ -381,7 +381,7 @@ def to_hdf5(ramon, hdf5=None):
                            data=AnnotationType.get_int(type(ramon)))
 
         if hasattr(ramon, 'cutout'):
-            if ramon.cutout:
+            if ramon.cutout is not None:
                 grp.create_dataset('CUTOUT', ramon.cutout.shape,
                                    ramon.cutout.dtype, data=ramon.cutout)
                 grp.create_dataset('RESOLUTION', (1,),
