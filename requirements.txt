@@ -2,7 +2,6 @@ pillow
 numpy
 h5py
 requests
-scipy
 pymcubes
 pycollada
 blosc

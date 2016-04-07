@@ -51,4 +51,14 @@ setup(
         'calcium'
     ],
     classifiers = [],
+    setup_requires = [
+        'numpy',
+    ],
+    install_requires = [
+        "pillow",
+        "numpy",
+        "h5py",
+        "requests",
+        "blosc",
+    ]
 )
