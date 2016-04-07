@@ -25,7 +25,5 @@ ndio/remote/errors.py
 ndio/remote/grute.py
 ndio/remote/neurodata.py
 ndio/utils/__init__.py
-ndio/utils/autoingest.py
 ndio/utils/mesh.py
 ndio/utils/parallel.py
-ndio/utils/stats.py
