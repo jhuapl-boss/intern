@@ -1,5 +1,7 @@
 # Changelog
 
+- **1.0.1**
+    - Add converters for voxel lists and ndarrays
 - **1.0.0**
     - This changelog prepares ndio to be stable.
     - All APIs are now static until the next breaking version (2.\*.\*).

@@ -403,7 +403,6 @@ def to_hdf5(ramon, hdf5=None):
         csvw = csv.writer(fstring, delimiter=',')
         csvw.writerows([r for r in six.iteritems(ramon.kvpairs)])
 
-
         metadata.create_dataset('KVPAIRS', (1,),
                                 dtype=h5py.special_dtype(vlen=str),
                                 data=fstring.getvalue())
@@ -416,7 +415,8 @@ def to_hdf5(ramon, hdf5=None):
 
         if hasattr(ramon, 'segments'):
             metadata.create_dataset('SEGMENTS',
-                                    data=numpy.asarray(ramon.segments, dtype=numpy.uint32))
+                                    data=numpy.asarray(ramon.segments,
+                                                       dtype=numpy.uint32))
 
         if hasattr(ramon, 'synapse_type'):
             metadata.create_dataset('SYNAPSE_TYPE', (1,), numpy.uint32,
