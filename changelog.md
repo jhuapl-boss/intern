@@ -1,5 +1,9 @@
 # Changelog
 
+- **1.0.0**
+    - This changelog prepares ndio to be stable.
+    - All APIs are now static until the next breaking version (2.\*.\*).
+    - We now follow Semantic Versioning.
 - **0.1.18**
     - Standardize converter names in the `convert` module
     - Fix post cutout's zyx bug
