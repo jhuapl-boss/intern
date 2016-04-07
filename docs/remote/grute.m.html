@@ -1,0 +1,2776 @@
+<!doctype html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+
+    <title>ndio.remote.grute API documentation</title>
+    <meta name="description" content="" />
+
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
+  
+  <style type="text/css">
+  
+* {
+  box-sizing: border-box;
+}
+/*! normalize.css v1.1.1 | MIT License | git.io/normalize */
+
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+/**
+ * Correct `block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/**
+ * Correct `inline-block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+audio,
+canvas,
+video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Firefox 3, and Safari 4.
+ * Known issue: no IE 6 support.
+ */
+
+[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/**
+ * 1. Prevent system color scheme's background color being used in Firefox, IE,
+ *    and Opera.
+ * 2. Prevent system color scheme's text color being used in Firefox, IE, and
+ *    Opera.
+ * 3. Correct text resizing oddly in IE 6/7 when body `font-size` is set using
+ *    `em` units.
+ * 4. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+html {
+    background: #fff; /* 1 */
+    color: #000; /* 2 */
+    font-size: 100%; /* 3 */
+    -webkit-text-size-adjust: 100%; /* 4 */
+    -ms-text-size-adjust: 100%; /* 4 */
+}
+
+/**
+ * Address `font-family` inconsistency between `textarea` and other form
+ * elements.
+ */
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: sans-serif;
+}
+
+/**
+ * Address margins handled incorrectly in IE 6/7.
+ */
+
+body {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+
+a:focus {
+    outline: thin dotted;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+/**
+ * Address font sizes and margins set differently in IE 6/7.
+ * Address font sizes within `section` and `article` in Firefox 4+, Safari 5,
+ * and Chrome.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 0.83em 0;
+}
+
+h3 {
+    font-size: 1.17em;
+    margin: 1em 0;
+}
+
+h4 {
+    font-size: 1em;
+    margin: 1.33em 0;
+}
+
+h5 {
+    font-size: 0.83em;
+    margin: 1.67em 0;
+}
+
+h6 {
+    font-size: 0.67em;
+    margin: 2.33em 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Safari 5, and Chrome.
+ */
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 3+, Safari 4/5, and Chrome.
+ */
+
+b,
+strong {
+    font-weight: bold;
+}
+
+blockquote {
+    margin: 1em 40px;
+}
+
+/**
+ * Address styling not present in Safari 5 and Chrome.
+ */
+
+dfn {
+    font-style: italic;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ * Known issue: no IE 6/7 normalization.
+ */
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 6/7/8/9.
+ */
+
+mark {
+    background: #ff0;
+    color: #000;
+}
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+p,
+pre {
+    margin: 1em 0;
+}
+
+/**
+ * Correct font family set oddly in IE 6, Safari 4/5, and Chrome.
+ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, serif;
+    _font-family: 'courier new', monospace;
+    font-size: 1em;
+}
+
+/**
+ * Improve readability of pre-formatted text in all browsers.
+ */
+
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/**
+ * Address CSS quotes not supported in IE 6/7.
+ */
+
+q {
+    quotes: none;
+}
+
+/**
+ * Address `quotes` property not supported in Safari 4.
+ */
+
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+dl,
+menu,
+ol,
+ul {
+    margin: 1em 0;
+}
+
+dd {
+    margin: 0 0 0 40px;
+}
+
+/**
+ * Address paddings set differently in IE 6/7.
+ */
+
+menu,
+ol,
+ul {
+    padding: 0 0 0 40px;
+}
+
+/**
+ * Correct list images handled incorrectly in IE 7.
+ */
+
+nav ul,
+nav ol {
+    list-style: none;
+    list-style-image: none;
+}
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+
+/**
+ * 1. Remove border when inside `a` element in IE 6/7/8/9 and Firefox 3.
+ * 2. Improve image quality when scaled in IE 7.
+ */
+
+img {
+    border: 0; /* 1 */
+    -ms-interpolation-mode: bicubic; /* 2 */
+}
+
+/**
+ * Correct overflow displayed oddly in IE 9.
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+
+/**
+ * Address margin not present in IE 6/7/8/9, Safari 5, and Opera 11.
+ */
+
+figure {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/**
+ * Correct margin displayed oddly in IE 6/7.
+ */
+
+form {
+    margin: 0;
+}
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct color not being inherited in IE 6/7/8/9.
+ * 2. Correct text not wrapping in Firefox 3.
+ * 3. Correct alignment displayed oddly in IE 6/7.
+ */
+
+legend {
+    border: 0; /* 1 */
+    padding: 0;
+    white-space: normal; /* 2 */
+    *margin-left: -7px; /* 3 */
+}
+
+/**
+ * 1. Correct font size not being inherited in all browsers.
+ * 2. Address margins set differently in IE 6/7, Firefox 3+, Safari 5,
+ *    and Chrome.
+ * 3. Improve appearance and consistency in all browsers.
+ */
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%; /* 1 */
+    margin: 0; /* 2 */
+    vertical-align: baseline; /* 3 */
+    *vertical-align: middle; /* 3 */
+}
+
+/**
+ * Address Firefox 3+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 6+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+
+button,
+select {
+    text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ * 4. Remove inner spacing in IE 7 without affecting normal text inputs.
+ *    Known issue: inner spacing remains in IE 6.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button; /* 2 */
+    cursor: pointer; /* 3 */
+    *overflow: visible;  /* 4 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+/**
+ * 1. Address box sizing set to content-box in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ * 3. Remove excess padding in IE 7.
+ *    Known issue: excess padding remains in IE 6.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+    *height: 13px; /* 3 */
+    *width: 13px; /* 3 */
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box; /* 2 */
+    box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * Remove inner padding and border in Firefox 3+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/**
+ * 1. Remove default vertical scrollbar in IE 6/7/8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+
+textarea {
+    overflow: auto; /* 1 */
+    vertical-align: top; /* 2 */
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+/**
+ * Remove most spacing between table cells.
+ */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+  </style>
+
+  <style type="text/css">
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+  body {
+    background: #fff;
+    font-family: "Source Sans Pro", "Helvetica Neueue", Helvetica, sans;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6em;
+  }
+  #content {
+    width: 70%;
+    max-width: 850px;
+    float: left;
+    padding: 30px 60px;
+    border-left: 1px solid #ddd;
+  }
+  #sidebar {
+    width: 25%;
+    float: left;
+    padding: 30px;
+    overflow: hidden;
+  }
+  #nav {
+    font-size: 130%;
+    margin: 0 0 15px 0;
+  }
+
+  #top {
+    display: block;
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    font-size: .85em;
+    text-transform: uppercase;
+  }
+
+  #footer {
+    font-size: .75em;
+    padding: 5px 30px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+  }
+    #footer p {
+      margin: 0 0 0 30px;
+      display: inline-block;
+    }
+
+  h1, h2, h3, h4, h5 {
+    font-weight: 300;
+  }
+  h1 {
+    font-size: 2.5em;
+    line-height: 1.1em;
+    margin: 0 0 .50em 0;
+  }
+
+  h2 {
+    font-size: 1.75em;
+    margin: 1em 0 .50em 0;
+  }
+
+  h3 {
+    margin: 25px 0 10px 0;
+  }
+
+  h4 {
+    margin: 0;
+    font-size: 105%;
+  }
+
+  a {
+    color: #058;
+    text-decoration: none;
+    transition: color .3s ease-in-out;
+  }
+
+  a:hover {
+    color: #e08524;
+    transition: color .3s ease-in-out;
+  }
+
+  pre, code, .mono, .name {
+    font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
+  }
+
+  .title .name {
+    font-weight: bold;
+  }
+  .section-title {
+    margin-top: 2em;
+  }
+  .ident {
+    color: #900;
+  }
+
+  code {
+    background: #f9f9f9;
+  } 
+
+  pre {
+    background: #fefefe;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 0 #f3f3f3;
+    margin: 0 30px;
+    padding: 15px 30px;
+  }
+
+  .codehilite {
+    margin: 0 30px 10px 30px;
+  }
+
+    .codehilite pre {
+      margin: 0;
+    }
+    .codehilite .err { background: #ff3300; color: #fff !important; } 
+
+  table#module-list {
+    font-size: 110%;
+  }
+
+    table#module-list tr td:first-child {
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+
+    table#module-list td {
+      vertical-align: top;
+      padding-bottom: 8px;
+    }
+
+      table#module-list td p {
+        margin: 0 0 7px 0;
+      }
+
+  .def {
+    display: table;
+  }
+
+    .def p {
+      display: table-cell;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .def p:first-child {
+      white-space: nowrap;
+    }
+
+    .def p:last-child {
+      width: 100%;
+    }
+
+
+  #index {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+    ul#index .class_name {
+      /* font-size: 110%; */
+      font-weight: bold;
+    }
+    #index ul {
+      margin: 0;
+    }
+
+  .item {
+    margin: 0 0 15px 0;
+  }
+
+    .item .class {
+      margin: 0 0 25px 30px;
+    }
+
+      .item .class ul.class_list {
+        margin: 0 0 20px 0;
+      }
+
+    .item .name {
+      background: #fafafa;
+      margin: 0;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 3px;
+      display: inline-block;
+      min-width: 40%;
+    }
+      .item .name:hover {
+        background: #f6f6f6;
+      }
+
+    .item .empty_desc {
+      margin: 0 0 5px 0;
+      padding: 0;
+    }
+
+    .item .inheritance {
+      margin: 3px 0 0 30px;
+    }
+
+    .item .inherited {
+      color: #666;
+    }
+
+    .item .desc {
+      padding: 0 8px;
+      margin: 0;
+    }
+
+      .item .desc p {
+        margin: 0 0 10px 0;
+      }
+
+    .source_cont {
+      margin: 0;
+      padding: 0;
+    }
+
+    .source_link a {
+      background: #ffc300;
+      font-weight: 400;
+      font-size: .75em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 1px 1px 0 #f4b700;
+      
+      padding: 3px 8px;
+      border-radius: 2px;
+      transition: background .3s ease-in-out;
+    }
+      .source_link a:hover {
+        background: #FF7200;
+        text-shadow: none;
+        transition: background .3s ease-in-out;
+      }
+
+    .source {
+      display: none;
+      max-height: 600px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+    }
+
+      .source .codehilite {
+        margin: 0;
+      }
+
+  .desc h1, .desc h2, .desc h3 {
+    font-size: 100% !important;
+  }
+  .clear {
+    clear: both;
+  }
+
+  @media all and (max-width: 950px) {
+    #sidebar {
+      width: 35%;
+    }
+    #content {
+      width: 65%;
+    }
+  }
+  @media all and (max-width: 650px) {
+    #top {
+      display: none;
+    }
+    #sidebar {
+      float: none;
+      width: auto;
+    }
+    #content {
+      float: none;
+      width: auto;
+      padding: 30px;
+    }
+
+    #index ul {
+      padding: 0;
+      margin-bottom: 15px;
+    }
+    #index ul li {
+      display: inline-block;
+      margin-right: 30px;
+    }
+    #footer {
+      text-align: left;
+    }
+    #footer p {
+      display: block;
+      margin: inherit;
+    }
+  }
+
+  /*****************************/
+
+  </style>
+
+  <style type="text/css">
+  .codehilite .hll { background-color: #ffffcc }
+.codehilite  { background: #f8f8f8; }
+.codehilite .c { color: #408080; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #FF0000 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666666 } /* Operator */
+.codehilite .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #BC7A00 } /* Comment.Preproc */
+.codehilite .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #408080; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .gr { color: #FF0000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #00A000 } /* Generic.Inserted */
+.codehilite .go { color: #888888 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #0044DD } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #7D9029 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #880000 } /* Name.Constant */
+.codehilite .nd { color: #AA22FF } /* Name.Decorator */
+.codehilite .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #0000FF } /* Name.Function */
+.codehilite .nl { color: #A0A000 } /* Name.Label */
+.codehilite .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite .mb { color: #666666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #BB6688 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+  </style>
+
+  <style type="text/css">
+  
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+  </style>
+
+  <script type="text/javascript">
+  function toggle(id, $link) {
+    $node = document.getElementById(id);
+    if (!$node)
+    return;
+    if (!$node.style.display || $node.style.display == 'none') {
+    $node.style.display = 'block';
+    $link.innerHTML = 'Hide source &nequiv;';
+    } else {
+    $node.style.display = 'none';
+    $link.innerHTML = 'Show source &equiv;';
+    }
+  }
+  </script>
+</head>
+<body>
+<a href="#" id="top">Top</a>
+
+<div id="container">
+    
+  
+  <div id="sidebar">
+    <h1>Index</h1>
+    <ul id="index">
+    <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#ndio.remote.grute.DEFAULT_EMAIL">DEFAULT_EMAIL</a></li>
+    <li class="mono"><a href="#ndio.remote.grute.DEFAULT_FIBER_FILE">DEFAULT_FIBER_FILE</a></li>
+    <li class="mono"><a href="#ndio.remote.grute.DEFAULT_HOSTNAME">DEFAULT_HOSTNAME</a></li>
+    <li class="mono"><a href="#ndio.remote.grute.DEFAULT_PROTOCOL">DEFAULT_PROTOCOL</a></li>
+  </ul>
+
+    </li>
+
+
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
+      <ul>
+        <li class="mono">
+        <span class="class_name"><a href="#ndio.remote.grute.GraphFormats">GraphFormats</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#ndio.remote.grute.Invariants">Invariants</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#ndio.remote.grute.grute">grute</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#ndio.remote.grute.grute.__init__">__init__</a></li>
+    <li class="mono"><a href="#ndio.remote.grute.grute.build_graph">build_graph</a></li>
+    <li class="mono"><a href="#ndio.remote.grute.grute.compute_invariants">compute_invariants</a></li>
+    <li class="mono"><a href="#ndio.remote.grute.grute.convert_graph">convert_graph</a></li>
+    <li class="mono"><a href="#ndio.remote.grute.grute.ping">ping</a></li>
+    <li class="mono"><a href="#ndio.remote.grute.grute.set_default_email">set_default_email</a></li>
+    <li class="mono"><a href="#ndio.remote.grute.grute.url">url</a></li>
+  </ul>
+
+        </li>
+      </ul>
+    </li>
+
+    </ul>
+  </div>
+
+    <article id="content">
+      
+  
+
+  
+
+
+  <header id="section-intro">
+  <h1 class="title"><span class="name">ndio.remote.grute</span> module</h1>
+  
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute" class="source">
+    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># For Python 3:</span>
+    <span class="kn">import</span> <span class="nn">urllib.request</span> <span class="kn">as</span> <span class="nn">urllib2</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">urllib2</span>
+
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">.Remote</span> <span class="kn">import</span> <span class="n">Remote</span>
+<span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">ndio.ramon</span> <span class="kn">as</span> <span class="nn">ramon</span>
+
+<span class="n">DEFAULT_HOSTNAME</span> <span class="o">=</span> <span class="s2">&quot;openconnecto.me&quot;</span>
+<span class="n">DEFAULT_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;http&quot;</span>
+<span class="n">DEFAULT_EMAIL</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">DEFAULT_FIBER_FILE</span> <span class="o">=</span> <span class="s2">&quot;fiber.dat&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">Invariants</span><span class="p">:</span>
+    <span class="n">SCAN_STATISTIC</span> <span class="o">=</span> <span class="n">ss1</span> <span class="o">=</span> <span class="s2">&quot;ss1&quot;</span>        <span class="c1"># the Scan Statistic 1</span>
+    <span class="n">TRIANGLE_COUNT</span> <span class="o">=</span> <span class="n">tri</span> <span class="o">=</span> <span class="s2">&quot;tri&quot;</span>        <span class="c1"># the Triangle Count</span>
+    <span class="n">CLUSTERING</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="s2">&quot;cc&quot;</span>              <span class="c1"># the Clustering Coefficient</span>
+    <span class="n">MAX_AVG_DEGREE</span> <span class="o">=</span> <span class="n">mad</span> <span class="o">=</span> <span class="s2">&quot;mad&quot;</span>        <span class="c1"># the Maximum Average Degree</span>
+    <span class="n">LOCAL_DEGREE</span> <span class="o">=</span> <span class="n">deg</span> <span class="o">=</span> <span class="s2">&quot;deg&quot;</span>          <span class="c1"># The Local Degree Count</span>
+    <span class="n">EIGENS</span> <span class="o">=</span> <span class="n">eig</span> <span class="o">=</span> <span class="s2">&quot;eig&quot;</span>                <span class="c1"># top 100 or max avail eigvecs, eigvals</span>
+
+    <span class="n">ALL</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">SCAN_STATISTIC</span><span class="p">,</span>
+        <span class="n">TRIANGLE_COUNT</span><span class="p">,</span>
+        <span class="n">CLUSTERING</span><span class="p">,</span>
+        <span class="n">MAX_AVG_DEGREE</span><span class="p">,</span>
+        <span class="n">LOCAL_DEGREE</span><span class="p">,</span>
+        <span class="n">EIGENS</span>
+    <span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">GraphFormats</span><span class="p">:</span>
+    <span class="n">GRAPHML</span> <span class="o">=</span> <span class="n">graphml</span> <span class="o">=</span> <span class="s2">&quot;graphml&quot;</span>
+    <span class="n">NCOL</span> <span class="o">=</span> <span class="n">ncol</span> <span class="o">=</span> <span class="s2">&quot;ncol&quot;</span>
+    <span class="n">EDGELIST</span> <span class="o">=</span> <span class="n">edgelist</span> <span class="o">=</span> <span class="s2">&quot;edgelist&quot;</span>
+    <span class="n">LGL</span> <span class="o">=</span> <span class="n">lgl</span> <span class="o">=</span> <span class="s2">&quot;lgl&quot;</span>
+    <span class="n">PAJEK</span> <span class="o">=</span> <span class="n">pajek</span> <span class="o">=</span> <span class="s2">&quot;pajek&quot;</span>
+    <span class="n">GRAPHDB</span> <span class="o">=</span> <span class="n">graphdb</span> <span class="o">=</span> <span class="s2">&quot;graphdb&quot;</span>
+    <span class="n">NUMPY</span> <span class="o">=</span> <span class="n">numpy</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+    <span class="n">MAT</span> <span class="o">=</span> <span class="n">mat</span> <span class="o">=</span> <span class="s2">&quot;mat&quot;</span>
+
+    <span class="n">_any</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">GRAPHML</span><span class="p">,</span>
+        <span class="n">NCOL</span><span class="p">,</span>
+        <span class="n">EDGELIST</span><span class="p">,</span>
+        <span class="n">LGL</span><span class="p">,</span>
+        <span class="n">PAJEK</span><span class="p">,</span>
+        <span class="n">GRAPHDB</span><span class="p">,</span>
+        <span class="n">NUMPY</span><span class="p">,</span>
+        <span class="n">MAT</span>
+    <span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">grute</span><span class="p">(</span><span class="n">Remote</span><span class="p">):</span>
+
+    <span class="n">SMALL</span> <span class="o">=</span> <span class="n">S</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
+    <span class="n">BIG</span> <span class="o">=</span> <span class="n">B</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="n">DEFAULT_HOSTNAME</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
+                 <span class="n">email</span><span class="o">=</span><span class="n">DEFAULT_EMAIL</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a string representation that can be used to reproduce this</span>
+<span class="sd">        instance. `eval(repr(this))` should return an identical copy.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Representation of reproducible instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;ndio.remote.grute(&#39;{}&#39;, &#39;{}&#39;, &#39;{}&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">protocol</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;/graph-services/&#39;</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_default_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the default email to use for notifications if none is specified.</span>
+<span class="sd">        Does only basic error-checking.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            email (str): The email to notify for all server graph services.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If an invalid email is supplied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;@&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">email</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid email.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
+
+    <span class="k">def</span> <span class="nf">build_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span>
+                    <span class="n">size</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">invariants</span><span class="o">=</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span>
+                    <span class="n">fiber_file</span><span class="o">=</span><span class="n">DEFAULT_FIBER_FILE</span><span class="p">,</span> <span class="n">atlas_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                    <span class="n">use_threads</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds a graph using the graph-services endpoint.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            project (str): The project to use</span>
+<span class="sd">            site (str): The site in question</span>
+<span class="sd">            subject (str): The subject&#39;s identifier</span>
+<span class="sd">            session (str): The session (per subject)</span>
+<span class="sd">            scan (str): The scan identifier</span>
+<span class="sd">            size (str): Whether to return a big (grute.BIG) or small</span>
+<span class="sd">                (grute.SMALL) graph. For a better explanation, see m2g.io.</span>
+<span class="sd">            email (str : self.email)*: An email to notify</span>
+<span class="sd">            invariants (str[]: Invariants.ALL)*: An array of invariants to</span>
+<span class="sd">                compute. You can use the grute.Invariants class to construct a</span>
+<span class="sd">                list, or simply pass grute.Invariants.ALL to compute them all.</span>
+<span class="sd">            fiber_file (str: DEFAULT_FIBER_FILE)*: A local filename of an</span>
+<span class="sd">                MRI Studio .dat file</span>
+<span class="sd">            atlas_file (str: None)*: A local atlas file, in NIFTI .nii format.</span>
+<span class="sd">                If none is specified, the Desikan atlas is used by default.</span>
+<span class="sd">            use_threads (bool: False)*: Whether to run the download in a Python</span>
+<span class="sd">                thread. If set to True, the call to `build_graph` will end</span>
+<span class="sd">                quickly, and the `callback` will be called with the returned</span>
+<span class="sd">                status-code of the restful call as its only argument.</span>
+<span class="sd">            callback (function: None)*: The function to run upon completion of</span>
+<span class="sd">                the call, if using threads. (Will not be called if use_threads</span>
+<span class="sd">                is set to False.)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP Response if use_threads is False. Otherwise, None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: When the supplied values are invalid (contain invalid</span>
+<span class="sd">                characters, bad email address supplied, etc.)</span>
+<span class="sd">            RemoteDataNotFoundError: When the data cannot be processed due to</span>
+<span class="sd">                a server error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invariants must be a subset of Invariants.ALL.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span> <span class="ow">and</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must be a function.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must take exactly 1 argument.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Once we get here, we know the callback is</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BIG</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SMALL</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;size must be either grute.BIG or grute.SMALL.&quot;</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;buildgraph/{}/{}/{}/{}/{}/{}/{}/{}/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">project</span><span class="p">,</span>
+            <span class="n">site</span><span class="p">,</span>
+            <span class="n">subject</span><span class="p">,</span>
+            <span class="n">session</span><span class="p">,</span>
+            <span class="n">scan</span><span class="p">,</span>
+            <span class="n">size</span><span class="p">,</span>
+            <span class="n">email</span><span class="p">,</span>
+            <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Arguments must not contain spaces.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span><span class="p">:</span>
+            <span class="c1"># Run in the background.</span>
+            <span class="n">download_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_build_graph</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">,</span> <span class="n">fiber_file</span><span class="p">,</span> <span class="n">atlas_file</span><span class="p">,</span> <span class="n">callback</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">download_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Run in the foreground.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_build_graph</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">fiber_file</span><span class="p">,</span> <span class="n">atlas_file</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_run_build_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span>
+                         <span class="n">fiber_file</span><span class="p">,</span> <span class="n">atlas_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span>
+            <span class="n">zfile</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">allowZip64</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_file</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">atlas_file</span><span class="p">:</span>
+                <span class="n">zfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atlas_file</span><span class="p">)</span>
+                <span class="n">zfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">tmpfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">tmpfile</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid atlas or fiber file. I don&#39;t have &quot;</span> <span class="o">+</span>
+                             <span class="s2">&quot;any more information than that, sorry!&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RemoteDataUploadError</span><span class="p">(</span><span class="s2">&quot;Failed to upload data at &quot;</span> <span class="o">+</span> <span class="n">url</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compute_invariants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">input_format</span><span class="p">,</span>
+                           <span class="n">invariants</span><span class="o">=</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                           <span class="n">use_threads</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute invariants from an existing GraphML file using the remote</span>
+<span class="sd">        grute graph services.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            graph_file (str): The filename of the graphml file</span>
+<span class="sd">            input_format (str): One of grute.GraphFormats</span>
+<span class="sd">            invariants (str[]: Invariants.ALL)*: An array of grute.Invariants</span>
+<span class="sd">                to compute on the graph</span>
+<span class="sd">            email (str: self.email)*: The email to notify upon completion</span>
+<span class="sd">            use_threads (bool: False)*: Whether to use Python threads to run</span>
+<span class="sd">                computation in the background when waiting for the server to</span>
+<span class="sd">                return the invariants</span>
+<span class="sd">            callback (function: None)*: The function to run upon completion of</span>
+<span class="sd">                the call, if using threads. (Will not be called if use_threads</span>
+<span class="sd">                is set to False.)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP Response if use_threads is False. Otherwise, None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the graph file does not exist, or if there are</span>
+<span class="sd">                issues with the passed arguments</span>
+<span class="sd">            RemoteDataUploadError: If there is an issue packing the file</span>
+<span class="sd">            RemoteError: If the server experiences difficulty computing invs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+
+        <span class="k">if</span> <span class="n">input_format</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GraphFormats</span><span class="o">.</span><span class="n">_any</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid input format, {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_format</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invariants must be a subset of Invariants.ALL.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span> <span class="ow">and</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must be a function.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must take exactly 1 argument.&quot;</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;graphupload/{}/{}/{}/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">email</span><span class="p">,</span>
+            <span class="n">input_format</span><span class="p">,</span>
+            <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Arguments cannot have spaces in them.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;File {} does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">graph_file</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span><span class="p">:</span>
+            <span class="c1"># Run in the background.</span>
+            <span class="n">upload_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_compute_invariants</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">upload_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Run in the foreground.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_compute_invariants</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_run_compute_invariants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span>
+            <span class="n">zfile</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">allowZip64</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">tmpfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">tmpfile</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unable to zip graph file for upload.&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RemoteDataUploadError</span><span class="p">(</span><span class="s2">&quot;Failed to upload graph file. Try &quot;</span> <span class="o">+</span>
+                                        <span class="s2">&quot;troubleshooting with a ping()?&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">convert_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">input_format</span><span class="p">,</span> <span class="n">output_formats</span><span class="p">,</span>
+                      <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">use_threads</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a graph from one GraphFormat to another.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            graph_file (str): Filename of the file to convert</span>
+<span class="sd">            input_format (str): A grute.GraphFormats</span>
+<span class="sd">            output_formats (str[]): A grute.GraphFormats</span>
+<span class="sd">            email (str: self.email)*: The email to notify</span>
+<span class="sd">            use_threads (bool: False)*: Whether to use Python threads to run</span>
+<span class="sd">                computation in the background when waiting for the server</span>
+<span class="sd">            callback (function: None)*: The function to run upon completion of</span>
+<span class="sd">                the call, if using threads. (Will not be called if use_threads</span>
+<span class="sd">                is set to False.)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP Response if use_threads=False. Else, no return value.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RemoteDataUploadError: If there&#39;s an issue uploading the data</span>
+<span class="sd">            RemoteError: If there&#39;s a server-side issue</span>
+<span class="sd">            ValueError: If there&#39;s a problem with the supplied arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+
+        <span class="k">if</span> <span class="n">input_format</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GraphFormats</span><span class="o">.</span><span class="n">_any</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid input format {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_format</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">output_formats</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">GraphFormats</span><span class="o">.</span><span class="n">_any</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Output formats must be a GraphFormats.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span> <span class="ow">and</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must be a function.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must take exactly 1 argument.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No such file, {}!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">graph_file</span><span class="p">))</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;convert/{}/{}/{}/l&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">email</span><span class="p">,</span>
+            <span class="n">input_format</span><span class="p">,</span>
+            <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_formats</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Spaces are not permitted in arguments.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span><span class="p">:</span>
+            <span class="c1"># Run in the background.</span>
+            <span class="n">convert_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_convert_graph</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">convert_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Run in the foreground.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_convert_graph</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_run_convert_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span>
+            <span class="n">zfile</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">allowZip64</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">tmpfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">tmpfile</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unable to zip graph file for upload.&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RemoteDataUploadError</span><span class="p">(</span><span class="s2">&quot;Failed to upload graph file. Try &quot;</span> <span class="o">+</span>
+                                        <span class="s2">&quot;troubleshooting with a ping()?&quot;</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+
+  </header>
+
+  <section id="section-items">
+    <h2 class="section-title" id="header-variables">Module variables</h2>
+      <div class="item">
+      <p id="ndio.remote.grute.DEFAULT_EMAIL" class="name">var <span class="ident">DEFAULT_EMAIL</span></p>
+      
+  
+  <div class="source_cont">
+</div>
+
+      </div>
+      <div class="item">
+      <p id="ndio.remote.grute.DEFAULT_FIBER_FILE" class="name">var <span class="ident">DEFAULT_FIBER_FILE</span></p>
+      
+  
+  <div class="source_cont">
+</div>
+
+      </div>
+      <div class="item">
+      <p id="ndio.remote.grute.DEFAULT_HOSTNAME" class="name">var <span class="ident">DEFAULT_HOSTNAME</span></p>
+      
+  
+  <div class="source_cont">
+</div>
+
+      </div>
+      <div class="item">
+      <p id="ndio.remote.grute.DEFAULT_PROTOCOL" class="name">var <span class="ident">DEFAULT_PROTOCOL</span></p>
+      
+  
+  <div class="source_cont">
+</div>
+
+      </div>
+
+
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="ndio.remote.grute.GraphFormats" class="name">class <span class="ident">GraphFormats</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.GraphFormats', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.GraphFormats" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">GraphFormats</span><span class="p">:</span>
+    <span class="n">GRAPHML</span> <span class="o">=</span> <span class="n">graphml</span> <span class="o">=</span> <span class="s2">&quot;graphml&quot;</span>
+    <span class="n">NCOL</span> <span class="o">=</span> <span class="n">ncol</span> <span class="o">=</span> <span class="s2">&quot;ncol&quot;</span>
+    <span class="n">EDGELIST</span> <span class="o">=</span> <span class="n">edgelist</span> <span class="o">=</span> <span class="s2">&quot;edgelist&quot;</span>
+    <span class="n">LGL</span> <span class="o">=</span> <span class="n">lgl</span> <span class="o">=</span> <span class="s2">&quot;lgl&quot;</span>
+    <span class="n">PAJEK</span> <span class="o">=</span> <span class="n">pajek</span> <span class="o">=</span> <span class="s2">&quot;pajek&quot;</span>
+    <span class="n">GRAPHDB</span> <span class="o">=</span> <span class="n">graphdb</span> <span class="o">=</span> <span class="s2">&quot;graphdb&quot;</span>
+    <span class="n">NUMPY</span> <span class="o">=</span> <span class="n">numpy</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+    <span class="n">MAT</span> <span class="o">=</span> <span class="n">mat</span> <span class="o">=</span> <span class="s2">&quot;mat&quot;</span>
+
+    <span class="n">_any</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">GRAPHML</span><span class="p">,</span>
+        <span class="n">NCOL</span><span class="p">,</span>
+        <span class="n">EDGELIST</span><span class="p">,</span>
+        <span class="n">LGL</span><span class="p">,</span>
+        <span class="n">PAJEK</span><span class="p">,</span>
+        <span class="n">GRAPHDB</span><span class="p">,</span>
+        <span class="n">NUMPY</span><span class="p">,</span>
+        <span class="n">MAT</span>
+    <span class="p">]</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#ndio.remote.grute.GraphFormats">GraphFormats</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.EDGELIST" class="name">var <span class="ident">EDGELIST</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.GRAPHDB" class="name">var <span class="ident">GRAPHDB</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.GRAPHML" class="name">var <span class="ident">GRAPHML</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.LGL" class="name">var <span class="ident">LGL</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.MAT" class="name">var <span class="ident">MAT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.NCOL" class="name">var <span class="ident">NCOL</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.NUMPY" class="name">var <span class="ident">NUMPY</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.PAJEK" class="name">var <span class="ident">PAJEK</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.edgelist" class="name">var <span class="ident">edgelist</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.graphdb" class="name">var <span class="ident">graphdb</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.graphml" class="name">var <span class="ident">graphml</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.lgl" class="name">var <span class="ident">lgl</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.mat" class="name">var <span class="ident">mat</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.ncol" class="name">var <span class="ident">ncol</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.numpy" class="name">var <span class="ident">numpy</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.GraphFormats.pajek" class="name">var <span class="ident">pajek</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="ndio.remote.grute.Invariants" class="name">class <span class="ident">Invariants</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.Invariants', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.Invariants" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Invariants</span><span class="p">:</span>
+    <span class="n">SCAN_STATISTIC</span> <span class="o">=</span> <span class="n">ss1</span> <span class="o">=</span> <span class="s2">&quot;ss1&quot;</span>        <span class="c1"># the Scan Statistic 1</span>
+    <span class="n">TRIANGLE_COUNT</span> <span class="o">=</span> <span class="n">tri</span> <span class="o">=</span> <span class="s2">&quot;tri&quot;</span>        <span class="c1"># the Triangle Count</span>
+    <span class="n">CLUSTERING</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="s2">&quot;cc&quot;</span>              <span class="c1"># the Clustering Coefficient</span>
+    <span class="n">MAX_AVG_DEGREE</span> <span class="o">=</span> <span class="n">mad</span> <span class="o">=</span> <span class="s2">&quot;mad&quot;</span>        <span class="c1"># the Maximum Average Degree</span>
+    <span class="n">LOCAL_DEGREE</span> <span class="o">=</span> <span class="n">deg</span> <span class="o">=</span> <span class="s2">&quot;deg&quot;</span>          <span class="c1"># The Local Degree Count</span>
+    <span class="n">EIGENS</span> <span class="o">=</span> <span class="n">eig</span> <span class="o">=</span> <span class="s2">&quot;eig&quot;</span>                <span class="c1"># top 100 or max avail eigvecs, eigvals</span>
+
+    <span class="n">ALL</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">SCAN_STATISTIC</span><span class="p">,</span>
+        <span class="n">TRIANGLE_COUNT</span><span class="p">,</span>
+        <span class="n">CLUSTERING</span><span class="p">,</span>
+        <span class="n">MAX_AVG_DEGREE</span><span class="p">,</span>
+        <span class="n">LOCAL_DEGREE</span><span class="p">,</span>
+        <span class="n">EIGENS</span>
+    <span class="p">]</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#ndio.remote.grute.Invariants">Invariants</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.ALL" class="name">var <span class="ident">ALL</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.CLUSTERING" class="name">var <span class="ident">CLUSTERING</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.EIGENS" class="name">var <span class="ident">EIGENS</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.LOCAL_DEGREE" class="name">var <span class="ident">LOCAL_DEGREE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.MAX_AVG_DEGREE" class="name">var <span class="ident">MAX_AVG_DEGREE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.SCAN_STATISTIC" class="name">var <span class="ident">SCAN_STATISTIC</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.TRIANGLE_COUNT" class="name">var <span class="ident">TRIANGLE_COUNT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.cc" class="name">var <span class="ident">cc</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.deg" class="name">var <span class="ident">deg</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.eig" class="name">var <span class="ident">eig</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.mad" class="name">var <span class="ident">mad</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.ss1" class="name">var <span class="ident">ss1</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.Invariants.tri" class="name">var <span class="ident">tri</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="ndio.remote.grute.grute" class="name">class <span class="ident">grute</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.grute" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">grute</span><span class="p">(</span><span class="n">Remote</span><span class="p">):</span>
+
+    <span class="n">SMALL</span> <span class="o">=</span> <span class="n">S</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
+    <span class="n">BIG</span> <span class="o">=</span> <span class="n">B</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="n">DEFAULT_HOSTNAME</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
+                 <span class="n">email</span><span class="o">=</span><span class="n">DEFAULT_EMAIL</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a string representation that can be used to reproduce this</span>
+<span class="sd">        instance. `eval(repr(this))` should return an identical copy.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Representation of reproducible instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;ndio.remote.grute(&#39;{}&#39;, &#39;{}&#39;, &#39;{}&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">protocol</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;/graph-services/&#39;</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_default_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the default email to use for notifications if none is specified.</span>
+<span class="sd">        Does only basic error-checking.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            email (str): The email to notify for all server graph services.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If an invalid email is supplied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;@&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">email</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid email.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
+
+    <span class="k">def</span> <span class="nf">build_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span>
+                    <span class="n">size</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">invariants</span><span class="o">=</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span>
+                    <span class="n">fiber_file</span><span class="o">=</span><span class="n">DEFAULT_FIBER_FILE</span><span class="p">,</span> <span class="n">atlas_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                    <span class="n">use_threads</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds a graph using the graph-services endpoint.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            project (str): The project to use</span>
+<span class="sd">            site (str): The site in question</span>
+<span class="sd">            subject (str): The subject&#39;s identifier</span>
+<span class="sd">            session (str): The session (per subject)</span>
+<span class="sd">            scan (str): The scan identifier</span>
+<span class="sd">            size (str): Whether to return a big (grute.BIG) or small</span>
+<span class="sd">                (grute.SMALL) graph. For a better explanation, see m2g.io.</span>
+<span class="sd">            email (str : self.email)*: An email to notify</span>
+<span class="sd">            invariants (str[]: Invariants.ALL)*: An array of invariants to</span>
+<span class="sd">                compute. You can use the grute.Invariants class to construct a</span>
+<span class="sd">                list, or simply pass grute.Invariants.ALL to compute them all.</span>
+<span class="sd">            fiber_file (str: DEFAULT_FIBER_FILE)*: A local filename of an</span>
+<span class="sd">                MRI Studio .dat file</span>
+<span class="sd">            atlas_file (str: None)*: A local atlas file, in NIFTI .nii format.</span>
+<span class="sd">                If none is specified, the Desikan atlas is used by default.</span>
+<span class="sd">            use_threads (bool: False)*: Whether to run the download in a Python</span>
+<span class="sd">                thread. If set to True, the call to `build_graph` will end</span>
+<span class="sd">                quickly, and the `callback` will be called with the returned</span>
+<span class="sd">                status-code of the restful call as its only argument.</span>
+<span class="sd">            callback (function: None)*: The function to run upon completion of</span>
+<span class="sd">                the call, if using threads. (Will not be called if use_threads</span>
+<span class="sd">                is set to False.)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP Response if use_threads is False. Otherwise, None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: When the supplied values are invalid (contain invalid</span>
+<span class="sd">                characters, bad email address supplied, etc.)</span>
+<span class="sd">            RemoteDataNotFoundError: When the data cannot be processed due to</span>
+<span class="sd">                a server error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invariants must be a subset of Invariants.ALL.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span> <span class="ow">and</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must be a function.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must take exactly 1 argument.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Once we get here, we know the callback is</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BIG</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SMALL</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;size must be either grute.BIG or grute.SMALL.&quot;</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;buildgraph/{}/{}/{}/{}/{}/{}/{}/{}/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">project</span><span class="p">,</span>
+            <span class="n">site</span><span class="p">,</span>
+            <span class="n">subject</span><span class="p">,</span>
+            <span class="n">session</span><span class="p">,</span>
+            <span class="n">scan</span><span class="p">,</span>
+            <span class="n">size</span><span class="p">,</span>
+            <span class="n">email</span><span class="p">,</span>
+            <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Arguments must not contain spaces.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span><span class="p">:</span>
+            <span class="c1"># Run in the background.</span>
+            <span class="n">download_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_build_graph</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">,</span> <span class="n">fiber_file</span><span class="p">,</span> <span class="n">atlas_file</span><span class="p">,</span> <span class="n">callback</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">download_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Run in the foreground.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_build_graph</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">fiber_file</span><span class="p">,</span> <span class="n">atlas_file</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_run_build_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span>
+                         <span class="n">fiber_file</span><span class="p">,</span> <span class="n">atlas_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span>
+            <span class="n">zfile</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">allowZip64</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_file</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">atlas_file</span><span class="p">:</span>
+                <span class="n">zfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atlas_file</span><span class="p">)</span>
+                <span class="n">zfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">tmpfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">tmpfile</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid atlas or fiber file. I don&#39;t have &quot;</span> <span class="o">+</span>
+                             <span class="s2">&quot;any more information than that, sorry!&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RemoteDataUploadError</span><span class="p">(</span><span class="s2">&quot;Failed to upload data at &quot;</span> <span class="o">+</span> <span class="n">url</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compute_invariants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">input_format</span><span class="p">,</span>
+                           <span class="n">invariants</span><span class="o">=</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                           <span class="n">use_threads</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute invariants from an existing GraphML file using the remote</span>
+<span class="sd">        grute graph services.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            graph_file (str): The filename of the graphml file</span>
+<span class="sd">            input_format (str): One of grute.GraphFormats</span>
+<span class="sd">            invariants (str[]: Invariants.ALL)*: An array of grute.Invariants</span>
+<span class="sd">                to compute on the graph</span>
+<span class="sd">            email (str: self.email)*: The email to notify upon completion</span>
+<span class="sd">            use_threads (bool: False)*: Whether to use Python threads to run</span>
+<span class="sd">                computation in the background when waiting for the server to</span>
+<span class="sd">                return the invariants</span>
+<span class="sd">            callback (function: None)*: The function to run upon completion of</span>
+<span class="sd">                the call, if using threads. (Will not be called if use_threads</span>
+<span class="sd">                is set to False.)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP Response if use_threads is False. Otherwise, None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the graph file does not exist, or if there are</span>
+<span class="sd">                issues with the passed arguments</span>
+<span class="sd">            RemoteDataUploadError: If there is an issue packing the file</span>
+<span class="sd">            RemoteError: If the server experiences difficulty computing invs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+
+        <span class="k">if</span> <span class="n">input_format</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GraphFormats</span><span class="o">.</span><span class="n">_any</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid input format, {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_format</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invariants must be a subset of Invariants.ALL.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span> <span class="ow">and</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must be a function.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must take exactly 1 argument.&quot;</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;graphupload/{}/{}/{}/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">email</span><span class="p">,</span>
+            <span class="n">input_format</span><span class="p">,</span>
+            <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Arguments cannot have spaces in them.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;File {} does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">graph_file</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span><span class="p">:</span>
+            <span class="c1"># Run in the background.</span>
+            <span class="n">upload_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_compute_invariants</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">upload_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Run in the foreground.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_compute_invariants</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_run_compute_invariants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span>
+            <span class="n">zfile</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">allowZip64</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">tmpfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">tmpfile</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unable to zip graph file for upload.&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RemoteDataUploadError</span><span class="p">(</span><span class="s2">&quot;Failed to upload graph file. Try &quot;</span> <span class="o">+</span>
+                                        <span class="s2">&quot;troubleshooting with a ping()?&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">convert_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">input_format</span><span class="p">,</span> <span class="n">output_formats</span><span class="p">,</span>
+                      <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">use_threads</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a graph from one GraphFormat to another.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            graph_file (str): Filename of the file to convert</span>
+<span class="sd">            input_format (str): A grute.GraphFormats</span>
+<span class="sd">            output_formats (str[]): A grute.GraphFormats</span>
+<span class="sd">            email (str: self.email)*: The email to notify</span>
+<span class="sd">            use_threads (bool: False)*: Whether to use Python threads to run</span>
+<span class="sd">                computation in the background when waiting for the server</span>
+<span class="sd">            callback (function: None)*: The function to run upon completion of</span>
+<span class="sd">                the call, if using threads. (Will not be called if use_threads</span>
+<span class="sd">                is set to False.)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP Response if use_threads=False. Else, no return value.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RemoteDataUploadError: If there&#39;s an issue uploading the data</span>
+<span class="sd">            RemoteError: If there&#39;s a server-side issue</span>
+<span class="sd">            ValueError: If there&#39;s a problem with the supplied arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+
+        <span class="k">if</span> <span class="n">input_format</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GraphFormats</span><span class="o">.</span><span class="n">_any</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid input format {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_format</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">output_formats</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">GraphFormats</span><span class="o">.</span><span class="n">_any</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Output formats must be a GraphFormats.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span> <span class="ow">and</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must be a function.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must take exactly 1 argument.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No such file, {}!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">graph_file</span><span class="p">))</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;convert/{}/{}/{}/l&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">email</span><span class="p">,</span>
+            <span class="n">input_format</span><span class="p">,</span>
+            <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_formats</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Spaces are not permitted in arguments.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_threads</span><span class="p">:</span>
+            <span class="c1"># Run in the background.</span>
+            <span class="n">convert_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_convert_graph</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">convert_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Run in the foreground.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_convert_graph</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_run_convert_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span>
+            <span class="n">zfile</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">allowZip64</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)</span>
+            <span class="n">zfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">tmpfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">tmpfile</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unable to zip graph file for upload.&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RemoteDataUploadError</span><span class="p">(</span><span class="s2">&quot;Failed to upload graph file. Try &quot;</span> <span class="o">+</span>
+                                        <span class="s2">&quot;troubleshooting with a ping()?&quot;</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#ndio.remote.grute.grute">grute</a></li>
+          <li>ndio.remote.Remote.Remote</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="ndio.remote.grute.grute.B" class="name">var <span class="ident">B</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.grute.BIG" class="name">var <span class="ident">BIG</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.grute.S" class="name">var <span class="ident">S</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="ndio.remote.grute.grute.SMALL" class="name">var <span class="ident">SMALL</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="ndio.remote.grute.grute.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, hostname=&#39;openconnecto.me&#39;, protocol=&#39;http&#39;, email=&#39;&#39;)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Arguments:
+<code>hostname</code>:     Hostname (e.g. google.com)
+<code>protocol</code>:     HTTP protocol (e.g. https)</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.grute.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="n">DEFAULT_HOSTNAME</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
+             <span class="n">email</span><span class="o">=</span><span class="n">DEFAULT_EMAIL</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="ndio.remote.grute.grute.build_graph">
+    <p>def <span class="ident">build_graph</span>(</p><p>self, project, site, subject, session, scan, size, email=None, invariants=[&#39;ss1&#39;, &#39;tri&#39;, &#39;cc&#39;, &#39;mad&#39;, &#39;deg&#39;, &#39;eig&#39;], fiber_file=&#39;fiber.dat&#39;, atlas_file=None, use_threads=False, callback=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Builds a graph using the graph-services endpoint.</p>
+<p>Arguments:
+    project (str): The project to use
+    site (str): The site in question
+    subject (str): The subject's identifier
+    session (str): The session (per subject)
+    scan (str): The scan identifier
+    size (str): Whether to return a big (grute.BIG) or small
+        (grute.SMALL) graph. For a better explanation, see m2g.io.
+    email (str : self.email)<em>: An email to notify
+    invariants (str[]: Invariants.ALL)</em>: An array of invariants to
+        compute. You can use the grute.Invariants class to construct a
+        list, or simply pass grute.Invariants.ALL to compute them all.
+    fiber_file (str: DEFAULT_FIBER_FILE)<em>: A local filename of an
+        MRI Studio .dat file
+    atlas_file (str: None)</em>: A local atlas file, in NIFTI .nii format.
+        If none is specified, the Desikan atlas is used by default.
+    use_threads (bool: False)<em>: Whether to run the download in a Python
+        thread. If set to True, the call to <code>build_graph</code> will end
+        quickly, and the <code>callback</code> will be called with the returned
+        status-code of the restful call as its only argument.
+    callback (function: None)</em>: The function to run upon completion of
+        the call, if using threads. (Will not be called if use_threads
+        is set to False.)</p>
+<p>Returns:
+    HTTP Response if use_threads is False. Otherwise, None</p>
+<p>Raises:
+    ValueError: When the supplied values are invalid (contain invalid
+        characters, bad email address supplied, etc.)
+    RemoteDataNotFoundError: When the data cannot be processed due to
+        a server error.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.build_graph', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.grute.build_graph" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">build_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span>
+                <span class="n">size</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">invariants</span><span class="o">=</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span>
+                <span class="n">fiber_file</span><span class="o">=</span><span class="n">DEFAULT_FIBER_FILE</span><span class="p">,</span> <span class="n">atlas_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">use_threads</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Builds a graph using the graph-services endpoint.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        project (str): The project to use</span>
+<span class="sd">        site (str): The site in question</span>
+<span class="sd">        subject (str): The subject&#39;s identifier</span>
+<span class="sd">        session (str): The session (per subject)</span>
+<span class="sd">        scan (str): The scan identifier</span>
+<span class="sd">        size (str): Whether to return a big (grute.BIG) or small</span>
+<span class="sd">            (grute.SMALL) graph. For a better explanation, see m2g.io.</span>
+<span class="sd">        email (str : self.email)*: An email to notify</span>
+<span class="sd">        invariants (str[]: Invariants.ALL)*: An array of invariants to</span>
+<span class="sd">            compute. You can use the grute.Invariants class to construct a</span>
+<span class="sd">            list, or simply pass grute.Invariants.ALL to compute them all.</span>
+<span class="sd">        fiber_file (str: DEFAULT_FIBER_FILE)*: A local filename of an</span>
+<span class="sd">            MRI Studio .dat file</span>
+<span class="sd">        atlas_file (str: None)*: A local atlas file, in NIFTI .nii format.</span>
+<span class="sd">            If none is specified, the Desikan atlas is used by default.</span>
+<span class="sd">        use_threads (bool: False)*: Whether to run the download in a Python</span>
+<span class="sd">            thread. If set to True, the call to `build_graph` will end</span>
+<span class="sd">            quickly, and the `callback` will be called with the returned</span>
+<span class="sd">            status-code of the restful call as its only argument.</span>
+<span class="sd">        callback (function: None)*: The function to run upon completion of</span>
+<span class="sd">            the call, if using threads. (Will not be called if use_threads</span>
+<span class="sd">            is set to False.)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        HTTP Response if use_threads is False. Otherwise, None</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: When the supplied values are invalid (contain invalid</span>
+<span class="sd">            characters, bad email address supplied, etc.)</span>
+<span class="sd">        RemoteDataNotFoundError: When the data cannot be processed due to</span>
+<span class="sd">            a server error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invariants must be a subset of Invariants.ALL.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_threads</span> <span class="ow">and</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must be a function.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must take exactly 1 argument.&quot;</span><span class="p">)</span>
+    <span class="c1"># Once we get here, we know the callback is</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BIG</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SMALL</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;size must be either grute.BIG or grute.SMALL.&quot;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;buildgraph/{}/{}/{}/{}/{}/{}/{}/{}/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">project</span><span class="p">,</span>
+        <span class="n">site</span><span class="p">,</span>
+        <span class="n">subject</span><span class="p">,</span>
+        <span class="n">session</span><span class="p">,</span>
+        <span class="n">scan</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">,</span>
+        <span class="n">email</span><span class="p">,</span>
+        <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Arguments must not contain spaces.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_threads</span><span class="p">:</span>
+        <span class="c1"># Run in the background.</span>
+        <span class="n">download_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_build_graph</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">,</span> <span class="n">fiber_file</span><span class="p">,</span> <span class="n">atlas_file</span><span class="p">,</span> <span class="n">callback</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">download_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Run in the foreground.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_build_graph</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">fiber_file</span><span class="p">,</span> <span class="n">atlas_file</span><span class="p">)</span>
+    <span class="k">return</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="ndio.remote.grute.grute.compute_invariants">
+    <p>def <span class="ident">compute_invariants</span>(</p><p>self, graph_file, input_format, invariants=[&#39;ss1&#39;, &#39;tri&#39;, &#39;cc&#39;, &#39;mad&#39;, &#39;deg&#39;, &#39;eig&#39;], email=None, use_threads=False, callback=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Compute invariants from an existing GraphML file using the remote
+grute graph services.</p>
+<p>Arguments:
+    graph_file (str): The filename of the graphml file
+    input_format (str): One of grute.GraphFormats
+    invariants (str[]: Invariants.ALL)<em>: An array of grute.Invariants
+        to compute on the graph
+    email (str: self.email)</em>: The email to notify upon completion
+    use_threads (bool: False)<em>: Whether to use Python threads to run
+        computation in the background when waiting for the server to
+        return the invariants
+    callback (function: None)</em>: The function to run upon completion of
+        the call, if using threads. (Will not be called if use_threads
+        is set to False.)</p>
+<p>Returns:
+    HTTP Response if use_threads is False. Otherwise, None</p>
+<p>Raises:
+    ValueError: If the graph file does not exist, or if there are
+        issues with the passed arguments
+    RemoteDataUploadError: If there is an issue packing the file
+    RemoteError: If the server experiences difficulty computing invs</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.compute_invariants', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.grute.compute_invariants" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">compute_invariants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">input_format</span><span class="p">,</span>
+                       <span class="n">invariants</span><span class="o">=</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                       <span class="n">use_threads</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute invariants from an existing GraphML file using the remote</span>
+<span class="sd">    grute graph services.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        graph_file (str): The filename of the graphml file</span>
+<span class="sd">        input_format (str): One of grute.GraphFormats</span>
+<span class="sd">        invariants (str[]: Invariants.ALL)*: An array of grute.Invariants</span>
+<span class="sd">            to compute on the graph</span>
+<span class="sd">        email (str: self.email)*: The email to notify upon completion</span>
+<span class="sd">        use_threads (bool: False)*: Whether to use Python threads to run</span>
+<span class="sd">            computation in the background when waiting for the server to</span>
+<span class="sd">            return the invariants</span>
+<span class="sd">        callback (function: None)*: The function to run upon completion of</span>
+<span class="sd">            the call, if using threads. (Will not be called if use_threads</span>
+<span class="sd">            is set to False.)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        HTTP Response if use_threads is False. Otherwise, None</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the graph file does not exist, or if there are</span>
+<span class="sd">            issues with the passed arguments</span>
+<span class="sd">        RemoteDataUploadError: If there is an issue packing the file</span>
+<span class="sd">        RemoteError: If the server experiences difficulty computing invs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+    <span class="k">if</span> <span class="n">input_format</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GraphFormats</span><span class="o">.</span><span class="n">_any</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid input format, {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_format</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">Invariants</span><span class="o">.</span><span class="n">ALL</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invariants must be a subset of Invariants.ALL.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_threads</span> <span class="ow">and</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must be a function.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must take exactly 1 argument.&quot;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;graphupload/{}/{}/{}/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">email</span><span class="p">,</span>
+        <span class="n">input_format</span><span class="p">,</span>
+        <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">invariants</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Arguments cannot have spaces in them.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;File {} does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">graph_file</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">use_threads</span><span class="p">:</span>
+        <span class="c1"># Run in the background.</span>
+        <span class="n">upload_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_compute_invariants</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">upload_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Run in the foreground.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_compute_invariants</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">)</span>
+    <span class="k">return</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="ndio.remote.grute.grute.convert_graph">
+    <p>def <span class="ident">convert_graph</span>(</p><p>self, graph_file, input_format, output_formats, email=None, use_threads=False, callback=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Convert a graph from one GraphFormat to another.</p>
+<p>Arguments:
+    graph_file (str): Filename of the file to convert
+    input_format (str): A grute.GraphFormats
+    output_formats (str[]): A grute.GraphFormats
+    email (str: self.email)<em>: The email to notify
+    use_threads (bool: False)</em>: Whether to use Python threads to run
+        computation in the background when waiting for the server
+    callback (function: None)*: The function to run upon completion of
+        the call, if using threads. (Will not be called if use_threads
+        is set to False.)</p>
+<p>Returns:
+    HTTP Response if use_threads=False. Else, no return value.</p>
+<p>Raises:
+    RemoteDataUploadError: If there's an issue uploading the data
+    RemoteError: If there's a server-side issue
+    ValueError: If there's a problem with the supplied arguments</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.convert_graph', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.grute.convert_graph" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">convert_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">input_format</span><span class="p">,</span> <span class="n">output_formats</span><span class="p">,</span>
+                  <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">use_threads</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a graph from one GraphFormat to another.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        graph_file (str): Filename of the file to convert</span>
+<span class="sd">        input_format (str): A grute.GraphFormats</span>
+<span class="sd">        output_formats (str[]): A grute.GraphFormats</span>
+<span class="sd">        email (str: self.email)*: The email to notify</span>
+<span class="sd">        use_threads (bool: False)*: Whether to use Python threads to run</span>
+<span class="sd">            computation in the background when waiting for the server</span>
+<span class="sd">        callback (function: None)*: The function to run upon completion of</span>
+<span class="sd">            the call, if using threads. (Will not be called if use_threads</span>
+<span class="sd">            is set to False.)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        HTTP Response if use_threads=False. Else, no return value.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RemoteDataUploadError: If there&#39;s an issue uploading the data</span>
+<span class="sd">        RemoteError: If there&#39;s a server-side issue</span>
+<span class="sd">        ValueError: If there&#39;s a problem with the supplied arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+    <span class="k">if</span> <span class="n">input_format</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GraphFormats</span><span class="o">.</span><span class="n">_any</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid input format {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_format</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">output_formats</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">GraphFormats</span><span class="o">.</span><span class="n">_any</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Output formats must be a GraphFormats.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_threads</span> <span class="ow">and</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must be a function.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;callback must take exactly 1 argument.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">graph_file</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No such file, {}!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">graph_file</span><span class="p">))</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;convert/{}/{}/{}/l&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">email</span><span class="p">,</span>
+        <span class="n">input_format</span><span class="p">,</span>
+        <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_formats</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Spaces are not permitted in arguments.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_threads</span><span class="p">:</span>
+        <span class="c1"># Run in the background.</span>
+        <span class="n">convert_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_convert_graph</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="n">callback</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">convert_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Run in the foreground.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_convert_graph</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">)</span>
+    <span class="k">return</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="ndio.remote.grute.grute.ping">
+    <p>def <span class="ident">ping</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Ping the server to make sure that you can access the base URL.</p>
+<p>Arguments:
+    None
+Returns:
+    <code>boolean</code> Successful access of server (or status code)</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.ping', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.grute.ping" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="ndio.remote.grute.grute.set_default_email">
+    <p>def <span class="ident">set_default_email</span>(</p><p>self, email)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Sets the default email to use for notifications if none is specified.
+Does only basic error-checking.</p>
+<p>Arguments:
+    email (str): The email to notify for all server graph services.</p>
+<p>Returns:
+    None</p>
+<p>Raises:
+    ValueError: If an invalid email is supplied.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.set_default_email', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.grute.set_default_email" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_default_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the default email to use for notifications if none is specified.</span>
+<span class="sd">    Does only basic error-checking.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The email to notify for all server graph services.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If an invalid email is supplied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;@&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">email</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid email.&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="ndio.remote.grute.grute.url">
+    <p>def <span class="ident">url</span>(</p><p>self, suffix=&#39;&#39;)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the base URL of the Remote.</p>
+<p>Arguments:
+    None
+Returns:
+    <code>str</code> base URL</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.url', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.remote.grute.grute.url" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;/graph-services/&#39;</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="ndio.remote.grute.grute.email" class="name">var <span class="ident">email</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+
+  </section>
+
+    </article>
+  <div class="clear"> </div>
+  <footer id="footer">
+    <p>
+      Documentation generated by
+      <a href="https://github.com/BurntSushi/pdoc">pdoc 0.3.2</a>
+    </p>
+
+    <p>pdoc is in the public domain with the
+      <a href="http://unlicense.org">UNLICENSE</a></p>
+
+    <p>Design by <a href="http://nadh.in">Kailash Nadh</a></p>
+  </footer>
+</div>
+</body>
+</html>
