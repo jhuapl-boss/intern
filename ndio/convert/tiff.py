@@ -99,6 +99,45 @@ def save_collection(tiff_filename_base, numpy_data, start_layers_at=1):
     return output_files
 
 
+def load_tiff_multipage(tiff_filename, dtype='float32'):
+    """
+    Load a multipage tiff into a single variable in x,y,z format.
+
+    Arguments:
+        tiff_filename:     Filename of source data
+        dtype:             data type to use for the returned tensor
+
+    Returns:
+        Array containing contents from input tiff file in xyz order
+    """
+
+    if not os.path.isfile(tiff_filename):
+        raise RuntimeError('could not find file "%s"' % tiff_filename)
+
+    # load the data from multi-layer TIF files
+    data = Image.open(tiff_filename)
+
+    im = []
+
+    while True:
+
+        Xi = numpy.array(data, dtype=dtype)
+        if Xi.ndim == 2:
+            Xi = Xi[numpy.newaxis, ...] # add slice dimension
+        im.append(Xi)
+
+        try:
+            data.seek(data.tell()+1)
+        except EOFError:
+            break  # this just means hit end of file (not really an error)
+
+    im = numpy.concatenate(im, axis=0)  # list of 2d -> tensor
+    im = numpy.rollaxis(im, 1)
+    im = numpy.rollaxis(im, 2)
+
+    return im
+
+
 def load_collection(tiff_filename_base):
     """
     Import all files matching the filename base given via `tiff_filename_base`.
