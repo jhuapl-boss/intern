@@ -1,10 +1,12 @@
 # Changelog
 
-- **1.0.1**
+- **1.1.0**
     - Add converters for voxel lists and ndarrays
+    - Add the `ndio.remote.NDIngest` remote
+    - Improve how ndio version checking works
+    - Improve how ndio installation and updates check for module versions (setup.py)
 - **1.0.0**
     - This changelog prepares ndio to be stable.
-    - All APIs are now static until the next breaking version (2.\*.\*).
     - We now follow Semantic Versioning.
 - **0.1.18**
     - Standardize converter names in the `convert` module
