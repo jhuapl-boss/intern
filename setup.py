@@ -53,6 +53,7 @@ manipulation.',
     ],
     classifiers=[],
     setup_requires=[
+        "requests",
         'numpy',
     ],
     install_requires=[
