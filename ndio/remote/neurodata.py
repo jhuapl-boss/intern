@@ -88,7 +88,7 @@ class neurodata(Remote):
             suffix (str : 'public_tokens/'): The url endpoint to check
 
         Returns:
-            int status code
+            int: status code
         """
         return super(neurodata, self).ping(suffix)
 
@@ -269,7 +269,7 @@ class neurodata(Remote):
             data (str): A dictionary to insert as metadata. Include `secret`.
 
         Returns:
-            JSON of the inserted ID (convenience) or an error message.
+            json: Info of the inserted ID (convenience) or an error message.
 
         Throws:
             RemoteDataUploadError: If the token is already populated, or if
@@ -293,7 +293,7 @@ class neurodata(Remote):
             token (str): The token to read from in LIMS
 
         Returns:
-            dict, or None if unavailable
+            dict: or None if unavailable
         """
         md = self.get_metadata(token)['metadata']
         if 'subvolumes' in md:
@@ -320,7 +320,7 @@ class neurodata(Remote):
             notes (str): Optional extra thoughts on the subvolume
 
         Returns:
-            Boolean success
+            boolean: success
         """
         md = self.get_metadata(token)['metadata']
         if 'subvolumes' in md:
@@ -622,11 +622,12 @@ class neurodata(Remote):
             data (numpy.ndarray): A numpy array of data. Pass in (x, y, z)
             dtype (str : ''): Pass in explicit datatype, or we use projinfo
             resolution (int : 0): Resolution at which to insert the data
+
         Returns:
             bool: True on success
 
         Raises:
-            RemoteDataUploadError if there's an issue during upload.
+            RemoteDataUploadError: if there's an issue during upload.
         """
 
         datatype = self.get_proj_info(token)['channels'][channel]['datatype']
@@ -733,7 +734,7 @@ class neurodata(Remote):
             resolution (int : 0): The resolution at which to download
 
         Returns:
-            (x_start, x_stop, y_start, y_stop, z_start, z_stop) ints
+            (x_start, x_stop, y_start, y_stop, z_start, z_stop): ints
         """
         url = self.url('{}/{}/{}/boundingbox/{}/'.format(token, channel,
                                                          r_id, resolution))
@@ -768,8 +769,10 @@ class neurodata(Remote):
             channel (str): Channel to use
             ramon_type (int : None): Optional. If set, filters IDs and only
                 returns those of RAMON objects of the requested type.
+
         Returns:
             int[]: A list of the ids of the returned RAMON objects
+
         Raises:
             RemoteDataNotFoundError: If the channel or token is not found
         """
@@ -814,16 +817,12 @@ class neurodata(Remote):
             sieve (function : None): A function that accepts a single ramon
                 and returns True or False depending on whether you want that
                 ramon object to be included in your response or not.
-
                 For example,
-
                 ```
                 def is_even_id(ramon):
                     return ramon.id % 2 == 0
                 ```
-
                 You can then pass this to get_ramon like this:
-
                 ```
                 ndio.remote.neurodata.get_ramon( . . . , sieve=is_even_id)
                 ```
@@ -833,7 +832,7 @@ class neurodata(Remote):
                 If >=100, set it to 100.
 
         Returns:
-            ndio.ramon.RAMON[]
+            ndio.ramon.RAMON[]: A list of returned RAMON objects.
 
         Raises:
             RemoteDataNotFoundError: If the requested ids cannot be found.
@@ -970,8 +969,8 @@ class neurodata(Remote):
         with this function, it seems dangerous.
 
         Arguments:
-            token
-            channel
+            token (str): The token to inspect
+            channel (str): The channel to inspect
             anno (int OR list(int) OR RAMON): The annotation to delete. If a
                 RAMON object is supplied, the remote annotation will be deleted
                 by an ID lookup. If an int is supplied, the annotation will be
@@ -1014,7 +1013,7 @@ class neurodata(Remote):
             bool: Success = True
 
         Throws:
-            RemoteDataUploadError if something goes wrong
+            RemoteDataUploadError: if something goes wrong
         """
 
         # Max out batch-size at 100.
@@ -1090,13 +1089,13 @@ class neurodata(Remote):
         Call the restful endpoint to merge two RAMON objects into one.
 
         Arguments:
-            token
-            channel
+            token (str): The token to inspect
+            channel (str): The channel to inspect
             ids (int[]): the list of the IDs to merge
             delete (bool : False): Whether to delete after merging.
 
         Returns:
-            json
+            json: The ID as returned by ndstore
         """
         req = requests.get(self.url() + "/merge/{}/"
                            .format(','.join([str(i) for i in ids])))
@@ -1118,12 +1117,12 @@ class neurodata(Remote):
         Arguments:
             token (str): The token the new channel should be added to
             name (str): The name of the channel to add
-            type (str): Type of the channel to add (e.g. neurodata.IMAGE)
-            dtype (str): The datatype of the channel's data (e.g. 'uint8')
+            type (str): Type of the channel to add (e.g. `neurodata.IMAGE`)
+            dtype (str): The datatype of the channel's data (e.g. `uint8`)
             readonly (bool): Can others write to this channel?
 
         Returns:
-            bool: True if successful, False otherwise.
+            bool: `True` if successful, `False` otherwise.
 
         Raises:
             ValueError: If your args were bad :(
