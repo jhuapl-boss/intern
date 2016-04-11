@@ -1,10 +1,8 @@
 # ndio
 
-[![](https://img.shields.io/pypi/v/ndio.svg)](https://pypi.python.org/pypi/ndio) —
+[![](https://img.shields.io/pypi/v/ndio.svg)](https://pypi.python.org/pypi/ndio)
 [![Build Status](https://travis-ci.org/neurodata/ndio.svg?branch=master)](https://travis-ci.org/neurodata/ndio)
-![](https://img.shields.io/badge/v-1.0-green.svg?style=flat) —
-[![](https://img.shields.io/badge/SfN-2015-blue.svg)](http://www.sfn.org/annual-meeting/neuroscience-2015)
-[![Neurodata.io](https://img.shields.io/badge/Visit-neurodata.io-ff69b4.svg)](http://neurodata.io/)
+[![Code Climate](https://codeclimate.com/github/neurodata/ndio/badges/gpa.svg)](https://codeclimate.com/github/neurodata/ndio)
 
 
 **ndio** is a Python 2 and 3 module that enables big-data neuroscience, as well as direct interfacing with NeuroData workflows and servers. More complete documentation is available at [the ndio documentation website](http://docs.neurodata.io/nddocs/ndio).
