@@ -1,6 +1,6 @@
 # Changelog
 
-- **1.1.0**
+- [Predicted April 15] **1.1.0**
     - Add converters for voxel lists and ndarrays
     - Add the `ndio.remote.NDIngest` remote
     - Improve how ndio version checking works
