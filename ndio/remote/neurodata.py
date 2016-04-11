@@ -539,9 +539,9 @@ class neurodata(Remote):
                                b[1][0], b[1][1],
                                b[2][0], b[2][1], neariso=neariso)
 
-                vol[b[2][0]-z_start : b[2][1]-z_start,
-                    b[1][0]-y_start : b[1][1]-y_start,
-                    b[0][0]-x_start : b[0][1]-x_start] = data
+                vol[b[2][0]-z_start: b[2][1]-z_start,
+                    b[1][0]-y_start: b[1][1]-y_start,
+                    b[0][0]-x_start: b[0][1]-x_start] = data
 
             vol = numpy.rollaxis(vol, 1)
             vol = numpy.rollaxis(vol, 2)
@@ -656,9 +656,9 @@ class neurodata(Remote):
                                    z_start, z_start + data.shape[0])
 
             for b in blocks:
-                subvol = data[b[2][0]-z_start : b[2][1]-z_start,
-                              b[1][0]-y_start : b[1][1]-y_start,
-                              b[0][0]-x_start : b[0][1]-x_start]
+                subvol = data[b[2][0]-z_start: b[2][1]-z_start,
+                              b[1][0]-y_start: b[1][1]-y_start,
+                              b[0][0]-x_start: b[0][1]-x_start]
                 # upload the chunk:
                 ul_func(token, channel, x_start,
                         y_start, z_start, subvol,

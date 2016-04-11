@@ -13,8 +13,10 @@ install:
     - sudo apt-get install python-nose
     - sudo pip install --install-option='--no-cython-compile' cython
     - pip install .
+    - pip install pep8
 cache:
     - pip
     - apt
 script:
+    - find . -name \*.py -exec pep8 {} +
     - python -m unittest discover

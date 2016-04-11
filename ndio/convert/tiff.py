@@ -123,7 +123,7 @@ def load_tiff_multipage(tiff_filename, dtype='float32'):
 
         Xi = numpy.array(data, dtype=dtype)
         if Xi.ndim == 2:
-            Xi = Xi[numpy.newaxis, ...] # add slice dimension
+            Xi = Xi[numpy.newaxis, ...]  # add slice dimension
         im.append(Xi)
 
         try:
