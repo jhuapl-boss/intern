@@ -305,8 +305,12 @@ class neurodata(Remote):
         Arguments:
             token (str): The token to write to in LIMS
             channel (str): Channel to add in the subvolume. Can be `None`
-            Q_start (int): The start of the Q dimension
-            Q_stop (int): The top of the Q dimension,
+            x_start (int): Start in x dimension
+            x_stop (int): Stop in x dimension
+            y_start (int): Start in y dimension
+            y_stop (int): Stop in y dimension
+            z_start (int): Start in z dimension
+            z_stop (int): Stop in z dimension
             resolution (int): The resolution at which this subvolume is seen
             title (str): The title to set for the subvolume
             notes (str): Optional extra thoughts on the subvolume
@@ -600,7 +604,6 @@ class neurodata(Remote):
                     y_start,
                     z_start,
                     data,
-                    dtype='',
                     resolution=0):
         """
         Post a cutout to the server.
@@ -612,7 +615,6 @@ class neurodata(Remote):
             y_start (int)
             z_start (int)
             data (numpy.ndarray): A numpy array of data. Pass in (x, y, z)
-            dtype (str : ''): Pass in explicit datatype, or we use projinfo
             resolution (int : 0): Resolution at which to insert the data
 
         Returns:
@@ -631,31 +633,35 @@ class neurodata(Remote):
 
         if six.PY3 or data.nbytes > 1.5e9:
             ul_func = self._post_cutout_no_chunking_npz
-        elif six.PY2:
-            ul_func = self._post_cutout_no_chunking_blosc
         else:
-            raise OSError("Check yo version of Python!")
+            ul_func = self._post_cutout_no_chunking_blosc
 
         if data.size < self._chunk_threshold:
             return ul_func(token, channel, x_start,
                            y_start, z_start, data,
                            resolution)
-        else:
-            # must chunk first
-            from ndio.utils.parallel import block_compute
-            blocks = block_compute(x_start, x_start + data.shape[2],
-                                   y_start, y_start + data.shape[1],
-                                   z_start, z_start + data.shape[0])
 
-            for b in blocks:
-                subvol = data[b[2][0]-z_start: b[2][1]-z_start,
-                              b[1][0]-y_start: b[1][1]-y_start,
-                              b[0][0]-x_start: b[0][1]-x_start]
-                # upload the chunk:
-                ul_func(token, channel, x_start,
-                        y_start, z_start, subvol,
-                        resolution)
+        return self._post_cutout_with_chunking(token, channel,
+                                               x_start, y_start, z_start, data,
+                                               resolution, ul_func)
 
+    def _post_cutout_with_chunking(self, token, channel, x_start,
+                                   y_start, z_start, data,
+                                   resolution, ul_func):
+        # must chunk first
+        from ndio.utils.parallel import block_compute
+        blocks = block_compute(x_start, x_start + data.shape[2],
+                               y_start, y_start + data.shape[1],
+                               z_start, z_start + data.shape[0])
+
+        for b in blocks:
+            subvol = data[b[2][0]-z_start: b[2][1]-z_start,
+                          b[1][0]-y_start: b[1][1]-y_start,
+                          b[0][0]-x_start: b[0][1]-x_start]
+            # upload the chunk:
+            ul_func(token, channel, x_start,
+                    y_start, z_start, subvol,
+                    resolution)
         return True
 
     def _post_cutout_no_chunking_npz(self, token, channel,
@@ -792,7 +798,7 @@ class neurodata(Remote):
             raise IOError("Could not successfully mock HDF5 file for parsing.")
 
     @_check_token
-    def get_ramon(self, token, channel, ids, resolution=None,
+    def get_ramon(self, token, channel, ids, resolution=0,
                   include_cutout=False, sieve=None, batch_size=100):
         """
         Download a RAMON object by ID.
@@ -832,65 +838,59 @@ class neurodata(Remote):
 
         b_size = min(100, batch_size)
 
-        mdata = self.get_ramon_metadata(token, channel, ids)
-
-        if resolution is None:
-            resolution = 0
-            # probably should be dynamic...
-
-        BATCH = False
         _return_first_only = False
-
         if type(ids) is not list:
             _return_first_only = True
             ids = [ids]
-        if type(ids) is list:
-            ids = [str(i) for i in ids]
-            if len(ids) > b_size:
-                BATCH = True
-        # now ids is a list of strings
 
-        if BATCH:
-            rs = []
-            id_batches = [ids[i:i+b_size] for i in xrange(0, len(ids), b_size)]
-            for batch in id_batches:
-                rs.extend(self._get_ramon_batch(token, channel,
-                                                batch, resolution))
-        else:
-            rs = self._get_ramon_batch(token, channel, ids, resolution)
+        rs = []
+        id_batches = [ids[i:i+b_size] for i in range(0, len(ids), b_size)]
+        for batch in id_batches:
+            rs.extend(self._get_ramon_batch(token, channel, batch, resolution))
 
-        if sieve is not None:
-            rs = [r for r in rs if sieve(r)]
+        rs = self._filter_ramon(rs, sieve)
 
         if include_cutout:
-            for r in rs:
-                if 'cutout' not in dir(r):
-                    continue
-                origin = r.xyz_offset
-                # Get the bounding box (cube-aligned)
-                bbox = self.get_ramon_bounding_box(token, channel,
-                                                   r.id, resolution=resolution)
-                # Get the cutout (cube-aligned)
-                cutout = self.get_cutout(token, channel,
-                                         *bbox, resolution=resolution)
-                cutout[cutout != int(r.id)] = 0
-
-                # Compute upper offset and crop
-                bounds = numpy.argwhere(cutout)
-                mins = [min([i[dim] for i in bounds]) for dim in range(3)]
-                maxs = [max([i[dim] for i in bounds]) for dim in range(3)]
-
-                r.cutout = cutout[
-                    mins[0]:maxs[0],
-                    mins[1]:maxs[1],
-                    mins[2]:maxs[2]
-                ]
+            rs = [self._add_ramon_cutout(token, channel, r, resolution)
+                  for r in rs]
 
         if _return_first_only:
             return rs[0]
+
         return rs
 
+    def _filter_ramon(self, rs, sieve):
+        if sieve is not None:
+            return [r for r in rs if sieve(r)]
+        return rs
+
+    def _add_ramon_cutout(self, token, channel, ramon, resolution):
+        if 'cutout' not in dir(ramon):
+            return ramon
+        origin = ramon.xyz_offset
+        # Get the bounding box (cube-aligned)
+        bbox = self.get_ramon_bounding_box(token, channel,
+                                           ramon.id, resolution=resolution)
+        # Get the cutout (cube-aligned)
+        cutout = self.get_cutout(token, channel,
+                                 *bbox, resolution=resolution)
+        cutout[cutout != int(ramon.id)] = 0
+
+        # Compute upper offset and crop
+        bounds = numpy.argwhere(cutout)
+        mins = [min([i[dim] for i in bounds]) for dim in range(3)]
+        maxs = [max([i[dim] for i in bounds]) for dim in range(3)]
+
+        ramon.cutout = cutout[
+            mins[0]:maxs[0],
+            mins[1]:maxs[1],
+            mins[2]:maxs[2]
+        ]
+
+        return ramon
+
     def _get_ramon_batch(self, token, channel, ids, resolution):
+        ids = [str(i) for i in ids]
         url = self.url("{}/{}/{}/json/".format(token, channel, ",".join(ids)))
         req = requests.get(url)
 
@@ -1018,7 +1018,7 @@ class neurodata(Remote):
         # If there are too many to fit in one batch, split here and call this
         # function recursively.
         if len(r) > batch_size:
-            batches = [r[i:i+b_size] for i in xrange(0, len(r), b_size)]
+            batches = [r[i:i+b_size] for i in range(0, len(r), b_size)]
             for batch in batches:
                 self.post_ramon(token, channel, batch, b_size)
             return
