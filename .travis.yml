@@ -14,9 +14,11 @@ install:
     - sudo pip install --install-option='--no-cython-compile' cython
     - pip install .
     - pip install pep8
+    - pip install pydocstyle
 cache:
     - pip
     - apt
 script:
     - find . -name \*.py -exec pep8 {} +
+    - find . -name \*.py -exec pydocstyle --ignore=D200,D400,D205,D401,D100,D203 {} +
     - python -m unittest discover
