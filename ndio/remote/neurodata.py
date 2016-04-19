@@ -62,7 +62,6 @@ class neurodata(Remote):
             suffix (str: "ocp"): The URL suffix to specify ndstore/microns. If
                 you aren't sure what to do with this, don't specify one.
         """
-
         self._check_tokens = kwargs.get('check_tokens', False)
         self._chunk_threshold = kwargs.get('chunk_threshold', 1E9 / 4)
         self._ext = kwargs.get('suffix', DEFAULT_SUFFIX)
