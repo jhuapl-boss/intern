@@ -14,7 +14,6 @@ def export_dae(filename, cutout, level=0):
     Returns:
         boolean success
     """
-
     if ".dae" not in filename:
         filename = filename + ".dae"
 
@@ -34,7 +33,6 @@ def export_obj(filename, cutout, level=0):
     Returns:
         boolean success
     """
-
     if ".obj" not in filename:
         filename = filename + ".obj"
 
@@ -54,7 +52,6 @@ def export_ply(filename, cutout, level=0):
     Returns:
         boolean success
     """
-
     if ".ply" not in filename:
         filename = filename + ".ply"
 
