@@ -20,7 +20,6 @@ def snap_to_cube(q_start, q_stop, chunk_depth=16, q_index=1):
     Returns:
         2-tuple: (lo, hi) bounding box for the volume
     """
-
     lo = 0
     hi = 0
     # Start by indexing everything at zero for our own sanity
@@ -50,13 +49,17 @@ def block_compute(x_start, x_stop,
     order to reconstitute a larger cutout.
 
     Arguments:
-        Q_start (int): The lower bound of dimension 'Q'
-        Q_stop (int): The upper bound of dimension 'Q'
+        x_start (int): The lower bound of dimension x
+        x_stop (int): The upper bound of dimension x
+        y_start (int): The lower bound of dimension y
+        y_stop (int): The upper bound of dimension y
+        z_start (int): The lower bound of dimension z
+        z_stop (int): The upper bound of dimension z
+
 
     Returns:
         [((x_start, x_stop), (y_start, y_stop), (z_start, z_stop)), ... ]
     """
-
     # x
     x_bounds = range(origin[0], x_stop + block_size[0], block_size[0])
     x_bounds = [x for x in x_bounds if (x > x_start and x < x_stop)]

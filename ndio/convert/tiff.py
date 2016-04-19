@@ -15,7 +15,6 @@ def load(tiff_filename):
     Returns:
         A numpy array with data from the TIFF file
     """
-
     # Expand filename to be absolute
     tiff_filename = os.path.expanduser(tiff_filename)
 
@@ -40,7 +39,6 @@ def save(tiff_filename, numpy_data):
     Returns:
         String. The expanded filename that now holds the TIFF data
     """
-
     # Expand filename to be absolute
     tiff_filename = os.path.expanduser(tiff_filename)
 
@@ -73,7 +71,6 @@ def save_collection(tiff_filename_base, numpy_data, start_layers_at=1):
     Returns:
         Array. A list of expanded filenames that hold TIFF data.
     """
-
     file_ext = tiff_filename_base.split('.')[-1]
     if file_ext in ['tif', 'tiff']:
         # Filename is "name*.tif[f]", set file_base to "name*".
@@ -110,7 +107,6 @@ def load_tiff_multipage(tiff_filename, dtype='float32'):
     Returns:
         Array containing contents from input tiff file in xyz order
     """
-
     if not os.path.isfile(tiff_filename):
         raise RuntimeError('could not find file "%s"' % tiff_filename)
 
@@ -153,7 +149,6 @@ def load_collection(tiff_filename_base):
     Returns:
         A numpy array holding a 3D dataset
     """
-
     # We expect images to be indexed by their alphabetical order.
     files = glob.glob(tiff_filename_base)
     files.sort()

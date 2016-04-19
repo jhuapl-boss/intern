@@ -107,7 +107,6 @@ def convert(in_file, out_file, in_fmt="", out_fmt=""):
     Returns:
         String. Output filename
     """
-
     # First verify that in_file exists and out_file doesn't.
     in_file = os.path.expanduser(in_file)
     out_file = os.path.expanduser(out_file)
