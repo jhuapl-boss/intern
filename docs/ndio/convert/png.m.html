@@ -1082,7 +1082,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array with data from the png file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># Expand filename to be absolute</span>
     <span class="n">png_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">png_filename</span><span class="p">)</span>
 
@@ -1113,7 +1112,6 @@ table {
 <span class="sd">            cannot be coerced into a png, or perhaps your numpy.ndarray is</span>
 <span class="sd">            ill-formed?</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># Expand filename to be absolute</span>
     <span class="n">png_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">png_filename</span><span class="p">)</span>
 
@@ -1149,7 +1147,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        Array. A list of expanded filenames that hold png data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">file_ext</span> <span class="o">=</span> <span class="n">png_filename_base</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">file_ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;png&#39;</span><span class="p">]:</span>
         <span class="c1"># Filename is &quot;name*.ext&quot;, set file_base to &quot;name*&quot;.</span>
@@ -1190,7 +1187,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array holding a 3D dataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># We expect images to be indexed by their alphabetical order.</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">png_filename_base</span><span class="p">)</span>
     <span class="n">files</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -1239,7 +1235,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array with data from the png file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># Expand filename to be absolute</span>
     <span class="n">png_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">png_filename</span><span class="p">)</span>
 
@@ -1297,7 +1292,6 @@ Also, look at how nicely these documentation lines are all the same length!</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array holding a 3D dataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># We expect images to be indexed by their alphabetical order.</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">png_filename_base</span><span class="p">)</span>
     <span class="n">files</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -1360,7 +1354,6 @@ Also, look at how nicely these documentation lines are all the same length!</p>
 <span class="sd">            cannot be coerced into a png, or perhaps your numpy.ndarray is</span>
 <span class="sd">            ill-formed?</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># Expand filename to be absolute</span>
     <span class="n">png_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">png_filename</span><span class="p">)</span>
 
@@ -1425,7 +1418,6 @@ array as its own 2D file.</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        Array. A list of expanded filenames that hold png data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">file_ext</span> <span class="o">=</span> <span class="n">png_filename_base</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">file_ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;png&#39;</span><span class="p">]:</span>
         <span class="c1"># Filename is &quot;name*.ext&quot;, set file_base to &quot;name*&quot;.</span>

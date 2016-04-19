@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>ndio API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="A Python library for open neuroscience data access and manipulation." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1044,6 +1044,13 @@ table {
 
     </li>
 
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#ndio.check_version">check_version</a></li>
+  </ul>
+
+    </li>
 
 
     <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
@@ -1066,11 +1073,28 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">ndio</span> module</h1>
-  
+  <p>A Python library for open neuroscience data access and manipulation.</p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio', this);">Show source &equiv;</a></p>
   <div id="source-ndio" class="source">
-    <div class="codehilite"><pre><span></span><span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A Python library for open neuroscience data access and manipulation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">check_version</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tells you if you have an old version of ndio.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">requests</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pypi.python.org/pypi/ndio/json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="n">version</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;A newer version of ndio is available. &quot;</span> <span class="o">+</span>
+              <span class="s2">&quot;&#39;pip install -U ndio&#39; to update.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span>
 </pre></div>
 
   </div>
@@ -1088,6 +1112,38 @@ table {
 
       </div>
 
+    <h2 class="section-title" id="header-functions">Functions</h2>
+      
+  <div class="item">
+    <div class="name def" id="ndio.check_version">
+    <p>def <span class="ident">check_version</span>(</p><p>)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Tells you if you have an old version of ndio.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.check_version', this);">Show source &equiv;</a></p>
+  <div id="source-ndio.check_version" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">check_version</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tells you if you have an old version of ndio.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">requests</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pypi.python.org/pypi/ndio/json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="n">version</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;A newer version of ndio is available. &quot;</span> <span class="o">+</span>
+              <span class="s2">&quot;&#39;pip install -U ndio&#39; to update.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
 
 
     <h2 class="section-title" id="header-submodules">Sub-modules</h2>
@@ -1095,24 +1151,40 @@ table {
       <p class="name"><a href="convert/index.html">ndio.convert</a></p>
       
   
+    <div class="desc"><p>Converters between common neuroscience file formats.</p></div>
 
       </div>
       <div class="item">
       <p class="name"><a href="ramon/index.html">ndio.ramon</a></p>
       
   
+    <div class="desc"><p>The enumerables in this file are to afford compatibility with CAJAL, which uses<br />
+integers as types. To convert from integer to string (for instance, if you want<br />
+to specify the ANNOTATION_TYPE in a RAMON hdf5 file), use:</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>AnnotationType.get_str(1)<br />
+"GENERIC"</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>To convert from an integer to an actual...</p></div>
 
       </div>
       <div class="item">
       <p class="name"><a href="remote/index.html">ndio.remote</a></p>
       
   
+    <div class="desc"><p>Remotes are services that are accessed via HTTP/SCP or other services that<br />
+talk to non-local machines.</p></div>
 
       </div>
       <div class="item">
       <p class="name"><a href="utils/index.html">ndio.utils</a></p>
       
   
+    <div class="desc"><p>Utility functions common to all ndio submodules.</p></div>
 
       </div>
   </section>

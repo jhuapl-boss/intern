@@ -1083,7 +1083,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array with data from the TIFF file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># Expand filename to be absolute</span>
     <span class="n">tiff_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">tiff_filename</span><span class="p">)</span>
 
@@ -1108,7 +1107,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        String. The expanded filename that now holds the TIFF data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># Expand filename to be absolute</span>
     <span class="n">tiff_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">tiff_filename</span><span class="p">)</span>
 
@@ -1141,7 +1139,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        Array. A list of expanded filenames that hold TIFF data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">file_ext</span> <span class="o">=</span> <span class="n">tiff_filename_base</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">file_ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="s1">&#39;tiff&#39;</span><span class="p">]:</span>
         <span class="c1"># Filename is &quot;name*.tif[f]&quot;, set file_base to &quot;name*&quot;.</span>
@@ -1178,7 +1175,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        Array containing contents from input tiff file in xyz order</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">tiff_filename</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;could not find file &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">tiff_filename</span><span class="p">)</span>
 
@@ -1191,7 +1187,7 @@ table {
 
         <span class="n">Xi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">Xi</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">Xi</span> <span class="o">=</span> <span class="n">Xi</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="c1"># add slice dimension</span>
+            <span class="n">Xi</span> <span class="o">=</span> <span class="n">Xi</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># add slice dimension</span>
         <span class="n">im</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Xi</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -1221,7 +1217,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array holding a 3D dataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># We expect images to be indexed by their alphabetical order.</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">tiff_filename_base</span><span class="p">)</span>
     <span class="n">files</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -1270,7 +1265,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array with data from the TIFF file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># Expand filename to be absolute</span>
     <span class="n">tiff_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">tiff_filename</span><span class="p">)</span>
 
@@ -1328,7 +1322,6 @@ Also, look at how nicely these documentation lines are all the same length!</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array holding a 3D dataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># We expect images to be indexed by their alphabetical order.</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">tiff_filename_base</span><span class="p">)</span>
     <span class="n">files</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -1377,7 +1370,6 @@ Also, look at how nicely these documentation lines are all the same length!</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        Array containing contents from input tiff file in xyz order</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">tiff_filename</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;could not find file &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">tiff_filename</span><span class="p">)</span>
 
@@ -1390,7 +1382,7 @@ Also, look at how nicely these documentation lines are all the same length!</p>
 
         <span class="n">Xi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">Xi</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">Xi</span> <span class="o">=</span> <span class="n">Xi</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="c1"># add slice dimension</span>
+            <span class="n">Xi</span> <span class="o">=</span> <span class="n">Xi</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># add slice dimension</span>
         <span class="n">im</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Xi</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -1442,7 +1434,6 @@ Also, look at how nicely these documentation lines are all the same length!</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        String. The expanded filename that now holds the TIFF data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># Expand filename to be absolute</span>
     <span class="n">tiff_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">tiff_filename</span><span class="p">)</span>
 
@@ -1504,7 +1495,6 @@ array as its own 2D file.</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        Array. A list of expanded filenames that hold TIFF data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">file_ext</span> <span class="o">=</span> <span class="n">tiff_filename_base</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">file_ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="s1">&#39;tiff&#39;</span><span class="p">]:</span>
         <span class="c1"># Filename is &quot;name*.tif[f]&quot;, set file_base to &quot;name*&quot;.</span>

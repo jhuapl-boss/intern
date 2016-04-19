@@ -1101,6 +1101,9 @@ table {
 <span class="sd">   to ndio Remotes.</span>
 <span class="sd">   &quot;&quot;&quot;</span>
    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Initialize the error.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
        <span class="nb">super</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 <span class="n">lass</span> <span class="n">RemoteDataNotFoundError</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">):</span>
    <span class="sd">&quot;&quot;&quot;</span>
@@ -1109,6 +1112,9 @@ table {
 <span class="sd">   or the data does not exist.</span>
 <span class="sd">   &quot;&quot;&quot;</span>
    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Initialize the error.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
        <span class="nb">super</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 <span class="n">lass</span> <span class="n">RemoteDataUploadError</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">):</span>
    <span class="sd">&quot;&quot;&quot;</span>
@@ -1117,6 +1123,9 @@ table {
 <span class="sd">   because there&#39;s a problem with your data. (Check your bounds?)</span>
 <span class="sd">   &quot;&quot;&quot;</span>
    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Initialize the error.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
        <span class="nb">super</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 <span class="n">lass</span> <span class="n">BadAPIKeyError</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">):</span>
    <span class="sd">&quot;&quot;&quot;</span>
@@ -1125,6 +1134,9 @@ table {
 <span class="sd">   to access/edit the data you&#39;re accessing/editing.</span>
 <span class="sd">   &quot;&quot;&quot;</span>
    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Initialize the error.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
        <span class="nb">super</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 
@@ -1153,7 +1165,11 @@ to access/edit the data you're accessing/editing.</p></div>
 <span class="sd">    or if you specify an API key that does not match the requirements</span>
 <span class="sd">    to access/edit the data you&#39;re accessing/editing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 
@@ -1174,10 +1190,6 @@ to access/edit the data you're accessing/editing.</p></div>
             <div class="item">
             <p id="ndio.remote.errors.BadAPIKeyError.args" class="name">var <span class="ident">args</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#ndio.remote.errors.RemoteError">RemoteError</a></code>.<code><a href="#ndio.remote.errors.RemoteError.args">args</a></code>
-    </p>
 
             
   
@@ -1192,14 +1204,21 @@ to access/edit the data you're accessing/editing.</p></div>
     <p>def <span class="ident">__init__</span>(</p><p>self, message)</p>
     </div>
     
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#ndio.remote.errors.RemoteError">RemoteError</a></code>.<code><a href="#ndio.remote.errors.RemoteError.__init__">__init__</a></code>
+    </p>
 
     
   
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+    <div class="desc inherited"><p>Initialize the error.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.errors.BadAPIKeyError.__init__', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.errors.BadAPIKeyError.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 
@@ -1227,7 +1246,11 @@ or the data does not exist.</p></div>
 <span class="sd">    server either cannot access it (maybe a permissions issue?)</span>
 <span class="sd">    or the data does not exist.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 
@@ -1248,10 +1271,6 @@ or the data does not exist.</p></div>
             <div class="item">
             <p id="ndio.remote.errors.RemoteDataNotFoundError.args" class="name">var <span class="ident">args</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#ndio.remote.errors.RemoteError">RemoteError</a></code>.<code><a href="#ndio.remote.errors.RemoteError.args">args</a></code>
-    </p>
 
             
   
@@ -1266,14 +1285,21 @@ or the data does not exist.</p></div>
     <p>def <span class="ident">__init__</span>(</p><p>self, message)</p>
     </div>
     
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#ndio.remote.errors.RemoteError">RemoteError</a></code>.<code><a href="#ndio.remote.errors.RemoteError.__init__">__init__</a></code>
+    </p>
 
     
   
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+    <div class="desc inherited"><p>Initialize the error.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.errors.RemoteDataNotFoundError.__init__', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.errors.RemoteDataNotFoundError.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 
@@ -1301,7 +1327,11 @@ because there's a problem with your data. (Check your bounds?)</p></div>
 <span class="sd">    because you don&#39;t have write access to this channel, or</span>
 <span class="sd">    because there&#39;s a problem with your data. (Check your bounds?)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 
@@ -1322,10 +1352,6 @@ because there's a problem with your data. (Check your bounds?)</p></div>
             <div class="item">
             <p id="ndio.remote.errors.RemoteDataUploadError.args" class="name">var <span class="ident">args</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#ndio.remote.errors.RemoteError">RemoteError</a></code>.<code><a href="#ndio.remote.errors.RemoteError.args">args</a></code>
-    </p>
 
             
   
@@ -1340,14 +1366,21 @@ because there's a problem with your data. (Check your bounds?)</p></div>
     <p>def <span class="ident">__init__</span>(</p><p>self, message)</p>
     </div>
     
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#ndio.remote.errors.RemoteError">RemoteError</a></code>.<code><a href="#ndio.remote.errors.RemoteError.__init__">__init__</a></code>
+    </p>
 
     
   
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+    <div class="desc inherited"><p>Initialize the error.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.errors.RemoteDataUploadError.__init__', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.errors.RemoteDataUploadError.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">RemoteError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 
@@ -1373,7 +1406,11 @@ to ndio Remotes.</p></div>
 <span class="sd">    A generic error arising from an issue pertaining</span>
 <span class="sd">    to ndio Remotes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 
@@ -1410,11 +1447,14 @@ to ndio Remotes.</p></div>
 
     
   
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+    <div class="desc"><p>Initialize the error.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.errors.RemoteError.__init__', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.errors.RemoteError.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 

@@ -1091,6 +1091,7 @@ table {
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RAMONNeuron Object for storing neuroscience data with a voxel volume</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">segments</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
 
@@ -1099,15 +1100,21 @@ table {
                  <span class="n">kvpairs</span><span class="o">=</span><span class="n">DEFAULT_DYNAMIC_METADATA</span><span class="p">,</span>
                  <span class="n">status</span><span class="o">=</span><span class="n">DEFAULT_STATUS</span><span class="p">,</span>
                  <span class="n">author</span><span class="o">=</span><span class="n">DEFAULT_AUTHOR</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a new `RAMONNeuron`. Neurons take all of the arguments of</span>
+<span class="sd">        `RAMONBase`.</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            segments (int[]: None): A list of RAMON IDs that make up the neuron</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
 
-            <span class="n">RAMONBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                               <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
-                               <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
-                               <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
-                               <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
-                               <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
+        <span class="n">RAMONBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                           <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+                           <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
+                           <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
+                           <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
+                           <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1172,6 +1179,7 @@ table {
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RAMONNeuron Object for storing neuroscience data with a voxel volume</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">segments</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
 
@@ -1180,15 +1188,21 @@ table {
                  <span class="n">kvpairs</span><span class="o">=</span><span class="n">DEFAULT_DYNAMIC_METADATA</span><span class="p">,</span>
                  <span class="n">status</span><span class="o">=</span><span class="n">DEFAULT_STATUS</span><span class="p">,</span>
                  <span class="n">author</span><span class="o">=</span><span class="n">DEFAULT_AUTHOR</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a new `RAMONNeuron`. Neurons take all of the arguments of</span>
+<span class="sd">        `RAMONBase`.</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            segments (int[]: None): A list of RAMON IDs that make up the neuron</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
 
-            <span class="n">RAMONBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                               <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
-                               <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
-                               <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
-                               <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
-                               <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
+        <span class="n">RAMONBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                           <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+                           <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
+                           <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
+                           <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
+                           <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1212,14 +1226,11 @@ table {
 
     
   
-    <div class="desc"><p>Initialize a new RAMONBase object with default attributes.</p>
+    <div class="desc"><p>Initialize a new <code>RAMONNeuron</code>. Neurons take all of the arguments of<br />
+<code>RAMONBase</code>.</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>id (int)</b>: Unique 32-bit ID value assigned by OCP database<br />
-&emsp;&emsp;&emsp;&emsp;<b>confidence (float)</b>: Value 0-1 indicating confidence in annotation<br />
-&emsp;&emsp;&emsp;&emsp;<b>kvpairs (dict)</b>: A collection of key-value pairs<br />
-&emsp;&emsp;&emsp;&emsp;<b>status (string)</b>: Status of annotation in database<br />
-&emsp;&emsp;&emsp;&emsp;<b>author (string)</b>: Username of the person who created the annotation</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>segments (int[]: None)</b>: A list of RAMON IDs that make up the neuron</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.ramon.RAMONNeuron.RAMONNeuron.__init__', this);">Show source &equiv;</a></p>
   <div id="source-ndio.ramon.RAMONNeuron.RAMONNeuron.__init__" class="source">
@@ -1230,13 +1241,19 @@ table {
              <span class="n">kvpairs</span><span class="o">=</span><span class="n">DEFAULT_DYNAMIC_METADATA</span><span class="p">,</span>
              <span class="n">status</span><span class="o">=</span><span class="n">DEFAULT_STATUS</span><span class="p">,</span>
              <span class="n">author</span><span class="o">=</span><span class="n">DEFAULT_AUTHOR</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
-        <span class="n">RAMONBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                           <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
-                           <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
-                           <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
-                           <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
-                           <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize a new `RAMONNeuron`. Neurons take all of the arguments of</span>
+<span class="sd">    `RAMONBase`.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        segments (int[]: None): A list of RAMON IDs that make up the neuron</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
+    <span class="n">RAMONBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                       <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+                       <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
+                       <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
+                       <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
+                       <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
 </pre></div>
 
   </div>

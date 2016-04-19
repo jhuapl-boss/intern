@@ -4,7 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>ndio.remote API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="Remotes are services that are accessed via HTTP/SCP or other services that
+talk to non-local machine..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1070,11 +1071,18 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">ndio.remote</span> module</h1>
-  
+  <p>Remotes are services that are accessed via HTTP/SCP or other services that<br />
+talk to non-local machines.</p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote" class="source">
-    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Remotes are services that are accessed via HTTP/SCP or other services that</span>
+<span class="sd">talk to non-local machines.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">.Remote</span> <span class="kn">import</span> <span class="n">Remote</span>
 <span class="kn">from</span> <span class="nn">.grute</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.neurodata</span> <span class="kn">import</span> <span class="o">*</span>

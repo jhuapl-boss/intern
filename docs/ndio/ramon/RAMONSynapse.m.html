@@ -1092,6 +1092,7 @@ table {
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RAMONSynapse Object for storing neuroscience data with a voxel volume</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">synapse_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">weight</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -1107,21 +1108,30 @@ table {
                  <span class="n">kvpairs</span><span class="o">=</span><span class="n">DEFAULT_DYNAMIC_METADATA</span><span class="p">,</span>
                  <span class="n">status</span><span class="o">=</span><span class="n">DEFAULT_STATUS</span><span class="p">,</span>
                  <span class="n">author</span><span class="o">=</span><span class="n">DEFAULT_AUTHOR</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a new `RAMONSynapse` object. Takes all arguments of the</span>
+<span class="sd">        `RAMONVolume` parent class.</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">synapse_type</span> <span class="o">=</span> <span class="n">synapse_type</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            synapse_type (int: 0): The synapse type. See the online ndstore</span>
+<span class="sd">                documentation for more details.</span>
+<span class="sd">            weight (int: 0): The weight of this synapse (arbitrarily defined)</span>
+<span class="sd">            segments (int[]: None): A list of segments that belong to this obj</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">synapse_type</span> <span class="o">=</span> <span class="n">synapse_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
 
-            <span class="n">RAMONVolume</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                                 <span class="n">xyz_offset</span><span class="o">=</span><span class="n">xyz_offset</span><span class="p">,</span>
-                                 <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                 <span class="n">cutout</span><span class="o">=</span><span class="n">cutout</span><span class="p">,</span>
-                                 <span class="n">voxels</span><span class="o">=</span><span class="n">voxels</span><span class="p">,</span>
-                                 <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
-                                 <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
-                                 <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
-                                 <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
-                                 <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
+        <span class="n">RAMONVolume</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                             <span class="n">xyz_offset</span><span class="o">=</span><span class="n">xyz_offset</span><span class="p">,</span>
+                             <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                             <span class="n">cutout</span><span class="o">=</span><span class="n">cutout</span><span class="p">,</span>
+                             <span class="n">voxels</span><span class="o">=</span><span class="n">voxels</span><span class="p">,</span>
+                             <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+                             <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
+                             <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
+                             <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
+                             <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1186,6 +1196,7 @@ table {
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RAMONSynapse Object for storing neuroscience data with a voxel volume</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">synapse_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">weight</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -1201,21 +1212,30 @@ table {
                  <span class="n">kvpairs</span><span class="o">=</span><span class="n">DEFAULT_DYNAMIC_METADATA</span><span class="p">,</span>
                  <span class="n">status</span><span class="o">=</span><span class="n">DEFAULT_STATUS</span><span class="p">,</span>
                  <span class="n">author</span><span class="o">=</span><span class="n">DEFAULT_AUTHOR</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a new `RAMONSynapse` object. Takes all arguments of the</span>
+<span class="sd">        `RAMONVolume` parent class.</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">synapse_type</span> <span class="o">=</span> <span class="n">synapse_type</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            synapse_type (int: 0): The synapse type. See the online ndstore</span>
+<span class="sd">                documentation for more details.</span>
+<span class="sd">            weight (int: 0): The weight of this synapse (arbitrarily defined)</span>
+<span class="sd">            segments (int[]: None): A list of segments that belong to this obj</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">synapse_type</span> <span class="o">=</span> <span class="n">synapse_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
 
-            <span class="n">RAMONVolume</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                                 <span class="n">xyz_offset</span><span class="o">=</span><span class="n">xyz_offset</span><span class="p">,</span>
-                                 <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                 <span class="n">cutout</span><span class="o">=</span><span class="n">cutout</span><span class="p">,</span>
-                                 <span class="n">voxels</span><span class="o">=</span><span class="n">voxels</span><span class="p">,</span>
-                                 <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
-                                 <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
-                                 <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
-                                 <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
-                                 <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
+        <span class="n">RAMONVolume</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                             <span class="n">xyz_offset</span><span class="o">=</span><span class="n">xyz_offset</span><span class="p">,</span>
+                             <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                             <span class="n">cutout</span><span class="o">=</span><span class="n">cutout</span><span class="p">,</span>
+                             <span class="n">voxels</span><span class="o">=</span><span class="n">voxels</span><span class="p">,</span>
+                             <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+                             <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
+                             <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
+                             <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
+                             <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1240,15 +1260,14 @@ table {
 
     
   
-    <div class="desc"><p>Initialize a new RAMONVolume object. Inherits attributes from RAMONBase<br />
-as well as:</p>
+    <div class="desc"><p>Initialize a new <code>RAMONSynapse</code> object. Takes all arguments of the<br />
+<code>RAMONVolume</code> parent class.</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>xyz_offset (int[3] : (0, 0, 0))</b>: x,y,z coordinates of the minimum<br />
-        corner of the cube (if data is a cutout), otherwise empty<br />
-&emsp;&emsp;&emsp;&emsp;<b>resolution (int : 0)</b>: level in the database resolution hierarchy<br />
-&emsp;&emsp;&emsp;&emsp;<b>cutout (numpy.ndarray)</b>: dense matrix of data<br />
-&emsp;&emsp;&emsp;&emsp;<b>voxels</b>: Unused for now</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>synapse_type (int: 0)</b>: The synapse type. See the online ndstore<br />
+        documentation for more details.<br />
+&emsp;&emsp;&emsp;&emsp;<b>weight (int: 0)</b>: The weight of this synapse (arbitrarily defined)<br />
+&emsp;&emsp;&emsp;&emsp;<b>segments (int[]: None)</b>: A list of segments that belong to this obj</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.ramon.RAMONSynapse.RAMONSynapse.__init__', this);">Show source &equiv;</a></p>
   <div id="source-ndio.ramon.RAMONSynapse.RAMONSynapse.__init__" class="source">
@@ -1265,19 +1284,28 @@ as well as:</p>
              <span class="n">kvpairs</span><span class="o">=</span><span class="n">DEFAULT_DYNAMIC_METADATA</span><span class="p">,</span>
              <span class="n">status</span><span class="o">=</span><span class="n">DEFAULT_STATUS</span><span class="p">,</span>
              <span class="n">author</span><span class="o">=</span><span class="n">DEFAULT_AUTHOR</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">synapse_type</span> <span class="o">=</span> <span class="n">synapse_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
-        <span class="n">RAMONVolume</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                             <span class="n">xyz_offset</span><span class="o">=</span><span class="n">xyz_offset</span><span class="p">,</span>
-                             <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                             <span class="n">cutout</span><span class="o">=</span><span class="n">cutout</span><span class="p">,</span>
-                             <span class="n">voxels</span><span class="o">=</span><span class="n">voxels</span><span class="p">,</span>
-                             <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
-                             <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
-                             <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
-                             <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
-                             <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize a new `RAMONSynapse` object. Takes all arguments of the</span>
+<span class="sd">    `RAMONVolume` parent class.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        synapse_type (int: 0): The synapse type. See the online ndstore</span>
+<span class="sd">            documentation for more details.</span>
+<span class="sd">        weight (int: 0): The weight of this synapse (arbitrarily defined)</span>
+<span class="sd">        segments (int[]: None): A list of segments that belong to this obj</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">synapse_type</span> <span class="o">=</span> <span class="n">synapse_type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">segments</span>
+    <span class="n">RAMONVolume</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">xyz_offset</span><span class="o">=</span><span class="n">xyz_offset</span><span class="p">,</span>
+                         <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                         <span class="n">cutout</span><span class="o">=</span><span class="n">cutout</span><span class="p">,</span>
+                         <span class="n">voxels</span><span class="o">=</span><span class="n">voxels</span><span class="p">,</span>
+                         <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+                         <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
+                         <span class="n">kvpairs</span><span class="o">=</span><span class="n">kvpairs</span><span class="p">,</span>
+                         <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
+                         <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
 </pre></div>
 
   </div>

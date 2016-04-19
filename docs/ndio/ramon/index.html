@@ -4,7 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>ndio.ramon API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="The enumerables in this file are to afford compatibility with CAJAL, which uses
+integers as types. T..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1102,11 +1103,82 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">ndio.ramon</span> module</h1>
-  
+  <p>The enumerables in this file are to afford compatibility with CAJAL, which uses<br />
+integers as types. To convert from integer to string (for instance, if you want<br />
+to specify the ANNOTATION_TYPE in a RAMON hdf5 file), use:</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>AnnotationType.get_str(1)<br />
+"GENERIC"</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>To convert from an integer to an actual RAMON type (say, if you want to create<br />
+a new RAMON object dynamically), use:</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>AnnotationType.get_class(1)<br />
+ndio.ramon.RAMONGeneric.RAMONGeneric</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>So you can create a new RAMON object of dynamic type like this:</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>anno_type = 5<br />
+r = AnnotationType.get_class(anno_type)()<br />
+type(r)<br />
+ndio.ramon.RAMONNeuron.RAMONNeuron</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>NOTE! If you already have an HDF5 file that contains a RAMON object, it is far<br />
+easier to use the prebuilt <code>from_hdf5()</code> function (below).</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import h5py<br />
+f = h5py.File('myfile.hdf5', 'r')<br />
+r = from_hdf5(f)</p>
+</blockquote>
+</blockquote>
+</blockquote>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.ramon', this);">Show source &equiv;</a></p>
   <div id="source-ndio.ramon" class="source">
-    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The enumerables in this file are to afford compatibility with CAJAL, which uses</span>
+<span class="sd">integers as types. To convert from integer to string (for instance, if you want</span>
+<span class="sd">to specify the ANNOTATION_TYPE in a RAMON hdf5 file), use:</span>
+
+<span class="sd">&gt;&gt;&gt; AnnotationType.get_str(1)</span>
+<span class="sd">&quot;GENERIC&quot;</span>
+
+<span class="sd">To convert from an integer to an actual RAMON type (say, if you want to create</span>
+<span class="sd">a new RAMON object dynamically), use:</span>
+
+<span class="sd">&gt;&gt;&gt; AnnotationType.get_class(1)</span>
+<span class="sd">ndio.ramon.RAMONGeneric.RAMONGeneric</span>
+
+<span class="sd">So you can create a new RAMON object of dynamic type like this:</span>
+
+<span class="sd">&gt;&gt;&gt; anno_type = 5</span>
+<span class="sd">&gt;&gt;&gt; r = AnnotationType.get_class(anno_type)()</span>
+<span class="sd">&gt;&gt;&gt; type(r)</span>
+<span class="sd">ndio.ramon.RAMONNeuron.RAMONNeuron</span>
+
+<span class="sd">NOTE! If you already have an HDF5 file that contains a RAMON object, it is far</span>
+<span class="sd">easier to use the prebuilt `from_hdf5()` function (below).</span>
+
+<span class="sd">&gt;&gt;&gt; import h5py</span>
+<span class="sd">&gt;&gt;&gt; f = h5py.File(&#39;myfile.hdf5&#39;, &#39;r&#39;)</span>
+<span class="sd">&gt;&gt;&gt; r = from_hdf5(f)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">json</span> <span class="kn">as</span> <span class="nn">jsonlib</span>
 <span class="kn">import</span> <span class="nn">csv</span>
@@ -1127,36 +1199,6 @@ table {
 
 <span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">The enumerables in this file are to afford compatibility with CAJAL, which uses</span>
-<span class="sd">integers as types. To convert from integer to string (for instance, if you want</span>
-<span class="sd">to specify the ANNOTATION_TYPE in a RAMON hdf5 file), use:</span>
-
-<span class="sd">    &gt;&gt;&gt; AnnotationType.get_str(1)</span>
-<span class="sd">    &quot;GENERIC&quot;</span>
-
-<span class="sd">To convert from an integer to an actual RAMON type (say, if you want to create</span>
-<span class="sd">a new RAMON object dynamically), use:</span>
-
-<span class="sd">    &gt;&gt;&gt; AnnotationType.get_class(1)</span>
-<span class="sd">    ndio.ramon.RAMONGeneric.RAMONGeneric</span>
-
-<span class="sd">So you can create a new RAMON object of dynamic type like this:</span>
-
-<span class="sd">    &gt;&gt;&gt; anno_type = 5</span>
-<span class="sd">    &gt;&gt;&gt; r = AnnotationType.get_class(anno_type)()</span>
-<span class="sd">    &gt;&gt;&gt; type(r)</span>
-<span class="sd">    ndio.ramon.RAMONNeuron.RAMONNeuron</span>
-
-<span class="sd">NOTE! If you already have an HDF5 file that contains a RAMON object, it is far</span>
-<span class="sd">easier to use the prebuilt `from_hdf5()` function (below).</span>
-
-<span class="sd">    &gt;&gt;&gt; import h5py</span>
-<span class="sd">    &gt;&gt;&gt; f = h5py.File(&#39;myfile.hdf5&#39;, &#39;r&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; r = from_hdf5(f)</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># str: int</span>
 <span class="n">_types</span> <span class="o">=</span> <span class="p">{</span>
@@ -1190,6 +1232,10 @@ table {
 
 
 <span class="k">class</span> <span class="nc">AnnotationType</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The annotation types (enumerable) plus convenience functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">GENERIC</span> <span class="o">=</span> <span class="n">_types</span><span class="p">[</span><span class="s2">&quot;generic&quot;</span><span class="p">]</span>
     <span class="n">SYNAPSE</span> <span class="o">=</span> <span class="n">_types</span><span class="p">[</span><span class="s2">&quot;synapse&quot;</span><span class="p">]</span>
     <span class="n">SEED</span> <span class="o">=</span> <span class="n">_types</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span>
@@ -1201,14 +1247,41 @@ table {
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_str</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        From an integer, gets the string representation of a RAMON type.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            typ (int): The type as an integer</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The type as a string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_reverse_types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_class</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        From an integer, gets the ndio class of a RAMON type.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            typ (int): The type as an integer</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            type: The type of RAMON object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_ramon_types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_int</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        From a string, gets the integer representation of a RAMON type.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            typ (str): The type as an string</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The type as a integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_reverse_ramon_types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
 
     <span class="nd">@staticmethod</span>
@@ -1228,6 +1301,17 @@ table {
 
 
 <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">ramons</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a RAMON object list to a JSON-style dictionary. Useful for going</span>
+<span class="sd">    from an array of RAMONs to a dictionary, indexed by ID.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        ramons (RAMON[]): A list of RAMON objects</span>
+<span class="sd">        flatten (boolean: False): Not implemented</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A python dictionary of RAMON objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ramons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">ramons</span> <span class="o">=</span> <span class="p">[</span><span class="n">ramons</span><span class="p">]</span>
 
@@ -1259,7 +1343,7 @@ table {
 
 <span class="sd">    Returns:</span>
 <span class="sd">        str: The JSON representation of the RAMON objects, in the schema:</span>
-
+<span class="sd">            ```</span>
 <span class="sd">            {</span>
 <span class="sd">                &lt;id&gt;: {</span>
 <span class="sd">                    type: . . . ,</span>
@@ -1268,11 +1352,11 @@ table {
 <span class="sd">                    }</span>
 <span class="sd">                },</span>
 <span class="sd">            }</span>
+<span class="sd">            ```</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If an invalid RAMON is passed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ramons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">ramons</span> <span class="o">=</span> <span class="p">[</span><span class="n">ramons</span><span class="p">]</span>
 
@@ -1315,7 +1399,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        [RAMON]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">json</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">json</span> <span class="o">=</span> <span class="n">jsonlib</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json</span><span class="p">)</span>
 
@@ -1377,7 +1460,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        ndio.RAMON object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="n">anno_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="c1"># The user just wants the first item we find, so... Yeah.</span>
         <span class="k">return</span> <span class="n">from_hdf5</span><span class="p">(</span><span class="n">hdf5</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">hdf5</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span>
@@ -1466,7 +1548,6 @@ table {
 <span class="sd">    Raises:</span>
 <span class="sd">        InvalidRAMONError: if you pass a non-RAMON object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ramon</span><span class="p">),</span> <span class="n">RAMONBase</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">InvalidRAMONError</span><span class="p">(</span><span class="s2">&quot;Invalid RAMON supplied to ramon.to_hdf5.&quot;</span><span class="p">)</span>
 
@@ -1655,7 +1736,6 @@ several times on the same file.</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        ndio.RAMON object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="n">anno_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="c1"># The user just wants the first item we find, so... Yeah.</span>
         <span class="k">return</span> <span class="n">from_hdf5</span><span class="p">(</span><span class="n">hdf5</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">hdf5</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span>
@@ -1796,7 +1876,6 @@ RAMON objects is returned instead of a single RAMON.</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        [RAMON]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">json</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">json</span> <span class="o">=</span> <span class="n">jsonlib</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json</span><span class="p">)</span>
 
@@ -1854,10 +1933,30 @@ RAMON objects is returned instead of a single RAMON.</p>
 
     
   
+    <div class="desc"><p>Converts a RAMON object list to a JSON-style dictionary. Useful for going<br />
+from an array of RAMONs to a dictionary, indexed by ID.</p>
+<h2 style='font-size:125% !important'>Arguments</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>ramons (RAMON[])</b>: A list of RAMON objects<br />
+&emsp;&emsp;&emsp;&emsp;<b>flatten (boolean: False)</b>: Not implemented</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>dict</b>: A python dictionary of RAMON objects.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.ramon.to_dict', this);">Show source &equiv;</a></p>
   <div id="source-ndio.ramon.to_dict" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">ramons</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a RAMON object list to a JSON-style dictionary. Useful for going</span>
+<span class="sd">    from an array of RAMONs to a dictionary, indexed by ID.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        ramons (RAMON[]): A list of RAMON objects</span>
+<span class="sd">        flatten (boolean: False): Not implemented</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A python dictionary of RAMON objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ramons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">ramons</span> <span class="o">=</span> <span class="p">[</span><span class="n">ramons</span><span class="p">]</span>
 
@@ -1916,7 +2015,6 @@ RAMON objects is returned instead of a single RAMON.</p>
 <span class="sd">    Raises:</span>
 <span class="sd">        InvalidRAMONError: if you pass a non-RAMON object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ramon</span><span class="p">),</span> <span class="n">RAMONBase</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">InvalidRAMONError</span><span class="p">(</span><span class="s2">&quot;Invalid RAMON supplied to ramon.to_hdf5.&quot;</span><span class="p">)</span>
 
@@ -2042,18 +2140,15 @@ words:</p>
         a single JSON document is returned.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>str</b>: The JSON representation of the RAMON objects, in the schema:</p>
-<div class="codehilite"><pre><span></span>    {
-</pre></div>
-
-
-<p>&emsp;&emsp;&emsp;&emsp;<b><id></b>: {<br />
-&emsp;&emsp;&emsp;&emsp;<b>type</b>: . . . ,<br />
-&emsp;&emsp;&emsp;&emsp;<b>metadata</b>: {<br />
-                    . . .<br />
-                }<br />
-            },<br />
-        }</p>
+<p>&emsp;&emsp;&emsp;&emsp;<b>str</b>: The JSON representation of the RAMON objects, in the schema:<br />
+<code>{
+&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&lt;b&gt;&lt;id&gt;&lt;/b&gt;: {
+&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&lt;b&gt;type&lt;/b&gt;: . . . ,
+&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&lt;b&gt;metadata&lt;/b&gt;: {
+                    . . .
+                }
+            },
+        }</code></p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>ValueError</b>: If an invalid RAMON is passed.</p></div>
@@ -2078,7 +2173,7 @@ words:</p>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        str: The JSON representation of the RAMON objects, in the schema:</span>
-
+<span class="sd">            ```</span>
 <span class="sd">            {</span>
 <span class="sd">                &lt;id&gt;: {</span>
 <span class="sd">                    type: . . . ,</span>
@@ -2087,11 +2182,11 @@ words:</p>
 <span class="sd">                    }</span>
 <span class="sd">                },</span>
 <span class="sd">            }</span>
+<span class="sd">            ```</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If an invalid RAMON is passed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ramons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">ramons</span> <span class="o">=</span> <span class="p">[</span><span class="n">ramons</span><span class="p">]</span>
 
@@ -2121,10 +2216,15 @@ words:</p>
       <p id="ndio.ramon.AnnotationType" class="name">class <span class="ident">AnnotationType</span></p>
       
   
+    <div class="desc"><p>The annotation types (enumerable) plus convenience functions.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.ramon.AnnotationType', this);">Show source &equiv;</a></p>
   <div id="source-ndio.ramon.AnnotationType" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">AnnotationType</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The annotation types (enumerable) plus convenience functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">GENERIC</span> <span class="o">=</span> <span class="n">_types</span><span class="p">[</span><span class="s2">&quot;generic&quot;</span><span class="p">]</span>
     <span class="n">SYNAPSE</span> <span class="o">=</span> <span class="n">_types</span><span class="p">[</span><span class="s2">&quot;synapse&quot;</span><span class="p">]</span>
     <span class="n">SEED</span> <span class="o">=</span> <span class="n">_types</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span>
@@ -2136,14 +2236,41 @@ words:</p>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_str</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        From an integer, gets the string representation of a RAMON type.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            typ (int): The type as an integer</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The type as a string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_reverse_types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_class</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        From an integer, gets the ndio class of a RAMON type.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            typ (int): The type as an integer</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            type: The type of RAMON object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_ramon_types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_int</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        From a string, gets the integer representation of a RAMON type.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            typ (str): The type as an string</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The type as a integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_reverse_ramon_types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
 
     <span class="nd">@staticmethod</span>
@@ -2296,11 +2423,25 @@ words:</p>
 
     
   
+    <div class="desc"><p>From an integer, gets the ndio class of a RAMON type.</p>
+<h2 style='font-size:125% !important'>Arguments</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>typ (int)</b>: The type as an integer</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>type</b>: The type of RAMON object</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.ramon.AnnotationType.get_class', this);">Show source &equiv;</a></p>
   <div id="source-ndio.ramon.AnnotationType.get_class" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">get_class</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    From an integer, gets the ndio class of a RAMON type.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        typ (int): The type as an integer</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        type: The type of RAMON object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_ramon_types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
 </pre></div>
 
@@ -2318,11 +2459,25 @@ words:</p>
 
     
   
+    <div class="desc"><p>From a string, gets the integer representation of a RAMON type.</p>
+<h2 style='font-size:125% !important'>Arguments</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>typ (str)</b>: The type as an string</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>int</b>: The type as a integer</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.ramon.AnnotationType.get_int', this);">Show source &equiv;</a></p>
   <div id="source-ndio.ramon.AnnotationType.get_int" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">get_int</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    From a string, gets the integer representation of a RAMON type.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        typ (str): The type as an string</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The type as a integer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_reverse_ramon_types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
 </pre></div>
 
@@ -2340,11 +2495,25 @@ words:</p>
 
     
   
+    <div class="desc"><p>From an integer, gets the string representation of a RAMON type.</p>
+<h2 style='font-size:125% !important'>Arguments</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>typ (int)</b>: The type as an integer</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>str</b>: The type as a string</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.ramon.AnnotationType.get_str', this);">Show source &equiv;</a></p>
   <div id="source-ndio.ramon.AnnotationType.get_str" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">get_str</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    From an integer, gets the string representation of a RAMON type.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        typ (int): The type as an integer</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The type as a string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_reverse_types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
 </pre></div>
 

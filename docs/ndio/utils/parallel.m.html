@@ -1085,7 +1085,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        2-tuple: (lo, hi) bounding box for the volume</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">lo</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">hi</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="c1"># Start by indexing everything at zero for our own sanity</span>
@@ -1115,13 +1114,17 @@ table {
 <span class="sd">    order to reconstitute a larger cutout.</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        Q_start (int): The lower bound of dimension &#39;Q&#39;</span>
-<span class="sd">        Q_stop (int): The upper bound of dimension &#39;Q&#39;</span>
+<span class="sd">        x_start (int): The lower bound of dimension x</span>
+<span class="sd">        x_stop (int): The upper bound of dimension x</span>
+<span class="sd">        y_start (int): The lower bound of dimension y</span>
+<span class="sd">        y_stop (int): The upper bound of dimension y</span>
+<span class="sd">        z_start (int): The lower bound of dimension z</span>
+<span class="sd">        z_stop (int): The upper bound of dimension z</span>
+
 
 <span class="sd">    Returns:</span>
 <span class="sd">        [((x_start, x_stop), (y_start, y_stop), (z_start, z_stop)), ... ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># x</span>
     <span class="n">x_bounds</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_stop</span> <span class="o">+</span> <span class="n">block_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">block_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">x_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_bounds</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">x_start</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">x_stop</span><span class="p">)]</span>
@@ -1193,8 +1196,12 @@ table {
 order to reconstitute a larger cutout.</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>Q_start (int)</b>: The lower bound of dimension 'Q'<br />
-&emsp;&emsp;&emsp;&emsp;<b>Q_stop (int)</b>: The upper bound of dimension 'Q'</p>
+<p>&emsp;&emsp;&emsp;&emsp;<b>x_start (int)</b>: The lower bound of dimension x<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_stop (int)</b>: The upper bound of dimension x<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_start (int)</b>: The lower bound of dimension y<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_stop (int)</b>: The upper bound of dimension y<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_start (int)</b>: The lower bound of dimension z<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_stop (int)</b>: The upper bound of dimension z</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <div class="codehilite"><pre><span></span>[((x_start, x_stop), (y_start, y_stop), (z_start, z_stop)), ... ]
@@ -1212,13 +1219,17 @@ order to reconstitute a larger cutout.</p>
 <span class="sd">    order to reconstitute a larger cutout.</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        Q_start (int): The lower bound of dimension &#39;Q&#39;</span>
-<span class="sd">        Q_stop (int): The upper bound of dimension &#39;Q&#39;</span>
+<span class="sd">        x_start (int): The lower bound of dimension x</span>
+<span class="sd">        x_stop (int): The upper bound of dimension x</span>
+<span class="sd">        y_start (int): The lower bound of dimension y</span>
+<span class="sd">        y_stop (int): The upper bound of dimension y</span>
+<span class="sd">        z_start (int): The lower bound of dimension z</span>
+<span class="sd">        z_stop (int): The upper bound of dimension z</span>
+
 
 <span class="sd">    Returns:</span>
 <span class="sd">        [((x_start, x_stop), (y_start, y_stop), (z_start, z_stop)), ... ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># x</span>
     <span class="n">x_bounds</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_stop</span> <span class="o">+</span> <span class="n">block_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">block_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">x_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_bounds</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">x_start</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">x_stop</span><span class="p">)]</span>
@@ -1318,7 +1329,6 @@ inside the bounds. For instance, snap_to_cube(2, 3) = (1, 17)</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        2-tuple: (lo, hi) bounding box for the volume</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">lo</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">hi</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="c1"># Start by indexing everything at zero for our own sanity</span>

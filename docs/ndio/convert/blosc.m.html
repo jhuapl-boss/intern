@@ -1078,7 +1078,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array with data from a blosc compressed array</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">try</span><span class="p">:</span>
         <span class="n">numpy_data</span> <span class="o">=</span> <span class="n">blosc</span><span class="o">.</span><span class="n">unpack_array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1097,7 +1096,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        Bytes/String. A blosc compressed array</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">try</span><span class="p">:</span>
         <span class="n">raw_data</span> <span class="o">=</span> <span class="n">blosc</span><span class="o">.</span><span class="n">pack_array</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1143,7 +1141,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        Bytes/String. A blosc compressed array</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">try</span><span class="p">:</span>
         <span class="n">raw_data</span> <span class="o">=</span> <span class="n">blosc</span><span class="o">.</span><span class="n">pack_array</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1187,7 +1184,6 @@ table {
 <span class="sd">    Returns:</span>
 <span class="sd">        A numpy array with data from a blosc compressed array</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">try</span><span class="p">:</span>
         <span class="n">numpy_data</span> <span class="o">=</span> <span class="n">blosc</span><span class="o">.</span><span class="n">unpack_array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>

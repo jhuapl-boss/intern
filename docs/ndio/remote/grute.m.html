@@ -1117,6 +1117,10 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Invariants</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An array of invariant enumerables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">SCAN_STATISTIC</span> <span class="o">=</span> <span class="n">ss1</span> <span class="o">=</span> <span class="s2">&quot;ss1&quot;</span>        <span class="c1"># the Scan Statistic 1</span>
     <span class="n">TRIANGLE_COUNT</span> <span class="o">=</span> <span class="n">tri</span> <span class="o">=</span> <span class="s2">&quot;tri&quot;</span>        <span class="c1"># the Triangle Count</span>
     <span class="n">CLUSTERING</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="s2">&quot;cc&quot;</span>              <span class="c1"># the Clustering Coefficient</span>
@@ -1135,6 +1139,10 @@ table {
 
 
 <span class="k">class</span> <span class="nc">GraphFormats</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The set of graph format enumerables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">GRAPHML</span> <span class="o">=</span> <span class="n">graphml</span> <span class="o">=</span> <span class="s2">&quot;graphml&quot;</span>
     <span class="n">NCOL</span> <span class="o">=</span> <span class="n">ncol</span> <span class="o">=</span> <span class="s2">&quot;ncol&quot;</span>
     <span class="n">EDGELIST</span> <span class="o">=</span> <span class="n">edgelist</span> <span class="o">=</span> <span class="s2">&quot;edgelist&quot;</span>
@@ -1157,12 +1165,27 @@ table {
 
 
 <span class="k">class</span> <span class="nc">grute</span><span class="p">(</span><span class="n">Remote</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The grute remote, for interfacing with ndgrutedb (NeuroData.io)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">SMALL</span> <span class="o">=</span> <span class="n">S</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
     <span class="n">BIG</span> <span class="o">=</span> <span class="n">B</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="n">DEFAULT_HOSTNAME</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">hostname</span><span class="o">=</span><span class="n">DEFAULT_HOSTNAME</span><span class="p">,</span>
+                 <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
                  <span class="n">email</span><span class="o">=</span><span class="n">DEFAULT_EMAIL</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a new grute remote.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            hostname (str: &quot;openconnecto.me&quot;): The hostname where grute lives</span>
+<span class="sd">            protocol (str: &quot;http&quot;): The protocol over which to access grute</span>
+<span class="sd">            email (str: &quot;&quot;): The email to which completion notifications should</span>
+<span class="sd">                be sent (unless overridden in individual calls). Note that the</span>
+<span class="sd">                completion URLs are also accessible via this Python API.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
 
@@ -1184,9 +1207,21 @@ table {
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check the server for proof of life.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a valid URL from the base grutedb url.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            suffix (str: &quot;&quot;): The suffix that should be appended to the base</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Fully formed absolute URL</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;/graph-services/&#39;</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_default_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">):</span>
@@ -1247,7 +1282,6 @@ table {
 <span class="sd">            RemoteDataNotFoundError: When the data cannot be processed due to</span>
 <span class="sd">                a server error.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
 
@@ -1346,7 +1380,6 @@ table {
 <span class="sd">            RemoteDataUploadError: If there is an issue packing the file</span>
 <span class="sd">            RemoteError: If the server experiences difficulty computing invs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
 
@@ -1434,7 +1467,6 @@ table {
 <span class="sd">            RemoteError: If there&#39;s a server-side issue</span>
 <span class="sd">            ValueError: If there&#39;s a problem with the supplied arguments</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
 
@@ -1545,10 +1577,15 @@ table {
       <p id="ndio.remote.grute.GraphFormats" class="name">class <span class="ident">GraphFormats</span></p>
       
   
+    <div class="desc"><p>The set of graph format enumerables.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.GraphFormats', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.grute.GraphFormats" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">GraphFormats</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The set of graph format enumerables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">GRAPHML</span> <span class="o">=</span> <span class="n">graphml</span> <span class="o">=</span> <span class="s2">&quot;graphml&quot;</span>
     <span class="n">NCOL</span> <span class="o">=</span> <span class="n">ncol</span> <span class="o">=</span> <span class="s2">&quot;ncol&quot;</span>
     <span class="n">EDGELIST</span> <span class="o">=</span> <span class="n">edgelist</span> <span class="o">=</span> <span class="s2">&quot;edgelist&quot;</span>
@@ -1748,10 +1785,15 @@ table {
       <p id="ndio.remote.grute.Invariants" class="name">class <span class="ident">Invariants</span></p>
       
   
+    <div class="desc"><p>An array of invariant enumerables.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.Invariants', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.grute.Invariants" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Invariants</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An array of invariant enumerables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">SCAN_STATISTIC</span> <span class="o">=</span> <span class="n">ss1</span> <span class="o">=</span> <span class="s2">&quot;ss1&quot;</span>        <span class="c1"># the Scan Statistic 1</span>
     <span class="n">TRIANGLE_COUNT</span> <span class="o">=</span> <span class="n">tri</span> <span class="o">=</span> <span class="s2">&quot;tri&quot;</span>        <span class="c1"># the Triangle Count</span>
     <span class="n">CLUSTERING</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="s2">&quot;cc&quot;</span>              <span class="c1"># the Clustering Coefficient</span>
@@ -1917,16 +1959,32 @@ table {
       <p id="ndio.remote.grute.grute" class="name">class <span class="ident">grute</span></p>
       
   
+    <div class="desc"><p>The grute remote, for interfacing with ndgrutedb (NeuroData.io)</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.grute.grute" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">grute</span><span class="p">(</span><span class="n">Remote</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The grute remote, for interfacing with ndgrutedb (NeuroData.io)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">SMALL</span> <span class="o">=</span> <span class="n">S</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
     <span class="n">BIG</span> <span class="o">=</span> <span class="n">B</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="n">DEFAULT_HOSTNAME</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">hostname</span><span class="o">=</span><span class="n">DEFAULT_HOSTNAME</span><span class="p">,</span>
+                 <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
                  <span class="n">email</span><span class="o">=</span><span class="n">DEFAULT_EMAIL</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a new grute remote.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            hostname (str: &quot;openconnecto.me&quot;): The hostname where grute lives</span>
+<span class="sd">            protocol (str: &quot;http&quot;): The protocol over which to access grute</span>
+<span class="sd">            email (str: &quot;&quot;): The email to which completion notifications should</span>
+<span class="sd">                be sent (unless overridden in individual calls). Note that the</span>
+<span class="sd">                completion URLs are also accessible via this Python API.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
 
@@ -1948,9 +2006,21 @@ table {
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check the server for proof of life.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a valid URL from the base grutedb url.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            suffix (str: &quot;&quot;): The suffix that should be appended to the base</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Fully formed absolute URL</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;/graph-services/&#39;</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_default_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">):</span>
@@ -2011,7 +2081,6 @@ table {
 <span class="sd">            RemoteDataNotFoundError: When the data cannot be processed due to</span>
 <span class="sd">                a server error.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
 
@@ -2110,7 +2179,6 @@ table {
 <span class="sd">            RemoteDataUploadError: If there is an issue packing the file</span>
 <span class="sd">            RemoteError: If the server experiences difficulty computing invs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
 
@@ -2198,7 +2266,6 @@ table {
 <span class="sd">            RemoteError: If there&#39;s a server-side issue</span>
 <span class="sd">            ValueError: If there&#39;s a problem with the supplied arguments</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
 
@@ -2325,15 +2392,30 @@ table {
 
     
   
-    <div class="desc"><h2 style='font-size:125% !important'>Arguments</h2>
+    <div class="desc"><p>Initialize a new grute remote.</p>
+<h2 style='font-size:125% !important'>Arguments</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b><code>hostname</code></b>:     Hostname (e.g. google.com)<br />
-&emsp;&emsp;&emsp;&emsp;<b><code>protocol</code></b>:     HTTP protocol (e.g. https)</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>hostname (str: "openconnecto.me")</b>: The hostname where grute lives<br />
+&emsp;&emsp;&emsp;&emsp;<b>protocol (str: "http")</b>: The protocol over which to access grute<br />
+&emsp;&emsp;&emsp;&emsp;<b>email (str: "")</b>: The email to which completion notifications should<br />
+        be sent (unless overridden in individual calls). Note that the<br />
+        completion URLs are also accessible via this Python API.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.__init__', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.grute.grute.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="n">DEFAULT_HOSTNAME</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+             <span class="n">hostname</span><span class="o">=</span><span class="n">DEFAULT_HOSTNAME</span><span class="p">,</span>
+             <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
              <span class="n">email</span><span class="o">=</span><span class="n">DEFAULT_EMAIL</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize a new grute remote.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        hostname (str: &quot;openconnecto.me&quot;): The hostname where grute lives</span>
+<span class="sd">        protocol (str: &quot;http&quot;): The protocol over which to access grute</span>
+<span class="sd">        email (str: &quot;&quot;): The email to which completion notifications should</span>
+<span class="sd">            be sent (unless overridden in individual calls). Note that the</span>
+<span class="sd">            completion URLs are also accessible via this Python API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
 </pre></div>
@@ -2677,19 +2759,14 @@ grute graph services.</p>
 
     
   
-    <div class="desc"><p>Ping the server to make sure that you can access the base URL.</p>
-<h2 style='font-size:125% !important'>Arguments</h2>
-
-<div class="codehilite"><pre><span></span>None
-</pre></div>
-
-
-<p><h2 style='font-size:125% !important'>Returns</h2><br />
-<code>boolean</code> Successful access of server (or status code)</p></div>
+    <div class="desc"><p>Check the server for proof of life.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.ping', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.grute.grute.ping" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check the server for proof of life.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
 </pre></div>
 
@@ -2754,19 +2831,24 @@ Does only basic error-checking.</p>
 
     
   
-    <div class="desc"><p>Get the base URL of the Remote.</p>
+    <div class="desc"><p>Construct a valid URL from the base grutedb url.</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
-<div class="codehilite"><pre><span></span>None
-</pre></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>suffix (str: "")</b>: The suffix that should be appended to the base</p>
+<h2 style='font-size:125% !important'>Returns</h2>
 
-
-<p><h2 style='font-size:125% !important'>Returns</h2><br />
-<code>str</code> base URL</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>str</b>: Fully formed absolute URL</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.grute.grute.url', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.grute.grute.url" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a valid URL from the base grutedb url.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        suffix (str: &quot;&quot;): The suffix that should be appended to the base</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Fully formed absolute URL</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">grute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;/graph-services/&#39;</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
 </pre></div>
 

@@ -1140,6 +1140,9 @@ table {
 
 
 <span class="k">class</span> <span class="nc">neurodata</span><span class="p">(</span><span class="n">Remote</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The NeuroData remote, for interfacing with ndstore, ndlims, and friends.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># SECTION:</span>
     <span class="c1"># Enumerables</span>
@@ -1151,15 +1154,26 @@ table {
                  <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
                  <span class="n">meta_root</span><span class="o">=</span><span class="s2">&quot;http://lims.neurodata.io/&quot;</span><span class="p">,</span>
                  <span class="n">meta_protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializer for the neurodata remote class.</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pypi.python.org/pypi/ndio/json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="n">ndio</span><span class="o">.</span><span class="n">version</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;suppress_warnings&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;A newer version of ndio is available. &quot;</span> <span class="o">+</span>
-                  <span class="s2">&quot;&#39;pip install -U ndio&#39; to update. Pass &quot;</span> <span class="o">+</span>
-                  <span class="s2">&quot;&#39;suppress_warnings=True&#39; to the neurodata &quot;</span> <span class="o">+</span>
-                  <span class="s2">&quot;constructor to suppress this message.&quot;</span><span class="p">)</span>
-
+<span class="sd">        Arguments:</span>
+<span class="sd">            hostname (str: &quot;openconnecto.me&quot;): The hostname to connect to</span>
+<span class="sd">            protocol (str: &quot;http&quot;): The protocol (http or https) to use</span>
+<span class="sd">            meta_root (str: &quot;http://lims.neurodata.io/&quot;): The metadata server</span>
+<span class="sd">            meta_protocol (str: &quot;http&quot;): The protocol to use for the md server</span>
+<span class="sd">            check_tokens (boolean: False): Whether functions that take `token`</span>
+<span class="sd">                as an argument should check for the existance of that token and</span>
+<span class="sd">                fail immediately if it is not found. This is a good idea for</span>
+<span class="sd">                functions that take more time to complete, and might not fail</span>
+<span class="sd">                until the very end otherwise.</span>
+<span class="sd">            chunk_threshold (int: 1e9 / 4): The maximum size of a numpy array</span>
+<span class="sd">                that will be uploaded in one HTTP request. If you find that</span>
+<span class="sd">                your data requests are commonly timing out, try reducing this.</span>
+<span class="sd">                Default is 1e9 / 4, or a 0.25GiB.</span>
+<span class="sd">            suffix (str: &quot;ocp&quot;): The URL suffix to specify ndstore/microns. If</span>
+<span class="sd">                you aren&#39;t sure what to do with this, don&#39;t specify one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_tokens</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;check_tokens&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_chunk_threshold</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;chunk_threshold&#39;</span><span class="p">,</span> <span class="mf">1E9</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ext</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;suffix&#39;</span><span class="p">,</span> <span class="n">DEFAULT_SUFFIX</span><span class="p">)</span>
@@ -1193,7 +1207,7 @@ table {
     <span class="c1"># Utilities</span>
     <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;public_tokens/&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the status-code of the API (estimated using the public-tokens</span>
+<span class="sd">        Return the status-code of the API (estimated using the public-tokens</span>
 <span class="sd">        lookup page).</span>
 
 <span class="sd">        Arguments:</span>
@@ -1206,7 +1220,7 @@ table {
 
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a constructed URL, appending an optional suffix (uri path).</span>
+<span class="sd">        Return a constructed URL, appending an optional suffix (uri path).</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            suffix (str : &quot;&quot;): The suffix to append to the end of the URL</span>
@@ -1218,7 +1232,7 @@ table {
 
     <span class="k">def</span> <span class="nf">meta_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a constructed URL, appending an optional suffix (uri path),</span>
+<span class="sd">        Return a constructed URL, appending an optional suffix (uri path),</span>
 <span class="sd">        for the metadata server. (Should be temporary, until the LIMS shim</span>
 <span class="sd">        is fixed.)</span>
 
@@ -1232,7 +1246,7 @@ table {
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a string representation that can be used to reproduce this</span>
+<span class="sd">        Return a string representation that can be used to reproduce this</span>
 <span class="sd">        instance. `eval(repr(this))` should return an identical copy.</span>
 
 <span class="sd">        Arguments:</span>
@@ -1266,7 +1280,7 @@ table {
     <span class="k">def</span> <span class="nf">get_public_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        NOTE: VERY SLOW!</span>
-<span class="sd">        Gets a list of public datasets. Different than public tokens!</span>
+<span class="sd">        Get a list of public datasets. Different than public tokens!</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            None</span>
@@ -1279,7 +1293,7 @@ table {
     <span class="k">def</span> <span class="nf">get_public_datasets_and_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        NOTE: VERY SLOW!</span>
-<span class="sd">        Gets a dictionary relating key:dataset to value:[tokens] that rely</span>
+<span class="sd">        Get a dictionary relating key:dataset to value:[tokens] that rely</span>
 <span class="sd">        on that dataset.</span>
 
 <span class="sd">        Arguments:</span>
@@ -1314,7 +1328,7 @@ table {
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">get_proj_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the project info for a given token.</span>
+<span class="sd">        Return the project info for a given token.</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            token (str): Token to return information for</span>
@@ -1349,7 +1363,7 @@ table {
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">get_image_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the size of the volume (3D). Convenient for when you want</span>
+<span class="sd">        Return the size of the volume (3D). Convenient for when you want</span>
 <span class="sd">        to download the entirety of a dataset.</span>
 
 <span class="sd">        Arguments:</span>
@@ -1399,7 +1413,7 @@ table {
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">get_subvolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a list of subvolumes taken from LIMS, if available.</span>
+<span class="sd">        Return a list of subvolumes taken from LIMS, if available.</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            token (str): The token to read from in LIMS</span>
@@ -1425,8 +1439,12 @@ table {
 <span class="sd">        Arguments:</span>
 <span class="sd">            token (str): The token to write to in LIMS</span>
 <span class="sd">            channel (str): Channel to add in the subvolume. Can be `None`</span>
-<span class="sd">            Q_start (int): The start of the Q dimension</span>
-<span class="sd">            Q_stop (int): The top of the Q dimension,</span>
+<span class="sd">            x_start (int): Start in x dimension</span>
+<span class="sd">            x_stop (int): Stop in x dimension</span>
+<span class="sd">            y_start (int): Start in y dimension</span>
+<span class="sd">            y_stop (int): Stop in y dimension</span>
+<span class="sd">            z_start (int): Start in z dimension</span>
+<span class="sd">            z_stop (int): Stop in z dimension</span>
 <span class="sd">            resolution (int): The resolution at which this subvolume is seen</span>
 <span class="sd">            title (str): The title to set for the subvolume</span>
 <span class="sd">            notes (str): Optional extra thoughts on the subvolume</span>
@@ -1567,7 +1585,6 @@ table {
 <span class="sd">        Returns:</span>
 <span class="sd">            ndio.ramon.RAMONVolume: Downloaded data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_stop</span><span class="o">-</span><span class="n">x_start</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">y_stop</span><span class="o">-</span><span class="n">y_start</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">z_stop</span><span class="o">-</span><span class="n">z_start</span><span class="p">)</span>
         <span class="n">volume</span> <span class="o">=</span> <span class="n">ramon</span><span class="o">.</span><span class="n">RAMONVolume</span><span class="p">()</span>
         <span class="n">volume</span><span class="o">.</span><span class="n">xyz_offset</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_start</span><span class="p">,</span> <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">]</span>
@@ -1608,7 +1625,6 @@ table {
 <span class="sd">        Returns:</span>
 <span class="sd">            numpy.ndarray: Downloaded data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">block_size</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="c1"># look up block size from metadata</span>
             <span class="n">block_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_block_size</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
@@ -1651,9 +1667,9 @@ table {
                                <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
                                <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">neariso</span><span class="o">=</span><span class="n">neariso</span><span class="p">)</span>
 
-                <span class="n">vol</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
-                    <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
-                    <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+                <span class="n">vol</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
+                    <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
+                    <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
 
             <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -1720,7 +1736,6 @@ table {
                     <span class="n">y_start</span><span class="p">,</span>
                     <span class="n">z_start</span><span class="p">,</span>
                     <span class="n">data</span><span class="p">,</span>
-                    <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                     <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Post a cutout to the server.</span>
@@ -1732,7 +1747,6 @@ table {
 <span class="sd">            y_start (int)</span>
 <span class="sd">            z_start (int)</span>
 <span class="sd">            data (numpy.ndarray): A numpy array of data. Pass in (x, y, z)</span>
-<span class="sd">            dtype (str : &#39;&#39;): Pass in explicit datatype, or we use projinfo</span>
 <span class="sd">            resolution (int : 0): Resolution at which to insert the data</span>
 
 <span class="sd">        Returns:</span>
@@ -1741,7 +1755,6 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataUploadError: if there&#39;s an issue during upload.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">datatype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_proj_info</span><span class="p">(</span><span class="n">token</span><span class="p">)[</span><span class="s1">&#39;channels&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">][</span><span class="s1">&#39;datatype&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">datatype</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">datatype</span><span class="p">)</span>
@@ -1751,31 +1764,35 @@ table {
 
         <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">&gt;</span> <span class="mf">1.5e9</span><span class="p">:</span>
             <span class="n">ul_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_no_chunking_npz</span>
-        <span class="k">elif</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-            <span class="n">ul_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_no_chunking_blosc</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">&quot;Check yo version of Python!&quot;</span><span class="p">)</span>
+            <span class="n">ul_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_no_chunking_blosc</span>
 
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chunk_threshold</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ul_func</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
                            <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
                            <span class="n">resolution</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># must chunk first</span>
-            <span class="kn">from</span> <span class="nn">ndio.utils.parallel</span> <span class="kn">import</span> <span class="n">block_compute</span>
-            <span class="n">blocks</span> <span class="o">=</span> <span class="n">block_compute</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                                   <span class="n">y_start</span><span class="p">,</span> <span class="n">y_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                   <span class="n">z_start</span><span class="p">,</span> <span class="n">z_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
-                <span class="n">subvol</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
-                              <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
-                              <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span>
-                <span class="c1"># upload the chunk:</span>
-                <span class="n">ul_func</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
-                        <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">subvol</span><span class="p">,</span>
-                        <span class="n">resolution</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_with_chunking</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
+                                               <span class="n">x_start</span><span class="p">,</span> <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+                                               <span class="n">resolution</span><span class="p">,</span> <span class="n">ul_func</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">_post_cutout_with_chunking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
+                                   <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+                                   <span class="n">resolution</span><span class="p">,</span> <span class="n">ul_func</span><span class="p">):</span>
+        <span class="c1"># must chunk first</span>
+        <span class="kn">from</span> <span class="nn">ndio.utils.parallel</span> <span class="kn">import</span> <span class="n">block_compute</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="n">block_compute</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                               <span class="n">y_start</span><span class="p">,</span> <span class="n">y_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                               <span class="n">z_start</span><span class="p">,</span> <span class="n">z_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+            <span class="n">subvol</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
+                          <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
+                          <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span>
+            <span class="c1"># upload the chunk:</span>
+            <span class="n">ul_func</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
+                    <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">subvol</span><span class="p">,</span>
+                    <span class="n">resolution</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">_post_cutout_no_chunking_npz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
@@ -1810,7 +1827,6 @@ table {
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Accepts data in zyx. !!!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">blosc_data</span> <span class="o">=</span> <span class="n">blosc</span><span class="o">.</span><span class="n">pack_array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
@@ -1888,7 +1904,6 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataNotFoundError: If the channel or token is not found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s2">&quot;{}/{}/query/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">ramon_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="c1"># User is requesting a specific ramon_type.</span>
@@ -1912,7 +1927,7 @@ table {
             <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Could not successfully mock HDF5 file for parsing.&quot;</span><span class="p">)</span>
 
     <span class="nd">@_check_token</span>
-    <span class="k">def</span> <span class="nf">get_ramon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">get_ramon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                   <span class="n">include_cutout</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sieve</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download a RAMON object by ID.</span>
@@ -1949,68 +1964,61 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataNotFoundError: If the requested ids cannot be found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">b_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
 
-        <span class="n">mdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ramon_metadata</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">resolution</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># probably should be dynamic...</span>
-
-        <span class="n">BATCH</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="n">_return_first_only</span> <span class="o">=</span> <span class="bp">False</span>
-
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
             <span class="n">_return_first_only</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">ids</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
-            <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">b_size</span><span class="p">:</span>
-                <span class="n">BATCH</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="c1"># now ids is a list of strings</span>
 
-        <span class="k">if</span> <span class="n">BATCH</span><span class="p">:</span>
-            <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">id_batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
-            <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">id_batches</span><span class="p">:</span>
-                <span class="n">rs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_ramon_batch</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
-                                                <span class="n">batch</span><span class="p">,</span> <span class="n">resolution</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ramon_batch</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">id_batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">id_batches</span><span class="p">:</span>
+            <span class="n">rs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_ramon_batch</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">resolution</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">sieve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">rs</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span> <span class="k">if</span> <span class="n">sieve</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_ramon</span><span class="p">(</span><span class="n">rs</span><span class="p">,</span> <span class="n">sieve</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">include_cutout</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s1">&#39;cutout&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
-                    <span class="k">continue</span>
-                <span class="n">origin</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">xyz_offset</span>
-                <span class="c1"># Get the bounding box (cube-aligned)</span>
-                <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ramon_bounding_box</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
-                                                   <span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
-                <span class="c1"># Get the cutout (cube-aligned)</span>
-                <span class="n">cutout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cutout</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
-                                         <span class="o">*</span><span class="n">bbox</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
-                <span class="n">cutout</span><span class="p">[</span><span class="n">cutout</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
-
-                <span class="c1"># Compute upper offset and crop</span>
-                <span class="n">bounds</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
-                <span class="n">mins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-                <span class="n">maxs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-
-                <span class="n">r</span><span class="o">.</span><span class="n">cutout</span> <span class="o">=</span> <span class="n">cutout</span><span class="p">[</span>
-                    <span class="n">mins</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">mins</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                    <span class="n">mins</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-                <span class="p">]</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_add_ramon_cutout</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+                  <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">_return_first_only</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">rs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
         <span class="k">return</span> <span class="n">rs</span>
 
+    <span class="k">def</span> <span class="nf">_filter_ramon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rs</span><span class="p">,</span> <span class="n">sieve</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">sieve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span> <span class="k">if</span> <span class="n">sieve</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">rs</span>
+
+    <span class="k">def</span> <span class="nf">_add_ramon_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ramon</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;cutout&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">ramon</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ramon</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="n">ramon</span><span class="o">.</span><span class="n">xyz_offset</span>
+        <span class="c1"># Get the bounding box (cube-aligned)</span>
+        <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ramon_bounding_box</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
+                                           <span class="n">ramon</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+        <span class="c1"># Get the cutout (cube-aligned)</span>
+        <span class="n">cutout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cutout</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
+                                 <span class="o">*</span><span class="n">bbox</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+        <span class="n">cutout</span><span class="p">[</span><span class="n">cutout</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ramon</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Compute upper offset and crop</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+        <span class="n">maxs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+
+        <span class="n">ramon</span><span class="o">.</span><span class="n">cutout</span> <span class="o">=</span> <span class="n">cutout</span><span class="p">[</span>
+            <span class="n">mins</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">mins</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">mins</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">ramon</span>
+
     <span class="k">def</span> <span class="nf">_get_ramon_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s2">&quot;{}/{}/{}/json/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ids</span><span class="p">)))</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 
@@ -2041,7 +2049,6 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataNotFoundError: If the data cannot be found on the Remote</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">anno_id</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">uint32</span><span class="p">]:</span>
             <span class="c1"># there&#39;s just one ID to download</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_single_ramon_metadata</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
@@ -2127,7 +2134,6 @@ table {
 <span class="sd">        Throws:</span>
 <span class="sd">            RemoteDataUploadError: if something goes wrong</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="c1"># Max out batch-size at 100.</span>
         <span class="n">b_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
 
@@ -2138,7 +2144,7 @@ table {
         <span class="c1"># If there are too many to fit in one batch, split here and call this</span>
         <span class="c1"># function recursively.</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">batch_size</span><span class="p">:</span>
-            <span class="n">batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
+            <span class="n">batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
             <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">batches</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">post_ramon</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">b_size</span><span class="p">)</span>
             <span class="k">return</span>
@@ -2241,7 +2247,6 @@ table {
 <span class="sd">            RemoteDataUploadError: If the channel data is valid but upload</span>
 <span class="sd">                fails for some other reason.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">isalnum</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Name cannot contain character {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
@@ -2285,7 +2290,6 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataUploadError: If the upload fails for some reason.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s2">&quot;{}/deleteChannel/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">)),</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;channels&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="p">})</span>
@@ -2298,6 +2302,16 @@ table {
 
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Kick off the propagate function on the remote server.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            token (str): The token to propagate</span>
+<span class="sd">            channel (str): The channel to propagate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            boolean: Success</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_propagate_status</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;{}/{}/setPropagate/1/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">))</span>
@@ -2308,6 +2322,16 @@ table {
 
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">get_propagate_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the propagate status for a token/channel pair.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            token (str): The token to check</span>
+<span class="sd">            channel (str): The channel to check</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The status code</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;{}/{}/getPropagate/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">))</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">200</span><span class="p">:</span>
@@ -2353,10 +2377,14 @@ table {
       <p id="ndio.remote.neurodata.neurodata" class="name">class <span class="ident">neurodata</span></p>
       
   
+    <div class="desc"><p>The NeuroData remote, for interfacing with ndstore, ndlims, and friends.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.neurodata.neurodata', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.neurodata.neurodata" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">neurodata</span><span class="p">(</span><span class="n">Remote</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The NeuroData remote, for interfacing with ndstore, ndlims, and friends.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># SECTION:</span>
     <span class="c1"># Enumerables</span>
@@ -2368,15 +2396,26 @@ table {
                  <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
                  <span class="n">meta_root</span><span class="o">=</span><span class="s2">&quot;http://lims.neurodata.io/&quot;</span><span class="p">,</span>
                  <span class="n">meta_protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializer for the neurodata remote class.</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pypi.python.org/pypi/ndio/json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="n">ndio</span><span class="o">.</span><span class="n">version</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;suppress_warnings&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;A newer version of ndio is available. &quot;</span> <span class="o">+</span>
-                  <span class="s2">&quot;&#39;pip install -U ndio&#39; to update. Pass &quot;</span> <span class="o">+</span>
-                  <span class="s2">&quot;&#39;suppress_warnings=True&#39; to the neurodata &quot;</span> <span class="o">+</span>
-                  <span class="s2">&quot;constructor to suppress this message.&quot;</span><span class="p">)</span>
-
+<span class="sd">        Arguments:</span>
+<span class="sd">            hostname (str: &quot;openconnecto.me&quot;): The hostname to connect to</span>
+<span class="sd">            protocol (str: &quot;http&quot;): The protocol (http or https) to use</span>
+<span class="sd">            meta_root (str: &quot;http://lims.neurodata.io/&quot;): The metadata server</span>
+<span class="sd">            meta_protocol (str: &quot;http&quot;): The protocol to use for the md server</span>
+<span class="sd">            check_tokens (boolean: False): Whether functions that take `token`</span>
+<span class="sd">                as an argument should check for the existance of that token and</span>
+<span class="sd">                fail immediately if it is not found. This is a good idea for</span>
+<span class="sd">                functions that take more time to complete, and might not fail</span>
+<span class="sd">                until the very end otherwise.</span>
+<span class="sd">            chunk_threshold (int: 1e9 / 4): The maximum size of a numpy array</span>
+<span class="sd">                that will be uploaded in one HTTP request. If you find that</span>
+<span class="sd">                your data requests are commonly timing out, try reducing this.</span>
+<span class="sd">                Default is 1e9 / 4, or a 0.25GiB.</span>
+<span class="sd">            suffix (str: &quot;ocp&quot;): The URL suffix to specify ndstore/microns. If</span>
+<span class="sd">                you aren&#39;t sure what to do with this, don&#39;t specify one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_tokens</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;check_tokens&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_chunk_threshold</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;chunk_threshold&#39;</span><span class="p">,</span> <span class="mf">1E9</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ext</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;suffix&#39;</span><span class="p">,</span> <span class="n">DEFAULT_SUFFIX</span><span class="p">)</span>
@@ -2410,7 +2449,7 @@ table {
     <span class="c1"># Utilities</span>
     <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;public_tokens/&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the status-code of the API (estimated using the public-tokens</span>
+<span class="sd">        Return the status-code of the API (estimated using the public-tokens</span>
 <span class="sd">        lookup page).</span>
 
 <span class="sd">        Arguments:</span>
@@ -2423,7 +2462,7 @@ table {
 
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a constructed URL, appending an optional suffix (uri path).</span>
+<span class="sd">        Return a constructed URL, appending an optional suffix (uri path).</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            suffix (str : &quot;&quot;): The suffix to append to the end of the URL</span>
@@ -2435,7 +2474,7 @@ table {
 
     <span class="k">def</span> <span class="nf">meta_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a constructed URL, appending an optional suffix (uri path),</span>
+<span class="sd">        Return a constructed URL, appending an optional suffix (uri path),</span>
 <span class="sd">        for the metadata server. (Should be temporary, until the LIMS shim</span>
 <span class="sd">        is fixed.)</span>
 
@@ -2449,7 +2488,7 @@ table {
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a string representation that can be used to reproduce this</span>
+<span class="sd">        Return a string representation that can be used to reproduce this</span>
 <span class="sd">        instance. `eval(repr(this))` should return an identical copy.</span>
 
 <span class="sd">        Arguments:</span>
@@ -2483,7 +2522,7 @@ table {
     <span class="k">def</span> <span class="nf">get_public_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        NOTE: VERY SLOW!</span>
-<span class="sd">        Gets a list of public datasets. Different than public tokens!</span>
+<span class="sd">        Get a list of public datasets. Different than public tokens!</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            None</span>
@@ -2496,7 +2535,7 @@ table {
     <span class="k">def</span> <span class="nf">get_public_datasets_and_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        NOTE: VERY SLOW!</span>
-<span class="sd">        Gets a dictionary relating key:dataset to value:[tokens] that rely</span>
+<span class="sd">        Get a dictionary relating key:dataset to value:[tokens] that rely</span>
 <span class="sd">        on that dataset.</span>
 
 <span class="sd">        Arguments:</span>
@@ -2531,7 +2570,7 @@ table {
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">get_proj_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the project info for a given token.</span>
+<span class="sd">        Return the project info for a given token.</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            token (str): Token to return information for</span>
@@ -2566,7 +2605,7 @@ table {
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">get_image_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the size of the volume (3D). Convenient for when you want</span>
+<span class="sd">        Return the size of the volume (3D). Convenient for when you want</span>
 <span class="sd">        to download the entirety of a dataset.</span>
 
 <span class="sd">        Arguments:</span>
@@ -2616,7 +2655,7 @@ table {
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">get_subvolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a list of subvolumes taken from LIMS, if available.</span>
+<span class="sd">        Return a list of subvolumes taken from LIMS, if available.</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            token (str): The token to read from in LIMS</span>
@@ -2642,8 +2681,12 @@ table {
 <span class="sd">        Arguments:</span>
 <span class="sd">            token (str): The token to write to in LIMS</span>
 <span class="sd">            channel (str): Channel to add in the subvolume. Can be `None`</span>
-<span class="sd">            Q_start (int): The start of the Q dimension</span>
-<span class="sd">            Q_stop (int): The top of the Q dimension,</span>
+<span class="sd">            x_start (int): Start in x dimension</span>
+<span class="sd">            x_stop (int): Stop in x dimension</span>
+<span class="sd">            y_start (int): Start in y dimension</span>
+<span class="sd">            y_stop (int): Stop in y dimension</span>
+<span class="sd">            z_start (int): Start in z dimension</span>
+<span class="sd">            z_stop (int): Stop in z dimension</span>
 <span class="sd">            resolution (int): The resolution at which this subvolume is seen</span>
 <span class="sd">            title (str): The title to set for the subvolume</span>
 <span class="sd">            notes (str): Optional extra thoughts on the subvolume</span>
@@ -2784,7 +2827,6 @@ table {
 <span class="sd">        Returns:</span>
 <span class="sd">            ndio.ramon.RAMONVolume: Downloaded data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_stop</span><span class="o">-</span><span class="n">x_start</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">y_stop</span><span class="o">-</span><span class="n">y_start</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">z_stop</span><span class="o">-</span><span class="n">z_start</span><span class="p">)</span>
         <span class="n">volume</span> <span class="o">=</span> <span class="n">ramon</span><span class="o">.</span><span class="n">RAMONVolume</span><span class="p">()</span>
         <span class="n">volume</span><span class="o">.</span><span class="n">xyz_offset</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_start</span><span class="p">,</span> <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">]</span>
@@ -2825,7 +2867,6 @@ table {
 <span class="sd">        Returns:</span>
 <span class="sd">            numpy.ndarray: Downloaded data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">block_size</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="c1"># look up block size from metadata</span>
             <span class="n">block_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_block_size</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
@@ -2868,9 +2909,9 @@ table {
                                <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
                                <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">neariso</span><span class="o">=</span><span class="n">neariso</span><span class="p">)</span>
 
-                <span class="n">vol</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
-                    <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
-                    <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+                <span class="n">vol</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
+                    <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
+                    <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
 
             <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -2937,7 +2978,6 @@ table {
                     <span class="n">y_start</span><span class="p">,</span>
                     <span class="n">z_start</span><span class="p">,</span>
                     <span class="n">data</span><span class="p">,</span>
-                    <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                     <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Post a cutout to the server.</span>
@@ -2949,7 +2989,6 @@ table {
 <span class="sd">            y_start (int)</span>
 <span class="sd">            z_start (int)</span>
 <span class="sd">            data (numpy.ndarray): A numpy array of data. Pass in (x, y, z)</span>
-<span class="sd">            dtype (str : &#39;&#39;): Pass in explicit datatype, or we use projinfo</span>
 <span class="sd">            resolution (int : 0): Resolution at which to insert the data</span>
 
 <span class="sd">        Returns:</span>
@@ -2958,7 +2997,6 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataUploadError: if there&#39;s an issue during upload.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">datatype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_proj_info</span><span class="p">(</span><span class="n">token</span><span class="p">)[</span><span class="s1">&#39;channels&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">][</span><span class="s1">&#39;datatype&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">datatype</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">datatype</span><span class="p">)</span>
@@ -2968,31 +3006,35 @@ table {
 
         <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">&gt;</span> <span class="mf">1.5e9</span><span class="p">:</span>
             <span class="n">ul_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_no_chunking_npz</span>
-        <span class="k">elif</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-            <span class="n">ul_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_no_chunking_blosc</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">&quot;Check yo version of Python!&quot;</span><span class="p">)</span>
+            <span class="n">ul_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_no_chunking_blosc</span>
 
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chunk_threshold</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ul_func</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
                            <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
                            <span class="n">resolution</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># must chunk first</span>
-            <span class="kn">from</span> <span class="nn">ndio.utils.parallel</span> <span class="kn">import</span> <span class="n">block_compute</span>
-            <span class="n">blocks</span> <span class="o">=</span> <span class="n">block_compute</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                                   <span class="n">y_start</span><span class="p">,</span> <span class="n">y_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                   <span class="n">z_start</span><span class="p">,</span> <span class="n">z_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
-                <span class="n">subvol</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
-                              <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
-                              <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span>
-                <span class="c1"># upload the chunk:</span>
-                <span class="n">ul_func</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
-                        <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">subvol</span><span class="p">,</span>
-                        <span class="n">resolution</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_with_chunking</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
+                                               <span class="n">x_start</span><span class="p">,</span> <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+                                               <span class="n">resolution</span><span class="p">,</span> <span class="n">ul_func</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">_post_cutout_with_chunking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
+                                   <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+                                   <span class="n">resolution</span><span class="p">,</span> <span class="n">ul_func</span><span class="p">):</span>
+        <span class="c1"># must chunk first</span>
+        <span class="kn">from</span> <span class="nn">ndio.utils.parallel</span> <span class="kn">import</span> <span class="n">block_compute</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="n">block_compute</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                               <span class="n">y_start</span><span class="p">,</span> <span class="n">y_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                               <span class="n">z_start</span><span class="p">,</span> <span class="n">z_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+            <span class="n">subvol</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
+                          <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
+                          <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span>
+            <span class="c1"># upload the chunk:</span>
+            <span class="n">ul_func</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
+                    <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">subvol</span><span class="p">,</span>
+                    <span class="n">resolution</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">_post_cutout_no_chunking_npz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
@@ -3027,7 +3069,6 @@ table {
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Accepts data in zyx. !!!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">blosc_data</span> <span class="o">=</span> <span class="n">blosc</span><span class="o">.</span><span class="n">pack_array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
@@ -3105,7 +3146,6 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataNotFoundError: If the channel or token is not found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s2">&quot;{}/{}/query/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">ramon_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="c1"># User is requesting a specific ramon_type.</span>
@@ -3129,7 +3169,7 @@ table {
             <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Could not successfully mock HDF5 file for parsing.&quot;</span><span class="p">)</span>
 
     <span class="nd">@_check_token</span>
-    <span class="k">def</span> <span class="nf">get_ramon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">get_ramon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                   <span class="n">include_cutout</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sieve</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download a RAMON object by ID.</span>
@@ -3166,68 +3206,61 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataNotFoundError: If the requested ids cannot be found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">b_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
 
-        <span class="n">mdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ramon_metadata</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">resolution</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># probably should be dynamic...</span>
-
-        <span class="n">BATCH</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="n">_return_first_only</span> <span class="o">=</span> <span class="bp">False</span>
-
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
             <span class="n">_return_first_only</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">ids</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
-            <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">b_size</span><span class="p">:</span>
-                <span class="n">BATCH</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="c1"># now ids is a list of strings</span>
 
-        <span class="k">if</span> <span class="n">BATCH</span><span class="p">:</span>
-            <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">id_batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
-            <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">id_batches</span><span class="p">:</span>
-                <span class="n">rs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_ramon_batch</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
-                                                <span class="n">batch</span><span class="p">,</span> <span class="n">resolution</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ramon_batch</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">id_batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">id_batches</span><span class="p">:</span>
+            <span class="n">rs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_ramon_batch</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">resolution</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">sieve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">rs</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span> <span class="k">if</span> <span class="n">sieve</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_ramon</span><span class="p">(</span><span class="n">rs</span><span class="p">,</span> <span class="n">sieve</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">include_cutout</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s1">&#39;cutout&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
-                    <span class="k">continue</span>
-                <span class="n">origin</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">xyz_offset</span>
-                <span class="c1"># Get the bounding box (cube-aligned)</span>
-                <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ramon_bounding_box</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
-                                                   <span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
-                <span class="c1"># Get the cutout (cube-aligned)</span>
-                <span class="n">cutout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cutout</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
-                                         <span class="o">*</span><span class="n">bbox</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
-                <span class="n">cutout</span><span class="p">[</span><span class="n">cutout</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
-
-                <span class="c1"># Compute upper offset and crop</span>
-                <span class="n">bounds</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
-                <span class="n">mins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-                <span class="n">maxs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-
-                <span class="n">r</span><span class="o">.</span><span class="n">cutout</span> <span class="o">=</span> <span class="n">cutout</span><span class="p">[</span>
-                    <span class="n">mins</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">mins</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                    <span class="n">mins</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-                <span class="p">]</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_add_ramon_cutout</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+                  <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">_return_first_only</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">rs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
         <span class="k">return</span> <span class="n">rs</span>
 
+    <span class="k">def</span> <span class="nf">_filter_ramon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rs</span><span class="p">,</span> <span class="n">sieve</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">sieve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span> <span class="k">if</span> <span class="n">sieve</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">rs</span>
+
+    <span class="k">def</span> <span class="nf">_add_ramon_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ramon</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;cutout&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">ramon</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ramon</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="n">ramon</span><span class="o">.</span><span class="n">xyz_offset</span>
+        <span class="c1"># Get the bounding box (cube-aligned)</span>
+        <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ramon_bounding_box</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
+                                           <span class="n">ramon</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+        <span class="c1"># Get the cutout (cube-aligned)</span>
+        <span class="n">cutout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cutout</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
+                                 <span class="o">*</span><span class="n">bbox</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+        <span class="n">cutout</span><span class="p">[</span><span class="n">cutout</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ramon</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Compute upper offset and crop</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+        <span class="n">maxs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+
+        <span class="n">ramon</span><span class="o">.</span><span class="n">cutout</span> <span class="o">=</span> <span class="n">cutout</span><span class="p">[</span>
+            <span class="n">mins</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">mins</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">mins</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">ramon</span>
+
     <span class="k">def</span> <span class="nf">_get_ramon_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s2">&quot;{}/{}/{}/json/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ids</span><span class="p">)))</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 
@@ -3258,7 +3291,6 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataNotFoundError: If the data cannot be found on the Remote</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">anno_id</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">uint32</span><span class="p">]:</span>
             <span class="c1"># there&#39;s just one ID to download</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_single_ramon_metadata</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
@@ -3344,7 +3376,6 @@ table {
 <span class="sd">        Throws:</span>
 <span class="sd">            RemoteDataUploadError: if something goes wrong</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="c1"># Max out batch-size at 100.</span>
         <span class="n">b_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
 
@@ -3355,7 +3386,7 @@ table {
         <span class="c1"># If there are too many to fit in one batch, split here and call this</span>
         <span class="c1"># function recursively.</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">batch_size</span><span class="p">:</span>
-            <span class="n">batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
+            <span class="n">batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
             <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">batches</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">post_ramon</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">b_size</span><span class="p">)</span>
             <span class="k">return</span>
@@ -3458,7 +3489,6 @@ table {
 <span class="sd">            RemoteDataUploadError: If the channel data is valid but upload</span>
 <span class="sd">                fails for some other reason.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">isalnum</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Name cannot contain character {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
@@ -3502,7 +3532,6 @@ table {
 <span class="sd">        Raises:</span>
 <span class="sd">            RemoteDataUploadError: If the upload fails for some reason.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s2">&quot;{}/deleteChannel/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">)),</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;channels&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="p">})</span>
@@ -3515,6 +3544,16 @@ table {
 
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Kick off the propagate function on the remote server.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            token (str): The token to propagate</span>
+<span class="sd">            channel (str): The channel to propagate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            boolean: Success</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_propagate_status</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;{}/{}/setPropagate/1/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">))</span>
@@ -3525,6 +3564,16 @@ table {
 
     <span class="nd">@_check_token</span>
     <span class="k">def</span> <span class="nf">get_propagate_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the propagate status for a token/channel pair.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            token (str): The token to check</span>
+<span class="sd">            channel (str): The channel to check</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The status code</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;{}/{}/getPropagate/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">))</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">200</span><span class="p">:</span>
@@ -3594,10 +3643,24 @@ table {
 
     
   
-    <div class="desc"><h2 style='font-size:125% !important'>Arguments</h2>
+    <div class="desc"><p>Initializer for the neurodata remote class.</p>
+<h2 style='font-size:125% !important'>Arguments</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b><code>hostname</code></b>:     Hostname (e.g. google.com)<br />
-&emsp;&emsp;&emsp;&emsp;<b><code>protocol</code></b>:     HTTP protocol (e.g. https)</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>hostname (str: "openconnecto.me")</b>: The hostname to connect to<br />
+&emsp;&emsp;&emsp;&emsp;<b>protocol (str: "http")</b>: The protocol (http or https) to use<br />
+&emsp;&emsp;&emsp;&emsp;<b>meta_root (str: "http://lims.neurodata.io/")</b>: The metadata server<br />
+&emsp;&emsp;&emsp;&emsp;<b>meta_protocol (str: "http")</b>: The protocol to use for the md server<br />
+&emsp;&emsp;&emsp;&emsp;<b>check_tokens (boolean: False)</b>: Whether functions that take <code>token</code><br />
+        as an argument should check for the existance of that token and<br />
+        fail immediately if it is not found. This is a good idea for<br />
+        functions that take more time to complete, and might not fail<br />
+        until the very end otherwise.<br />
+&emsp;&emsp;&emsp;&emsp;<b>chunk_threshold (int: 1e9 / 4)</b>: The maximum size of a numpy array<br />
+        that will be uploaded in one HTTP request. If you find that<br />
+        your data requests are commonly timing out, try reducing this.<br />
+        Default is 1e9 / 4, or a 0.25GiB.<br />
+&emsp;&emsp;&emsp;&emsp;<b>suffix (str: "ocp")</b>: The URL suffix to specify ndstore/microns. If<br />
+        you aren't sure what to do with this, don't specify one.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.neurodata.neurodata.__init__', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.neurodata.neurodata.__init__" class="source">
@@ -3606,13 +3669,25 @@ table {
              <span class="n">protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span>
              <span class="n">meta_root</span><span class="o">=</span><span class="s2">&quot;http://lims.neurodata.io/&quot;</span><span class="p">,</span>
              <span class="n">meta_protocol</span><span class="o">=</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pypi.python.org/pypi/ndio/json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="n">ndio</span><span class="o">.</span><span class="n">version</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;suppress_warnings&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;A newer version of ndio is available. &quot;</span> <span class="o">+</span>
-              <span class="s2">&quot;&#39;pip install -U ndio&#39; to update. Pass &quot;</span> <span class="o">+</span>
-              <span class="s2">&quot;&#39;suppress_warnings=True&#39; to the neurodata &quot;</span> <span class="o">+</span>
-              <span class="s2">&quot;constructor to suppress this message.&quot;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initializer for the neurodata remote class.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        hostname (str: &quot;openconnecto.me&quot;): The hostname to connect to</span>
+<span class="sd">        protocol (str: &quot;http&quot;): The protocol (http or https) to use</span>
+<span class="sd">        meta_root (str: &quot;http://lims.neurodata.io/&quot;): The metadata server</span>
+<span class="sd">        meta_protocol (str: &quot;http&quot;): The protocol to use for the md server</span>
+<span class="sd">        check_tokens (boolean: False): Whether functions that take `token`</span>
+<span class="sd">            as an argument should check for the existance of that token and</span>
+<span class="sd">            fail immediately if it is not found. This is a good idea for</span>
+<span class="sd">            functions that take more time to complete, and might not fail</span>
+<span class="sd">            until the very end otherwise.</span>
+<span class="sd">        chunk_threshold (int: 1e9 / 4): The maximum size of a numpy array</span>
+<span class="sd">            that will be uploaded in one HTTP request. If you find that</span>
+<span class="sd">            your data requests are commonly timing out, try reducing this.</span>
+<span class="sd">            Default is 1e9 / 4, or a 0.25GiB.</span>
+<span class="sd">        suffix (str: &quot;ocp&quot;): The URL suffix to specify ndstore/microns. If</span>
+<span class="sd">            you aren&#39;t sure what to do with this, don&#39;t specify one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_check_tokens</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;check_tokens&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_chunk_threshold</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;chunk_threshold&#39;</span><span class="p">,</span> <span class="mf">1E9</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_ext</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;suffix&#39;</span><span class="p">,</span> <span class="n">DEFAULT_SUFFIX</span><span class="p">)</span>
@@ -3645,8 +3720,12 @@ table {
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>token (str)</b>: The token to write to in LIMS<br />
 &emsp;&emsp;&emsp;&emsp;<b>channel (str)</b>: Channel to add in the subvolume. Can be <code>None</code><br />
-&emsp;&emsp;&emsp;&emsp;<b>Q_start (int)</b>: The start of the Q dimension<br />
-&emsp;&emsp;&emsp;&emsp;<b>Q_stop (int)</b>: The top of the Q dimension,<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_start (int)</b>: Start in x dimension<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_stop (int)</b>: Stop in x dimension<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_start (int)</b>: Start in y dimension<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_stop (int)</b>: Stop in y dimension<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_start (int)</b>: Start in z dimension<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_stop (int)</b>: Stop in z dimension<br />
 &emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: The resolution at which this subvolume is seen<br />
 &emsp;&emsp;&emsp;&emsp;<b>title (str)</b>: The title to set for the subvolume<br />
 &emsp;&emsp;&emsp;&emsp;<b>notes (str)</b>: Optional extra thoughts on the subvolume</p>
@@ -3667,8 +3746,12 @@ table {
 <span class="sd">    Arguments:</span>
 <span class="sd">        token (str): The token to write to in LIMS</span>
 <span class="sd">        channel (str): Channel to add in the subvolume. Can be `None`</span>
-<span class="sd">        Q_start (int): The start of the Q dimension</span>
-<span class="sd">        Q_stop (int): The top of the Q dimension,</span>
+<span class="sd">        x_start (int): Start in x dimension</span>
+<span class="sd">        x_stop (int): Stop in x dimension</span>
+<span class="sd">        y_start (int): Start in y dimension</span>
+<span class="sd">        y_stop (int): Stop in y dimension</span>
+<span class="sd">        z_start (int): Start in z dimension</span>
+<span class="sd">        z_stop (int): Stop in z dimension</span>
 <span class="sd">        resolution (int): The resolution at which this subvolume is seen</span>
 <span class="sd">        title (str): The title to set for the subvolume</span>
 <span class="sd">        notes (str): Optional extra thoughts on the subvolume</span>
@@ -4061,9 +4144,9 @@ a given project.</p>
                            <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
                            <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
                            <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">neariso</span><span class="o">=</span><span class="n">neariso</span><span class="p">)</span>
-            <span class="n">vol</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
-                <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
-                <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">vol</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
+                <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
+                <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
         <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">vol</span>
@@ -4166,7 +4249,7 @@ result of this function should be your x/y/z starts.</p>
 
     
   
-    <div class="desc"><p>Returns the size of the volume (3D). Convenient for when you want<br />
+    <div class="desc"><p>Return the size of the volume (3D). Convenient for when you want<br />
 to download the entirety of a dataset.</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
@@ -4186,7 +4269,7 @@ to download the entirety of a dataset.</p>
     <div class="codehilite"><pre><span></span><span class="nd">@_check_token</span>
 <span class="k">def</span> <span class="nf">get_image_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the size of the volume (3D). Convenient for when you want</span>
+<span class="sd">    Return the size of the volume (3D). Convenient for when you want</span>
 <span class="sd">    to download the entirety of a dataset.</span>
 <span class="sd">    Arguments:</span>
 <span class="sd">        token (str): The token for which to find the dataset image bounds</span>
@@ -4246,7 +4329,7 @@ to download the entirety of a dataset.</p>
 
     
   
-    <div class="desc"><p>Returns the project info for a given token.</p>
+    <div class="desc"><p>Return the project info for a given token.</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>token (str)</b>: Token to return information for</p>
@@ -4259,7 +4342,7 @@ to download the entirety of a dataset.</p>
     <div class="codehilite"><pre><span></span><span class="nd">@_check_token</span>
 <span class="k">def</span> <span class="nf">get_proj_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the project info for a given token.</span>
+<span class="sd">    Return the project info for a given token.</span>
 <span class="sd">    Arguments:</span>
 <span class="sd">        token (str): Token to return information for</span>
 <span class="sd">    Returns:</span>
@@ -4283,11 +4366,27 @@ to download the entirety of a dataset.</p>
 
     
   
+    <div class="desc"><p>Get the propagate status for a token/channel pair.</p>
+<h2 style='font-size:125% !important'>Arguments</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>token (str)</b>: The token to check<br />
+&emsp;&emsp;&emsp;&emsp;<b>channel (str)</b>: The channel to check</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>str</b>: The status code</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.neurodata.neurodata.get_propagate_status', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.neurodata.neurodata.get_propagate_status" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@_check_token</span>
 <span class="k">def</span> <span class="nf">get_propagate_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the propagate status for a token/channel pair.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        token (str): The token to check</span>
+<span class="sd">        channel (str): The channel to check</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The status code</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;{}/{}/getPropagate/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">))</span>
     <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">200</span><span class="p">:</span>
@@ -4310,7 +4409,7 @@ to download the entirety of a dataset.</p>
     
   
     <div class="desc"><p>&emsp;&emsp;&emsp;&emsp;<b>NOTE</b>: VERY SLOW!<br />
-Gets a list of public datasets. Different than public tokens!</p>
+Get a list of public datasets. Different than public tokens!</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
 <div class="codehilite"><pre><span></span>None
@@ -4326,7 +4425,7 @@ Gets a list of public datasets. Different than public tokens!</p>
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_public_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    NOTE: VERY SLOW!</span>
-<span class="sd">    Gets a list of public datasets. Different than public tokens!</span>
+<span class="sd">    Get a list of public datasets. Different than public tokens!</span>
 <span class="sd">    Arguments:</span>
 <span class="sd">        None</span>
 <span class="sd">    Returns:</span>
@@ -4350,7 +4449,7 @@ Gets a list of public datasets. Different than public tokens!</p>
     
   
     <div class="desc"><p>&emsp;&emsp;&emsp;&emsp;<b>NOTE</b>: VERY SLOW!<br />
-Gets a dictionary relating key:dataset to value:[tokens] that rely<br />
+Get a dictionary relating key:dataset to value:[tokens] that rely<br />
 on that dataset.</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
@@ -4367,7 +4466,7 @@ on that dataset.</p>
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_public_datasets_and_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    NOTE: VERY SLOW!</span>
-<span class="sd">    Gets a dictionary relating key:dataset to value:[tokens] that rely</span>
+<span class="sd">    Get a dictionary relating key:dataset to value:[tokens] that rely</span>
 <span class="sd">    on that dataset.</span>
 <span class="sd">    Arguments:</span>
 <span class="sd">        None</span>
@@ -4471,7 +4570,7 @@ on that dataset.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.neurodata.neurodata.get_ramon', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.neurodata.neurodata.get_ramon" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@_check_token</span>
-<span class="k">def</span> <span class="nf">get_ramon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">get_ramon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
               <span class="n">include_cutout</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sieve</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download a RAMON object by ID.</span>
@@ -4506,51 +4605,18 @@ on that dataset.</p>
 <span class="sd">        RemoteDataNotFoundError: If the requested ids cannot be found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">b_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
-    <span class="n">mdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ramon_metadata</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">resolution</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># probably should be dynamic...</span>
-    <span class="n">BATCH</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="n">_return_first_only</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">_return_first_only</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">ids</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
-        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">b_size</span><span class="p">:</span>
-            <span class="n">BATCH</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="c1"># now ids is a list of strings</span>
-    <span class="k">if</span> <span class="n">BATCH</span><span class="p">:</span>
-        <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">id_batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
-        <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">id_batches</span><span class="p">:</span>
-            <span class="n">rs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_ramon_batch</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
-                                            <span class="n">batch</span><span class="p">,</span> <span class="n">resolution</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ramon_batch</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">sieve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">rs</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span> <span class="k">if</span> <span class="n">sieve</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">id_batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">id_batches</span><span class="p">:</span>
+        <span class="n">rs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_ramon_batch</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">resolution</span><span class="p">))</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_ramon</span><span class="p">(</span><span class="n">rs</span><span class="p">,</span> <span class="n">sieve</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">include_cutout</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;cutout&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
-                <span class="k">continue</span>
-            <span class="n">origin</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">xyz_offset</span>
-            <span class="c1"># Get the bounding box (cube-aligned)</span>
-            <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ramon_bounding_box</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
-                                               <span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
-            <span class="c1"># Get the cutout (cube-aligned)</span>
-            <span class="n">cutout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cutout</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
-                                     <span class="o">*</span><span class="n">bbox</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
-            <span class="n">cutout</span><span class="p">[</span><span class="n">cutout</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># Compute upper offset and crop</span>
-            <span class="n">bounds</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
-            <span class="n">mins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-            <span class="n">maxs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">])</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-            <span class="n">r</span><span class="o">.</span><span class="n">cutout</span> <span class="o">=</span> <span class="n">cutout</span><span class="p">[</span>
-                <span class="n">mins</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">mins</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">mins</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">maxs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-            <span class="p">]</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_add_ramon_cutout</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">_return_first_only</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">rs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">rs</span>
@@ -4779,7 +4845,7 @@ returned from the server.
 
     
   
-    <div class="desc"><p>Returns a list of subvolumes taken from LIMS, if available.</p>
+    <div class="desc"><p>Return a list of subvolumes taken from LIMS, if available.</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>token (str)</b>: The token to read from in LIMS</p>
@@ -4792,7 +4858,7 @@ returned from the server.
     <div class="codehilite"><pre><span></span><span class="nd">@_check_token</span>
 <span class="k">def</span> <span class="nf">get_subvolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns a list of subvolumes taken from LIMS, if available.</span>
+<span class="sd">    Return a list of subvolumes taken from LIMS, if available.</span>
 <span class="sd">    Arguments:</span>
 <span class="sd">        token (str): The token to read from in LIMS</span>
 <span class="sd">    Returns:</span>
@@ -5027,7 +5093,7 @@ should use the channel 'image.'</p>
 
     
   
-    <div class="desc"><p>Returns a constructed URL, appending an optional suffix (uri path),<br />
+    <div class="desc"><p>Return a constructed URL, appending an optional suffix (uri path),<br />
 for the metadata server. (Should be temporary, until the LIMS shim<br />
 is fixed.)</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
@@ -5041,7 +5107,7 @@ is fixed.)</p>
   <div id="source-ndio.remote.neurodata.neurodata.meta_url" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">meta_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns a constructed URL, appending an optional suffix (uri path),</span>
+<span class="sd">    Return a constructed URL, appending an optional suffix (uri path),</span>
 <span class="sd">    for the metadata server. (Should be temporary, until the LIMS shim</span>
 <span class="sd">    is fixed.)</span>
 <span class="sd">    Arguments:</span>
@@ -5066,7 +5132,7 @@ is fixed.)</p>
 
     
   
-    <div class="desc"><p>Returns the status-code of the API (estimated using the public-tokens<br />
+    <div class="desc"><p>Return the status-code of the API (estimated using the public-tokens<br />
 lookup page).</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
@@ -5079,7 +5145,7 @@ lookup page).</p>
   <div id="source-ndio.remote.neurodata.neurodata.ping" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;public_tokens/&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the status-code of the API (estimated using the public-tokens</span>
+<span class="sd">    Return the status-code of the API (estimated using the public-tokens</span>
 <span class="sd">    lookup page).</span>
 <span class="sd">    Arguments:</span>
 <span class="sd">        suffix (str : &#39;public_tokens/&#39;): The url endpoint to check</span>
@@ -5115,7 +5181,6 @@ z_start (int)
 
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>data (numpy.ndarray)</b>: A numpy array of data. Pass in (x, y, z)<br />
-&emsp;&emsp;&emsp;&emsp;<b>dtype (str : '')</b>: Pass in explicit datatype, or we use projinfo<br />
 &emsp;&emsp;&emsp;&emsp;<b>resolution (int : 0)</b>: Resolution at which to insert the data</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
@@ -5132,7 +5197,6 @@ z_start (int)
                 <span class="n">y_start</span><span class="p">,</span>
                 <span class="n">z_start</span><span class="p">,</span>
                 <span class="n">data</span><span class="p">,</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                 <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Post a cutout to the server.</span>
@@ -5143,7 +5207,6 @@ z_start (int)
 <span class="sd">        y_start (int)</span>
 <span class="sd">        z_start (int)</span>
 <span class="sd">        data (numpy.ndarray): A numpy array of data. Pass in (x, y, z)</span>
-<span class="sd">        dtype (str : &#39;&#39;): Pass in explicit datatype, or we use projinfo</span>
 <span class="sd">        resolution (int : 0): Resolution at which to insert the data</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: True on success</span>
@@ -5157,29 +5220,15 @@ z_start (int)
     <span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">&gt;</span> <span class="mf">1.5e9</span><span class="p">:</span>
         <span class="n">ul_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_no_chunking_npz</span>
-    <span class="k">elif</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-        <span class="n">ul_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_no_chunking_blosc</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">&quot;Check yo version of Python!&quot;</span><span class="p">)</span>
+        <span class="n">ul_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_no_chunking_blosc</span>
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chunk_threshold</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ul_func</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
                        <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
                        <span class="n">resolution</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># must chunk first</span>
-        <span class="kn">from</span> <span class="nn">ndio.utils.parallel</span> <span class="kn">import</span> <span class="n">block_compute</span>
-        <span class="n">blocks</span> <span class="o">=</span> <span class="n">block_compute</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                               <span class="n">y_start</span><span class="p">,</span> <span class="n">y_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                               <span class="n">z_start</span><span class="p">,</span> <span class="n">z_start</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
-            <span class="n">subvol</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">z_start</span><span class="p">,</span>
-                          <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y_start</span><span class="p">,</span>
-                          <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span> <span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x_start</span><span class="p">]</span>
-            <span class="c1"># upload the chunk:</span>
-            <span class="n">ul_func</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span>
-                    <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">subvol</span><span class="p">,</span>
-                    <span class="n">resolution</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_cutout_with_chunking</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span>
+                                           <span class="n">x_start</span><span class="p">,</span> <span class="n">y_start</span><span class="p">,</span> <span class="n">z_start</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+                                           <span class="n">resolution</span><span class="p">,</span> <span class="n">ul_func</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -5237,7 +5286,7 @@ z_start (int)
     <span class="c1"># If there are too many to fit in one batch, split here and call this</span>
     <span class="c1"># function recursively.</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">batch_size</span><span class="p">:</span>
-        <span class="n">batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
+        <span class="n">batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">b_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">b_size</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">batches</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">post_ramon</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">b_size</span><span class="p">)</span>
         <span class="k">return</span>
@@ -5282,11 +5331,27 @@ z_start (int)
 
     
   
+    <div class="desc"><p>Kick off the propagate function on the remote server.</p>
+<h2 style='font-size:125% !important'>Arguments</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>token (str)</b>: The token to propagate<br />
+&emsp;&emsp;&emsp;&emsp;<b>channel (str)</b>: The channel to propagate</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>boolean</b>: Success</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-ndio.remote.neurodata.neurodata.propagate', this);">Show source &equiv;</a></p>
   <div id="source-ndio.remote.neurodata.neurodata.propagate" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@_check_token</span>
 <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Kick off the propagate function on the remote server.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        token (str): The token to propagate</span>
+<span class="sd">        channel (str): The channel to propagate</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        boolean: Success</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_propagate_status</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span>
     <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="s1">&#39;{}/{}/setPropagate/1/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">channel</span><span class="p">))</span>
@@ -5402,7 +5467,7 @@ z_start (int)
 
     
   
-    <div class="desc"><p>Returns a constructed URL, appending an optional suffix (uri path).</p>
+    <div class="desc"><p>Return a constructed URL, appending an optional suffix (uri path).</p>
 <h2 style='font-size:125% !important'>Arguments</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>suffix (str : "")</b>: The suffix to append to the end of the URL</p>
@@ -5414,7 +5479,7 @@ z_start (int)
   <div id="source-ndio.remote.neurodata.neurodata.url" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns a constructed URL, appending an optional suffix (uri path).</span>
+<span class="sd">    Return a constructed URL, appending an optional suffix (uri path).</span>
 <span class="sd">    Arguments:</span>
 <span class="sd">        suffix (str : &quot;&quot;): The suffix to append to the end of the URL</span>
 <span class="sd">    Returns:</span>
