@@ -10,6 +10,7 @@ class RAMONVolume(RAMONBase):
     """
     RAMONVolume Object for storing neuroscience data with a voxel volume
     """
+
     def __init__(self,
                  xyz_offset=(0, 0, 0),
                  resolution=0,
@@ -32,7 +33,6 @@ class RAMONVolume(RAMONBase):
             cutout (numpy.ndarray): dense matrix of data
             voxels: Unused for now
         """
-
         self.xyz_offset = xyz_offset
         self.resolution = resolution
         self.cutout = cutout

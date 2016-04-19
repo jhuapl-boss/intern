@@ -10,6 +10,7 @@ class RAMONNeuron(RAMONBase):
     """
     RAMONNeuron Object for storing neuroscience data with a voxel volume
     """
+
     def __init__(self,
                  segments=None,
 
@@ -18,12 +19,18 @@ class RAMONNeuron(RAMONBase):
                  kvpairs=DEFAULT_DYNAMIC_METADATA,
                  status=DEFAULT_STATUS,
                  author=DEFAULT_AUTHOR):
+        """
+        Initialize a new `RAMONNeuron`. Neurons take all of the arguments of
+        `RAMONBase`.
 
-            self.segments = segments
+        Arguments:
+            segments (int[]: None): A list of RAMON IDs that make up the neuron
+        """
+        self.segments = segments
 
-            RAMONBase.__init__(self,
-                               id=id,
-                               confidence=confidence,
-                               kvpairs=kvpairs,
-                               status=status,
-                               author=author)
+        RAMONBase.__init__(self,
+                           id=id,
+                           confidence=confidence,
+                           kvpairs=kvpairs,
+                           status=status,
+                           author=author)

@@ -14,10 +14,12 @@ install:
     - sudo pip install --install-option='--no-cython-compile' cython
     - pip install .
     - pip install pep8
+    - pip install pydocstyle
     - pip install json-spec jsonschema
 cache:
     - pip
     - apt
 script:
     - find . -name \*.py -exec pep8 {} +
+    - ./stylecheck +
     - python -m unittest discover

@@ -28,6 +28,9 @@ DEFAULT_PROTOCOL = "http"
 
 
 class neurodata(Remote):
+    """
+    The NeuroData remote, for interfacing with ndstore, ndlims, and friends.
+    """
 
     # SECTION:
     # Enumerables
@@ -39,7 +42,26 @@ class neurodata(Remote):
                  protocol=DEFAULT_PROTOCOL,
                  meta_root="http://lims.neurodata.io/",
                  meta_protocol=DEFAULT_PROTOCOL, **kwargs):
+        """
+        Initializer for the neurodata remote class.
 
+        Arguments:
+            hostname (str: "openconnecto.me"): The hostname to connect to
+            protocol (str: "http"): The protocol (http or https) to use
+            meta_root (str: "http://lims.neurodata.io/"): The metadata server
+            meta_protocol (str: "http"): The protocol to use for the md server
+            check_tokens (boolean: False): Whether functions that take `token`
+                as an argument should check for the existance of that token and
+                fail immediately if it is not found. This is a good idea for
+                functions that take more time to complete, and might not fail
+                until the very end otherwise.
+            chunk_threshold (int: 1e9 / 4): The maximum size of a numpy array
+                that will be uploaded in one HTTP request. If you find that
+                your data requests are commonly timing out, try reducing this.
+                Default is 1e9 / 4, or a 0.25GiB.
+            suffix (str: "ocp"): The URL suffix to specify ndstore/microns. If
+                you aren't sure what to do with this, don't specify one.
+        """
         self._check_tokens = kwargs.get('check_tokens', False)
         self._chunk_threshold = kwargs.get('chunk_threshold', 1E9 / 4)
         self._ext = kwargs.get('suffix', DEFAULT_SUFFIX)
@@ -73,7 +95,7 @@ class neurodata(Remote):
     # Utilities
     def ping(self, suffix='public_tokens/'):
         """
-        Returns the status-code of the API (estimated using the public-tokens
+        Return the status-code of the API (estimated using the public-tokens
         lookup page).
 
         Arguments:
@@ -86,7 +108,7 @@ class neurodata(Remote):
 
     def url(self, suffix=""):
         """
-        Returns a constructed URL, appending an optional suffix (uri path).
+        Return a constructed URL, appending an optional suffix (uri path).
 
         Arguments:
             suffix (str : ""): The suffix to append to the end of the URL
@@ -98,7 +120,7 @@ class neurodata(Remote):
 
     def meta_url(self, suffix=""):
         """
-        Returns a constructed URL, appending an optional suffix (uri path),
+        Return a constructed URL, appending an optional suffix (uri path),
         for the metadata server. (Should be temporary, until the LIMS shim
         is fixed.)
 
@@ -112,7 +134,7 @@ class neurodata(Remote):
 
     def __repr__(self):
         """
-        Returns a string representation that can be used to reproduce this
+        Return a string representation that can be used to reproduce this
         instance. `eval(repr(this))` should return an identical copy.
 
         Arguments:
@@ -146,7 +168,7 @@ class neurodata(Remote):
     def get_public_datasets(self):
         """
         NOTE: VERY SLOW!
-        Gets a list of public datasets. Different than public tokens!
+        Get a list of public datasets. Different than public tokens!
 
         Arguments:
             None
@@ -159,7 +181,7 @@ class neurodata(Remote):
     def get_public_datasets_and_tokens(self):
         """
         NOTE: VERY SLOW!
-        Gets a dictionary relating key:dataset to value:[tokens] that rely
+        Get a dictionary relating key:dataset to value:[tokens] that rely
         on that dataset.
 
         Arguments:
@@ -194,7 +216,7 @@ class neurodata(Remote):
     @_check_token
     def get_proj_info(self, token):
         """
-        Returns the project info for a given token.
+        Return the project info for a given token.
 
         Arguments:
             token (str): Token to return information for
@@ -229,7 +251,7 @@ class neurodata(Remote):
     @_check_token
     def get_image_size(self, token, resolution=0):
         """
-        Returns the size of the volume (3D). Convenient for when you want
+        Return the size of the volume (3D). Convenient for when you want
         to download the entirety of a dataset.
 
         Arguments:
@@ -279,7 +301,7 @@ class neurodata(Remote):
     @_check_token
     def get_subvolumes(self, token):
         """
-        Returns a list of subvolumes taken from LIMS, if available.
+        Return a list of subvolumes taken from LIMS, if available.
 
         Arguments:
             token (str): The token to read from in LIMS
@@ -451,7 +473,6 @@ class neurodata(Remote):
         Returns:
             ndio.ramon.RAMONVolume: Downloaded data.
         """
-
         size = (x_stop-x_start)*(y_stop-y_start)*(z_stop-z_start)
         volume = ramon.RAMONVolume()
         volume.xyz_offset = [x_start, y_start, z_start]
@@ -492,7 +513,6 @@ class neurodata(Remote):
         Returns:
             numpy.ndarray: Downloaded data.
         """
-
         if block_size is None:
             # look up block size from metadata
             block_size = self.get_block_size(token, resolution)
@@ -623,7 +643,6 @@ class neurodata(Remote):
         Raises:
             RemoteDataUploadError: if there's an issue during upload.
         """
-
         datatype = self.get_proj_info(token)['channels'][channel]['datatype']
         if data.dtype.name != datatype:
             data = data.astype(datatype)
@@ -696,7 +715,6 @@ class neurodata(Remote):
         """
         Accepts data in zyx. !!!
         """
-
         data = numpy.expand_dims(data, axis=0)
         blosc_data = blosc.pack_array(data)
 
@@ -774,7 +792,6 @@ class neurodata(Remote):
         Raises:
             RemoteDataNotFoundError: If the channel or token is not found
         """
-
         url = self.url("{}/{}/query/".format(token, channel))
         if ramon_type is not None:
             # User is requesting a specific ramon_type.
@@ -835,7 +852,6 @@ class neurodata(Remote):
         Raises:
             RemoteDataNotFoundError: If the requested ids cannot be found.
         """
-
         b_size = min(100, batch_size)
 
         _return_first_only = False
@@ -921,7 +937,6 @@ class neurodata(Remote):
         Raises:
             RemoteDataNotFoundError: If the data cannot be found on the Remote
         """
-
         if type(anno_id) in [int, numpy.uint32]:
             # there's just one ID to download
             return self._get_single_ramon_metadata(token, channel,
@@ -1007,7 +1022,6 @@ class neurodata(Remote):
         Throws:
             RemoteDataUploadError: if something goes wrong
         """
-
         # Max out batch-size at 100.
         b_size = min(100, batch_size)
 
@@ -1121,7 +1135,6 @@ class neurodata(Remote):
             RemoteDataUploadError: If the channel data is valid but upload
                 fails for some other reason.
         """
-
         for c in name:
             if not c.isalnum():
                 raise ValueError("Name cannot contain character {}.".format(c))
@@ -1165,7 +1178,6 @@ class neurodata(Remote):
         Raises:
             RemoteDataUploadError: If the upload fails for some reason.
         """
-
         req = requests.post(self.url("{}/deleteChannel/".format(token)), json={
             "channels": [name]
         })
@@ -1178,6 +1190,16 @@ class neurodata(Remote):
 
     @_check_token
     def propagate(self, token, channel):
+        """
+        Kick off the propagate function on the remote server.
+
+        Arguments:
+            token (str): The token to propagate
+            channel (str): The channel to propagate
+
+        Returns:
+            boolean: Success
+        """
         if self.get_propagate_status(token, channel) is not 0:
             return
         url = self.url('{}/{}/setPropagate/1/'.format(token, channel))
@@ -1188,6 +1210,16 @@ class neurodata(Remote):
 
     @_check_token
     def get_propagate_status(self, token, channel):
+        """
+        Get the propagate status for a token/channel pair.
+
+        Arguments:
+            token (str): The token to check
+            channel (str): The channel to check
+
+        Returns:
+            str: The status code
+        """
         url = self.url('{}/{}/getPropagate/'.format(token, channel))
         req = requests.get(url)
         if req.status_code is not 200:

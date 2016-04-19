@@ -1,3 +1,7 @@
+"""
+A Python library for open neuroscience data access and manipulation.
+"""
+
 version = "1.0.0"
 
 

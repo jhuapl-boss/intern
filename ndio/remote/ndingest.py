@@ -14,12 +14,15 @@ VERIFY_BY_SLICE = 'Slice'
 
 
 class NDIngest:
+    """
+    A remote to automate the ingest of large volumetric data into ndstore.
+    """
 
     def __init__(self, site_host=None):
         """
         Arguments:
             site_host(str): The site host to post the data to, by default
-            http://openconnectome.me.
+                http://openconnectome.me.
 
         Returns:
             None
@@ -130,10 +133,9 @@ neurodata/ndstore/ae-doc-edits/docs/sphinx/channel_schema.json')
 
     def add_dataset(self, dataset_name, imagesize, voxelres, offset=None,
                     timerange=None, scalinglevels=None, scaling=None):
-
-        self.dataset = (dataset_name.strip().replace(" ", ""), imagesize,
-                        voxelres, offset, timerange, scalinglevels, scaling)
         """
+        Add a new dataset to the ingest.
+
         Arguments:
             dataset_name (str): Dataset Name is the overarching name of the
                 research effort. Standard naming convention is to do
@@ -170,10 +172,10 @@ neurodata/ndstore/ae-doc-edits/docs/sphinx/channel_schema.json')
         Returns:
             None
         """
+        self.dataset = (dataset_name.strip().replace(" ", ""), imagesize,
+                        voxelres, offset, timerange, scalinglevels, scaling)
 
     def add_metadata(self, metadata=""):
-        self.metadata = metadata
-
         """
         Arguments:
             metadata(str): Any metadata as appropriate from the LIMS schema
@@ -181,9 +183,12 @@ neurodata/ndstore/ae-doc-edits/docs/sphinx/channel_schema.json')
         Returns:
             None
         """
+        self.metadata = metadata
 
     def nd_json(self, dataset, project, channel_list, metadata):
-        """Genarate ND json object"""
+        """
+        Genarate ND json object.
+        """
         nd_dict = {}
         nd_dict['dataset'] = self.dataset_dict(*dataset)
         nd_dict['project'] = self.project_dict(*project)
@@ -195,7 +200,9 @@ neurodata/ndstore/ae-doc-edits/docs/sphinx/channel_schema.json')
         return json.dumps(nd_dict, sort_keys=True, indent=4)
 
     def nd_json_list(self, dataset, project, channel_list, metadata):
-        """Genarate ND json object"""
+        """
+        Genarate ND json object.
+        """
         nd_dict = {}
         nd_dict['dataset'] = self.dataset_dict(*dataset)
         nd_dict['project'] = self.project_dict(*project)
@@ -224,11 +231,12 @@ neurodata/ndstore/ae-doc-edits/docs/sphinx/channel_schema.json')
             dataset_dict['scaling'] = scaling
         return dataset_dict
 
-    def channel_dict(
-        self, channel_name, datatype, channel_type, data_url, file_format,
-            file_type, exceptions, resolution,
-            windowrange, readonly):
-        """Generate the project dictionary"""
+    def channel_dict(self, channel_name, datatype, channel_type, data_url,
+                     file_format, file_type, exceptions, resolution,
+                     windowrange, readonly):
+        """
+        Generate the project dictionary.
+        """
         channel_dict = {}
         channel_dict['channel_name'] = channel_name
         channel_dict['datatype'] = datatype
@@ -247,7 +255,9 @@ neurodata/ndstore/ae-doc-edits/docs/sphinx/channel_schema.json')
         return channel_dict
 
     def project_dict(self, project_name, token_name, public):
-        """Genarate the project dictionary"""
+        """
+        Genarate the project dictionary.
+        """
         project_dict = {}
         project_dict['project_name'] = project_name
         if token_name is not None:
@@ -264,8 +274,7 @@ neurodata/ndstore/ae-doc-edits/docs/sphinx/channel_schema.json')
 
     def identify_imagesize(self, image_type, image_path='/tmp/img.'):
         """
-        Identify the image size using the data location and other
-        parameters
+        Identify the image size using the data location and other parameters
         """
         dims = ()
         try:
@@ -285,6 +294,9 @@ neurodata/ndstore/ae-doc-edits/docs/sphinx/channel_schema.json')
         return dims
 
     def verify_path(self, data, verifytype):
+        """
+        Verify the path supplied.
+        """
         # Insert try and catch blocks
         try:
             token_name = data["project"]["token_name"]
@@ -422,6 +434,9 @@ provided image size.')
             # By Here the path should have been verified
 
     def verify_json(self, data):
+        """
+        Verify the JSON against the spec.
+        """
         names = []
         # Channels
         channel_names = list(data["channels"].copy().keys())
@@ -458,8 +473,9 @@ including: $&+,:;=?@#|'<>.^*()%!-].* in dataset, project, channel or token \
 names")
 
     def put_data(self, data):
-        # try to post data to the server
-
+        """
+        Try to post data to the server.
+        """
         URLPath = self.oo.url("autoIngest")
         try:
             response = requests.post(URLPath, data=json.dumps(data))
@@ -487,7 +503,6 @@ names")
         Returns:
             None
         """
-
         if (file_name is None):
             complete_example = (
                 self.dataset, self.project, self.channels, self.metadata)

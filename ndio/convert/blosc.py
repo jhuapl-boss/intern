@@ -13,7 +13,6 @@ def to_array(data):
     Returns:
         A numpy array with data from a blosc compressed array
     """
-
     try:
         numpy_data = blosc.unpack_array(data)
     except Exception as e:
@@ -32,7 +31,6 @@ def from_array(array):
     Returns:
         Bytes/String. A blosc compressed array
     """
-
     try:
         raw_data = blosc.pack_array(array)
     except Exception as e:

@@ -3,6 +3,11 @@ import requests
 
 
 class Remote(object):
+    """
+    All Remotes in this module should inherit from this base class.
+
+    This base class itself should not be used.
+    """
 
     def __init__(self, hostname, protocol):
         """

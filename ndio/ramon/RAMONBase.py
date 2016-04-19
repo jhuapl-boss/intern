@@ -7,6 +7,7 @@ class RAMONBase(object):
     """
     RAMONBase Object for storing neuroscience data
     """
+
     def __init__(self, id=DEFAULT_ID,
                  confidence=DEFAULT_CONFIDENCE,
                  kvpairs=DEFAULT_DYNAMIC_METADATA,
