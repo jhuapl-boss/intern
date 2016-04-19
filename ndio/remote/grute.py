@@ -23,6 +23,10 @@ DEFAULT_FIBER_FILE = "fiber.dat"
 
 
 class Invariants:
+    """
+    An array of invariant enumerables.
+    """
+    
     SCAN_STATISTIC = ss1 = "ss1"        # the Scan Statistic 1
     TRIANGLE_COUNT = tri = "tri"        # the Triangle Count
     CLUSTERING = cc = "cc"              # the Clustering Coefficient
@@ -41,6 +45,10 @@ class Invariants:
 
 
 class GraphFormats:
+    """
+    The set of graph format enumerables.
+    """
+
     GRAPHML = graphml = "graphml"
     NCOL = ncol = "ncol"
     EDGELIST = edgelist = "edgelist"
@@ -63,12 +71,27 @@ class GraphFormats:
 
 
 class grute(Remote):
+    """
+    The grute remote, for interfacing with ndgrutedb (NeuroData.io)
+    """
 
     SMALL = S = 's'
     BIG = B = 'b'
 
-    def __init__(self, hostname=DEFAULT_HOSTNAME, protocol=DEFAULT_PROTOCOL,
+    def __init__(self,
+                 hostname=DEFAULT_HOSTNAME,
+                 protocol=DEFAULT_PROTOCOL,
                  email=DEFAULT_EMAIL):
+        """
+        Initialize a new grute remote.
+
+        Arguments:
+            hostname (str: "openconnecto.me"): The hostname where grute lives
+            protocol (str: "http"): The protocol over which to access grute
+            email (str: ""): The email to which completion notifications should
+                be sent (unless overridden in individual calls). Note that the
+                completion URLs are also accessible via this Python API.
+        """
         super(grute, self).__init__(hostname, protocol)
         self.email = email
 
@@ -90,9 +113,21 @@ class grute(Remote):
         )
 
     def ping(self):
+        """
+        Check the server for proof of life.
+        """
         return super(grute, self).ping()
 
     def url(self, suffix=""):
+        """
+        Construct a valid URL from the base grutedb url.
+
+        Arguments:
+            suffix (str: ""): The suffix that should be appended to the base
+
+        Returns:
+            str: Fully formed absolute URL
+        """
         return super(grute, self).url('/graph-services/' + suffix)
 
     def set_default_email(self, email):
@@ -153,7 +188,6 @@ class grute(Remote):
             RemoteDataNotFoundError: When the data cannot be processed due to
                 a server error.
         """
-
         if email is None:
             email = self.email
 
@@ -252,7 +286,6 @@ class grute(Remote):
             RemoteDataUploadError: If there is an issue packing the file
             RemoteError: If the server experiences difficulty computing invs
         """
-
         if email is None:
             email = self.email
 
@@ -340,7 +373,6 @@ class grute(Remote):
             RemoteError: If there's a server-side issue
             ValueError: If there's a problem with the supplied arguments
         """
-
         if email is None:
             email = self.email
 
