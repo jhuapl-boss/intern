@@ -10,6 +10,7 @@ class RAMONOrganelle(RAMONVolume):
     """
     RAMONOrganelle Object for storing neuroscience data with a voxel volume
     """
+    
     def __init__(self,
                  organelle_class=0,
 
@@ -23,16 +24,23 @@ class RAMONOrganelle(RAMONVolume):
                  kvpairs=DEFAULT_DYNAMIC_METADATA,
                  status=DEFAULT_STATUS,
                  author=DEFAULT_AUTHOR):
+        """
+        Initialize a new `RAMONOrganelle`. Organelles take all of the arguments
+        of their parent `RAMONVolume` class.
 
-            self.organelle_class = organelle_class
+        Arguments:
+            organelle_class (int: 0): The organelle class to which this object
+                belongs. For more details, see the online ndstore documentation
+        """
+        self.organelle_class = organelle_class
 
-            RAMONVolume.__init__(self,
-                                 xyz_offset=xyz_offset,
-                                 resolution=resolution,
-                                 cutout=cutout,
-                                 voxels=voxels,
-                                 id=id,
-                                 confidence=confidence,
-                                 kvpairs=kvpairs,
-                                 status=status,
-                                 author=author)
+        RAMONVolume.__init__(self,
+                             xyz_offset=xyz_offset,
+                             resolution=resolution,
+                             cutout=cutout,
+                             voxels=voxels,
+                             id=id,
+                             confidence=confidence,
+                             kvpairs=kvpairs,
+                             status=status,
+                             author=author)

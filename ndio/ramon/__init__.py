@@ -1,3 +1,32 @@
+"""
+The enumerables in this file are to afford compatibility with CAJAL, which uses
+integers as types. To convert from integer to string (for instance, if you want
+to specify the ANNOTATION_TYPE in a RAMON hdf5 file), use:
+
+>>> AnnotationType.get_str(1)
+"GENERIC"
+
+To convert from an integer to an actual RAMON type (say, if you want to create
+a new RAMON object dynamically), use:
+
+>>> AnnotationType.get_class(1)
+ndio.ramon.RAMONGeneric.RAMONGeneric
+
+So you can create a new RAMON object of dynamic type like this:
+
+>>> anno_type = 5
+>>> r = AnnotationType.get_class(anno_type)()
+>>> type(r)
+ndio.ramon.RAMONNeuron.RAMONNeuron
+
+NOTE! If you already have an HDF5 file that contains a RAMON object, it is far
+easier to use the prebuilt `from_hdf5()` function (below).
+
+>>> import h5py
+>>> f = h5py.File('myfile.hdf5', 'r')
+>>> r = from_hdf5(f)
+"""
+
 from __future__ import absolute_import
 import tempfile
 import json as jsonlib
@@ -19,36 +48,6 @@ from ndio.ramon.RAMONVolume import *
 
 from .errors import *
 
-"""
-
-The enumerables in this file are to afford compatibility with CAJAL, which uses
-integers as types. To convert from integer to string (for instance, if you want
-to specify the ANNOTATION_TYPE in a RAMON hdf5 file), use:
-
-    >>> AnnotationType.get_str(1)
-    "GENERIC"
-
-To convert from an integer to an actual RAMON type (say, if you want to create
-a new RAMON object dynamically), use:
-
-    >>> AnnotationType.get_class(1)
-    ndio.ramon.RAMONGeneric.RAMONGeneric
-
-So you can create a new RAMON object of dynamic type like this:
-
-    >>> anno_type = 5
-    >>> r = AnnotationType.get_class(anno_type)()
-    >>> type(r)
-    ndio.ramon.RAMONNeuron.RAMONNeuron
-
-NOTE! If you already have an HDF5 file that contains a RAMON object, it is far
-easier to use the prebuilt `from_hdf5()` function (below).
-
-    >>> import h5py
-    >>> f = h5py.File('myfile.hdf5', 'r')
-    >>> r = from_hdf5(f)
-
-"""
 
 # str: int
 _types = {
@@ -97,14 +96,41 @@ class AnnotationType:
 
     @staticmethod
     def get_str(typ):
+        """
+        From an integer, gets the string representation of a RAMON type.
+
+        Arguments:
+            typ (int): The type as an integer
+
+        Returns:
+            str: The type as a string
+        """
         return _reverse_types[typ]
 
     @staticmethod
     def get_class(typ):
+        """
+        From an integer, gets the ndio class of a RAMON type.
+
+        Arguments:
+            typ (int): The type as an integer
+
+        Returns:
+            type: The type of RAMON object
+        """
         return _ramon_types[typ]
 
     @staticmethod
     def get_int(typ):
+        """
+        From a string, gets the integer representation of a RAMON type.
+
+        Arguments:
+            typ (str): The type as an string
+
+        Returns:
+            int: The type as a integer
+        """
         return _reverse_ramon_types[typ]
 
     @staticmethod
@@ -124,6 +150,17 @@ class AnnotationType:
 
 
 def to_dict(ramons, flatten=False):
+    """
+    Converts a RAMON object list to a JSON-style dictionary. Useful for going
+    from an array of RAMONs to a dictionary, indexed by ID.
+
+    Arguments:
+        ramons (RAMON[]): A list of RAMON objects
+        flatten (boolean: False): Not implemented
+
+    Returns:
+        dict: A python dictionary of RAMON objects.
+    """
     if type(ramons) is not list:
         ramons = [ramons]
 
@@ -155,7 +192,7 @@ def to_json(ramons, flatten=False):
 
     Returns:
         str: The JSON representation of the RAMON objects, in the schema:
-
+            ```
             {
                 <id>: {
                     type: . . . ,
@@ -164,11 +201,11 @@ def to_json(ramons, flatten=False):
                     }
                 },
             }
+            ```
 
     Raises:
         ValueError: If an invalid RAMON is passed.
     """
-
     if type(ramons) is not list:
         ramons = [ramons]
 
@@ -211,7 +248,6 @@ def from_json(json, cutout=None):
     Returns:
         [RAMON]
     """
-
     if type(json) is str:
         json = jsonlib.loads(json)
 
@@ -273,7 +309,6 @@ def from_hdf5(hdf5, anno_id=None):
     Returns:
         ndio.RAMON object
     """
-
     if anno_id is None:
         # The user just wants the first item we find, so... Yeah.
         return from_hdf5(hdf5, list(hdf5.keys())[0])
@@ -362,7 +397,6 @@ def to_hdf5(ramon, hdf5=None):
     Raises:
         InvalidRAMONError: if you pass a non-RAMON object
     """
-
     if issubclass(type(ramon), RAMONBase) is False:
         raise InvalidRAMONError("Invalid RAMON supplied to ramon.to_hdf5.")
 
