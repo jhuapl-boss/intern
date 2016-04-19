@@ -82,6 +82,10 @@ _reverse_ramon_types = {v: k for k, v in list(_ramon_types.items())}
 
 
 class AnnotationType:
+    """
+    The annotation types (enumerable) plus convenience functions.
+    """
+
     GENERIC = _types["generic"]
     SYNAPSE = _types["synapse"]
     SEED = _types["seed"]
