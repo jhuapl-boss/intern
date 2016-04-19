@@ -14,7 +14,6 @@ def load(hdf5_filename):
     Returns:
         A numpy array with data from the HDF5 file
     """
-
     # Expand filename to be absolute
     hdf5_filename = os.path.expanduser(hdf5_filename)
 
@@ -41,7 +40,6 @@ def save(hdf5_filename, array):
     Returns:
         String. The expanded filename that now holds the HDF5 data
     """
-
     # Expand filename to be absolute
     hdf5_filename = os.path.expanduser(hdf5_filename)
 

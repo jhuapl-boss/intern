@@ -26,7 +26,7 @@ class Invariants:
     """
     An array of invariant enumerables.
     """
-    
+
     SCAN_STATISTIC = ss1 = "ss1"        # the Scan Statistic 1
     TRIANGLE_COUNT = tri = "tri"        # the Triangle Count
     CLUSTERING = cc = "cc"              # the Clustering Coefficient

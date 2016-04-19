@@ -15,7 +15,6 @@ def load(png_filename):
     Returns:
         A numpy array with data from the png file
     """
-
     # Expand filename to be absolute
     png_filename = os.path.expanduser(png_filename)
 
@@ -46,7 +45,6 @@ def save(filename, numpy_data):
             cannot be coerced into a png, or perhaps your numpy.ndarray is
             ill-formed?
     """
-
     # Expand filename to be absolute
     png_filename = os.path.expanduser(png_filename)
 
@@ -82,7 +80,6 @@ def save_collection(png_filename_base, numpy_data, start_layers_at=1):
     Returns:
         Array. A list of expanded filenames that hold png data.
     """
-
     file_ext = png_filename_base.split('.')[-1]
     if file_ext in ['png']:
         # Filename is "name*.ext", set file_base to "name*".
@@ -123,7 +120,6 @@ def load_collection(png_filename_base):
     Returns:
         A numpy array holding a 3D dataset
     """
-
     # We expect images to be indexed by their alphabetical order.
     files = glob.glob(png_filename_base)
     files.sort()

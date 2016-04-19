@@ -10,7 +10,7 @@ class RAMONOrganelle(RAMONVolume):
     """
     RAMONOrganelle Object for storing neuroscience data with a voxel volume
     """
-    
+
     def __init__(self,
                  organelle_class=0,
 
