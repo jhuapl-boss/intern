@@ -1,10 +1,11 @@
 # Changelog
 
-- [Predicted April 15] **1.1.0**
+- [Predicted April 30] **1.1.0**
     - Add converters for voxel lists and ndarrays
     - Add the `ndio.remote.NDIngest` remote
     - Improve how ndio version checking works
     - Improve how ndio installation and updates check for module versions (setup.py)
+    - Add checks for styleguide, both pep8 and docstrings
 - **1.0.0**
     - This changelog prepares ndio to be stable.
     - We now follow Semantic Versioning.
