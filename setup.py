@@ -3,10 +3,7 @@ from distutils.core import setup
 
 VERSION = ndio.version
 """
-update docs with:
-sphinx-apidoc -f -o ./docs/source/ ./ndio *.py
-cd docs
-make html
+update docs with the `generatedocs` script.
 
 roll with:
 
