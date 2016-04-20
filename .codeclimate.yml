@@ -1,13 +1,7 @@
 ---
 engines:
   duplication:
-    enabled: true
-    config:
-      languages:
-      - ruby
-      - javascript
-      - python
-      - php
+    enabled: false
   fixme:
     enabled: true
   radon:
@@ -24,11 +18,3 @@ ratings:
 exclude_paths:
 - dist/
 - tests/
-engines:
-  # ... CONFIG CONTENT ...
-  duplication:
-    enabled: true
-    # ... CONFIG CONTENT ...
-    checks:
-      Similar code:
-        enabled: false
