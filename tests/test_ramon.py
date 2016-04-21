@@ -18,5 +18,10 @@ class TestRAMONSegment(unittest.TestCase):
     def test_actually_got_cutout(self):
         self.assertEqual(self.ramon_segment.cutout.shape, (49, 54, 7))
 
+    def test_id_ordering(self):
+        rs = self.oo.get_ramon('kasthuri2015_ramon_v4',
+                               'neurons', ['4', '3'], 3)
+        self.assertEqual([rs[0].id, rs[1].id], ['4', '3'])
+
 if __name__ == '__main__':
     unittest.main()

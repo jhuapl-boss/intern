@@ -14,7 +14,7 @@ class TestXYZZYX(unittest.TestCase):
     def test_post_get_no_chunk(self):
         token = 'ndio_demos'
         channel = 'image'
-        cutout = numpy.ones((10, 10, 10)).astype(int)
+        cutout = numpy.zeros((10, 10, 10)).astype(int)
         zind = random.randint(0, 4)
         cutout[2, 3, zind] = random.randint(100, 200)
         self.nd.post_cutout(token, channel, 20, 20, 20, cutout, resolution=0)
@@ -25,7 +25,7 @@ class TestXYZZYX(unittest.TestCase):
     def test_post_get_chunk(self):
         token = 'ndio_demos'
         channel = 'image'
-        cutout = numpy.ones((10, 10, 10)).astype(int)
+        cutout = numpy.zeros((10, 10, 10)).astype(int)
         zind = random.randint(0, 4)
         cutout[2, 3, zind] = random.randint(100, 200)
         self.nd_force_chunk.post_cutout(token, channel,

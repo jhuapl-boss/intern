@@ -858,6 +858,7 @@ class neurodata(Remote):
         if type(ids) is not list:
             _return_first_only = True
             ids = [ids]
+        ids = [str(i) for i in ids]
 
         rs = []
         id_batches = [ids[i:i+b_size] for i in range(0, len(ids), b_size)]
@@ -873,7 +874,7 @@ class neurodata(Remote):
         if _return_first_only:
             return rs[0]
 
-        return rs
+        return sorted(rs, key=lambda x: ids.index(x.id))
 
     def _filter_ramon(self, rs, sieve):
         if sieve is not None:
