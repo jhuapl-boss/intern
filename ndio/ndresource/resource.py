@@ -12,14 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Remotes are services that are accessed via HTTP/SCP or other services that
-talk to non-local machines.
-"""
+from abc import ABCMeta
+from abc import abstractmethod
 
+class Resource(metaclass=ABCMeta):
+    """Base class used as a parameter by ndio.service.Service object methods.
+    """
 
-# from __future__ import absolute_import
-# from .Remote import Remote
-# from .grute import *
-# from .neurodata import *
-# from .ndingest import *
+    @abstractmethod
+    def valid_volume():
+        """Returns True if resource is something that can access the volume service.
+            Attributes:
+
+            Returns:
+                (bool) : True if calls to volume service may be made.
+        """

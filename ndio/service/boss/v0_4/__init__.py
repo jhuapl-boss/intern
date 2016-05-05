@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Remotes are services that are accessed via HTTP/SCP or other services that
-talk to non-local machines.
+"""The Boss specific services using v0.4 of the API.
+
+Author:
+    Tim Gion
 """
 
-
-# from __future__ import absolute_import
-# from .Remote import Remote
-# from .grute import *
-# from .neurodata import *
-# from .ndingest import *
+BOSS_VERSION = 'v0.4'
+BOSS_ENDPOINT = 'manage-data'

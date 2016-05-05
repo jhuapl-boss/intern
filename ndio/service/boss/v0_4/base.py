@@ -12,14 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Remotes are services that are accessed via HTTP/SCP or other services that
-talk to non-local machines.
-"""
+from ndio.service.boss.baseversion import BaseVersion
+from . import BOSS_VERSION
+from . import BOSS_ENDPOINT
 
+class Base(BaseVersion):
+    """This is the common parent for all interfaces to the Boss v.04.
+    """
 
-# from __future__ import absolute_import
-# from .Remote import Remote
-# from .grute import *
-# from .neurodata import *
-# from .ndingest import *
+    def __init__(self):
+        super().__init__()
+        self._token = None
+
+    @property
+    def version(self):
+        return BOSS_VERSION
+
+    @property
+    def endpoint(self):
+        return BOSS_ENDPOINT

@@ -12,14 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Remotes are services that are accessed via HTTP/SCP or other services that
-talk to non-local machines.
-"""
+from ndio.service.boss.service import Service
+from .base import Base
 
+class ProjectService_0_4(Base):
+    def __init__(self):
+        super().__init__()
 
-# from __future__ import absolute_import
-# from .Remote import Remote
-# from .grute import *
-# from .neurodata import *
-# from .ndingest import *
+    def list(self, resource, url_prefix, auth):
+        return self.get_request(resource, 'GET', 'application/json', url_prefix, auth, list_req = True)
+
+    def create(self, resource, url_prefix, auth):
+        pass
+
+    def get(self, resource, url_prefix, auth):
+        pass
+
+    def update(self, resource, url_prefix, auth):
+        pass
+
+    def delete(self, resource, url_prefix, auth):
+        pass
