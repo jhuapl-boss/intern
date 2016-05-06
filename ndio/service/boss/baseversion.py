@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -75,8 +75,12 @@ class BaseVersion(metaclass=ABCMeta):
             '/' + suffix)
         return url
 
-    def get_request(self, resource, method, content, url_prefix, token, list_req=False):
+    def get_request(self, resource, method, content, url_prefix, token, list_req=False, json=None):
         url = self.build_url(resource, url_prefix, list_req)
         headers = self.get_headers(content, token)
-        req = Request(method, url, headers = headers)
+        if(json is None):
+            req = Request(method, url, headers = headers)
+        else:
+            req = Request(method, url, headers = headers, json = json)
+
         return req

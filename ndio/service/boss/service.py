@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,26 @@
 
 from ndio.service.service import Service as NdService
 from abc import abstractmethod
+from requests import Session
 
 class Service(NdService):
     def __init__(self):
         super().__init__()
         self._versions = {}
+        self._session = Session()
+        self._session_send_opts = {}
+
+    @property
+    def session(self):
+        return self._session
+
+    @property
+    def session_send_opts(self):
+        return self._session_send_opts
+
+    @session_send_opts.setter
+    def session_send_opts(self, opts_dict):
+        self._session_send_opts = opts_dict
 
     def set_auth(self, token, **kwargs):
         """Set the token for authentication/authorization.

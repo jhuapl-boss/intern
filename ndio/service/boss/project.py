@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,20 +33,30 @@ class ProjectService(Service):
 
     def list(self, resource):
         ps = self.get_api_impl(resource.version)
-        return ps.list(resource, self.url_prefix, self.auth)
+        return ps.list(
+            resource, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
 
     def create(self, resource):
         ps = self.get_api_impl(resource.version)
-        ps.create(resource, self.url_prefix, self.auth)
+        return ps.create(
+            resource, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
 
     def get(self, resource):
         ps = self.get_api_impl(resource.version)
-        ps.get(resource, self.url_prefix, self.auth)
+        return ps.get(
+            resource, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
 
-    def update(self, resource):
-        ps = self.get_api_impl(resource.version)
-        ps.update(resource, self.url_prefix, self.auth)
+    def update(self, old_resource, new_resource):
+        ps = self.get_api_impl(old_resource.version)
+        ps.update(
+            old_resource, new_resource, self.url_prefix, self.auth, 
+            self.session, self.session_send_opts)
 
     def delete(self, resource):
         ps = self.get_api_impl(resource.version)
-        ps.delete(resource, self.url_prefix, self.auth)
+        ps.delete(
+            resource, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)

@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -97,6 +97,34 @@ class ExperimentResource(Resource):
 
     def get_list_route(self):
         return self.coll_name + '/experiments'
+
+class CoordinateFrameResource(Resource):
+    def __init__(
+        self, name, version=BOSS_DEFAULT_VERSION, description='',
+        x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
+        x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
+        time_step=0, time_step_unit='seconds'):
+
+        super().__init__(name, description, version)
+
+        self.x_start = x_start
+        self.x_stop = x_stop
+        self.y_start = y_start 
+        self.y_stop = y_stop
+        self.z_start = z_start
+        self.z_stop = z_stop
+        self.x_voxel_size = x_voxel_size
+        self.y_voxel_size = y_voxel_size
+        self.z_voxel_size = z_voxel_size
+        self.voxel_unit = voxel_unit
+        self.time_step = time_step
+        self.time_step_unit = time_step_unit
+
+    def get_route(self):
+        return 'coordinateframes/' + self.name
+
+    def get_list_route(self):
+        return 'coordinateframes/'
 
 class ChannelLayerBaseResource(Resource):
     """
