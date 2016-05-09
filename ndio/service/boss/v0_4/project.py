@@ -19,6 +19,10 @@ class ProjectService_0_4(Base):
     def __init__(self):
         super().__init__()
 
+    @property
+    def endpoint(self):
+        return 'manage-data'
+
     def list(self, resource, url_prefix, auth, session, send_opts):
         req = self.get_request(
             resource, 'GET', 'application/json', url_prefix, auth, 
