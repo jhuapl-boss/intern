@@ -22,7 +22,7 @@ class ProjectService_0_4(Base):
     def list(self, resource, url_prefix, auth, session, send_opts):
         req = self.get_request(
             resource, 'GET', 'application/json', url_prefix, auth, 
-            list_req = True)
+            proj_list_req = True)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:

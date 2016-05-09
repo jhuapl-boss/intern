@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ class BaseVersionTest(unittest.TestCase):
         uses the plural form of the resource's type name rather than the
         resource's name.
         """
-        actual = self.sut.build_url(self.resource, self.url_prefix, list_req=True)
+        actual = self.sut.build_url(self.resource, self.url_prefix, proj_list_req=True)
         self.assertEqual(
             self.url_prefix + '/' + self.sut.version + '/' + self.sut.endpoint +
             '/collections',
@@ -50,7 +50,7 @@ class BaseVersionTest(unittest.TestCase):
     def test_build_url_not_list(self):
         """Test standard use of BaseVersion.build_url().
         """
-        actual = self.sut.build_url(self.resource, self.url_prefix, list_req=False)
+        actual = self.sut.build_url(self.resource, self.url_prefix, proj_list_req=False)
         self.assertEqual(
             self.url_prefix + '/' + self.sut.version + '/' + self.sut.endpoint +
             '/' + self.resource.name,
@@ -64,4 +64,4 @@ class BaseVersionTest(unittest.TestCase):
     def test_get_headers_gives_dict_with_authorization(self):
         actual = self.sut.get_headers('application/json', 'my_token')
         self.assertTrue('Authorization' in actual)
-        self.assertEqual('Token: my_token', 'Authorization')
+        self.assertEqual('Token my_token', actual['Authorization'])

@@ -46,8 +46,12 @@ class Resource(NdResource):
         """
 
     @abstractmethod
-    def get_list_route(self):
+    def get_project_list_route(self):
         """Get the route, to list resources of this type, to pass as an HTTP request.
+
+        Getting a list from the project service uses a slightly different URL
+        than the other operations.  It uses the plural form of the resource's
+        type such as 'collections' and 'channels'.
 
         Attributes:
 
@@ -65,7 +69,7 @@ class CollectionResource(Resource):
     def get_route(self):
         return self.name
 
-    def get_list_route(self):
+    def get_project_list_route(self):
         return 'collections'
 
 class ExperimentResource(Resource):
@@ -95,7 +99,7 @@ class ExperimentResource(Resource):
     def get_route(self):
         return self.coll_name + '/' + self.name
 
-    def get_list_route(self):
+    def get_project_list_route(self):
         return self.coll_name + '/experiments'
 
 class CoordinateFrameResource(Resource):
@@ -123,7 +127,7 @@ class CoordinateFrameResource(Resource):
     def get_route(self):
         return 'coordinateframes/' + self.name
 
-    def get_list_route(self):
+    def get_project_list_route(self):
         return 'coordinateframes/'
 
 class ChannelLayerBaseResource(Resource):
@@ -171,7 +175,7 @@ class ChannelResource(ChannelLayerBaseResource):
         """
         return True
 
-    def get_list_route(self):
+    def get_project_list_route(self):
         return self.coll_name + '/' + self.exp_name + '/channels'
 
 class LayerResource(ChannelLayerBaseResource):
@@ -188,5 +192,5 @@ class LayerResource(ChannelLayerBaseResource):
             description, default_time_step, datatype, base_resolution)
 
 
-    def get_list_route(self):
+    def get_project_list_route(self):
         return self.coll_name + '/' + self.exp_name + '/layers'

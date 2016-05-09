@@ -53,12 +53,12 @@ class BaseVersion(metaclass=ABCMeta):
             'Content-Type': content_type
         }
 
-    def build_url(self, resource, url_prefix, list_req):
+    def build_url(self, resource, url_prefix, proj_list_req):
         """Build the url to access the Boss API.
 
         Attributes:
             url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
-            list_req (bool): If True generate a list request.
+            proj_list_req (bool): If True generate a list request for the project service.
 
         Returns:
             (string): Full URL to access API.
@@ -66,8 +66,8 @@ class BaseVersion(metaclass=ABCMeta):
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        if list_req:
-            suffix = resource.get_list_route()
+        if proj_list_req:
+            suffix = resource.get_project_list_route()
         else:
             suffix = resource.get_route()
 
@@ -75,8 +75,8 @@ class BaseVersion(metaclass=ABCMeta):
             '/' + suffix)
         return url
 
-    def get_request(self, resource, method, content, url_prefix, token, list_req=False, json=None):
-        url = self.build_url(resource, url_prefix, list_req)
+    def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None):
+        url = self.build_url(resource, url_prefix, proj_list_req)
         headers = self.get_headers(content, token)
         if(json is None):
             req = Request(method, url, headers = headers)
