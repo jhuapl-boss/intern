@@ -14,7 +14,6 @@
 
 from ndio.service.boss.baseversion import BaseVersion
 from . import BOSS_VERSION
-from . import BOSS_ENDPOINT
 
 class Base(BaseVersion):
     """This is the common parent for all interfaces to the Boss v.04.

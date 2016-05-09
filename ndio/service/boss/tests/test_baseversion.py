@@ -56,6 +56,25 @@ class BaseVersionTest(unittest.TestCase):
             '/' + self.resource.name,
             actual)
 
+    def test_build_metadata_url_no_value(self):
+        key = 'foo'
+        actual = self.sut.build_metadata_url(
+            self.resource, self.url_prefix, key)
+        self.assertEqual(
+            self.url_prefix + '/' + self.sut.version + '/' + self.sut.endpoint +
+            '/' + self.resource.name + '/?key=' + key,
+            actual)
+
+    def test_build_metadata_url_key_and_value(self):
+        key = 'foo'
+        value = 'bar'
+        actual = self.sut.build_metadata_url(
+            self.resource, self.url_prefix, key, value)
+        self.assertEqual(
+            self.url_prefix + '/' + self.sut.version + '/' + self.sut.endpoint +
+            '/' + self.resource.name + '/?key=' + key + '&value=' + value,
+            actual)
+
     def test_get_headers_gives_dict_with_content_type(self):
         actual = self.sut.get_headers('application/json', 'my_token')
         self.assertTrue('Content-Type' in actual)

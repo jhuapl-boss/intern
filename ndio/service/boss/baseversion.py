@@ -54,7 +54,7 @@ class BaseVersion(metaclass=ABCMeta):
         }
 
     def build_url(self, resource, url_prefix, proj_list_req):
-        """Build the url to access the Boss API.
+        """Build the url to access the Boss' project service.
 
         Attributes:
             url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
@@ -75,7 +75,40 @@ class BaseVersion(metaclass=ABCMeta):
             '/' + suffix)
         return url
 
+    def build_metadata_url(self, resource, url_prefix, key, value=None):
+        """Build the url to access the Boss' metadata service.
+
+        Attributes:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            key (string): Key to get/create/update/delete.
+            value (string): Value to assign to key or None.
+
+        Returns:
+            (string): Full URL to access API.
+        """
+        urlNoParams = self.build_url(resource, url_prefix, proj_list_req=False)
+        urlWithKey = urlNoParams + '/?key=' + key
+        if value is None:
+            return urlWithKey
+        return urlWithKey + '&value=' + value
+
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None):
+        """Create a request for accessing the Boss' services.
+
+        Use for the project service or listing keys via the metadata service.
+
+        Attributes:
+            resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            proj_list_req (bool): Set to True if performing a list operation on the project service.  Defaults to False.
+            json (dict): POST body data.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+        """
         url = self.build_url(resource, url_prefix, proj_list_req)
         headers = self.get_headers(content, token)
         if(json is None):
@@ -84,3 +117,28 @@ class BaseVersion(metaclass=ABCMeta):
             req = Request(method, url, headers = headers, json = json)
 
         return req
+
+    def get_metadata_request(
+        self, resource, method, content, url_prefix, token,
+        key=None, value=None):
+
+        """Create a request for accessing the Boss' metadata service.
+
+        Do not use this method for list operations.  Instead, use the
+        get_request() method.
+
+        Attributes:
+            resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            key (string): Name of key to operate on.  Defaults to None.
+            value (string): Value to assign to key  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+        """
+        url = self.build_metadata_url(resource, url_prefix, key, value)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
