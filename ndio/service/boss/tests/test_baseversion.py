@@ -15,10 +15,11 @@
 import unittest
 from ndio.service.boss.baseversion import BaseVersion
 from ndio.ndresource.boss.resource import CollectionResource
+from ndio.ndresource.boss.resource import ChannelResource
 
 VER = 'v0.4'
 
-class BaseImpl(BaseVersion):
+class ProjectImpl(BaseVersion):
     """Create a concrete implementation of BaseVersion so it can be tested.
     """
 
@@ -30,57 +31,113 @@ class BaseImpl(BaseVersion):
     def endpoint(self):
         return 'manage-data'
 
+class MetadataImpl(BaseVersion):
+    """Create a concrete implementation of BaseVersion so it can be tested.
+    """
+
+    @property
+    def version(self):
+        return VER
+
+    @property
+    def endpoint(self):
+        return 'meta'
+
+class VolumeImpl(BaseVersion):
+    """Create a concrete implementation of BaseVersion so it can be tested.
+    """
+
+    @property
+    def version(self):
+        return VER
+
+    @property
+    def endpoint(self):
+        return 'cutout'
+
 class BaseVersionTest(unittest.TestCase):
     def setUp(self):
         self.resource = CollectionResource('coll1', VER)
-        self.sut = BaseImpl()
+        self.chanResource = ChannelResource(
+            'chan1', 'coll1', 'exp1', VER, 'null descr', 0, 'uint8', 0)
+        self.test_project = ProjectImpl()
+        self.test_meta = MetadataImpl()
+        self.test_volume = VolumeImpl()
         self.url_prefix = 'https://api.theboss.io'
+
+    ##
+    ## Methods used for the project service.
+    ##
 
     def test_build_url_for_list(self):
         """A list operation's URL is different than any other operation.  It
         uses the plural form of the resource's type name rather than the
         resource's name.
         """
-        actual = self.sut.build_url(self.resource, self.url_prefix, proj_list_req=True)
+        actual = self.test_project.build_url(self.resource, self.url_prefix, proj_list_req=True)
         self.assertEqual(
-            self.url_prefix + '/' + self.sut.version + '/' + self.sut.endpoint +
-            '/collections',
+            self.url_prefix + '/' + self.test_project.version + '/' + 
+            self.test_project.endpoint + '/collections',
             actual)
 
     def test_build_url_not_list(self):
         """Test standard use of BaseVersion.build_url().
         """
-        actual = self.sut.build_url(self.resource, self.url_prefix, proj_list_req=False)
+        actual = self.test_project.build_url(self.resource, self.url_prefix, proj_list_req=False)
         self.assertEqual(
-            self.url_prefix + '/' + self.sut.version + '/' + self.sut.endpoint +
-            '/' + self.resource.name,
+            self.url_prefix + '/' + self.test_project.version + '/' +
+            self.test_project.endpoint + '/' + self.resource.name,
             actual)
+
+    def test_get_headers_gives_dict_with_content_type(self):
+        actual = self.test_project.get_headers('application/json', 'my_token')
+        self.assertTrue('Content-Type' in actual)
+        self.assertEqual('application/json', actual['Content-Type'])
+
+    def test_get_headers_gives_dict_with_authorization(self):
+        actual = self.test_project.get_headers('application/json', 'my_token')
+        self.assertTrue('Authorization' in actual)
+        self.assertEqual('Token my_token', actual['Authorization'])
+
+    ##
+    ## Methods used for the metadata service.
+    ##
 
     def test_build_metadata_url_no_value(self):
         key = 'foo'
-        actual = self.sut.build_metadata_url(
+        actual = self.test_meta.build_metadata_url(
             self.resource, self.url_prefix, key)
         self.assertEqual(
-            self.url_prefix + '/' + self.sut.version + '/' + self.sut.endpoint +
-            '/' + self.resource.name + '/?key=' + key,
+            self.url_prefix + '/' + self.test_meta.version + '/' + 
+            self.test_meta.endpoint + '/' + self.resource.name + '/?key=' + key,
             actual)
 
     def test_build_metadata_url_key_and_value(self):
         key = 'foo'
         value = 'bar'
-        actual = self.sut.build_metadata_url(
+        actual = self.test_meta.build_metadata_url(
             self.resource, self.url_prefix, key, value)
         self.assertEqual(
-            self.url_prefix + '/' + self.sut.version + '/' + self.sut.endpoint +
-            '/' + self.resource.name + '/?key=' + key + '&value=' + value,
+            self.url_prefix + '/' + self.test_meta.version + '/' + 
+            self.test_meta.endpoint + '/' + self.resource.name + '/?key=' + 
+            key + '&value=' + value,
             actual)
 
-    def test_get_headers_gives_dict_with_content_type(self):
-        actual = self.sut.get_headers('application/json', 'my_token')
-        self.assertTrue('Content-Type' in actual)
-        self.assertEqual('application/json', actual['Content-Type'])
+    ##
+    ## Methods used for the volume service.
+    ##
 
-    def test_get_headers_gives_dict_with_authorization(self):
-        actual = self.sut.get_headers('application/json', 'my_token')
-        self.assertTrue('Authorization' in actual)
-        self.assertEqual('Token my_token', actual['Authorization'])
+    def test_build_cutout_url(self):
+        res = 0
+        x_range = '20:40'
+        y_range = '50:70'
+        z_range = '30:50'
+        actual = self.test_volume.build_cutout_url(
+            self.chanResource, self.url_prefix, res, x_range, y_range, z_range)
+
+        self.assertEqual(
+            self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
+            '/' + self.chanResource.coll_name + '/' + self.chanResource.exp_name +
+            '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
+            y_range + '/' + z_range + '/',
+            actual)

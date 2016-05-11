@@ -92,7 +92,27 @@ class BaseVersion(metaclass=ABCMeta):
             return urlWithKey
         return urlWithKey + '&value=' + value
 
-    def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None):
+    def build_cutout_url(
+        self, resource, url_prefix, resolution, x_range, y_range, z_range):
+        baseUrl = self.build_url(resource, url_prefix, proj_list_req=False)
+        """Build the url to access the cutout function of the Boss' volume service.
+
+        Attributes:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            resolution (int): 0 indicates native resolution.
+            x_range (string): x range such as '10:20' which means x>=10 and x<20.
+            y_range (string): y range such as '10:20' which means y>=10 and y<20.
+            z_range (string): z range such as '10:20' which means z>=10 and z<20.
+
+        Returns:
+            (string): Full URL to access API.
+        """
+        urlWithParams = (
+            baseUrl + '/' + str(resolution) + '/' + x_range + '/' + y_range +
+            '/' + z_range + '/')
+        return urlWithParams
+
+    def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
         """Create a request for accessing the Boss' services.
 
         Use for the project service or listing keys via the metadata service.
@@ -105,16 +125,14 @@ class BaseVersion(metaclass=ABCMeta):
             token (string): Django Rest Framework token for auth.
             proj_list_req (bool): Set to True if performing a list operation on the project service.  Defaults to False.
             json (dict): POST body data.  Defaults to None.
+            data (): Raw data.  Defaults to None.
 
         Returns:
             (requests.Request): A newly constructed Request object.
         """
         url = self.build_url(resource, url_prefix, proj_list_req)
         headers = self.get_headers(content, token)
-        if(json is None):
-            req = Request(method, url, headers = headers)
-        else:
-            req = Request(method, url, headers = headers, json = json)
+        req = Request(method, url, headers = headers, json = json, data = data)
 
         return req
 
@@ -142,3 +160,25 @@ class BaseVersion(metaclass=ABCMeta):
         url = self.build_metadata_url(resource, url_prefix, key, value)
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers)
+
+    def get_cutout_request(
+        self, resource, method, content, url_prefix, token, 
+        resolution, x_range, y_range, z_range, numpyVolume=None):
+
+        """Create a request for working with cutouts (part of the Boss' volume service).
+        Attributes:
+            resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            resolution (int): 0 indicates native resolution.
+            x_range (string): x range such as '10:20' which means x>=10 and x<20.
+            y_range (string): y range such as '10:20' which means y>=10 and y<20.
+            z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            numpyVolume (numpy array): The data volume encoded in a numpy array.
+        """
+        url = self.build_cutout_url(
+            resource, url_prefix, resolution, x_range, y_range, z_range)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers, data = numpyVolume)

@@ -21,7 +21,7 @@ class ProjectService_0_4(Base):
 
     @property
     def endpoint(self):
-        return 'manage-data'
+        return 'resource'
 
     def list(self, resource, url_prefix, auth, session, send_opts):
         req = self.get_request(
@@ -37,8 +37,11 @@ class ProjectService_0_4(Base):
     def create(self, resource, url_prefix, auth, session, send_opts):
         json = self._get_resource_params(resource)
         req = self.get_request(
-            resource, 'POST', 'application/json', url_prefix, auth, 
-            json = json)
+            resource, 'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            data = json)
+            # json content-type currently broken.
+            #resource, 'POST', 'application/json', url_prefix, auth, 
+            #json = json)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
 
@@ -62,8 +65,10 @@ class ProjectService_0_4(Base):
     def update(self, old_resource, new_resource, url_prefix, auth, session, send_opts):
         json = self._get_resource_params(new_resource)
         req = self.get_request(
-            old_resource, 'PUT', 'application/json', url_prefix, auth, 
-            json = json)
+            old_resource, 'PUT', 'application/application/x-www-form-urlencoded',
+            url_prefix, auth, json = json)
+            #old_resource, 'PUT', 'application/json', url_prefix, auth, 
+            #json = json)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
 
@@ -107,12 +112,12 @@ class ProjectService_0_4(Base):
 
         if isinstance(resource, LayerResource):
             params = self._get_channel_layer_params(resource)
-            params[is_channel] = False
+            params['is_channel'] = False
             return params
 
         if isinstance(resource, ChannelResource):
             params = self._get_channel_layer_params(resource)
-            params[is_channel] = True
+            params['is_channel'] = True
             return params
         
         raise TypeError('resource is not supported type.')
