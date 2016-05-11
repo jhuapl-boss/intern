@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from ndio.remote.remote import Remote as NdRemote
+import configparser
 
 class Remote(NdRemote):
     def __init__(self):
@@ -21,8 +22,31 @@ class Remote(NdRemote):
         # Pass token to services.
         pass
 
-    def _load_token_from_disk(self, path):
-        pass
+    def load_config(self, config_str):
+        """Load config data for the Remote.
+
+        Attributes:
+            config_str (string): Config data encoded in a string.
+
+        Returns:
+            (configparser.ConfigParser)
+        """
+        cfg_parser = configparser.ConfigParser()
+        cfg_parser.read_string(config_str)
+        return cfg_parser
+
+    def load_confg_file(self, path):
+        """Load config data for Remote from file.
+
+        Attributes:
+            path (string): Path (and filename) to config file.
+
+        Returns:
+            (configparser.ConfigParser)
+        """
+        with open(path, 'r') as f:
+            data = f.read()
+            return self.load_config(data)
 
     def set_resource(self, resource, **kwargs):
         self._resource = resource
