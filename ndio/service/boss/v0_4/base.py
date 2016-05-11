@@ -17,6 +17,9 @@ from . import BOSS_VERSION
 
 class Base(BaseVersion):
     """This is the common parent for all interfaces to the Boss v.04.
+
+    Attributes:
+        _token (string): Django Rest Framework token used for auth.
     """
 
     def __init__(self):
@@ -25,4 +28,9 @@ class Base(BaseVersion):
 
     @property
     def version(self):
+        """Version of the Boss API supported by this service instance.
+
+        Returns:
+            (string): Boss API version.
+        """
         return BOSS_VERSION

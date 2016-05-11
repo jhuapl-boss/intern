@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,25 +16,20 @@ from abc import ABCMeta
 from abc import abstractmethod
 
 class Remote(metaclass=ABCMeta):
+    """Base class for communicating with remote neuro data stores.
+
+    Attributes:
+        _volume (ndio.service.service.Service): Class that communicates with the volume service.
+        _metadata (ndio.service.service.Service): Class that communicates with the metadata service.
+        _project (ndio.service.service.Service): Class that communicates with the project service.
+        _object (ndio.service.service.Service): Class that communicates with the ume service.
+    """
+
     def __init__(self):
-        self._resource = None
         self._volume = None
         self._metadata = None
         self._project = None
         self._object = None
-
-    @abstractmethod
-    def set_resource(self, **kwargs):
-        """
-        Sets self._resource to pass to other operations.  For the Boss, this
-        could be a:
-            collection, experiment, channel, or layer.
-        """
-        pass
-
-    @property
-    def resource(self):
-        return self._resource
 
     @property
     def volume_service(self):
@@ -50,18 +45,46 @@ class Remote(metaclass=ABCMeta):
     def object_service(self):
         return self._object
 
-    def get_cutout(
-        self, resolution, x_range, y_range, z_range):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range):
+        """Get a cutout from the volume service.
 
-        if not self._resource.valid_volume():
-            raise some_err
+        Args:
+            resource (ndio.ndresource.resource.Resource): Resource compatible with cutout operations.
+            resolution (int): 0 indicates native resolution.
+            x_range (string): x range such as '10:20' which means x>=10 and x<20.
+            y_range (string): y range such as '10:20' which means y>=10 and y<20.
+            z_range (string): z range such as '10:20' which means z>=10 and z<20.
+
+        Returns:
+            (): Return type depends on volume service's implementation.
+
+        Raises:
+            RuntimeError when given invalid resource.
+        """
+
+        if not resource.valid_volume():
+            raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.get_cutout(
-            self._resource, channel, resolution, x_range, y_range, z_range)
+            resource, channel, resolution, x_range, y_range, z_range)
 
-    def create_cutout(
-        self, resolution, x_range, y_range, z_range, data):
+    def create_cutout(self, resource, resolution, x_range, y_range, z_range, data):
+        """Upload a cutout to the volume service.
 
-        if not self._resource.valid_volume():
-            raise some_err
+        Args:
+            resource (ndio.ndresource.resource.Resource): Resource compatible with cutout operations.
+            resolution (int): 0 indicates native resolution.
+            x_range (string): x range such as '10:20' which means x>=10 and x<20.
+            y_range (string): y range such as '10:20' which means y>=10 and y<20.
+            z_range (string): z range such as '10:20' which means z>=10 and z<20.
+
+        Returns:
+            (): Return type depends on volume service's implementation.
+
+        Raises:
+            RuntimeError when given invalid resource.
+        """
+
+        if not resource.valid_volume():
+            raise RuntimeError('Resource incompatible with the volume service.')
         self._volume.create_cutout(
-            self._resource, x_range, y_range, z_range, data)
+            resource, x_range, y_range, z_range, data)

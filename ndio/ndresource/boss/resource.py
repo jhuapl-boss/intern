@@ -38,7 +38,7 @@ class Resource(NdResource):
     def get_route(self):
         """Get the resource as a route to pass as an HTTP request.
 
-        Attributes:
+        Args:
 
         Returns:
             (string): A string that can be appended to the location of an
@@ -53,7 +53,7 @@ class Resource(NdResource):
         than the other operations.  It uses the plural form of the resource's
         type such as 'collections' and 'channels'.
 
-        Attributes:
+        Args:
 
         Returns:
             (string): A string that can be appended to the location of an
@@ -160,7 +160,7 @@ class ChannelLayerBaseResource(Resource):
 
 class ChannelResource(ChannelLayerBaseResource):
     """
-    Will provide some way to list layers associated with the channel.
+    ToDo: provide some way to list layers associated with the channel.
     """
     def __init__(self, name, collection_name, experiment_name,
         version=BOSS_DEFAULT_VERSION,
@@ -170,7 +170,7 @@ class ChannelResource(ChannelLayerBaseResource):
         super().__init__(name, collection_name, experiment_name, version,
             description, default_time_step, datatype, base_resolution)
 
-    def valid_volume():
+    def valid_volume(self):
         """A channel is a valid resource for interacting with the volume service.
         """
         return True

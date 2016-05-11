@@ -25,8 +25,11 @@ class ProjectService_0_4(Base):
 
     def list(self, resource, url_prefix, auth, session, send_opts):
         req = self.get_request(
-            resource, 'GET', 'application/json', url_prefix, auth, 
+            resource, 'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
             proj_list_req = True)
+            # json content-type currently broken.
+            #resource, 'GET', 'application/json', url_prefix, auth, 
+            #proj_list_req = True)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
@@ -65,8 +68,9 @@ class ProjectService_0_4(Base):
     def update(self, old_resource, new_resource, url_prefix, auth, session, send_opts):
         json = self._get_resource_params(new_resource)
         req = self.get_request(
-            old_resource, 'PUT', 'application/application/x-www-form-urlencoded',
-            url_prefix, auth, json = json)
+            old_resource, 'PUT', 'application/x-www-form-urlencoded',
+            url_prefix, auth, data = json)
+            # json content-type currently broken.
             #old_resource, 'PUT', 'application/json', url_prefix, auth, 
             #json = json)
         prep = session.prepare_request(req)
@@ -127,6 +131,7 @@ class ProjectService_0_4(Base):
 
     def _get_experiment_params(self, exp):
         return { 
+            'name': exp.name, 
             'description': exp.description ,
             'coord_frame': exp.coord_frame,
             'num_hierarchy_levels': exp.num_hierarchy_levels,

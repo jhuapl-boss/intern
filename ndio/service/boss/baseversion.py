@@ -41,7 +41,7 @@ class BaseVersion(metaclass=ABCMeta):
         The auth token is added to the header for authenthication and
         authorization.
 
-        Attributes:
+        Args:
             content_type (string):  HTTP content type of request.
             token (string):  Django Rest Framework token.
 
@@ -56,7 +56,7 @@ class BaseVersion(metaclass=ABCMeta):
     def build_url(self, resource, url_prefix, proj_list_req):
         """Build the url to access the Boss' project service.
 
-        Attributes:
+        Args:
             url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
             proj_list_req (bool): If True generate a list request for the project service.
 
@@ -78,7 +78,7 @@ class BaseVersion(metaclass=ABCMeta):
     def build_metadata_url(self, resource, url_prefix, key, value=None):
         """Build the url to access the Boss' metadata service.
 
-        Attributes:
+        Args:
             url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
             key (string): Key to get/create/update/delete.
             value (string): Value to assign to key or None.
@@ -97,7 +97,7 @@ class BaseVersion(metaclass=ABCMeta):
         baseUrl = self.build_url(resource, url_prefix, proj_list_req=False)
         """Build the url to access the cutout function of the Boss' volume service.
 
-        Attributes:
+        Args:
             url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
             resolution (int): 0 indicates native resolution.
             x_range (string): x range such as '10:20' which means x>=10 and x<20.
@@ -117,7 +117,7 @@ class BaseVersion(metaclass=ABCMeta):
 
         Use for the project service or listing keys via the metadata service.
 
-        Attributes:
+        Args:
             resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
             method (string): HTTP verb such as 'GET'.
             content (string): HTTP Content-Type such as 'application/json'.
@@ -145,7 +145,7 @@ class BaseVersion(metaclass=ABCMeta):
         Do not use this method for list operations.  Instead, use the
         get_request() method.
 
-        Attributes:
+        Args:
             resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
             method (string): HTTP verb such as 'GET'.
             content (string): HTTP Content-Type such as 'application/json'.
@@ -166,7 +166,8 @@ class BaseVersion(metaclass=ABCMeta):
         resolution, x_range, y_range, z_range, numpyVolume=None):
 
         """Create a request for working with cutouts (part of the Boss' volume service).
-        Attributes:
+
+        Args:
             resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
             method (string): HTTP verb such as 'GET'.
             content (string): HTTP Content-Type such as 'application/json'.
