@@ -29,7 +29,21 @@ CONFIG_TOKEN = 'token'
 
 
 class Remote(NdRemote):
+    """Remote provides an SDK to the Boss API.
+
+    Attributes:
+        _token_project (string): Django Rest Framework token for auth to the project service.
+        _token_metadata (string): Django Rest Framework token for auth to the metadata service.
+        _token_volume (string): Django Rest Framework token for auth to the volume service.
+    """
+
     def __init__(self, cfg_file=CONFIG_FILE):
+        """Constructor.
+
+        Args:
+            cfg_file (string): Path to config file in INI format.
+        """
+
         self._token_project = None
         self._token_metadata = None
         self._token_volume = None
@@ -77,7 +91,7 @@ class Remote(NdRemote):
     def load_config(self, config_str):
         """Load config data for the Remote.
 
-        Attributes:
+        Args:
             config_str (string): Config data encoded in a string.
 
         Returns:
@@ -90,7 +104,7 @@ class Remote(NdRemote):
     def load_config_file(self, path):
         """Load config data for Remote from file.
 
-        Attributes:
+        Args:
             path (string): Path (and filename) to config file.
 
         Returns:
@@ -107,6 +121,7 @@ class Remote(NdRemote):
     @token_project.setter 
     def token_project(self, value):
         self._token_project = value
+        self.project_service.set_auth(self._token_project)
 
     @property
     def token_metadata(self):
@@ -115,6 +130,7 @@ class Remote(NdRemote):
     @token_metadata.setter 
     def token_metadata(self, value):
         self._token_metadata = value
+        self.metadata_service.set_auth(self._token_metadata)
 
     @property
     def token_volume(self):
@@ -123,43 +139,138 @@ class Remote(NdRemote):
     @token_volume.setter 
     def token_volume(self, value):
         self._token_volume = value
+        self.volume_service.set_auth(self._token_volume)
 
     def project_list(self, resource):
+        """List all instances of the given resource type.
+
+        Args:
+            resource (ndio.resource.boss.Resource): resource.name may be an empty string.
+
+        Returns:
+            (list)
+        """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list(resource)
 
     def project_create(self, resource):
+        """Create the entity described by the given resource.
+
+        Args:
+            resource (ndio.resource.boss.Resource)
+
+        Returns:
+            (bool): True on success.
+        """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create(resource)
 
     def project_get(self, resource):
+        """Get the entity described by the given resource.
+
+        Args:
+            resource (ndio.resource.boss.Resource)
+
+        Returns:
+            (dictionary): Dictionary containing the entity's attributes.
+        """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get(resource)
 
-    def project_update(self, resource):
+    def project_update(self, resource_name, resource):
+        """Updates an entity in the data model using the given resource.
+        Args:
+            resource_name (string): Current name of the resource (in case the resource is getting its name changed).
+            resource (ndio.resource.boss.Resource): New attributes for the resource.
+
+        Returns:
+            (bool): True on success.
+        """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.update(resource)
+        return self.project_service.update(resource_name, resource)
 
     def project_delete(self, resource):
+        """Deletes the entity described by the given resource.
+
+        Args:
+            resource (ndio.resource.boss.Resource)
+
+        Returns:
+            (bool): True on success.
+        """
         self.project_service.set_auth(self._token_project)
         return self.project_service.delete(resource)
 
     def list_metadata(self, resource):
+        """List all keys associated with the given resource.
+
+        Args:
+            resource (ndio.resource.boss.Resource)
+
+        Returns:
+            (list)
+        """
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.list(resource)
 
-    def create_metadata(self, resource, key, val):
-        self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.create(resource, key, val)
+    def create_metadata(self, resource, keys_vals):
+        """Associates new key-value pairs with the given resource.
 
-    def get_metadata(self, resource, key):
-        self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.get(resource, key)
+        Will attempt to add all key-value pairs even if some fail.
 
-    def update_metadata(self, resource, key, val):
-        self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.update(resource, key, val)
+        Args:
+            resource (ndio.resource.boss.Resource)
+            keys_vals (dictionary): Collection of key-value pairs to assign to given resource.
 
-    def delete_metadata(self, resource, key):
+        Returns:
+            (bool): False if at least one key failed.
+        """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.delete(resource, key)
+        return self.metadata_service.create(resource, keys_vals)
+
+    def get_metadata(self, resource, keys):
+        """Gets the values for given keys associated with the given resource.
+
+        Args:
+            resource (ndio.resource.boss.Resource)
+            keys (list)
+            
+        Returns:
+            (dictionary)
+
+        Raises:
+            requests.HTTPError on a failure.
+        """
+        self.metadata_service.set_auth(self._token_metadata)
+        return self.metadata_service.get(resource, keys)
+
+    def update_metadata(self, resource, keys_vals):
+        """Updates key-value pairs with the given resource.
+
+        Will attempt to update all key-value pairs even if some fail.
+        Keys must already exist.
+
+        Args:
+            resource (ndio.resource.boss.Resource)
+            keys_vals (dictionary): Collection of key-value pairs to update on the given resource.
+
+        Returns:
+            (bool): False if at least one key failed.
+        """
+        self.metadata_service.set_auth(self._token_metadata)
+        return self.metadata_service.update(resource, keys_vals)
+
+    def delete_metadata(self, resource, keys):
+        """Deletes the given key-value pairs associated with the given resource.
+
+        Will attempt to delete all key-value pairs even if some fail.
+
+        Args:
+            resource (ndio.resource.boss.Resource)
+            keys (list)
+            
+        Returns:
+            (bool) False if deleting at least one key failed.
+        """
+        self.metadata_service.set_auth(self._token_metadata)
+        return self.metadata_service.delete(resource, keys)

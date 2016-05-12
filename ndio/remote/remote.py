@@ -22,7 +22,7 @@ class Remote(metaclass=ABCMeta):
         _volume (ndio.service.service.Service): Class that communicates with the volume service.
         _metadata (ndio.service.service.Service): Class that communicates with the metadata service.
         _project (ndio.service.service.Service): Class that communicates with the project service.
-        _object (ndio.service.service.Service): Class that communicates with the ume service.
+        _object (ndio.service.service.Service): Class that communicates with the volume service.
     """
 
     def __init__(self):

@@ -14,6 +14,7 @@
 
 from .base import Base
 from ndio.ndresource.boss.resource import *
+import copy
 
 class ProjectService_0_4(Base):
     def __init__(self):
@@ -65,8 +66,15 @@ class ProjectService_0_4(Base):
 
         resp.raise_for_status()
 
-    def update(self, old_resource, new_resource, url_prefix, auth, session, send_opts):
-        json = self._get_resource_params(new_resource)
+    def update(self, resource_name, resource, url_prefix, auth, session, send_opts):
+
+        # Create a copy of the resource and change its name to resource_name
+        # in case the update includes changing the name of a resource.
+        old_resource = copy.deepcopy(resource)
+        old_resource.name = resource_name
+
+        json = self._get_resource_params(resource)
+
         req = self.get_request(
             old_resource, 'PUT', 'application/x-www-form-urlencoded',
             url_prefix, auth, data = json)

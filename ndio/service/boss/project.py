@@ -49,10 +49,10 @@ class ProjectService(Service):
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def update(self, old_resource, new_resource):
-        ps = self.get_api_impl(old_resource.version)
+    def update(self, resource_name, resource):
+        ps = self.get_api_impl(resource.version)
         return ps.update(
-            old_resource, new_resource, self.url_prefix, self.auth, 
+            resource_name, resource, self.url_prefix, self.auth, 
             self.session, self.session_send_opts)
 
     def delete(self, resource):
