@@ -58,11 +58,32 @@ coll_list = rmt.project_list(coll)
 # and alpha experiment:
 channels = ChannelResource('', 'gray', 'alpha', API_VER)
 chan_list = rmt.project_list(channels)
+for chan in chan_list:
+    print(chan['name'])
 
 # When creating a new resource, the corresponding resource object will need
 # the required attributes populated.
 # For example, to add a channel named beta to the alpha experiment referenced
 # in the previous example:
 betaChan = ChannelResource('beta', 'gray', 'alpha', API_VER, 'test channel')
-if(not rmt.project_create(betaChan)):
-    print('Creating beta channel failed.')
+if not rmt.project_create(betaChan):
+    print('Creating {} channel failed.'.format(betaChan.name))
+
+# We forgot, to set the channel's data type to uint32.  Let's fix that by
+# updating the channel.
+betaChan.datatype = 'uint32'
+if not rmt.project_update(betaChan.name, betaChan):
+    print('Updating {} channel failed.'.format(betaChan.name))
+
+# Let's get the channel and verify the data type was updated.
+chan_data = rmt.project_get(betaChan)
+print(chan_data['datatype'])
+
+# To demonstrate the final method available for project operations, we will
+# delete the beta channel.
+if not rmt.project_delete(betaChan):
+    print('Delete {} channel failed.'.format(betaChan.name))
+
+chan_list = rmt.project_list(channels)
+for chan in chan_list:
+    print(chan['name'])
