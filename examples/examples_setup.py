@@ -59,4 +59,13 @@ except HTTPError:
         print('Couldn''t create experiment {}, aborting.'.format(alpha_exp.name))
         sys.exit(1)
 
+omega_chan = ChannelResource('omega', 'gray', 'alpha', API_VER, 'Example channel.')
+try:
+    rmt.project_get(omega_chan)
+except HTTPError:
+    if(not rmt.project_create(omega_chan)):
+        print('Couldn''t create channel {}, aborting.'.format(omega_chan.name))
+        sys.exit(1)
+
+
 print('Data model for examples setup.')

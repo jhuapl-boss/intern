@@ -30,15 +30,15 @@ class VolumeService(Service):
             'v0.4': VolumeService_0_4()
         }
 
-    def create_cutout(
+    def cutout_create(
         self, resource, resolution, x_range, y_range, z_range, numpyVolume):
         ps = self.get_api_impl(resource.version)
-        return ps.create_cutout(
+        return ps.cutout_create(
             resource, resolution, x_range, y_range, z_range, numpyVolume,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range):
+    def cutout_get(self, resource, resolution, x_range, y_range, z_range):
         ps = self.get_api_impl(resource.version)
-        return ps.get_cutout(
+        return ps.cutout_get(
             resource, resolution, x_range, y_range, z_range,
             self.url_prefix, self.auth, self.session, self.session_send_opts)

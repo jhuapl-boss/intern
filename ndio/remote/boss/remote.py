@@ -15,6 +15,7 @@
 from ndio.remote.remote import Remote as NdRemote
 from ndio.service.boss.project import ProjectService
 from ndio.service.boss.metadata import MetadataService
+from ndio.service.boss.volume import VolumeService
 import configparser
 import os
 
@@ -84,7 +85,7 @@ class Remote(NdRemote):
         proto = volume_cfg[CONFIG_PROTOCOL]
         host = volume_cfg[CONFIG_HOST]
 
-        self._volume = MetadataService(host)
+        self._volume = VolumeService(host)
         self._volume.base_protocol = proto
         self._volume.set_auth(self._token_volume)
 
