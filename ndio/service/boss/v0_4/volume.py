@@ -75,12 +75,15 @@ class VolumeService_0_4(Base):
         """
 
         req = self.get_cutout_request(
-            resource, 'POST', 'application/blosc-python',
+            resource, 'GET', 'application/blosc-python',
             url_prefix, auth, resolution, x_range, y_range, z_range)
         prep = session.prepare_request(req)
-        resp = session.send(prep, stream = True, **send_opts)
+        # Hack in Accept header for now.
+        prep.headers['Accepts'] = 'application/blosc-python'
+        #resp = session.send(prep, stream = True, **send_opts)
+        resp = session.send(prep, **send_opts)
         
         if resp.status_code == 200:
-            return blosc.unpack_array(resp.raw)
+            return blosc.unpack_array(resp.content)
 
         resp.raise_for_status()

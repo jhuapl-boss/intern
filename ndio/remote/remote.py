@@ -86,5 +86,5 @@ class Remote(metaclass=ABCMeta):
 
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
-        self._volume.cutout_create(
+        return self._volume.cutout_create(
             resource, resolution, x_range, y_range, z_range, data)
