@@ -12,6 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+This example shows how to work with the Boss' data model.  The Remote
+class methods that being with 'project_' operate on the data model. These
+methods are:
+    project_list()
+    project_create()
+    project_get()
+    project_update()
+    project_delete()
+
+All of these methods take a ndio.ndresource.boss.resource.Resource object, as
+a minimum.  The resource object identifies where in the data model hierarchy
+the operation should be performed.  For create and update operations, the 
+resource object also contains the parameters to place in the database.
+"""
+
 from ndio.remote.boss.remote import Remote
 from ndio.ndresource.boss.resource import *
 
@@ -19,7 +35,8 @@ rmt = Remote('test.cfg')
 
 API_VER = 'v0.4'
 
-# Turn off SSL cert verification
+# Turn off SSL cert verification.  This is necessary for interacting with
+# developer instances of the Boss.
 import requests
 from requests import Session
 from requests.packages.urllib3.exceptions import InsecureRequestWarning

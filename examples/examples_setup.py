@@ -23,7 +23,8 @@ rmt = Remote('test.cfg')
 
 API_VER = 'v0.4'
 
-# Turn off SSL cert verification and silence warnings.
+# Turn off SSL cert verification.  This is necessary for interacting with
+# developer instances of the Boss.
 import requests
 from requests import Session
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
