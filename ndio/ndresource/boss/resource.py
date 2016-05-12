@@ -90,10 +90,13 @@ class ExperimentResource(Resource):
         super().__init__(name, description, version)
         self.coll_name = collection_name
 
+        self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
+
         #ToDo: validate data types.
         self.coord_frame = coord_frame
         self.num_hierarchy_levels = num_hierarchy_levels
-        self.hierarchy_method = hierarchy_method
+        self.hierarchy_method = self.validate_hierarchy_method(
+            hierarchy_method)
         self.max_time_sample = max_time_sample
 
     def get_route(self):
@@ -101,6 +104,13 @@ class ExperimentResource(Resource):
 
     def get_project_list_route(self):
         return self.coll_name + '/experiments'
+
+    def validate_hierarchy_method(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_hierarchy_methods:
+            return lowered
+        raise ValueError('{} is not a valid hierarchy method.'.format(value))
+
 
 class CoordinateFrameResource(Resource):
     def __init__(
@@ -111,6 +121,12 @@ class CoordinateFrameResource(Resource):
 
         super().__init__(name, description, version)
 
+        self._valid_voxel_units = [
+            'nanometers', 'micrometers', 'millimeters', 'centimeters']
+
+        self._valid_time_units = [
+            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+
         self.x_start = x_start
         self.x_stop = x_stop
         self.y_start = y_start 
@@ -120,15 +136,29 @@ class CoordinateFrameResource(Resource):
         self.x_voxel_size = x_voxel_size
         self.y_voxel_size = y_voxel_size
         self.z_voxel_size = z_voxel_size
-        self.voxel_unit = voxel_unit
+        self.voxel_unit = self.validate_voxel_units(voxel_unit)
         self.time_step = time_step
-        self.time_step_unit = time_step_unit
+        self.time_step_unit = self.validate_time_units(time_step_unit)
 
     def get_route(self):
         return 'coordinateframes/' + self.name
 
     def get_project_list_route(self):
         return 'coordinateframes/'
+
+    def validate_voxel_units(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_voxel_units:
+            return lowered
+        raise ValueError('{} is not a valid voxel unit.'.format(value))
+
+    def validate_time_units(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_time_units:
+            return lowered
+        raise ValueError('{} is not a valid time unit.'.format(value))
+
+
 
 class ChannelLayerBaseResource(Resource):
     """
@@ -150,13 +180,21 @@ class ChannelLayerBaseResource(Resource):
         self.coll_name = collection_name
         self.exp_name = experiment_name
 
+        self._valid_datatypes = ['uint8', 'uint16', 'uint32', 'uint64']
+
         #ToDo: validate data types.
         self.default_time_step = default_time_step
-        self.datatype = datatype
+        self.datatype = self.validate_datatype(datatype)
         self.base_resolution = base_resolution
 
     def get_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
+
+    def validate_datatype(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_datatypes:
+            return lowered
+        raise ValueError('{} is not a valid data type.'.format(value))
 
 class ChannelResource(ChannelLayerBaseResource):
     """
