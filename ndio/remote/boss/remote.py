@@ -201,7 +201,7 @@ class Remote(NdRemote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.delete(resource)
 
-    def list_metadata(self, resource):
+    def metadata_list(self, resource):
         """List all keys associated with the given resource.
 
         Args:
@@ -213,7 +213,7 @@ class Remote(NdRemote):
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.list(resource)
 
-    def create_metadata(self, resource, keys_vals):
+    def metadata_create(self, resource, keys_vals):
         """Associates new key-value pairs with the given resource.
 
         Will attempt to add all key-value pairs even if some fail.
@@ -228,7 +228,7 @@ class Remote(NdRemote):
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.create(resource, keys_vals)
 
-    def get_metadata(self, resource, keys):
+    def metadata_get(self, resource, keys):
         """Gets the values for given keys associated with the given resource.
 
         Args:
@@ -244,7 +244,7 @@ class Remote(NdRemote):
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.get(resource, keys)
 
-    def update_metadata(self, resource, keys_vals):
+    def metadata_update(self, resource, keys_vals):
         """Updates key-value pairs with the given resource.
 
         Will attempt to update all key-value pairs even if some fail.
@@ -260,7 +260,7 @@ class Remote(NdRemote):
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.update(resource, keys_vals)
 
-    def delete_metadata(self, resource, keys):
+    def metadata_delete(self, resource, keys):
         """Deletes the given key-value pairs associated with the given resource.
 
         Will attempt to delete all key-value pairs even if some fail.
