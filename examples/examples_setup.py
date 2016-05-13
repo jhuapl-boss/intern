@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,7 +59,8 @@ except HTTPError:
         print('Couldn''t create experiment {}, aborting.'.format(alpha_exp.name))
         sys.exit(1)
 
-omega_chan = ChannelResource('omega', 'gray', 'alpha', API_VER, 'Example channel.')
+omega_chan = ChannelResource(
+    'omega', 'gray', 'alpha', API_VER, 'Example channel.', datatype='uint16')
 try:
     rmt.project_get(omega_chan)
 except HTTPError:
