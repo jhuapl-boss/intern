@@ -69,13 +69,19 @@ if not rmt.metadata_create(
 mark = rmt.metadata_get(coll, ['mark'])
 print(mark['mark'])
 omega_metadata = rmt.metadata_get(omega_chan, ['algorithm', 'iterations', 'confidence'])
+print('omega\'s key-values:')
 for pair in omega_metadata.items():
-    print('{}: {}'.format(pair[0], pair[1]))
+    print('\t{}: {}'.format(pair[0], pair[1]))
 
 # List existing metadata keys using metadata_list().
+alpha_list = rmt.metadata_list(alpha_exp)
+print('alpha\'s keys:')
+for ka in alpha_list:
+    print('\t{}'.format(ka))
 omega_list = rmt.metadata_list(omega_chan)
-for k in omega_list:
-    print(k)
+print('omega\'s keys:')
+for ko in omega_list:
+    print('\t{}'.format(ko))
 
 # Update metadata using metadata_update().
 if not rmt.metadata_update(omega_chan, {'iterations': '2000', 'confidence': '80'}):
