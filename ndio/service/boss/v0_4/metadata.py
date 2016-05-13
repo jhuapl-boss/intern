@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ class MetadataService_0_4(Base):
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
-            return resp.json()
+            keys_dict = resp.json()
+            return keys_dict['keys']
 
         print('List failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
