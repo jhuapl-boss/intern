@@ -79,7 +79,7 @@ class VolumeService_0_4(Base):
             url_prefix, auth, resolution, x_range, y_range, z_range)
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
-        prep.headers['Accepts'] = 'application/blosc-python'
+        prep.headers['Accept'] = 'application/blosc-python'
         #resp = session.send(prep, stream = True, **send_opts)
         resp = session.send(prep, **send_opts)
         
