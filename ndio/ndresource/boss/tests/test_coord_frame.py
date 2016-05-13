@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,19 @@ from ndio.ndresource.boss.resource import CoordinateFrameResource
 class TestCoordFrameResource(unittest.TestCase):
     def setUp(self):
         self.cf = CoordinateFrameResource('frame')
+
+    def test_not_valid_volume(self):
+        self.assertFalse(self.cf.valid_volume())
+
+    def test_voxel_unit_setter(self):
+        exp = 'millimeters'
+        self.cf.voxel_unit = exp
+        self.assertEqual(exp, self.cf.voxel_unit)
+
+    def test_time_units_setter(self):
+        exp = 'seconds'
+        self.cf.time_step_unit = exp
+        self.assertEqual(exp, self.cf.time_step_unit)
 
     def test_validate_voxel_units_nm(self):
         exp = 'nanometers'

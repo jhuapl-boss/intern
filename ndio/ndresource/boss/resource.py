@@ -38,8 +38,6 @@ class Resource(NdResource):
     def get_route(self):
         """Get the resource as a route to pass as an HTTP request.
 
-        Args:
-
         Returns:
             (string): A string that can be appended to the location of an
             endpoint such as 'mycollection/experiment1/channel1'
@@ -52,8 +50,6 @@ class Resource(NdResource):
         Getting a list from the project service uses a slightly different URL
         than the other operations.  It uses the plural form of the resource's
         type such as 'collections' and 'channels'.
-
-        Args:
 
         Returns:
             (string): A string that can be appended to the location of an
@@ -86,7 +82,7 @@ class ExperimentResource(Resource):
         version=BOSS_DEFAULT_VERSION, description='', coord_frame=0,
         num_hierarchy_levels=1, hierarchy_method='near_iso',
         max_time_sample=0):
-
+        
         super().__init__(name, description, version)
         self.coll_name = collection_name
 
@@ -95,9 +91,23 @@ class ExperimentResource(Resource):
         #ToDo: validate data types.
         self.coord_frame = coord_frame
         self.num_hierarchy_levels = num_hierarchy_levels
-        self.hierarchy_method = self.validate_hierarchy_method(
+        self._hierarchy_method = self.validate_hierarchy_method(
             hierarchy_method)
         self.max_time_sample = max_time_sample
+
+    @property
+    def hierarchy_method(self):
+        return self._hierarchy_method
+
+    @hierarchy_method.setter
+    def hierarchy_method(self, value):
+        """
+        Args:
+            value (string): Valid values: 'near_iso', 'iso', 'slice'
+        Raises:
+            ValueError
+        """
+        self._hierarchy_method = self.validate_hierarchy_method(value)
 
     def get_route(self):
         return self.coll_name + '/' + self.name
@@ -136,15 +146,43 @@ class CoordinateFrameResource(Resource):
         self.x_voxel_size = x_voxel_size
         self.y_voxel_size = y_voxel_size
         self.z_voxel_size = z_voxel_size
-        self.voxel_unit = self.validate_voxel_units(voxel_unit)
+        self._voxel_unit = self.validate_voxel_units(voxel_unit)
         self.time_step = time_step
-        self.time_step_unit = self.validate_time_units(time_step_unit)
+        self._time_step_unit = self.validate_time_units(time_step_unit)
 
     def get_route(self):
         return 'coordinateframes/' + self.name
 
     def get_project_list_route(self):
         return 'coordinateframes/'
+
+    @property
+    def voxel_unit(self):
+        return self._voxel_unit
+
+    @voxel_unit.setter
+    def voxel_unit(self, value):
+        """
+        Args:
+            value (string): Valid values: 'nanometers', 'micrometers', 'millimeters', 'centimeters'
+        Raises:
+            ValueError
+        """
+        self._voxel_unit = self.validate_voxel_units(value)
+
+    @property
+    def time_step_unit(self):
+        return self._time_step_unit
+
+    @time_step_unit.setter
+    def time_step_unit(self, value):
+        """
+        Args:
+            value (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'
+        Raises:
+            ValueError
+        """
+        self._time_step_unit = self.validate_time_units(value)
 
     def validate_voxel_units(self, value):
         lowered = value.lower()
@@ -168,7 +206,7 @@ class ChannelLayerBaseResource(Resource):
         coll_name (string): Name of collection containing this resource.
         exp_name (string): Name of experiment containing this resource.
         default_time_step (int):
-        datatype (string):
+        _datatype (string):
         base_resolution (int):
     """
     def __init__(self, name, collection_name, experiment_name,
@@ -184,11 +222,30 @@ class ChannelLayerBaseResource(Resource):
 
         #ToDo: validate data types.
         self.default_time_step = default_time_step
-        self.datatype = self.validate_datatype(datatype)
+        self._datatype = self.validate_datatype(datatype)
         self.base_resolution = base_resolution
 
     def get_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
+
+    def valid_volume(self):
+        """Channels and layers are valid resources for interacting with the volume service.
+        """
+        return True
+
+    @property
+    def datatype(self):
+        return self._datatype
+
+    @datatype.setter
+    def datatype(self, value):
+        """
+        Args:
+            value (string): 'uint8', 'uint16', 'uint32', 'uint64'
+        Raises:
+            ValueError
+        """
+        self._datatype = self.validate_datatype(value)
 
     def validate_datatype(self, value):
         lowered = value.lower()
@@ -207,11 +264,6 @@ class ChannelResource(ChannelLayerBaseResource):
 
         super().__init__(name, collection_name, experiment_name, version,
             description, default_time_step, datatype, base_resolution)
-
-    def valid_volume(self):
-        """A channel is a valid resource for interacting with the volume service.
-        """
-        return True
 
     def get_project_list_route(self):
         return self.coll_name + '/' + self.exp_name + '/channels'

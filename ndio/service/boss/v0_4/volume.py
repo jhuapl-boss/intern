@@ -35,7 +35,7 @@ class VolumeService_0_4(Base):
             x_range (string): x range such as '10:20' which means x>=10 and x<20.
             y_range (string): y range such as '10:20' which means y>=10 and y<20.
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
-            numpyVolume (numpy.array): A 3D or 4D numpy matrix in ZYX(time) order.
+            numpyVolume (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
 
         Returns:
             (bool): True on success.

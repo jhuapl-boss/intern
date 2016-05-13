@@ -1,4 +1,4 @@
-﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Contains implementation of ndio.remote.Remote for the Boss API.
+import unittest
+from ndio.ndresource.boss.resource import CollectionResource
 
-Author:
-    Tim Gion
-"""
+class TestCollectionResource(unittest.TestCase):
+    def setUp(self):
+        self.coll = CollectionResource('foo')
+
+    def test_not_valid_volume(self):
+        self.assertFalse(self.coll.valid_volume())

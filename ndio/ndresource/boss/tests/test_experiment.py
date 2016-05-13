@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,14 @@ from ndio.ndresource.boss.resource import ExperimentResource
 class TestExperimentResource(unittest.TestCase):
     def setUp(self):
         self.er = ExperimentResource('foo', 'bar')
+
+    def test_not_valid_volume(self):
+        self.assertFalse(self.er.valid_volume())
+
+    def test_hierarchy_method_setter(self):
+        exp = 'iso'
+        self.er.hierarchy_method = exp
+        self.assertEqual(exp, self.er.hierarchy_method)
 
     def test_validate_hierarchy_method_near_iso(self):
         exp = 'near_iso'

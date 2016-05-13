@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,6 +25,14 @@ class ChanLyrImpl(ChannelLayerBaseResource):
 class TestChannelLayerBaseResource(unittest.TestCase):
     def setUp(self):
         self.clb = ChanLyrImpl('foo', 'bar', 'exp')
+
+    def test_valid_volume(self):
+        self.assertTrue(self.clb.valid_volume())
+
+    def test_datatype_setter(self):
+        exp = 'uint32'
+        self.clb.datatype = exp
+        self.assertEqual(exp, self.clb.datatype)
 
     def test_validate_datatype_uint8(self):
         exp = 'uint8'
