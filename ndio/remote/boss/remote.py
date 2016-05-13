@@ -167,13 +167,16 @@ class Remote(NdRemote):
         return self.project_service.create(resource)
 
     def project_get(self, resource):
-        """Get the entity described by the given resource.
+        """Get attributes of the data model object named by the given resource.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (ndio.ndresource.boss.Resource): resource.name as well as any parents must be identified to succeed.
 
         Returns:
             (dictionary): Dictionary containing the entity's attributes.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get(resource)

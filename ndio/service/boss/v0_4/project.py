@@ -25,6 +25,21 @@ class ProjectService_0_4(Base):
         return 'resource'
 
     def list(self, resource, url_prefix, auth, session, send_opts):
+        """List all resources of the same type as the given resource.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): List resources of the same type as this..
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list): List of resources.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         req = self.get_request(
             resource, 'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
             proj_list_req = True)
@@ -39,6 +54,18 @@ class ProjectService_0_4(Base):
         resp.raise_for_status()
 
     def create(self, resource, url_prefix, auth, session, send_opts):
+        """Create the given resource.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): Create a data model object with attributes matching those of the resource.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (bool): True if create successful.
+        """
         json = self._get_resource_params(resource)
         req = self.get_request(
             resource, 'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
@@ -67,6 +94,19 @@ class ProjectService_0_4(Base):
         resp.raise_for_status()
 
     def update(self, resource_name, resource, url_prefix, auth, session, send_opts):
+        """Updates an entity in the data model using the given resource.
+
+        Args:
+            resource_name (string): Current name of the resource (in case the resource is getting its name changed).
+            resource (ndio.resource.boss.Resource): New attributes for the resource.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (bool): True on success.
+        """
 
         # Create a copy of the resource and change its name to resource_name
         # in case the update includes changing the name of a resource.
@@ -93,6 +133,18 @@ class ProjectService_0_4(Base):
 
 
     def delete(self, resource, url_prefix, auth, session, send_opts):
+        """Deletes the entity described by the given resource.
+
+        Args:
+            resource (ndio.resource.boss.Resource)
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (bool): True on success.
+        """
         req = self.get_request(
             resource, 'DELETE', 'application/json', url_prefix, auth)
         prep = session.prepare_request(req)

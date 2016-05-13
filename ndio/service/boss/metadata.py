@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,30 +32,88 @@ class MetadataService(Service):
         }
 
     def list(self, resource):
+        """List metadata keys associated with the given resource.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): List keys associated with this resource.
+
+        Returns:
+            (list): List of key names.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.list(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def create(self, resource, keys_vals):
+        """Create the given key-value pairs for the given resource.
+
+        Will attempt to create all key-value pairs even if a failure is encountered.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): List keys associated with this resource.
+            keys_vals (dictionary): The metadata to associate with the resource.
+
+        Returns:
+            (bool): True if create successful for all key-value pairs.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.create(
             resource, keys_vals, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def get(self, resource, keys):
+        """Get metadata key-value pairs associated with the given resource.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): Get key-value pairs associated with this resource.
+            keys (list): Keys to retrieve.
+
+        Returns:
+            (dictionary): The requested metadata for the given resource.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.get(
             resource, keys, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def update(self, resource, keys_vals):
+        """Update the given key-value pairs for the given resource.
+
+        Keys must already exist before they may be updated.  Will attempt to 
+        update all key-value pairs even if a failure is encountered.  
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): Update values associated with this resource.
+            keys_vals (dictionary): The metadata to update for the resource.
+
+        Returns:
+            (bool): True if update successful for all key-value pairs.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.update(
             resource, keys_vals, self.url_prefix, self.auth, 
             self.session, self.session_send_opts)
 
     def delete(self, resource, keys):
+        """Delete metadata key-value pairs associated with the given resource.
+
+        Will attempt to delete all given key-value pairs even if a failure
+        occurs.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): Delete key-value pairs associated with this resource.
+            keys (list): Keys to delete.
+
+        Returns:
+            (bool): True if delete successful for all key-value pairs.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.delete(
             resource, keys, self.url_prefix, self.auth, self.session,

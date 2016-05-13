@@ -32,30 +32,77 @@ class ProjectService(Service):
         }
 
     def list(self, resource):
+        """List all resources of the same type as the given resource.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): List resources of the same type as this..
+
+        Returns:
+            (list): List of resources.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.list(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def create(self, resource):
+        """Create the given resource.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): Create a data model object with attributes matching those of the resource.
+
+        Returns:
+            (bool): True if create successful.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.create(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def get(self, resource):
+        """Get attributes of the data model object named by the given resource.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): resource.name as well as any parents must be identified to succeed.
+
+        Returns:
+            (dictionary): Dictionary containing the entity's attributes.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.get(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def update(self, resource_name, resource):
+        """Updates an entity in the data model using the given resource.
+
+        Args:
+            resource_name (string): Current name of the resource (in case the resource is getting its name changed).
+            resource (ndio.resource.boss.Resource): New attributes for the resource.
+
+        Returns:
+            (bool): True on success.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.update(
             resource_name, resource, self.url_prefix, self.auth, 
             self.session, self.session_send_opts)
 
     def delete(self, resource):
+        """Deletes the entity described by the given resource.
+
+        Args:
+            resource (ndio.resource.boss.Resource)
+
+        Returns:
+            (bool): True on success.
+        """
         ps = self.get_api_impl(resource.version)
         return ps.delete(
             resource, self.url_prefix, self.auth, self.session,
