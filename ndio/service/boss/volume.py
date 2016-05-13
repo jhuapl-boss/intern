@@ -32,12 +32,42 @@ class VolumeService(Service):
 
     def cutout_create(
         self, resource, resolution, x_range, y_range, z_range, numpyVolume):
+        """Upload a cutout to the volume service.
+
+        Args:
+            resource (ndio.ndresource.resource.Resource): Resource compatible with cutout operations.
+            resolution (int): 0 indicates native resolution.
+            x_range (string): x range such as '10:20' which means x>=10 and x<20.
+            y_range (string): y range such as '10:20' which means y>=10 and y<20.
+            z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            numpyVolume (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
+
+        Returns:
+            (bool): Return True on success.
+        """
+
         ps = self.get_api_impl(resource.version)
         return ps.cutout_create(
             resource, resolution, x_range, y_range, z_range, numpyVolume,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def cutout_get(self, resource, resolution, x_range, y_range, z_range):
+        """Get a cutout from the volume service.
+
+        Args:
+            resource (ndio.ndresource.boss.resource.ChannelLayerBaseResource): Channel or layer resource.
+            resolution (int): 0 indicates native resolution.
+            x_range (string): x range such as '10:20' which means x>=10 and x<20.
+            y_range (string): y range such as '10:20' which means y>=10 and y<20.
+            z_range (string): z range such as '10:20' which means z>=10 and z<20.
+
+        Returns:
+            (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
+
+        Raises:
+            requests.HTTPError on error.
+        """
+
         ps = self.get_api_impl(resource.version)
         return ps.cutout_get(
             resource, resolution, x_range, y_range, z_range,
