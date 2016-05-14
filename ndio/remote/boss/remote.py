@@ -57,7 +57,7 @@ class Remote(NdRemote):
         except FileNotFoundError:
             print('Config file {} not found.'.format(cfg_file))
         except KeyError as k:
-            print('Could not find key {} in {}'.format(k, CONFIG_FILE))
+            print('Could not find key {} in {}'.format(k, cfg_file))
 
     def _init_project_service(self):
         project_cfg = self._config[CONFIG_PROJECT_SECTION]
@@ -110,6 +110,9 @@ class Remote(NdRemote):
 
         Returns:
             (configparser.ConfigParser)
+
+        Raises:
+            FileNotFoundError
         """
         with open(path, 'r') as f:
             data = f.read()
@@ -119,7 +122,7 @@ class Remote(NdRemote):
     def token_project(self):
         return self._token_project
 
-    @token_project.setter 
+    @token_project.setter
     def token_project(self, value):
         self._token_project = value
         self.project_service.set_auth(self._token_project)
@@ -128,7 +131,7 @@ class Remote(NdRemote):
     def token_metadata(self):
         return self._token_metadata
 
-    @token_metadata.setter 
+    @token_metadata.setter
     def token_metadata(self, value):
         self._token_metadata = value
         self.metadata_service.set_auth(self._token_metadata)
@@ -137,7 +140,7 @@ class Remote(NdRemote):
     def token_volume(self):
         return self._token_volume
 
-    @token_volume.setter 
+    @token_volume.setter
     def token_volume(self, value):
         self._token_volume = value
         self.volume_service.set_auth(self._token_volume)
@@ -183,6 +186,7 @@ class Remote(NdRemote):
 
     def project_update(self, resource_name, resource):
         """Updates an entity in the data model using the given resource.
+
         Args:
             resource_name (string): Current name of the resource (in case the resource is getting its name changed).
             resource (ndio.resource.boss.Resource): New attributes for the resource.
@@ -238,7 +242,7 @@ class Remote(NdRemote):
         Args:
             resource (ndio.resource.boss.Resource)
             keys (list)
-            
+
         Returns:
             (dictionary)
 
@@ -272,7 +276,7 @@ class Remote(NdRemote):
         Args:
             resource (ndio.resource.boss.Resource)
             keys (list)
-            
+
         Returns:
             (bool) False if deleting at least one key failed.
         """
