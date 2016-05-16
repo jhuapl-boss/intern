@@ -41,10 +41,10 @@ class ProjectService_0_4(Base):
             requests.HTTPError on failure.
         """
         req = self.get_request(
-            resource, 'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            resource, 'GET', 'application/x-www-form-urlencoded', url_prefix, auth,
             proj_list_req = True)
             # json content-type currently broken.
-            #resource, 'GET', 'application/json', url_prefix, auth, 
+            #resource, 'GET', 'application/json', url_prefix, auth,
             #proj_list_req = True)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -68,10 +68,10 @@ class ProjectService_0_4(Base):
         """
         json = self._get_resource_params(resource)
         req = self.get_request(
-            resource, 'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            resource, 'POST', 'application/x-www-form-urlencoded', url_prefix, auth,
             data = json)
             # json content-type currently broken.
-            #resource, 'POST', 'application/json', url_prefix, auth, 
+            #resource, 'POST', 'application/json', url_prefix, auth,
             #json = json)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -119,7 +119,7 @@ class ProjectService_0_4(Base):
             old_resource, 'PUT', 'application/x-www-form-urlencoded',
             url_prefix, auth, data = json)
             # json content-type currently broken.
-            #old_resource, 'PUT', 'application/json', url_prefix, auth, 
+            #old_resource, 'PUT', 'application/json', url_prefix, auth,
             #json = json)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -159,12 +159,25 @@ class ProjectService_0_4(Base):
         if resp.status_code == 403:
             print('Delete failed on {}, access denied.'.format(resource.name))
             return False
-        
+
         print('Delete failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
         return False
 
     def _get_resource_params(self, resource):
+        """Get dictionary containing all parameters for the given resource.
+
+        Args:
+            resource (ndio.ndresource.boss.resource.Resource): A sub-class
+                whose parameters will be extracted into a dictionary.
+
+        Returns:
+            (dictionary): A dictionary containing the resource's parameters as
+            required by the Boss API.
+
+        Raises:
+            TypeError if resource is not a supported class.
+        """
         if isinstance(resource, CollectionResource):
             return self._get_collection_params(resource)
 
@@ -183,15 +196,15 @@ class ProjectService_0_4(Base):
             params = self._get_channel_layer_params(resource)
             params['is_channel'] = True
             return params
-        
+
         raise TypeError('resource is not supported type.')
 
     def _get_collection_params(self, coll):
         return { 'name': coll.name, 'description': coll.description }
 
     def _get_experiment_params(self, exp):
-        return { 
-            'name': exp.name, 
+        return {
+            'name': exp.name,
             'description': exp.description ,
             'coord_frame': exp.coord_frame,
             'num_hierarchy_levels': exp.num_hierarchy_levels,
@@ -201,7 +214,7 @@ class ProjectService_0_4(Base):
 
     def _get_coordinate_params(self, coord):
         return {
-            'name': coord.name, 
+            'name': coord.name,
             'description': coord.description ,
             'x_start': coord.x_start,
             'x_stop': coord.x_stop,
