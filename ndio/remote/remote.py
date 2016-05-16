@@ -45,7 +45,7 @@ class Remote(metaclass=ABCMeta):
     def object_service(self):
         return self._object
 
-    def cutout_get(self, resource, resolution, x_range, y_range, z_range):
+    def cutout_get(self, resource, resolution, x_range, y_range, z_range, time_range=None):
         """Get a cutout from the volume service.
 
         Args:
@@ -54,6 +54,7 @@ class Remote(metaclass=ABCMeta):
             x_range (string): x range such as '10:20' which means x>=10 and x<20.
             y_range (string): y range such as '10:20' which means y>=10 and y<20.
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            time_range (optional [string]): time range such as 30:40 which means t>=30 and t<40.
 
         Returns:
             (): Return type depends on volume service's implementation.
@@ -65,9 +66,9 @@ class Remote(metaclass=ABCMeta):
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.cutout_get(
-            resource, resolution, x_range, y_range, z_range)
+            resource, resolution, x_range, y_range, z_range, time_range)
 
-    def cutout_create(self, resource, resolution, x_range, y_range, z_range, data):
+    def cutout_create(self, resource, resolution, x_range, y_range, z_range, data, time_range=None):
         """Upload a cutout to the volume service.
 
         Args:
@@ -76,6 +77,8 @@ class Remote(metaclass=ABCMeta):
             x_range (string): x range such as '10:20' which means x>=10 and x<20.
             y_range (string): y range such as '10:20' which means y>=10 and y<20.
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            data (object): Type depends on implementation.
+            time_range (optional [string]): time range such as 30:40 which means t>=30 and t<40.
 
         Returns:
             (): Return type depends on volume service's implementation.
@@ -87,4 +90,4 @@ class Remote(metaclass=ABCMeta):
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.cutout_create(
-            resource, resolution, x_range, y_range, z_range, data)
+            resource, resolution, x_range, y_range, z_range, data, time_range)

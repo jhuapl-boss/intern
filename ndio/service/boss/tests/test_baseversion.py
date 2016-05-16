@@ -127,17 +127,36 @@ class BaseVersionTest(unittest.TestCase):
     ## Methods used for the volume service.
     ##
 
-    def test_build_cutout_url(self):
+    def test_build_cutout_url_no_time_range(self):
         res = 0
         x_range = '20:40'
         y_range = '50:70'
         z_range = '30:50'
+        time_range = None
         actual = self.test_volume.build_cutout_url(
-            self.chanResource, self.url_prefix, res, x_range, y_range, z_range)
+            self.chanResource, self.url_prefix,
+            res, x_range, y_range, z_range, time_range)
 
         self.assertEqual(
             self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
             '/' + self.chanResource.coll_name + '/' + self.chanResource.exp_name +
             '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
             y_range + '/' + z_range + '/',
+            actual)
+
+    def test_build_cutout_url_with_time_range(self):
+        res = 0
+        x_range = '20:40'
+        y_range = '50:70'
+        z_range = '30:50'
+        time_range = '10:25'
+        actual = self.test_volume.build_cutout_url(
+            self.chanResource, self.url_prefix, 
+            res, x_range, y_range, z_range, time_range)
+
+        self.assertEqual(
+            self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
+            '/' + self.chanResource.coll_name + '/' + self.chanResource.exp_name +
+            '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
+            y_range + '/' + z_range + '/' + time_range + '/',
             actual)

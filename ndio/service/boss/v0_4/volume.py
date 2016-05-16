@@ -25,7 +25,7 @@ class VolumeService_0_4(Base):
         return 'cutout'
 
     def cutout_create(
-        self, resource, resolution, x_range, y_range, z_range, numpyVolume,
+        self, resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
         url_prefix, auth, session, send_opts):
         """Upload a cutout to the Boss data store.
 
@@ -35,7 +35,12 @@ class VolumeService_0_4(Base):
             x_range (string): x range such as '10:20' which means x>=10 and x<20.
             y_range (string): y range such as '10:20' which means y>=10 and y<20.
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            time_range (string): None or time range such as 30:40 which means t>=30 and t<40.
             numpyVolume (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
             (bool): True on success.
@@ -44,7 +49,8 @@ class VolumeService_0_4(Base):
         compressed = blosc.pack_array(numpyVolume)
         req = self.get_cutout_request(
             resource, 'POST', 'application/blosc-python',
-            url_prefix, auth, resolution, x_range, y_range, z_range, compressed)
+            url_prefix, auth,
+            resolution, x_range, y_range, z_range, time_range, compressed)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         
@@ -56,7 +62,7 @@ class VolumeService_0_4(Base):
         return False
 
     def cutout_get(
-        self, resource, resolution, x_range, y_range, z_range,
+        self, resource, resolution, x_range, y_range, z_range, time_range,
         url_prefix, auth, session, send_opts):
         """Upload a cutout to the Boss data store.
 
@@ -66,6 +72,11 @@ class VolumeService_0_4(Base):
             x_range (string): x range such as '10:20' which means x>=10 and x<20.
             y_range (string): y range such as '10:20' which means y>=10 and y<20.
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            time_range (string): None or time range such as 30:40 which means t>=30 and t<40.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
@@ -76,7 +87,7 @@ class VolumeService_0_4(Base):
 
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc-python',
-            url_prefix, auth, resolution, x_range, y_range, z_range)
+            url_prefix, auth, resolution, x_range, y_range, z_range, time_range)
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
         prep.headers['Accept'] = 'application/blosc-python'

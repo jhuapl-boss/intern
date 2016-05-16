@@ -31,7 +31,7 @@ class VolumeService(Service):
         }
 
     def cutout_create(
-        self, resource, resolution, x_range, y_range, z_range, numpyVolume):
+        self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None):
         """Upload a cutout to the volume service.
 
         Args:
@@ -41,6 +41,7 @@ class VolumeService(Service):
             y_range (string): y range such as '10:20' which means y>=10 and y<20.
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
             numpyVolume (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
+            time_range (optional [string]): time range such as 30:40 which means t>=30 and t<40.
 
         Returns:
             (bool): Return True on success.
@@ -48,10 +49,10 @@ class VolumeService(Service):
 
         ps = self.get_api_impl(resource.version)
         return ps.cutout_create(
-            resource, resolution, x_range, y_range, z_range, numpyVolume,
+            resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def cutout_get(self, resource, resolution, x_range, y_range, z_range):
+    def cutout_get(self, resource, resolution, x_range, y_range, z_range, time_range=None):
         """Get a cutout from the volume service.
 
         Args:
@@ -60,6 +61,7 @@ class VolumeService(Service):
             x_range (string): x range such as '10:20' which means x>=10 and x<20.
             y_range (string): y range such as '10:20' which means y>=10 and y<20.
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            time_range (optional [string]): time range such as 30:40 which means t>=30 and t<40.
 
         Returns:
             (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -70,5 +72,5 @@ class VolumeService(Service):
 
         ps = self.get_api_impl(resource.version)
         return ps.cutout_get(
-            resource, resolution, x_range, y_range, z_range,
+            resource, resolution, x_range, y_range, z_range, time_range,
             self.url_prefix, self.auth, self.session, self.session_send_opts)

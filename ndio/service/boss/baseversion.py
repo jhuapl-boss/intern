@@ -93,7 +93,7 @@ class BaseVersion(metaclass=ABCMeta):
         return urlWithKey + '&value=' + value
 
     def build_cutout_url(
-        self, resource, url_prefix, resolution, x_range, y_range, z_range):
+        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range):
         baseUrl = self.build_url(resource, url_prefix, proj_list_req=False)
         """Build the url to access the cutout function of the Boss' volume service.
 
@@ -103,6 +103,7 @@ class BaseVersion(metaclass=ABCMeta):
             x_range (string): x range such as '10:20' which means x>=10 and x<20.
             y_range (string): y range such as '10:20' which means y>=10 and y<20.
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            time_range (string): None or time range such as 30:40 which means t>=30 and t<40.
 
         Returns:
             (string): Full URL to access API.
@@ -110,7 +111,11 @@ class BaseVersion(metaclass=ABCMeta):
         urlWithParams = (
             baseUrl + '/' + str(resolution) + '/' + x_range + '/' + y_range +
             '/' + z_range + '/')
-        return urlWithParams
+        if time_range is None:
+            return urlWithParams
+
+        urlWithTime = urlWithParams + time_range + '/'
+        return urlWithTime
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
         """Create a request for accessing the Boss' services.
@@ -163,7 +168,7 @@ class BaseVersion(metaclass=ABCMeta):
 
     def get_cutout_request(
         self, resource, method, content, url_prefix, token, 
-        resolution, x_range, y_range, z_range, numpyVolume=None):
+        resolution, x_range, y_range, z_range, time_range, numpyVolume=None):
 
         """Create a request for working with cutouts (part of the Boss' volume service).
 
@@ -177,9 +182,10 @@ class BaseVersion(metaclass=ABCMeta):
             x_range (string): x range such as '10:20' which means x>=10 and x<20.
             y_range (string): y range such as '10:20' which means y>=10 and y<20.
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            time_range (string): None or time range such as 30:40 which means t>=30 and t<40.
             numpyVolume (numpy array): The data volume encoded in a numpy array.
         """
         url = self.build_cutout_url(
-            resource, url_prefix, resolution, x_range, y_range, z_range)
+            resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = numpyVolume)

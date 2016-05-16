@@ -113,6 +113,8 @@ class MetadataService_0_4(Base):
             if resp.status_code == 200:
                 resDict[key] = resp.json()['value']
             else:
+                print('Get failed on {}, got HTTP response: ({}) - {}'.format(
+                    resource.name, resp.status_code, resp.text))
                 resp.raise_for_status()
 
         return resDict

@@ -51,6 +51,8 @@ class ProjectService_0_4(Base):
         if resp.status_code == 200:
             return resp.json()
 
+        print('List failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
         resp.raise_for_status()
 
     def create(self, resource, url_prefix, auth, session, send_opts):
@@ -91,6 +93,8 @@ class ProjectService_0_4(Base):
         if resp.status_code == 200:
             return resp.json()
 
+        print('Get failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
         resp.raise_for_status()
 
     def update(self, resource_name, resource, url_prefix, auth, session, send_opts):
