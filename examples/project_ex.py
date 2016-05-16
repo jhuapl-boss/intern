@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -69,9 +69,9 @@ betaChan = ChannelResource('beta', 'gray', 'alpha', API_VER, 'test channel')
 if not rmt.project_create(betaChan):
     print('Creating {} channel failed.'.format(betaChan.name))
 
-# We forgot, to set the channel's data type to uint32.  Let's fix that by
+# We forgot, to set the channel's data type to uint64.  Let's fix that by
 # updating the channel.
-betaChan.datatype = 'uint32'
+betaChan.datatype = 'uint64'
 if not rmt.project_update(betaChan.name, betaChan):
     print('Updating {} channel failed.'.format(betaChan.name))
 

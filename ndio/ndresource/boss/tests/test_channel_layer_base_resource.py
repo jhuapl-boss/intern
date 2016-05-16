@@ -29,21 +29,12 @@ class TestChannelLayerBaseResource(unittest.TestCase):
     def test_valid_volume(self):
         self.assertTrue(self.clb.valid_volume())
 
-    def test_datatype_setter(self):
-        exp = 'uint32'
-        self.clb.datatype = exp
-        self.assertEqual(exp, self.clb.datatype)
-
     def test_validate_datatype_uint8(self):
         exp = 'uint8'
         self.assertEqual(exp, self.clb.validate_datatype(exp))
 
     def test_validate_datatype_uint16(self):
         exp = 'uint16'
-        self.assertEqual(exp, self.clb.validate_datatype(exp))
-
-    def test_validate_datatype_uint32(self):
-        exp = 'uint32'
         self.assertEqual(exp, self.clb.validate_datatype(exp))
 
     def test_validate_datatype_uint64(self):

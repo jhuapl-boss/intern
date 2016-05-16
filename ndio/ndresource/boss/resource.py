@@ -218,7 +218,7 @@ class ChannelLayerBaseResource(Resource):
         self.coll_name = collection_name
         self.exp_name = experiment_name
 
-        self._valid_datatypes = ['uint8', 'uint16', 'uint32', 'uint64']
+        self._valid_datatypes = ['uint8', 'uint16', 'uint64']
 
         #ToDo: validate data types.
         self.default_time_step = default_time_step
@@ -241,7 +241,7 @@ class ChannelLayerBaseResource(Resource):
     def datatype(self, value):
         """
         Args:
-            value (string): 'uint8', 'uint16', 'uint32', 'uint64'
+            value (string): 'uint8', 'uint16', 'uint64'
         Raises:
             ValueError
         """
