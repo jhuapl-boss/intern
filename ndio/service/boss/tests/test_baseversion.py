@@ -16,6 +16,7 @@ import unittest
 from ndio.service.boss.baseversion import BaseVersion
 from ndio.ndresource.boss.resource import CollectionResource
 from ndio.ndresource.boss.resource import ChannelResource
+import numpy
 
 VER = 'v0.4'
 
@@ -29,7 +30,7 @@ class ProjectImpl(BaseVersion):
 
     @property
     def endpoint(self):
-        return 'manage-data'
+        return 'resource'
 
 class MetadataImpl(BaseVersion):
     """Create a concrete implementation of BaseVersion so it can be tested.
@@ -99,6 +100,18 @@ class BaseVersionTest(unittest.TestCase):
         self.assertTrue('Authorization' in actual)
         self.assertEqual('Token my_token', actual['Authorization'])
 
+    def test_get_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        actual = self.test_project.get_request(
+            self.resource, 'GET', 'application/json', url_prefix, token, 
+            proj_list_req=False)
+        self.assertEqual(
+            '{}/{}/{}/{}'.format(url_prefix, self.test_project.version, self.test_project.endpoint, self.resource.name), 
+            actual.url)
+        self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
+        self.assertEqual('application/json', actual.headers['Content-Type'])
+
     ##
     ## Methods used for the metadata service.
     ##
@@ -122,6 +135,18 @@ class BaseVersionTest(unittest.TestCase):
             self.test_meta.endpoint + '/' + self.resource.name + '/?key=' + 
             key + '&value=' + value,
             actual)
+
+    def test_get_metadata_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        key = 'version'
+        actual = self.test_meta.get_metadata_request(
+            self.resource, 'GET', 'application/json', url_prefix, token, key)
+        self.assertEqual(
+            '{}/{}/{}/{}/?key={}'.format(url_prefix, self.test_meta.version, self.test_meta.endpoint, self.resource.name, key), 
+            actual.url)
+        self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
+        self.assertEqual('application/json', actual.headers['Content-Type'])
 
     ##
     ## Methods used for the volume service.
@@ -160,3 +185,26 @@ class BaseVersionTest(unittest.TestCase):
             '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
             y_range + '/' + z_range + '/' + time_range + '/',
             actual)
+
+    def test_get_cutout_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        key = 'version'
+        resolution = 0
+        x_range = '20:40'
+        y_range = '50:70'
+        z_range = '30:50'
+        time_range = '10:25'
+        data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+
+        actual = self.test_volume.get_cutout_request(
+            self.chanResource, 'GET', 'application/blosc-python', url_prefix, token,
+            resolution, x_range, y_range, z_range, time_range, data)
+        self.assertEqual(
+            '{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/'.format(url_prefix, self.test_volume.version,
+            self.test_volume.endpoint, self.chanResource.coll_name, 
+            self.chanResource.exp_name, self.chanResource.name, resolution, 
+            x_range, y_range, z_range, time_range), 
+            actual.url)
+        self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
+        self.assertEqual('application/blosc-python', actual.headers['Content-Type'])
