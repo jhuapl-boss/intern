@@ -192,12 +192,12 @@ class ProjectService_0_4(Base):
             return self._get_coordinate_params(resource)
 
         if isinstance(resource, LayerResource):
-            params = self._get_channel_layer_params(resource)
+            params = self._get_layer_params(resource)
             params['is_channel'] = False
             return params
 
         if isinstance(resource, ChannelResource):
-            params = self._get_channel_layer_params(resource)
+            params = self._get_channel_params(resource)
             params['is_channel'] = True
             return params
 
@@ -234,11 +234,19 @@ class ProjectService_0_4(Base):
             'time_step_unit': coord.time_step_unit
         }
 
-    def _get_channel_layer_params(self, chlyr):
+    def _get_channel_params(self, chan):
         return {
-            'description': chlyr.description ,
-            'default_time_step': chlyr.default_time_step,
-            'datatype': chlyr.datatype,
-            'base_resolution': chlyr.base_resolution,
-            'channels': chlyr.channels
+            'description': chan.description ,
+            'default_time_step': chan.default_time_step,
+            'datatype': chan.datatype,
+            'base_resolution': chan.base_resolution,
+        }
+
+    def _get_layer_params(self, lyr):
+        return {
+            'description': lyr.description ,
+            'default_time_step': lyr.default_time_step,
+            'datatype': lyr.datatype,
+            'base_resolution': lyr.base_resolution,
+            'channels': lyr.channels
         }
