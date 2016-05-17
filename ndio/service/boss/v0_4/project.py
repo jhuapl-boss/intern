@@ -239,5 +239,6 @@ class ProjectService_0_4(Base):
             'description': chlyr.description ,
             'default_time_step': chlyr.default_time_step,
             'datatype': chlyr.datatype,
-            'base_resolution': chlyr.base_resolution
+            'base_resolution': chlyr.base_resolution,
+            'channels': chlyr.channels
         }

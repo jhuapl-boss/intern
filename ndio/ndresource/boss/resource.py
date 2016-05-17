@@ -56,6 +56,7 @@ class Resource(NdResource):
             endpoint such as 'mycollection/experiment1/channels'
         """
 
+
 class CollectionResource(Resource):
     """Top level container for Boss projects.
     """
@@ -67,6 +68,7 @@ class CollectionResource(Resource):
 
     def get_project_list_route(self):
         return 'collections'
+
 
 class ExperimentResource(Resource):
     """Experiments reside inside a collection and contain channels and
@@ -197,7 +199,6 @@ class CoordinateFrameResource(Resource):
         raise ValueError('{} is not a valid time unit.'.format(value))
 
 
-
 class ChannelLayerBaseResource(Resource):
     """
     Holds data common to both channels and layers.
@@ -253,6 +254,7 @@ class ChannelLayerBaseResource(Resource):
             return lowered
         raise ValueError('{} is not a valid data type.'.format(value))
 
+
 class ChannelResource(ChannelLayerBaseResource):
     """
     ToDo: provide some way to list layers associated with the channel.
@@ -261,6 +263,18 @@ class ChannelResource(ChannelLayerBaseResource):
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
         base_resolution=0):
+        """Constructor.
+
+        Args:
+            name (string): Channel name.
+            collection_name (string): Parent collection name.
+            experiment_name (string): Parent experiment name.
+            version (optional[string]): API version to use.
+            description (optional[string]): Layer description.
+            default_time_step (optional[int]): Defaults to 0.
+            datatype (optional[string]): 'uint8', 'uint16', 'uint64'
+            base_resolution (optional[int]): Defaults to 0 (native).
+        """
 
         super().__init__(name, collection_name, experiment_name, version,
             description, default_time_step, datatype, base_resolution)
@@ -268,18 +282,36 @@ class ChannelResource(ChannelLayerBaseResource):
     def get_project_list_route(self):
         return self.coll_name + '/' + self.exp_name + '/channels'
 
+
 class LayerResource(ChannelLayerBaseResource):
     """
     Layers contain annotation data.
     They must be associated with at least one channel.
+
+    Attributes:
+        channels (list): Ids of linked channels.
     """
     def __init__(self, name, collection_name, experiment_name,
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
-        base_resolution=0):
+        base_resolution=0, channels=[]):
+        """Constructor.
+
+        Args:
+            name (string): Layer name.
+            collection_name (string): Parent collection name.
+            experiment_name (string): Parent experiment name.
+            version (optional[string]): API version to use.
+            description (optional[string]): Layer description.
+            default_time_step (optional[int]): Defaults to 0.
+            datatype (optional[string]): 'uint8', 'uint16', 'uint64'
+            base_resolution (optional[int]): Defaults to 0 (native).
+            channels (optional[list]): Ids of linked channels.
+        """
 
         super().__init__(name, collection_name, experiment_name, version,
             description, default_time_step, datatype, base_resolution)
+        self.channels = channels
 
 
     def get_project_list_route(self):

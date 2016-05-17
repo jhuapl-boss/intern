@@ -19,26 +19,26 @@ from ndio.ndresource.boss.resource import *
 from requests import HTTPError
 import sys
 
-rmt = Remote('test.cfg')
+rmt = Remote('integration.cfg')
 
 API_VER = 'v0.4'
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
-import requests
-from requests import Session
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-rmt.project_service.session_send_opts = { 'verify': False }
-rmt.metadata_service.session_send_opts = { 'verify': False }
-rmt.volume_service.session_send_opts = { 'verify': False }
+#import requests
+#from requests import Session
+#from requests.packages.urllib3.exceptions import InsecureRequestWarning
+#requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+#rmt.project_service.session_send_opts = { 'verify': False }
+#rmt.metadata_service.session_send_opts = { 'verify': False }
+#rmt.volume_service.session_send_opts = { 'verify': False }
 
 coll = CollectionResource('gray', API_VER, 'Collection used for examples.')
 try:
     rmt.project_get(coll)
 except HTTPError:
     if(not rmt.project_create(coll)):
-        print('Couldn''t create collection {}, aborting.'.format(coll.name))
+        print('Couldn\'t create collection {}, aborting.'.format(coll.name))
         sys.exit(1)
 
 coord = CoordinateFrameResource('StdFrame', API_VER, 'Standard coordinate frame for xyz.')
@@ -46,27 +46,32 @@ try:
     coord_data = rmt.project_get(coord)
 except HTTPError:
     if(not rmt.project_create(coord)):
-        print('Couldn''t create coordinate frame {}, aborting.'.format(coord.name))
+        print('Couldn\'t create coordinate frame {}, aborting.'.format(coord.name))
         sys.exit(1)
     coord_data = rmt.project_get(coord)
 
 alpha_exp = ExperimentResource(
-    'alpha', 'gray', API_VER, 'Alpha example experiment.', coord_data['id'])
+    'alpha', 'gray', API_VER, 'Alpha example experiment.', coord_data['id'], max_time_sample=600)
 try:
     rmt.project_get(alpha_exp)
 except HTTPError:
     if(not rmt.project_create(alpha_exp)):
-        print('Couldn''t create experiment {}, aborting.'.format(alpha_exp.name))
+        print('Couldn\'t create experiment {}, aborting.'.format(alpha_exp.name))
         sys.exit(1)
 
 omega_chan = ChannelResource(
     'omega', 'gray', 'alpha', API_VER, 'Example channel.', datatype='uint16')
 try:
-    rmt.project_get(omega_chan)
+    omega_dict = rmt.project_get(omega_chan)
 except HTTPError:
     if(not rmt.project_create(omega_chan)):
-        print('Couldn''t create channel {}, aborting.'.format(omega_chan.name))
+        print('Couldn\'t create channel {}, aborting.'.format(omega_chan.name))
         sys.exit(1)
 
+rho_layer = LayerResource(
+    'rho', 'gray', 'alpha', API_VER, 'Example layer.', datatype='uint64', 
+    channels=[omega_dict['id']])
+if not rmt.project_create(rho_layer):
+    print('Couldn\'t create layer {}, aborting.'.format(rho_layer.name))
 
 print('Data model for examples setup.')
