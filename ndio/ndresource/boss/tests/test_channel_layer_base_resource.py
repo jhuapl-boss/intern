@@ -19,15 +19,17 @@ class ChanLyrImpl(ChannelLayerBaseResource):
     def get_project_list_route(self):
         return ''
 
-    def get_route(self):
-        return ''
-
 class TestChannelLayerBaseResource(unittest.TestCase):
     def setUp(self):
         self.clb = ChanLyrImpl('foo', 'bar', 'exp')
 
     def test_valid_volume(self):
         self.assertTrue(self.clb.valid_volume())
+
+    def test_get_route(self):
+        self.assertEqual('{}/{}/{}'.format(
+            self.clb.coll_name, self.clb.exp_name, self.clb.name), 
+            self.clb.get_route())
 
     def test_validate_datatype_uint8(self):
         exp = 'uint8'

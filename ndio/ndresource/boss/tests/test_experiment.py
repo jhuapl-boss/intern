@@ -22,6 +22,15 @@ class TestExperimentResource(unittest.TestCase):
     def test_not_valid_volume(self):
         self.assertFalse(self.er.valid_volume())
 
+    def test_get_route(self):
+        self.assertEqual('{}/{}'.format(
+            self.er.coll_name, self.er.name), self.er.get_route())
+
+    def test_get_project_list_route(self):
+        self.assertEqual(
+            '{}/experiments'.format(self.er.coll_name), 
+            self.er.get_project_list_route())
+
     def test_hierarchy_method_setter(self):
         exp = 'iso'
         self.er.hierarchy_method = exp

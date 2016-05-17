@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,3 +21,9 @@ class TestCollectionResource(unittest.TestCase):
 
     def test_not_valid_volume(self):
         self.assertFalse(self.coll.valid_volume())
+
+    def test_get_route(self):
+        self.assertEqual(self.coll.name, self.coll.get_route())
+
+    def test_get_project_list_route(self):
+        self.assertEqual('collections', self.coll.get_project_list_route())

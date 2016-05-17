@@ -26,6 +26,14 @@ class Resource(NdResource):
         version (string): API version of Boss to use.
     """
     def __init__(self, name, description, version=BOSS_DEFAULT_VERSION):
+        """Constructor.
+
+        Args:
+            name (string): Name of resource.
+            description (string): Description of resource.
+            version (optional[string]): Defaults to latest version.
+        """
+
         # ToDo: validate version.
         self.version = version
         self.name = name
@@ -61,6 +69,13 @@ class CollectionResource(Resource):
     """Top level container for Boss projects.
     """
     def __init__(self, name, version=BOSS_DEFAULT_VERSION, description=''):
+        """Constructor.
+
+        Args:
+            name (string): Collection name.
+            version (optional[string]): Defaults to latest version.
+            description (optional[string]): Collection description.  Defaults to empty.
+        """
         super().__init__(name, description, version)
 
     def get_route(self):
@@ -84,6 +99,17 @@ class ExperimentResource(Resource):
         version=BOSS_DEFAULT_VERSION, description='', coord_frame=0,
         num_hierarchy_levels=1, hierarchy_method='near_iso',
         max_time_sample=0):
+        """Constructor.
+
+        Args:
+            name (string): Experiment name.
+            version (optional[string]): Defaults to latest version.
+            description (optional[string]): Experiment description.  Defaults to empty.
+            coord_frame (optional[int]): Id of coordinate frame used by experiment.  Defaults to 0.
+            num_hierarchy_levels (optional[int]): Defaults to 1.
+            hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
+            max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.
+        """
         
         super().__init__(name, description, version)
         self.coll_name = collection_name
@@ -125,11 +151,54 @@ class ExperimentResource(Resource):
 
 
 class CoordinateFrameResource(Resource):
+    """
+    Coordinate frame used by experiment(s).
+
+    For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
+
+    Attributes:
+        name (string): Coordinate frame name.
+        version (string): Defaults to latest version.
+        description (string): Coordinate frame description.  Defaults to empty.
+        x_start (int): Minimum x coordinate (defaults to 0).
+        x_stop (int): Maximum x coordinate - exclusive (defaults to 1).
+        y_start (int): Minimum y coordinate (defaults to 0).
+        y_stop (int): Maximum y coordinate - exclusive (defaults to 1).
+        z_start (int): Minimum z coordinate (defaults to 0).
+        z_stop (int): Maximum z coordinate - exclusive (defaults to 1).
+        x_voxel_size (int): Defaults to 1.
+        y_voxel_size (int): Defaults to 1.
+        z_voxel_size (int): Defaults to 1.
+        voxel_unit (string): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
+        time_step (int): Defaults to 0.
+        time_step_unit (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
+    """
     def __init__(
         self, name, version=BOSS_DEFAULT_VERSION, description='',
         x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
         x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
         time_step=0, time_step_unit='seconds'):
+        """Constructor.
+
+        For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
+
+        Args:
+            name (string): Coordinate frame name.
+            version (optional[string]): Defaults to latest version.
+            description (optional[string]): Coordinate frame description.  Defaults to empty.
+            x_start (optional[int]): Minimum x coordinate (defaults to 0).
+            x_stop (optional[int]): Maximum x coordinate - exclusive (defaults to 1).
+            y_start (optional[int]): Minimum y coordinate (defaults to 0).
+            y_stop (optional[int]): Maximum y coordinate - exclusive (defaults to 1).
+            z_start (optional[int]): Minimum z coordinate (defaults to 0).
+            z_stop (optional[int]): Maximum z coordinate - exclusive (defaults to 1).
+            x_voxel_size (optional[int]): Defaults to 1.
+            y_voxel_size (optional[int]): Defaults to 1.
+            z_voxel_size (optional[int]): Defaults to 1.
+            voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
+            time_step (optional[int]): Defaults to 0.
+            time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
+        """
 
         super().__init__(name, description, version)
 
@@ -206,6 +275,8 @@ class ChannelLayerBaseResource(Resource):
     Attributes:
         coll_name (string): Name of collection containing this resource.
         exp_name (string): Name of experiment containing this resource.
+        description (string): Description of channel or layer.
+        version (string): The Boss API version to use.
         default_time_step (int):
         _datatype (string):
         base_resolution (int):
@@ -214,6 +285,18 @@ class ChannelLayerBaseResource(Resource):
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
         base_resolution=0):
+        """Constructor.
+
+        Args:
+            name (string): Channel name.
+            collection_name (string): Parent collection name.
+            experiment_name (string): Parent experiment name.
+            version (optional[string]): API version to use.  Defaults to latest version.
+            description (optional[string]): Layer description.  Defaults to empty.
+            default_time_step (optional[int]): Defaults to 0.
+            datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
+            base_resolution (optional[int]): Defaults to 0 (native).
+        """
 
         super().__init__(name, description, version)
         self.coll_name = collection_name
@@ -257,7 +340,7 @@ class ChannelLayerBaseResource(Resource):
 
 class ChannelResource(ChannelLayerBaseResource):
     """
-    ToDo: provide some way to list layers associated with the channel.
+    Channels store collected data.
     """
     def __init__(self, name, collection_name, experiment_name,
         version=BOSS_DEFAULT_VERSION,
