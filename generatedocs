@@ -1,1 +1,0 @@
-pdoc ndio --html --html-dir="docs" --overwrite --docstring-style=google

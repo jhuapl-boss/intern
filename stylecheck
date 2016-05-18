@@ -1,2 +1,0 @@
-pep8 $PWD/ndio
-pydocstyle --ignore=D200,D400,D205,D401,D100,D203 $PWD/ndio
