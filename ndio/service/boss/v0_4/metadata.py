@@ -146,7 +146,6 @@ class MetadataService_0_4(Base):
             prep = session.prepare_request(req)
             resp = session.send(prep, **send_opts)
 
-            # Boss currently return 201 but will return 200.
             if resp.status_code == 200:
                 continue
 
@@ -180,7 +179,6 @@ class MetadataService_0_4(Base):
                 resource, 'DELETE', 'application/json', url_prefix, auth, key)
             prep = session.prepare_request(req)
             resp = session.send(prep, **send_opts)
-            # Boss currently return 201 but will return 200.
             if resp.status_code == 200:
                 continue
             print(
