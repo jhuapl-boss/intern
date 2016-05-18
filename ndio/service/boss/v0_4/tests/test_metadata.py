@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -126,23 +126,6 @@ class TestMetadata(unittest.TestCase):
 
         with self.assertRaises(HTTPError):
             self.meta.get(self.chan, expected.keys(), url_prefix, auth, mock_session, send_opts)
-
-    @patch('requests.Session', autospec=True)
-    def test_meta_create_success(self, mock_session):
-        key_vals = {'foo': 'bar', 'day': 'night'}
-        mock_session.prepare_request.return_value = PreparedRequest()
-        fake_resp = Response()
-        fake_resp.status_code = 201
-
-        mock_session.send.return_value = fake_resp
-
-        url_prefix = 'https://api.theboss.io'
-        auth = 'mytoken'
-        send_opts = {}
-
-        actual = self.meta.create(self.chan, key_vals, url_prefix, auth, mock_session, send_opts)
-
-        self.assertTrue(actual)
 
     @patch('requests.Session', autospec=True)
     def test_meta_update_success(self, mock_session):
