@@ -17,6 +17,9 @@ from ndio.ndresource.boss.resource import *
 import copy
 
 class ProjectService_0_4(Base):
+    """The Boss API v0.4 project service.
+    """
+
     def __init__(self):
         super().__init__()
 
@@ -35,7 +38,7 @@ class ProjectService_0_4(Base):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (list): List of resources.
+            (list): List of resources.  Each resource is a dictionary.
 
         Raises:
             requests.HTTPError on failure.
@@ -86,6 +89,21 @@ class ProjectService_0_4(Base):
         return False
 
     def get(self, resource, url_prefix, auth, session, send_opts):
+        """Get attributes of the given resource.
+
+        Args:
+            resource (ndio.ndresource.boss.Resource): Create a data model object with attributes matching those of the resource.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (dictionary): Dictionary containing resource's attributes..
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         req = self.get_request(
             resource, 'GET', 'application/json', url_prefix, auth)
         prep = session.prepare_request(req)
@@ -192,14 +210,10 @@ class ProjectService_0_4(Base):
             return self._get_coordinate_params(resource)
 
         if isinstance(resource, LayerResource):
-            params = self._get_layer_params(resource)
-            params['is_channel'] = False
-            return params
+            return self._get_layer_params(resource)
 
         if isinstance(resource, ChannelResource):
-            params = self._get_channel_params(resource)
-            params['is_channel'] = True
-            return params
+            return self._get_channel_params(resource)
 
         raise TypeError('resource is not supported type.')
 
@@ -236,17 +250,21 @@ class ProjectService_0_4(Base):
 
     def _get_channel_params(self, chan):
         return {
+            'name': chan.name,
             'description': chan.description ,
             'default_time_step': chan.default_time_step,
             'datatype': chan.datatype,
             'base_resolution': chan.base_resolution,
+            'is_channel': True
         }
 
     def _get_layer_params(self, lyr):
         return {
+            'name': lyr.name,
             'description': lyr.description ,
             'default_time_step': lyr.default_time_step,
             'datatype': lyr.datatype,
             'base_resolution': lyr.base_resolution,
+            'is_channel': False,
             'channels': lyr.channels
         }
