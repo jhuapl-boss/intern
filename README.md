@@ -13,9 +13,17 @@ ndio is derived from a fork of [NeuroData's](http://neurodata.io) ndio package:
 ## Installation
 
 Clone the repository from https://github.com/jhuapl-boss/ndio and run
-`pip install -r requirements.txt`.
+`pip install -r requirements.txt` from the repository's location on your
+system.
+
+Add `<repository location>` to your `PYTHONPATH`. 
+
+For example, on a *nix system, if ndio was cloned to ~/ndio:
+
+`export PYTHONPATH=$PYTHONPATH:~/ndio`
 
 
 ## Getting Started
 
 See the examples in https://github.com/jhuapl-boss/ndio/tree/master/examples
+and the accompanying wiki page: https://github.com/jhuapl-boss/ndio/wiki/Examples
