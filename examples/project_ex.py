@@ -31,7 +31,7 @@ resource object also contains the parameters to place in the database.
 from ndio.remote.boss.remote import Remote
 from ndio.ndresource.boss.resource import *
 
-rmt = Remote('test.cfg')
+rmt = Remote('example.cfg')
 
 API_VER = 'v0.4'
 

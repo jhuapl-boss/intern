@@ -19,7 +19,7 @@ from ndio.ndresource.boss.resource import *
 from requests import HTTPError
 import sys
 
-rmt = Remote('integration.cfg')
+rmt = Remote('example.cfg')
 
 API_VER = 'v0.4'
 
