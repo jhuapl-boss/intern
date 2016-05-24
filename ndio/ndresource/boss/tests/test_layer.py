@@ -31,3 +31,19 @@ class TestLayerResource(unittest.TestCase):
         self.assertEqual(
             '{}/{}/layers'.format(self.lyr.coll_name, self.lyr.exp_name), 
             self.lyr.get_project_list_route())
+
+    def test_validate_datatype_uint8(self):
+        exp = 'uint8'
+        self.assertEqual(exp, self.lyr.validate_datatype(exp))
+
+    def test_validate_datatype_uint16(self):
+        exp = 'uint16'
+        self.assertEqual(exp, self.lyr.validate_datatype(exp))
+
+    def test_validate_datatype_uint64(self):
+        exp = 'uint64'
+        self.assertEqual(exp, self.lyr.validate_datatype(exp))
+
+    def test_validate_datatype_bad(self):
+        with self.assertRaises(ValueError):
+            self.lyr.validate_datatype('bigint')

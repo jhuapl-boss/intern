@@ -302,8 +302,6 @@ class ChannelLayerBaseResource(Resource):
         self.coll_name = collection_name
         self.exp_name = experiment_name
 
-        self._valid_datatypes = ['uint8', 'uint16', 'uint64']
-
         #ToDo: validate data types.
         self.default_time_step = default_time_step
         self._datatype = self.validate_datatype(datatype)
@@ -331,11 +329,19 @@ class ChannelLayerBaseResource(Resource):
         """
         self._datatype = self.validate_datatype(value)
 
+    @abstractmethod
     def validate_datatype(self, value):
-        lowered = value.lower()
-        if lowered in self._valid_datatypes:
-            return lowered
-        raise ValueError('{} is not a valid data type.'.format(value))
+        """Confirm that user supplied valid data type for this resource.
+
+        Args:
+            value (string): Selected data type.
+
+        Returns:
+            (string): Pass through given value if valid.
+
+        Raises:
+            ValueError if invalid value supplied.
+        """
 
 
 class ChannelResource(ChannelLayerBaseResource):
@@ -355,15 +361,23 @@ class ChannelResource(ChannelLayerBaseResource):
             version (optional[string]): API version to use.
             description (optional[string]): Layer description.
             default_time_step (optional[int]): Defaults to 0.
-            datatype (optional[string]): 'uint8', 'uint16', 'uint64'
+            datatype (optional[string]): 'uint8', 'uint16'
             base_resolution (optional[int]): Defaults to 0 (native).
         """
+
+        self._valid_datatypes = ['uint8', 'uint16']
 
         super().__init__(name, collection_name, experiment_name, version,
             description, default_time_step, datatype, base_resolution)
 
     def get_project_list_route(self):
         return self.coll_name + '/' + self.exp_name + '/channels'
+
+    def validate_datatype(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_datatypes:
+            return lowered
+        raise ValueError('{} is not a valid data type.'.format(value))
 
 
 class LayerResource(ChannelLayerBaseResource):
@@ -392,6 +406,8 @@ class LayerResource(ChannelLayerBaseResource):
             channels (optional[list]): Ids of linked channels.
         """
 
+        self._valid_datatypes = ['uint8', 'uint16', 'uint64']
+
         super().__init__(name, collection_name, experiment_name, version,
             description, default_time_step, datatype, base_resolution)
         self.channels = channels
@@ -399,3 +415,10 @@ class LayerResource(ChannelLayerBaseResource):
 
     def get_project_list_route(self):
         return self.coll_name + '/' + self.exp_name + '/layers'
+
+    def validate_datatype(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_datatypes:
+            return lowered
+        raise ValueError('{} is not a valid data type.'.format(value))
+

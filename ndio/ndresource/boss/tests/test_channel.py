@@ -31,3 +31,20 @@ class TestChannelResource(unittest.TestCase):
         self.assertEqual(
             '{}/{}/channels'.format(self.chan.coll_name, self.chan.exp_name), 
             self.chan.get_project_list_route())
+
+    def test_validate_datatype_uint8(self):
+        exp = 'uint8'
+        self.assertEqual(exp, self.chan.validate_datatype(exp))
+
+    def test_validate_datatype_uint16(self):
+        exp = 'uint16'
+        self.assertEqual(exp, self.chan.validate_datatype(exp))
+
+    def test_validate_datatype_uint64(self):
+        exp = 'uint64'
+        with self.assertRaises(ValueError):
+            self.chan.validate_datatype(exp)
+
+    def test_validate_datatype_bad(self):
+        with self.assertRaises(ValueError):
+            self.chan.validate_datatype('bigint')
