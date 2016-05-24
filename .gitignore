@@ -5,6 +5,8 @@
 # Private Things
 .coverage
 .coveralls.yml
+coverage.xml
+nose2-junit.xml
 
 # Compiled Things
 *.pyc
