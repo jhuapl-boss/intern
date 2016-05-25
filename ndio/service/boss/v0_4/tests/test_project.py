@@ -272,9 +272,9 @@ class TestProject(unittest.TestCase):
         self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_experiment(self):
-        exp = ExperimentResource('', 'foo')
+        exp = ExperimentResource('', 'pyro')
         dict = { 
-            'name': 'fire', 'collection': 'pyro', 'description': 'walker', 
+            'name': 'fire', 'description': 'walker', 
             'id': 5, 'creator': 'auto', 'coord_frame': 3, 
             'num_hierarchy_levels': 1, 'hierarchy_method': 'near_iso',
             'max_time_sample': 500

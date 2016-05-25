@@ -286,7 +286,7 @@ class ProjectService_0_4(Base):
             return self._get_collection(dict)
 
         if isinstance(resource, ExperimentResource):
-            return self._get_experiment(dict)
+            return self._get_experiment(dict, resource.coll_name)
 
         if isinstance(resource, CoordinateFrameResource):
             return self._get_coordinate(dict)
@@ -307,16 +307,15 @@ class ProjectService_0_4(Base):
         return CollectionResource(
             name, self.version, description, id, creator, raw=dict)
 
-    def _get_experiment(self, dict):
+    def _get_experiment(self, dict, coll_name):
         exp_keys = [
             'id', 'name', 'description', 'creator', 'coord_frame', 
             'num_hierarchy_levels', 'hierarchy_method', 'max_time_sample'             
         ]
 
         filtered = { k:v for (k, v) in dict.items() if k in exp_keys }
-        collection = dict['collection']
         return ExperimentResource(
-            version=self.version, collection_name=collection, raw=dict, **filtered)
+            version=self.version, collection_name=coll_name, raw=dict, **filtered)
 
     def _get_coordinate(self, dict):
         coord_keys = [
