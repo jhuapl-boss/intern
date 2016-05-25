@@ -304,7 +304,8 @@ class ProjectService_0_4(Base):
         description = dict['description']
         id = dict['id']
         creator = dict['creator']
-        return CollectionResource(name, self.version, description, id, creator)
+        return CollectionResource(
+            name, self.version, description, id, creator, raw=dict)
 
     def _get_experiment(self, dict):
         exp_keys = [
@@ -315,7 +316,7 @@ class ProjectService_0_4(Base):
         filtered = { k:v for (k, v) in dict.items() if k in exp_keys }
         collection = dict['collection']
         return ExperimentResource(
-            version=self.version, collection_name=collection, **filtered)
+            version=self.version, collection_name=collection, raw=dict, **filtered)
 
     def _get_coordinate(self, dict):
         coord_keys = [
@@ -326,7 +327,7 @@ class ProjectService_0_4(Base):
         ]
 
         filtered = { k:v for (k, v) in dict.items() if k in coord_keys }
-        return CoordinateFrameResource(version=self.version, **filtered)
+        return CoordinateFrameResource(version=self.version, raw=dict, **filtered)
 
     def _get_channel(self, dict, coll_name):
         chan_keys = [
@@ -339,7 +340,7 @@ class ProjectService_0_4(Base):
         experiment = dict['experiment']
         return ChannelResource(
             version=self.version, collection_name=collection,
-            experiment_name=experiment, **filtered)
+            experiment_name=experiment, raw=dict, **filtered)
 
     def _get_layer(self, dict, coll_name):
         layer_keys = [
@@ -353,4 +354,4 @@ class ProjectService_0_4(Base):
         channels = dict['linked_channel_layers']
         return LayerResource(
             version=self.version, collection_name=collection,
-            experiment_name=experiment, channels=channels, **filtered)
+            experiment_name=experiment, channels=channels, raw=dict, **filtered)

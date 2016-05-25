@@ -269,6 +269,7 @@ class TestProject(unittest.TestCase):
         self.assertEqual(5, actual.id)
         self.assertEqual('auto', actual.creator)
         self.assertEqual(self.prj.version, actual.version)
+        self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_experiment(self):
         exp = ExperimentResource('', 'foo')
@@ -290,6 +291,7 @@ class TestProject(unittest.TestCase):
         self.assertEqual(500, actual.max_time_sample)
         self.assertEqual('pyro', actual.coll_name)
         self.assertEqual(self.prj.version, actual.version)
+        self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_coordinate(self):
         coord = CoordinateFrameResource('')
@@ -317,6 +319,7 @@ class TestProject(unittest.TestCase):
         self.assertEqual('centimeters', actual.voxel_unit)
         self.assertEqual(2, actual.time_step)
         self.assertEqual('milliseconds', actual.time_step_unit)
+        self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_channel(self):
         chan = ChannelResource('', 'coll1', 'exp1')
@@ -336,6 +339,7 @@ class TestProject(unittest.TestCase):
         self.assertEqual(2, actual.default_time_step)
         self.assertEqual('uint16', actual.datatype)
         self.assertEqual(0, actual.base_resolution)
+        self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_layer(self):
         layer = LayerResource('', 'coll1', 'exp1')
@@ -357,3 +361,4 @@ class TestProject(unittest.TestCase):
         self.assertEqual('uint16', actual.datatype)
         self.assertEqual(0, actual.base_resolution)
         self.assertEqual([10, 12], actual.channels)
+        self.assertEqual(dict, actual.raw)

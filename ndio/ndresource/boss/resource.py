@@ -26,9 +26,10 @@ class Resource(NdResource):
         version (string): API version of Boss to use.
         id (int): ID used internally by the Boss.
         creator (string): Resource creator.
+        raw (dictionary): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
     """
     def __init__(
-        self, name, description, version=BOSS_DEFAULT_VERSION, id=-1, creator=''):
+        self, name, description, version=BOSS_DEFAULT_VERSION, id=-1, creator='', raw={}):
         """Constructor.
 
         Args:
@@ -37,6 +38,7 @@ class Resource(NdResource):
             version (optional[string]): Defaults to latest version.
             id (optional[int]): ID used internally by the Boss.
             creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
         # ToDo: validate version.
@@ -45,6 +47,7 @@ class Resource(NdResource):
         self.description = description
         self.id = id
         self.creator = creator
+        self.raw = raw
 
     def valid_volume(self):
         return False
@@ -75,7 +78,9 @@ class Resource(NdResource):
 class CollectionResource(Resource):
     """Top level container for Boss projects.
     """
-    def __init__(self, name, version=BOSS_DEFAULT_VERSION, description='', id=-1, creator=''):
+    def __init__(
+        self, name, version=BOSS_DEFAULT_VERSION, description='', id=-1, 
+        creator='', raw={}):
         """Constructor.
 
         Args:
@@ -84,8 +89,9 @@ class CollectionResource(Resource):
             description (optional[string]): Collection description.  Defaults to empty.
             id (optional[int]): ID used internally by the Boss.
             creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
-        super().__init__(name, description, version, id, creator)
+        super().__init__(name, description, version, id, creator, raw)
 
     def get_route(self):
         return self.name
@@ -107,7 +113,7 @@ class ExperimentResource(Resource):
     def __init__(self, name, collection_name,
         version=BOSS_DEFAULT_VERSION, description='', coord_frame=0,
         num_hierarchy_levels=1, hierarchy_method='near_iso',
-        max_time_sample=0, id=-1, creator=''):
+        max_time_sample=0, id=-1, creator='', raw={}):
         """Constructor.
 
         Args:
@@ -120,9 +126,10 @@ class ExperimentResource(Resource):
             max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.
             id (optional[int]): ID used internally by the Boss.
             creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
         
-        super().__init__(name, description, version, id, creator)
+        super().__init__(name, description, version, id, creator, raw)
         self.coll_name = collection_name
 
         self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
@@ -188,7 +195,7 @@ class CoordinateFrameResource(Resource):
         self, name, version=BOSS_DEFAULT_VERSION, description='',
         x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
         x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
-        time_step=0, time_step_unit='seconds', id=-1, creator=''):
+        time_step=0, time_step_unit='seconds', id=-1, creator='', raw={}):
         """Constructor.
 
         For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
@@ -211,9 +218,10 @@ class CoordinateFrameResource(Resource):
             time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
             id (optional[int]): ID used internally by the Boss.
             creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
-        super().__init__(name, description, version, id)
+        super().__init__(name, description, version, id, raw=raw)
 
         self._valid_voxel_units = [
             'nanometers', 'micrometers', 'millimeters', 'centimeters']
@@ -297,7 +305,7 @@ class ChannelLayerBaseResource(Resource):
     def __init__(self, name, collection_name, experiment_name,
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
-        base_resolution=0, id=-1, creator=''):
+        base_resolution=0, id=-1, creator='', raw={}):
         """Constructor.
 
         Args:
@@ -311,9 +319,10 @@ class ChannelLayerBaseResource(Resource):
             base_resolution (optional[int]): Defaults to 0 (native).
             id (optional[int]): ID used internally by the Boss.
             creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
-        super().__init__(name, description, version, id, creator)
+        super().__init__(name, description, version, id, creator, raw)
         self.coll_name = collection_name
         self.exp_name = experiment_name
 
@@ -366,7 +375,7 @@ class ChannelResource(ChannelLayerBaseResource):
     def __init__(self, name, collection_name, experiment_name,
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
-        base_resolution=0, id=-1, creator=''):
+        base_resolution=0, id=-1, creator='', raw={}):
         """Constructor.
 
         Args:
@@ -380,12 +389,13 @@ class ChannelResource(ChannelLayerBaseResource):
             base_resolution (optional[int]): Defaults to 0 (native).
             id (optional[int]): ID used internally by the Boss.
             creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
         self._valid_datatypes = ['uint8', 'uint16']
 
         super().__init__(name, collection_name, experiment_name, version,
-            description, default_time_step, datatype, base_resolution, id, creator)
+            description, default_time_step, datatype, base_resolution, id, creator, raw)
 
     def get_project_list_route(self):
         return self.coll_name + '/' + self.exp_name + '/channels'
@@ -408,7 +418,7 @@ class LayerResource(ChannelLayerBaseResource):
     def __init__(self, name, collection_name, experiment_name,
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
-        base_resolution=0, channels=[], id=-1, creator=''):
+        base_resolution=0, channels=[], id=-1, creator='', raw={}):
         """Constructor.
 
         Args:
@@ -423,12 +433,13 @@ class LayerResource(ChannelLayerBaseResource):
             channels (optional[list]): Ids of linked channels.
             id (optional[int]): ID used internally by the Boss.
             creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
         self._valid_datatypes = ['uint8', 'uint16', 'uint64']
 
         super().__init__(name, collection_name, experiment_name, version,
-            description, default_time_step, datatype, base_resolution, id, creator)
+            description, default_time_step, datatype, base_resolution, id, creator, raw)
         self.channels = channels
 
 

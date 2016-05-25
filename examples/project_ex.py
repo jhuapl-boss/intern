@@ -70,9 +70,13 @@ newBetaChan = rmt.project_create(betaChan)
 
 # Note that the create method returns a new instance of the ChannelResource.
 # This new instance is populated with additional information, such as the id
-# used by the Boss API.
+# used by the Boss API.  The new instance also has its `raw` attribute populated
+# with all the JSON data returned by the Boss API.
 if not newBetaChan:
     print('Creating {} channel failed.'.format(betaChan.name))
+
+# Display raw channel data from the Boss API:
+print(newBetaChan.raw)
 
 # We forgot, to set the channel's data type to uint16.  Let's fix that by
 # updating the channel.
