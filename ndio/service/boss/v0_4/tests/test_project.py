@@ -57,13 +57,18 @@ class TestProject(unittest.TestCase):
         with self.assertRaises(HTTPError):
             self.prj.list(self.chan, url_prefix, auth, mock_session, send_opts)
 
+    @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
-    def test_prj_create_success(self, mock_session):
+    def test_prj_create_success(self, mock_session, mock_resp):
         mock_session.prepare_request.return_value = PreparedRequest()
-        fake_resp = Response()
-        fake_resp.status_code = 201
+        mock_resp.status_code = 201
+        mock_resp.json.return_value = {
+            'id': 7, 'name': 'chan', 'description': 'walker', 
+            'experiment': 'bar', 'creator': 'me',
+            'default_time_step': 2, 'datatype': 'uint16', 'base_resolution': 0
+        }
 
-        mock_session.send.return_value = fake_resp
+        mock_session.send.return_value = mock_resp
 
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
@@ -71,7 +76,10 @@ class TestProject(unittest.TestCase):
 
         actual = self.prj.create(self.chan, url_prefix, auth, mock_session, send_opts)
 
-        self.assertTrue(actual)
+        self.assertTrue(isinstance(actual, ChannelResource))
+        self.assertEqual('chan', actual.name)
+        self.assertEqual('foo', actual.coll_name)
+        self.assertEqual('bar', actual.exp_name)
 
     @patch('requests.Session', autospec=True)
     def test_prj_create_failure(self, mock_session):
@@ -245,3 +253,107 @@ class TestProject(unittest.TestCase):
         self.assertTrue('datatype' in actual)
         self.assertTrue('base_resolution' in actual)
         self.assertTrue('channels' in actual)
+
+    def test_create_resource_from_dict_bad_type(self):
+        bad_type = self.prj
+        dict = {}
+        with self.assertRaises(TypeError):
+            self.prj._create_resource_from_dict(bad_type, dict)
+
+    def test_create_resource_from_dict_collection(self):
+        coll = CollectionResource('')
+        dict = { 'name': 'fire', 'description': 'walker', 'id': 5, 'creator': 'auto' }
+        actual = self.prj._create_resource_from_dict(coll, dict)
+        self.assertEqual('fire', actual.name)
+        self.assertEqual('walker', actual.description)
+        self.assertEqual(5, actual.id)
+        self.assertEqual('auto', actual.creator)
+        self.assertEqual(self.prj.version, actual.version)
+
+    def test_create_resource_from_dict_experiment(self):
+        exp = ExperimentResource('', 'foo')
+        dict = { 
+            'name': 'fire', 'collection': 'pyro', 'description': 'walker', 
+            'id': 5, 'creator': 'auto', 'coord_frame': 3, 
+            'num_hierarchy_levels': 1, 'hierarchy_method': 'near_iso',
+            'max_time_sample': 500
+        }
+
+        actual = self.prj._create_resource_from_dict(exp, dict)
+        self.assertEqual('fire', actual.name)
+        self.assertEqual('walker', actual.description)
+        self.assertEqual(5, actual.id)
+        self.assertEqual('auto', actual.creator)
+        self.assertEqual(3, actual.coord_frame)
+        self.assertEqual(1, actual.num_hierarchy_levels)
+        self.assertEqual('near_iso', actual.hierarchy_method)
+        self.assertEqual(500, actual.max_time_sample)
+        self.assertEqual('pyro', actual.coll_name)
+        self.assertEqual(self.prj.version, actual.version)
+
+    def test_create_resource_from_dict_coordinate(self):
+        coord = CoordinateFrameResource('')
+        dict = {
+            'id': 7, 'name': 'fire', 'description': 'walker', 
+            'x_start': 0, 'x_stop': 100, 
+            'y_start': 50, 'y_stop': 150, 'z_start': 75, 'z_stop': 125, 
+            'x_voxel_size': 2, 'y_voxel_size': 4, 'z_voxel_size': 6,
+            'voxel_unit': 'centimeters', 
+            'time_step': 2, 'time_step_unit': 'milliseconds'}
+
+        actual = self.prj._create_resource_from_dict(coord, dict)
+        self.assertEqual('fire', actual.name)
+        self.assertEqual('walker', actual.description)
+        self.assertEqual(7, actual.id)
+        self.assertEqual(0, actual.x_start)
+        self.assertEqual(100, actual.x_stop)
+        self.assertEqual(50, actual.y_start)
+        self.assertEqual(150, actual.y_stop)
+        self.assertEqual(75, actual.z_start)
+        self.assertEqual(125, actual.z_stop)
+        self.assertEqual(2, actual.x_voxel_size)
+        self.assertEqual(4, actual.y_voxel_size)
+        self.assertEqual(6, actual.z_voxel_size)
+        self.assertEqual('centimeters', actual.voxel_unit)
+        self.assertEqual(2, actual.time_step)
+        self.assertEqual('milliseconds', actual.time_step_unit)
+
+    def test_create_resource_from_dict_channel(self):
+        chan = ChannelResource('', 'coll1', 'exp1')
+        dict = {
+            'id': 7, 'name': 'fire', 'description': 'walker', 
+            'experiment': 'exp1', 'creator': 'me',
+            'default_time_step': 2, 'datatype': 'uint16', 'base_resolution': 0
+        }
+
+        actual = self.prj._create_resource_from_dict(chan, dict)
+        self.assertEqual('fire', actual.name)
+        self.assertEqual('walker', actual.description)
+        self.assertEqual(7, actual.id)
+        self.assertEqual('coll1', actual.coll_name)
+        self.assertEqual('exp1', actual.exp_name)
+        self.assertEqual('me', actual.creator)
+        self.assertEqual(2, actual.default_time_step)
+        self.assertEqual('uint16', actual.datatype)
+        self.assertEqual(0, actual.base_resolution)
+
+    def test_create_resource_from_dict_layer(self):
+        layer = LayerResource('', 'coll1', 'exp1')
+        dict = {
+            'id': 7, 'name': 'fire', 'description': 'walker', 
+            'experiment': 'exp1', 'creator': 'me',
+            'default_time_step': 2, 'datatype': 'uint16', 'base_resolution': 0,
+            'linked_channel_layers': [10, 12]
+        }
+
+        actual = self.prj._create_resource_from_dict(layer, dict)
+        self.assertEqual('fire', actual.name)
+        self.assertEqual('walker', actual.description)
+        self.assertEqual(7, actual.id)
+        self.assertEqual('coll1', actual.coll_name)
+        self.assertEqual('exp1', actual.exp_name)
+        self.assertEqual('me', actual.creator)
+        self.assertEqual(2, actual.default_time_step)
+        self.assertEqual('uint16', actual.datatype)
+        self.assertEqual(0, actual.base_resolution)
+        self.assertEqual([10, 12], actual.channels)

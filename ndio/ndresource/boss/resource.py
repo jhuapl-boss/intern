@@ -24,20 +24,27 @@ class Resource(NdResource):
         the Boss API.
         description (string): Text description of resource.
         version (string): API version of Boss to use.
+        id (int): ID used internally by the Boss.
+        creator (string): Resource creator.
     """
-    def __init__(self, name, description, version=BOSS_DEFAULT_VERSION):
+    def __init__(
+        self, name, description, version=BOSS_DEFAULT_VERSION, id=-1, creator=''):
         """Constructor.
 
         Args:
             name (string): Name of resource.
             description (string): Description of resource.
             version (optional[string]): Defaults to latest version.
+            id (optional[int]): ID used internally by the Boss.
+            creator (optional[string]): Resource creator.
         """
 
         # ToDo: validate version.
         self.version = version
         self.name = name
         self.description = description
+        self.id = id
+        self.creator = creator
 
     def valid_volume(self):
         return False
@@ -68,15 +75,17 @@ class Resource(NdResource):
 class CollectionResource(Resource):
     """Top level container for Boss projects.
     """
-    def __init__(self, name, version=BOSS_DEFAULT_VERSION, description=''):
+    def __init__(self, name, version=BOSS_DEFAULT_VERSION, description='', id=-1, creator=''):
         """Constructor.
 
         Args:
             name (string): Collection name.
             version (optional[string]): Defaults to latest version.
             description (optional[string]): Collection description.  Defaults to empty.
+            id (optional[int]): ID used internally by the Boss.
+            creator (optional[string]): Resource creator.
         """
-        super().__init__(name, description, version)
+        super().__init__(name, description, version, id, creator)
 
     def get_route(self):
         return self.name
@@ -98,7 +107,7 @@ class ExperimentResource(Resource):
     def __init__(self, name, collection_name,
         version=BOSS_DEFAULT_VERSION, description='', coord_frame=0,
         num_hierarchy_levels=1, hierarchy_method='near_iso',
-        max_time_sample=0):
+        max_time_sample=0, id=-1, creator=''):
         """Constructor.
 
         Args:
@@ -109,9 +118,11 @@ class ExperimentResource(Resource):
             num_hierarchy_levels (optional[int]): Defaults to 1.
             hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
             max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.
+            id (optional[int]): ID used internally by the Boss.
+            creator (optional[string]): Resource creator.
         """
         
-        super().__init__(name, description, version)
+        super().__init__(name, description, version, id, creator)
         self.coll_name = collection_name
 
         self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
@@ -177,7 +188,7 @@ class CoordinateFrameResource(Resource):
         self, name, version=BOSS_DEFAULT_VERSION, description='',
         x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
         x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
-        time_step=0, time_step_unit='seconds'):
+        time_step=0, time_step_unit='seconds', id=-1, creator=''):
         """Constructor.
 
         For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
@@ -198,9 +209,11 @@ class CoordinateFrameResource(Resource):
             voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
             time_step (optional[int]): Defaults to 0.
             time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
+            id (optional[int]): ID used internally by the Boss.
+            creator (optional[string]): Resource creator.
         """
 
-        super().__init__(name, description, version)
+        super().__init__(name, description, version, id)
 
         self._valid_voxel_units = [
             'nanometers', 'micrometers', 'millimeters', 'centimeters']
@@ -284,7 +297,7 @@ class ChannelLayerBaseResource(Resource):
     def __init__(self, name, collection_name, experiment_name,
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
-        base_resolution=0):
+        base_resolution=0, id=-1, creator=''):
         """Constructor.
 
         Args:
@@ -296,9 +309,11 @@ class ChannelLayerBaseResource(Resource):
             default_time_step (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
             base_resolution (optional[int]): Defaults to 0 (native).
+            id (optional[int]): ID used internally by the Boss.
+            creator (optional[string]): Resource creator.
         """
 
-        super().__init__(name, description, version)
+        super().__init__(name, description, version, id, creator)
         self.coll_name = collection_name
         self.exp_name = experiment_name
 
@@ -351,7 +366,7 @@ class ChannelResource(ChannelLayerBaseResource):
     def __init__(self, name, collection_name, experiment_name,
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
-        base_resolution=0):
+        base_resolution=0, id=-1, creator=''):
         """Constructor.
 
         Args:
@@ -363,12 +378,14 @@ class ChannelResource(ChannelLayerBaseResource):
             default_time_step (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16'
             base_resolution (optional[int]): Defaults to 0 (native).
+            id (optional[int]): ID used internally by the Boss.
+            creator (optional[string]): Resource creator.
         """
 
         self._valid_datatypes = ['uint8', 'uint16']
 
         super().__init__(name, collection_name, experiment_name, version,
-            description, default_time_step, datatype, base_resolution)
+            description, default_time_step, datatype, base_resolution, id, creator)
 
     def get_project_list_route(self):
         return self.coll_name + '/' + self.exp_name + '/channels'
@@ -391,7 +408,7 @@ class LayerResource(ChannelLayerBaseResource):
     def __init__(self, name, collection_name, experiment_name,
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
-        base_resolution=0, channels=[]):
+        base_resolution=0, channels=[], id=-1, creator=''):
         """Constructor.
 
         Args:
@@ -404,12 +421,14 @@ class LayerResource(ChannelLayerBaseResource):
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'
             base_resolution (optional[int]): Defaults to 0 (native).
             channels (optional[list]): Ids of linked channels.
+            id (optional[int]): ID used internally by the Boss.
+            creator (optional[string]): Resource creator.
         """
 
         self._valid_datatypes = ['uint8', 'uint16', 'uint64']
 
         super().__init__(name, collection_name, experiment_name, version,
-            description, default_time_step, datatype, base_resolution)
+            description, default_time_step, datatype, base_resolution, id, creator)
         self.channels = channels
 
 

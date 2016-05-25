@@ -66,12 +66,17 @@ for chan in chan_list:
 # For example, to add a channel named beta to the alpha experiment referenced
 # in the previous example:
 betaChan = ChannelResource('beta', 'gray', 'alpha', API_VER, 'test channel')
-if not rmt.project_create(betaChan):
+newBetaChan = rmt.project_create(betaChan)
+
+# Note that the create method returns a new instance of the ChannelResource.
+# This new instance is populated with additional information, such as the id
+# used by the Boss API.
+if not newBetaChan:
     print('Creating {} channel failed.'.format(betaChan.name))
 
-# We forgot, to set the channel's data type to uint64.  Let's fix that by
+# We forgot, to set the channel's data type to uint16.  Let's fix that by
 # updating the channel.
-betaChan.datatype = 'uint64'
+betaChan.datatype = 'uint16'
 if not rmt.project_update(betaChan.name, betaChan):
     print('Updating {} channel failed.'.format(betaChan.name))
 

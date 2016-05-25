@@ -69,7 +69,7 @@ class ProjectService_0_4(Base):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (bool): True if create successful.
+            (ndio.ndresource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
         """
         json = self._get_resource_params(resource)
         req = self.get_request(
@@ -82,11 +82,11 @@ class ProjectService_0_4(Base):
         resp = session.send(prep, **send_opts)
 
         if resp.status_code == 201:
-            return True
+            return self._create_resource_from_dict(resource, resp.json())
 
         print('Create failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        return False
+        return None
 
     def get(self, resource, url_prefix, auth, session, send_opts):
         """Get attributes of the given resource.
@@ -268,3 +268,89 @@ class ProjectService_0_4(Base):
             'is_channel': False,
             'channels': lyr.channels
         }
+
+    def _create_resource_from_dict(self, resource, dict):
+        """
+        Args:
+            resource (ndio.resource.boss.Resource): Used to determine type of resource to create.
+            dict (dictionary): JSON data returned by the Boss API.
+
+        Returns:
+            (ndio.resource.boss.Resource): Instance populated with values from dict.
+
+        Raises:
+            KeyError if dict missing required key.
+            TypeError if resource is not a supported class.
+        """
+        if isinstance(resource, CollectionResource):
+            return self._get_collection(dict)
+
+        if isinstance(resource, ExperimentResource):
+            return self._get_experiment(dict)
+
+        if isinstance(resource, CoordinateFrameResource):
+            return self._get_coordinate(dict)
+
+        if isinstance(resource, LayerResource):
+            return self._get_layer(dict, resource.coll_name)
+
+        if isinstance(resource, ChannelResource):
+            return self._get_channel(dict, resource.coll_name)
+
+        raise TypeError('resource is not supported type.')
+
+    def _get_collection(self, dict):
+        name = dict['name']
+        description = dict['description']
+        id = dict['id']
+        creator = dict['creator']
+        return CollectionResource(name, self.version, description, id, creator)
+
+    def _get_experiment(self, dict):
+        exp_keys = [
+            'id', 'name', 'description', 'creator', 'coord_frame', 
+            'num_hierarchy_levels', 'hierarchy_method', 'max_time_sample'             
+        ]
+
+        filtered = { k:v for (k, v) in dict.items() if k in exp_keys }
+        collection = dict['collection']
+        return ExperimentResource(
+            version=self.version, collection_name=collection, **filtered)
+
+    def _get_coordinate(self, dict):
+        coord_keys = [
+            'id', 'name', 'description', 'x_start', 'x_stop', 
+            'y_start', 'y_stop', 'z_start', 'z_stop', 
+            'x_voxel_size', 'y_voxel_size', 'z_voxel_size',
+            'voxel_unit', 'time_step', 'time_step_unit'
+        ]
+
+        filtered = { k:v for (k, v) in dict.items() if k in coord_keys }
+        return CoordinateFrameResource(version=self.version, **filtered)
+
+    def _get_channel(self, dict, coll_name):
+        chan_keys = [
+            'id', 'name', 'description', 'creator', 'default_time_step', 
+            'datatype', 'base_resolution'
+        ]
+
+        filtered = { k:v for (k, v) in dict.items() if k in chan_keys }
+        collection = coll_name
+        experiment = dict['experiment']
+        return ChannelResource(
+            version=self.version, collection_name=collection,
+            experiment_name=experiment, **filtered)
+
+    def _get_layer(self, dict, coll_name):
+        layer_keys = [
+            'id', 'name', 'description', 'creator', 'default_time_step', 
+            'datatype', 'base_resolution'
+        ]
+
+        filtered = { k:v for (k, v) in dict.items() if k in layer_keys }
+        collection = coll_name
+        experiment = dict['experiment']
+        channels = dict['linked_channel_layers']
+        return LayerResource(
+            version=self.version, collection_name=collection,
+            experiment_name=experiment, channels=channels, **filtered)
