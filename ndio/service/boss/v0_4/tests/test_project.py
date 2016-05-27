@@ -95,14 +95,27 @@ class TestProject(unittest.TestCase):
 
         actual = self.prj.create(self.chan, url_prefix, auth, mock_session, send_opts)
 
-        self.assertFalse(actual)
+        self.assertIsNone(actual)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
     def test_prj_get_success(self, mock_session, mock_resp):
-        expected = { 'rock': 'foo', 'paper': 'bar' }
+        chan_dict = { 
+            'id': 10, 'name': 'bar', 'description': 'none', 'experiment': 8, 
+            'is_channel': True, 'default_time_step': 0, 'datatype': 'uint16',
+            'base_resolution': 0, 'linked_channel_layers': [], 'creator': 'me'
+        }
+        expected = ChannelResource(
+            chan_dict['name'], self.chan.coll_name, self.chan.exp_name) 
+        expected.description = chan_dict['description']
+        expected.datatype = chan_dict['datatype']
+        expected.base_resolution = chan_dict['base_resolution']
+        expected.default_time_step = chan_dict['default_time_step']
+        expected.id = chan_dict['id']
+
+
         mock_session.prepare_request.return_value = PreparedRequest()
-        mock_resp.json.return_value = expected
+        mock_resp.json.return_value = chan_dict
         mock_resp.status_code = 200
 
         mock_session.send.return_value = mock_resp
@@ -113,7 +126,14 @@ class TestProject(unittest.TestCase):
 
         actual = self.prj.get(self.chan, url_prefix, auth, mock_session, send_opts)
 
-        self.assertEqual(expected, actual)
+        self.assertEqual(expected.name, actual.name)
+        self.assertEqual(expected.id, actual.id)
+        self.assertEqual(expected.description, actual.description)
+        self.assertEqual(expected.exp_name, actual.exp_name)
+        self.assertEqual(expected.coll_name, actual.coll_name)
+        self.assertEqual(expected.default_time_step, actual.default_time_step)
+        self.assertEqual(expected.datatype, actual.datatype)
+        self.assertEqual(expected.base_resolution, actual.base_resolution)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
@@ -128,16 +148,30 @@ class TestProject(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        with self.assertRaises(HTTPError):
-            self.prj.get(self.chan, url_prefix, auth, mock_session, send_opts)
+        actual = self.prj.get(self.chan, url_prefix, auth, mock_session, send_opts)
+        self.assertIsNone(actual)
 
+    @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
-    def test_prj_update_success(self, mock_session):
-        mock_session.prepare_request.return_value = PreparedRequest()
-        fake_resp = Response()
-        fake_resp.status_code = 200
+    def test_prj_update_success(self, mock_session, mock_resp):
+        chan_dict = { 
+            'id': 10, 'name': 'bar', 'description': 'none', 'experiment': 8, 
+            'is_channel': True, 'default_time_step': 0, 'datatype': 'uint16',
+            'base_resolution': 0, 'linked_channel_layers': [], 'creator': 'me'
+        }
+        expected = ChannelResource(
+            chan_dict['name'], self.chan.coll_name, self.chan.exp_name) 
+        expected.description = chan_dict['description']
+        expected.datatype = chan_dict['datatype']
+        expected.base_resolution = chan_dict['base_resolution']
+        expected.default_time_step = chan_dict['default_time_step']
+        expected.id = chan_dict['id']
 
-        mock_session.send.return_value = fake_resp
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_resp.json.return_value = chan_dict
+        mock_resp.status_code = 200
+
+        mock_session.send.return_value = mock_resp
 
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
@@ -145,7 +179,14 @@ class TestProject(unittest.TestCase):
 
         actual = self.prj.update(self.chan.name, self.chan, url_prefix, auth, mock_session, send_opts)
 
-        self.assertTrue(actual)
+        self.assertEqual(expected.name, actual.name)
+        self.assertEqual(expected.id, actual.id)
+        self.assertEqual(expected.description, actual.description)
+        self.assertEqual(expected.exp_name, actual.exp_name)
+        self.assertEqual(expected.coll_name, actual.coll_name)
+        self.assertEqual(expected.default_time_step, actual.default_time_step)
+        self.assertEqual(expected.datatype, actual.datatype)
+        self.assertEqual(expected.base_resolution, actual.base_resolution)
 
     @patch('requests.Session', autospec=True)
     def test_prj_update_failure(self, mock_session):
@@ -362,3 +403,7 @@ class TestProject(unittest.TestCase):
         self.assertEqual(0, actual.base_resolution)
         self.assertEqual([10, 12], actual.channels)
         self.assertEqual(dict, actual.raw)
+
+if __name__ == '__main__':
+    unittest.main()
+
