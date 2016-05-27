@@ -87,6 +87,7 @@ class ProjectServiceTest(unittest.TestCase):
         self.rmt.project_delete(self.chan)
         self.rmt.project_delete(self.exp_upd)
         self.rmt.project_delete(self.exp)
+        self.rmt.project_delete(self.coord_upd)
         self.rmt.project_delete(self.coord)
         self.rmt.project_delete(self.coll_upd)
         self.rmt.project_delete(self.coll)
