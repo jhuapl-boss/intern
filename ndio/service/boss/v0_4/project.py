@@ -99,21 +99,18 @@ class ProjectService_0_4(Base):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (dictionary): Dictionary containing resource's attributes..
-
-        Raises:
-            requests.HTTPError on failure.
+            (ndio.resource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
         """
         req = self.get_request(
             resource, 'GET', 'application/json', url_prefix, auth)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
-            return resp.json()
+            return self._create_resource_from_dict(resource, resp.json())
 
         print('Get failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        resp.raise_for_status()
+        return None
 
     def update(self, resource_name, resource, url_prefix, auth, session, send_opts):
         """Updates an entity in the data model using the given resource.
@@ -127,7 +124,7 @@ class ProjectService_0_4(Base):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (bool): True on success.
+            (ndio.resource.boss.Resource): Returns updated resource of given type on success.  Returns None on failure.
         """
 
         # Create a copy of the resource and change its name to resource_name
@@ -147,11 +144,11 @@ class ProjectService_0_4(Base):
         resp = session.send(prep, **send_opts)
 
         if resp.status_code == 200:
-            return True
+            return self._create_resource_from_dict(resource, resp.json())
 
         print('Update failed on {}, got HTTP response: ({}) - {}'.format(
             old_resource.name, resp.status_code, resp.text))
-        return False
+        return None
 
 
     def delete(self, resource, url_prefix, auth, session, send_opts):
@@ -173,14 +170,6 @@ class ProjectService_0_4(Base):
         resp = session.send(prep, **send_opts)
         if resp.status_code == 204:
             return True
-
-        if resp.status_code == 404:
-            print('Delete failed, {} not found.'.format(resource.name))
-            return False
-
-        if resp.status_code == 403:
-            print('Delete failed on {}, access denied.'.format(resource.name))
-            return False
 
         print('Delete failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
@@ -292,10 +281,10 @@ class ProjectService_0_4(Base):
             return self._get_coordinate(dict)
 
         if isinstance(resource, LayerResource):
-            return self._get_layer(dict, resource.coll_name)
+            return self._get_layer(dict, resource.coll_name, resource.exp_name)
 
         if isinstance(resource, ChannelResource):
-            return self._get_channel(dict, resource.coll_name)
+            return self._get_channel(dict, resource.coll_name, resource.exp_name)
 
         raise TypeError('resource is not supported type.')
 
@@ -328,7 +317,7 @@ class ProjectService_0_4(Base):
         filtered = { k:v for (k, v) in dict.items() if k in coord_keys }
         return CoordinateFrameResource(version=self.version, raw=dict, **filtered)
 
-    def _get_channel(self, dict, coll_name):
+    def _get_channel(self, dict, coll_name, exp_name):
         chan_keys = [
             'id', 'name', 'description', 'creator', 'default_time_step', 
             'datatype', 'base_resolution'
@@ -336,12 +325,11 @@ class ProjectService_0_4(Base):
 
         filtered = { k:v for (k, v) in dict.items() if k in chan_keys }
         collection = coll_name
-        experiment = dict['experiment']
         return ChannelResource(
             version=self.version, collection_name=collection,
-            experiment_name=experiment, raw=dict, **filtered)
+            experiment_name=exp_name, raw=dict, **filtered)
 
-    def _get_layer(self, dict, coll_name):
+    def _get_layer(self, dict, coll_name, exp_name):
         layer_keys = [
             'id', 'name', 'description', 'creator', 'default_time_step', 
             'datatype', 'base_resolution'
@@ -349,8 +337,7 @@ class ProjectService_0_4(Base):
 
         filtered = { k:v for (k, v) in dict.items() if k in layer_keys }
         collection = coll_name
-        experiment = dict['experiment']
         channels = dict['linked_channel_layers']
         return LayerResource(
             version=self.version, collection_name=collection,
-            experiment_name=experiment, channels=channels, raw=dict, **filtered)
+            experiment_name=exp_name, channels=channels, raw=dict, **filtered)

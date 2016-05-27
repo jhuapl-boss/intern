@@ -55,7 +55,7 @@ class ProjectService(Service):
             resource (ndio.ndresource.boss.Resource): Create a data model object with attributes matching those of the resource.
 
         Returns:
-            (bool): True if create successful.
+            (ndio.ndresource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.create(
@@ -69,10 +69,7 @@ class ProjectService(Service):
             resource (ndio.ndresource.boss.Resource): resource.name as well as any parents must be identified to succeed.
 
         Returns:
-            (dictionary): Dictionary containing the entity's attributes.
-
-        Raises:
-            requests.HTTPError on failure.
+            (ndio.resource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.get(
@@ -87,7 +84,7 @@ class ProjectService(Service):
             resource (ndio.resource.boss.Resource): New attributes for the resource.
 
         Returns:
-            (bool): True on success.
+            (ndio.resource.boss.Resource): Returns updated resource of given type on success.  Returns None on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.update(

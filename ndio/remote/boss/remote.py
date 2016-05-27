@@ -164,7 +164,7 @@ class Remote(NdRemote):
             resource (ndio.resource.boss.Resource)
 
         Returns:
-            (bool): True on success.
+            (ndio.ndresource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create(resource)
@@ -176,10 +176,7 @@ class Remote(NdRemote):
             resource (ndio.ndresource.boss.Resource): resource.name as well as any parents must be identified to succeed.
 
         Returns:
-            (dictionary): Dictionary containing the entity's attributes.
-
-        Raises:
-            requests.HTTPError on failure.
+            (ndio.resource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get(resource)
@@ -192,7 +189,7 @@ class Remote(NdRemote):
             resource (ndio.resource.boss.Resource): New attributes for the resource.
 
         Returns:
-            (bool): True on success.
+            (ndio.resource.boss.Resource): Returns updated resource of given type on success.  Returns None on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.update(resource_name, resource)
