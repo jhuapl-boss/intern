@@ -189,7 +189,6 @@ class BaseVersionTest(unittest.TestCase):
     def test_get_cutout_request(self):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
-        key = 'version'
         resolution = 0
         x_range = '20:40'
         y_range = '50:70'
@@ -208,3 +207,30 @@ class BaseVersionTest(unittest.TestCase):
             actual.url)
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/blosc-python', actual.headers['Content-Type'])
+
+    def test_get_group_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        grp_name = 'fire'
+
+        expected = '{}/{}/group/{}/'.format(
+            url_prefix, self.test_volume.version, grp_name)
+
+        actual = self.test_volume.get_group_request(
+            'GET', 'application/json', url_prefix, token, grp_name, None)
+
+        self.assertEqual(expected, actual.url)
+
+    def test_get_group_request_user(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        grp_name = 'fire'
+        user_name = 'fox'
+
+        expected = '{}/{}/group-member/{}/{}/'.format(
+            url_prefix, self.test_volume.version, grp_name, user_name)
+
+        actual = self.test_volume.get_group_request(
+            'GET', 'application/json', url_prefix, token, grp_name, user_name)
+
+        self.assertEqual(expected, actual.url)

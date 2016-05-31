@@ -15,6 +15,8 @@
 from ndio.service.boss.service import Service
 from ndio.service.boss.v0_4.project import ProjectService_0_4
 
+LATEST_VERSION='v0.4'
+
 class ProjectService(Service):
     """ProjectService routes calls to the appropriate API version.
     """
@@ -30,6 +32,74 @@ class ProjectService(Service):
         self._versions = {
             'v0.4': ProjectService_0_4()
         }
+
+    def group_get(self, name, user_name=None, version=LATEST_VERSION):
+        """Get information on the given group or whether or not a user is a member of the group.
+
+        Args:
+            name (string): Name of group to query.
+            user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Returns:
+            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+        """
+        ps = self.get_api_impl(version)
+        return ps.group_get(
+            name, user_name, self.url_prefix, self.auth, self.session, 
+            self.session_send_opts)
+
+    def group_create(self, name, version=LATEST_VERSION):
+        """Create a new group.
+
+        Args:
+            name (string): Name of the group to create.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Returns:
+            (bool): True on success.
+        """
+        ps = self.get_api_impl(version)
+        return ps.group_create(
+            name, self.url_prefix, self.auth, self.session, 
+            self.session_send_opts)
+
+    def group_delete(self, name, user_name=None, version=LATEST_VERSION):
+        """Delete given group or delete user from given group.
+
+        If user_name is provided, the user will be removed from the group.
+        Otherwise, the group, itself, is deleted.
+
+        Args:
+            name (string): Name of group.
+            user_name (optional[string]): Defaults to None.  User to remove from group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Returns:
+            (bool): True on success.
+        """
+        ps = self.get_api_impl(version)
+        return ps.group_delete(
+            name, user_name, self.url_prefix, self.auth, self.session, 
+            self.session_send_opts)
+
+    def group_add_user(self, name, user, version=LATEST_VERSION):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user_name (string): User to add to group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Returns:
+            (bool): True on success.
+        """
+        ps = self.get_api_impl(version)
+        return ps.group_add_user(
+            name, user, self.url_prefix, self.auth, self.session, 
+            self.session_send_opts)
 
     def list(self, resource):
         """List all resources of the same type as the given resource.

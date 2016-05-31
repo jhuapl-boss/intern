@@ -145,6 +145,63 @@ class Remote(NdRemote):
         self._token_volume = value
         self.volume_service.set_auth(self._token_volume)
 
+    def group_get(self, name, user_name=None):
+        """Get information on the given group or whether or not a user is a member of the group.
+
+        Args:
+            name (string): Name of group to query.
+            user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Returns:
+            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.group_get(name, user_name)
+
+    def group_create(self, name):
+        """Create a new group.
+
+        Args:
+            name (string): Name of the group to create.
+
+        Returns:
+            (bool): True on success.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.group_create(name)
+
+    def group_delete(self, name, user_name=None):
+        """Delete given group or delete user from given group.
+
+        If user_name is provided, the user will be removed from the group.
+        Otherwise, the group, itself, is deleted.
+
+        Args:
+            name (string): Name of group.
+            user_name (optional[string]): Defaults to None.  User to remove from group.
+
+        Returns:
+            (bool): True on success.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.group_delete(name, user_name)
+
+    def group_add_user(self, grp_name, user):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user_name (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.group_add_user(grp_name, user)
+
     def project_list(self, resource):
         """List all instances of the given resource type.
 

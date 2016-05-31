@@ -27,6 +27,117 @@ class ProjectService_0_4(Base):
     def endpoint(self):
         return 'resource'
 
+    def group_get(self, name, user_name, url_prefix, auth, session, send_opts):
+        """Get information on the given group or whether or not a user is a member of the group.
+
+        Args:
+            name (string): Name of group to query.
+            user_name (string): Supply None if not interested in determining if user is a member of the given group.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+        """
+        req = self.get_group_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name, user_name)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            return resp.json()
+
+        print('Get failed for group {}, got HTTP response: ({}) - {}'.format(
+            name, resp.status_code, resp.text))
+        return {}
+
+    def group_create(self, name, url_prefix, auth, session, send_opts):
+        """Create a new group.
+
+        Args:
+            name (string): Name of the group to create.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (bool): True on success.
+        """
+        req = self.get_group_request(
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, name, None)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 201:
+            return True
+
+        print('Create failed for group {}, got HTTP response: ({}) - {}'.format(
+            name, resp.status_code, resp.text))
+        return False
+
+    def group_delete(self, name, user_name, url_prefix, auth, session, send_opts):
+        """Delete given group or delete user from given group.
+
+        If user_name is provided, the user will be removed from the group.
+        Otherwise, the group, itself, is deleted.
+
+        Args:
+            name (string): Name of group.
+            user_name (optional[string]): Defaults to None.  User to remove from group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (bool): True on success.
+        """
+        req = self.get_group_request(
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, name, None)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 204:
+            return True
+
+        print('Delete failed for group {}, got HTTP response: ({}) - {}'.format(
+            name, resp.status_code, resp.text))
+        return False
+
+    def group_add_user(self, grp_name, user, url_prefix, auth, session, send_opts):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (bool): True on success.
+        """
+        req = self.get_group_request(
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 201:
+            return True
+
+        print('Failed adding user {} to group {}, got HTTP response: ({}) - {}'.format(
+            user, grp_name, resp.status_code, resp.text))
+        return False
+
     def list(self, resource, url_prefix, auth, session, send_opts):
         """List all resources of the same type as the given resource.
 
