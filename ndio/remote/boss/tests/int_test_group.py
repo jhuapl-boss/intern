@@ -59,8 +59,6 @@ class ProjectGroupTest(unittest.TestCase):
         self.existing_grp_name = 'int_test_exists'
         self.user_name = 'bossadmin'
 
-        self.rmt.group_create(self.existing_grp_name)
-
     def cleanup_db(self):
         """Clean up the data model objects used by this test case.
 
@@ -71,6 +69,7 @@ class ProjectGroupTest(unittest.TestCase):
 
     def setUp(self):
         self.initialize()
+        self.rmt.group_create(self.existing_grp_name)
 
     def tearDown(self):
         self.cleanup_db()
