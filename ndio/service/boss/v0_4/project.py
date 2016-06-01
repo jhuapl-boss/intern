@@ -98,7 +98,7 @@ class ProjectService_0_4(Base):
             (bool): True on success.
         """
         req = self.get_group_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, name, None)
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, name, user_name)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)

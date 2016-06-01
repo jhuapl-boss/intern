@@ -14,7 +14,7 @@
 
 from ndio.service.boss.v0_4.project import ProjectService_0_4
 from ndio.ndresource.boss.resource import *
-from requests import HTTPError, PreparedRequest, Response, Session
+from requests import PreparedRequest, Response, Session
 import unittest
 from unittest.mock import patch
 
@@ -116,4 +116,98 @@ class TestGroup(unittest.TestCase):
 
         self.assertFalse(self.prj.group_delete(
             'mygroup', user, url_prefix, auth, mock_session, send_opts))
+
+    @patch('requests.Session', autospec=True)
+    def test_group_add_user_success(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 201
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        self.assertTrue(self.prj.group_add_user(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+
+    @patch('requests.Session', autospec=True)
+    def test_group_add_user_failure(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 403
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        self.assertFalse(self.prj.group_add_user(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_group_get_user_success(self, mock_session, mock_resp):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = True
+        mock_session.send.return_value = mock_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        self.assertTrue(self.prj.group_get(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+
+    @patch('requests.Session', autospec=True)
+    def test_group_get_user_failure(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 403
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        self.assertFalse(self.prj.group_get(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+
+    @patch('requests.Session', autospec=True)
+    def test_group_delete_user_success(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 204
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        self.assertTrue(self.prj.group_delete(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+
+    @patch('requests.Session', autospec=True)
+    def test_group_delete_user_failure(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 403
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        self.assertFalse(self.prj.group_delete(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+
+if __name__ == '__main__':
+    unittest.main()
 
