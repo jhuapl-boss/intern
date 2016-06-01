@@ -31,6 +31,10 @@ class Service(NdService):
         self._session = Session()
         self._session_send_opts = {}
 
+    def __del__(self):
+        if self._session is not None:
+            self._session.close()
+
     @property
     def session(self):
         return self._session
