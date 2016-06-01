@@ -134,6 +134,9 @@ class BaseVersion(metaclass=ABCMeta):
 
         Returns:
             (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
         """
         url = self.build_url(resource, url_prefix, proj_list_req)
         headers = self.get_headers(content, token)
@@ -161,6 +164,9 @@ class BaseVersion(metaclass=ABCMeta):
 
         Returns:
             (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
         """
         url = self.build_metadata_url(resource, url_prefix, key, value)
         headers = self.get_headers(content, token)
@@ -184,6 +190,12 @@ class BaseVersion(metaclass=ABCMeta):
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
             time_range (string): None or time range such as 30:40 which means t>=30 and t<40.
             numpyVolume (numpy array): The data volume encoded in a numpy array.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
         """
         url = self.build_cutout_url(
             resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
@@ -203,6 +215,12 @@ class BaseVersion(metaclass=ABCMeta):
             token (string): Django Rest Framework token for auth.
             name (string): Name of group.
             user_name (optional[string]): Defaults to None.  If given, will generate a group membership request.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
         """
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
@@ -214,3 +232,35 @@ class BaseVersion(metaclass=ABCMeta):
                    user_name + '/')
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers)
+
+    def get_permission_request(
+        self, method, content, url_prefix, token, name, resource, json=None):
+        """Generate a request for manipulating permissions of a data model object.
+
+        Manipulate what members of the named group can do with the given data
+        model object.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
+            json (dict): POST body data.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        suffix = resource.get_route()
+        url = (url_prefix + '/' + self.version + '/permission/' + name + '/' +
+               suffix)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers, json = json)

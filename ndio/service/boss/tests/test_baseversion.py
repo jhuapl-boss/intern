@@ -234,3 +234,20 @@ class BaseVersionTest(unittest.TestCase):
             'GET', 'application/json', url_prefix, token, grp_name, user_name)
 
         self.assertEqual(expected, actual.url)
+
+    def test_get_permission_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        grp_name = 'fire'
+        resrc_path = self.chanResource.get_route()
+        json = { 'permissions': ['update', 'add', 'delete'] }
+
+        expected = '{}/{}/permission/{}/{}'.format(
+            url_prefix, self.test_volume.version, grp_name, resrc_path)
+
+        actual = self.test_volume.get_permission_request(
+            'GET', 'application/json', url_prefix, token, grp_name, 
+            self.chanResource, json)
+
+        self.assertEqual(expected, actual.url)
+        self.assertEqual(json, actual.json)
