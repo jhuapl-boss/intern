@@ -14,6 +14,7 @@
 
 from ndio.service.boss.service import Service
 from ndio.service.boss.v0_4.metadata import MetadataService_0_4
+from ndio.service.boss.v0_5.metadata import MetadataService_0_5
 
 class MetadataService(Service):
     """MetadataService routes calls to the appropriate API version.
@@ -28,7 +29,8 @@ class MetadataService(Service):
         super().__init__()
         self.base_url = base_url
         self._versions = {
-            'v0.4': MetadataService_0_4()
+            'v0.4': MetadataService_0_4(),
+            'v0.5': MetadataService_0_5()
         }
 
     def list(self, resource):

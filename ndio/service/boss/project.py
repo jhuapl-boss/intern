@@ -14,8 +14,9 @@
 
 from ndio.service.boss.service import Service
 from ndio.service.boss.v0_4.project import ProjectService_0_4
+from ndio.service.boss.v0_5.project import ProjectService_0_5
 
-LATEST_VERSION='v0.4'
+LATEST_VERSION='v0.5'
 
 class ProjectService(Service):
     """ProjectService routes calls to the appropriate API version.
@@ -30,7 +31,8 @@ class ProjectService(Service):
         super().__init__()
         self.base_url = base_url
         self._versions = {
-            'v0.4': ProjectService_0_4()
+            'v0.4': ProjectService_0_4(),
+            'v0.5': ProjectService_0_5()
         }
 
     def group_get(self, name, user_name=None, version=LATEST_VERSION):
@@ -44,6 +46,9 @@ class ProjectService(Service):
         Returns:
             (mixed): Dictionary if getting group information or bool if a user name is supplied.
         """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+
         ps = self.get_api_impl(version)
         return ps.group_get(
             name, user_name, self.url_prefix, self.auth, self.session, 
@@ -59,6 +64,9 @@ class ProjectService(Service):
         Returns:
             (bool): True on success.
         """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+
         ps = self.get_api_impl(version)
         return ps.group_create(
             name, self.url_prefix, self.auth, self.session, 
@@ -78,6 +86,9 @@ class ProjectService(Service):
         Returns:
             (bool): True on success.
         """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+
         ps = self.get_api_impl(version)
         return ps.group_delete(
             name, user_name, self.url_prefix, self.auth, self.session, 
@@ -96,6 +107,9 @@ class ProjectService(Service):
         Returns:
             (bool): True on success.
         """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+
         ps = self.get_api_impl(version)
         return ps.group_add_user(
             name, user, self.url_prefix, self.auth, self.session, 
@@ -108,6 +122,9 @@ class ProjectService(Service):
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
         """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+
         return ps.permissions_get(
             grp_name, resource,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
@@ -120,6 +137,9 @@ class ProjectService(Service):
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to add to the given resource.
         """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+
         ps = self.get_api_impl(version)
         return ps.permissions_add(
             grp_name, resource, permissions,
@@ -133,6 +153,9 @@ class ProjectService(Service):
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to remove from the given resource.
         """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+
         ps = self.get_api_impl(version)
         return ps.permissions_delete(
             grp_name, resource, permissions,

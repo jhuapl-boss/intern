@@ -14,6 +14,7 @@
 
 from ndio.service.boss.service import Service
 from ndio.service.boss.v0_4.volume import VolumeService_0_4
+from ndio.service.boss.v0_5.volume import VolumeService_0_5
 
 class VolumeService(Service):
     """VolumeService routes calls to the appropriate API version.
@@ -27,7 +28,8 @@ class VolumeService(Service):
         super().__init__()
         self.base_url = base_url
         self._versions = {
-            'v0.4': VolumeService_0_4()
+            'v0.4': VolumeService_0_4(),
+            'v0.5': VolumeService_0_5()
         }
 
     def cutout_create(

@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss.v0_4.metadata import MetadataService_0_4
+from ndio.service.boss.v0_5.metadata import MetadataService_0_5
 from ndio.ndresource.boss.resource import ChannelResource
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
 from unittest.mock import patch
 
-class TestMetadata_v0_4(unittest.TestCase):
+class TestMetadata_v0_5(unittest.TestCase):
     def setUp(self):
-        self.meta = MetadataService_0_4()
+        self.meta = MetadataService_0_5()
         self.chan = ChannelResource('chan', 'foo', 'bar', datatype='uint16')
 
     @patch('requests.Response', autospec=True)

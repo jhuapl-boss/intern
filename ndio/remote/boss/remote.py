@@ -28,14 +28,24 @@ CONFIG_PROTOCOL = 'protocol'
 CONFIG_HOST = 'host'
 CONFIG_TOKEN = 'token'
 
+LATEST_VERSION='v0.5'
+
 
 class Remote(NdRemote):
     """Remote provides an SDK to the Boss API.
+
+    The methods for working with groups, users, and permissions use the 
+    group_perm_api_version property to determine which version of the Boss
+    API to use.  If not set, it defaults to using the latest version.
+
+    Note that ndio support for groups, users, and permissions was first added
+    in v0.5.
 
     Attributes:
         _token_project (string): Django Rest Framework token for auth to the project service.
         _token_metadata (string): Django Rest Framework token for auth to the metadata service.
         _token_volume (string): Django Rest Framework token for auth to the volume service.
+        _group_perm_api_version (string): Boss API version to use when calling group_*() and permissions_*() methods.
     """
 
     def __init__(self, cfg_file=CONFIG_FILE):
@@ -48,6 +58,7 @@ class Remote(NdRemote):
         self._token_project = None
         self._token_metadata = None
         self._token_volume = None
+        self._group_perm_api_version = LATEST_VERSION
 
         try:
             self._config = self.load_config_file(os.path.expanduser(cfg_file))
@@ -145,6 +156,14 @@ class Remote(NdRemote):
         self._token_volume = value
         self.volume_service.set_auth(self._token_volume)
 
+    @property
+    def group_perm_api_version(self):
+        return self._group_perm_api_version
+
+    @group_perm_api_version.setter
+    def group_perm_api_version(self, value):
+        self._group_perm_api_version = value
+
     def group_get(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
@@ -157,7 +176,8 @@ class Remote(NdRemote):
             (mixed): Dictionary if getting group information or bool if a user name is supplied.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_get(name, user_name)
+        return self.project_service.group_get(
+            name, user_name, self.group_perm_api_version)
 
     def group_create(self, name):
         """Create a new group.
@@ -169,7 +189,8 @@ class Remote(NdRemote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_create(name)
+        return self.project_service.group_create(
+            name, self.group_perm_api_version)
 
     def group_delete(self, name, user_name=None):
         """Delete given group or delete user from given group.
@@ -185,7 +206,8 @@ class Remote(NdRemote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_delete(name, user_name)
+        return self.project_service.group_delete(
+            name, user_name, self.group_perm_api_version)
 
     def group_add_user(self, grp_name, user):
         """Add the given user to the named group.
@@ -200,21 +222,23 @@ class Remote(NdRemote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_add_user(grp_name, user)
+        return self.project_service.group_add_user(
+            grp_name, user, self.group_perm_api_version)
 
     def permissions_get(self, grp_name, resource):
         self.project_service.set_auth(self._token_project)
-        return self.project_service.permissions_get(grp_name, resource)
+        return self.project_service.permissions_get(
+            grp_name, resource, self.group_perm_api_version)
 
     def permissions_add(self, grp_name, resource, permissions):
         self.project_service.set_auth(self._token_project)
         return self.project_service.permissions_add(
-            grp_name, resource, permissions)
+            grp_name, resource, permissions, self.group_perm_api_version)
 
     def permissions_delete(self, grp_name, resource, permissions):
         self.project_service.set_auth(self._token_project)
         return self.project_service.permissions_delete(
-            grp_name, resource, permissions)
+            grp_name, resource, permissions, self.group_perm_api_version)
 
     def project_list(self, resource):
         """List all instances of the given resource type.

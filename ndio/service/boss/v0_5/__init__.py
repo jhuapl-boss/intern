@@ -1,4 +1,4 @@
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""The Boss specific resource objects that are passed to ndio.service.Service methods.
+"""The Boss specific services using v0.5 of the API.
 
 Author:
     Tim Gion
 """
 
-BOSS_DEFAULT_VERSION='v0.5'
+BOSS_VERSION = 'v0.5'

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss.v0_4.volume import VolumeService_0_4
+from ndio.service.boss.v0_5.volume import VolumeService_0_5
 from ndio.ndresource.boss.resource import ChannelResource
 import blosc
 import numpy
@@ -20,9 +20,9 @@ from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
 from unittest.mock import patch
 
-class TestVolume_v0_4(unittest.TestCase):
+class TestVolume_v0_5(unittest.TestCase):
     def setUp(self):
-        self.vol = VolumeService_0_4()
+        self.vol = VolumeService_0_5()
         self.chan = ChannelResource('chan', 'foo', 'bar', datatype='uint16')
 
     @patch('requests.Session', autospec=True)

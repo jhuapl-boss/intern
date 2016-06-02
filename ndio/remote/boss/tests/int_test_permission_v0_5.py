@@ -22,9 +22,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
 
-API_VER = 'v0.4'
+API_VER = 'v0.5'
 
-class ProjectPermissionTest(unittest.TestCase):
+class ProjectPermissionTest_v0_5(unittest.TestCase):
     """Integration tests of the Boss permission API.
 
     Note that that there will be many "Delete failed" messages because DELETE

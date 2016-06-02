@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss.v0_4.project import ProjectService_0_4
+from ndio.service.boss.v0_5.project import ProjectService_0_5
 from ndio.ndresource.boss.resource import *
 from requests import PreparedRequest, Response, Session
 import unittest
@@ -20,7 +20,7 @@ from unittest.mock import patch
 
 class TestGroup(unittest.TestCase):
     def setUp(self):
-        self.prj = ProjectService_0_4()
+        self.prj = ProjectService_0_5()
 
     @patch('requests.Session', autospec=True)
     def test_group_create_success(self, mock_session):

@@ -22,9 +22,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
 
-API_VER = 'v0.4'
+API_VER = 'v0.5'
 
-class ProjectGroupTest(unittest.TestCase):
+class ProjectGroupTest_v0_5(unittest.TestCase):
     """Integration tests of the Boss group API.
 
     Note that that there will be many "Delete failed" messages because DELETE
@@ -70,6 +70,7 @@ class ProjectGroupTest(unittest.TestCase):
     def setUp(self):
         self.initialize()
         self.rmt.group_create(self.existing_grp_name)
+        self.rmt.group_perm_api_version = API_VER
 
     def tearDown(self):
         self.cleanup_db()

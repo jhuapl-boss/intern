@@ -24,7 +24,7 @@ import unittest
 
 API_VER = 'v0.4'
 
-class ProjectServiceTest(unittest.TestCase):
+class ProjectServiceTest_v0_4(unittest.TestCase):
     """Integration tests of the Boss resource API.
 
     Note that that there will be many "Delete failed" messages because DELETE
