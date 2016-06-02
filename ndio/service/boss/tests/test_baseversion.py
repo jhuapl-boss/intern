@@ -240,14 +240,14 @@ class BaseVersionTest(unittest.TestCase):
         token = 'foobar'
         grp_name = 'fire'
         resrc_path = self.chanResource.get_route()
-        json = { 'permissions': ['update', 'add', 'delete'] }
+        data = { 'permissions': ['update', 'add', 'delete'] }
 
         expected = '{}/{}/permission/{}/{}'.format(
             url_prefix, self.test_volume.version, grp_name, resrc_path)
 
         actual = self.test_volume.get_permission_request(
             'GET', 'application/json', url_prefix, token, grp_name, 
-            self.chanResource, json)
+            self.chanResource, data)
 
         self.assertEqual(expected, actual.url)
-        self.assertEqual(json, actual.json)
+        self.assertEqual(data, actual.data)

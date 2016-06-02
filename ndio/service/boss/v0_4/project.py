@@ -58,7 +58,6 @@ class ProjectService_0_4(Base):
 
         Args:
             name (string): Name of the group to create.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -88,7 +87,6 @@ class ProjectService_0_4(Base):
         Args:
             name (string): Name of group.
             user_name (optional[string]): Defaults to None.  User to remove from group.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -117,7 +115,6 @@ class ProjectService_0_4(Base):
         Args:
             name (string): Name of group.
             user (string): User to add to group.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -137,6 +134,70 @@ class ProjectService_0_4(Base):
         print('Failed adding user {} to group {}, got HTTP response: ({}) - {}'.format(
             user, grp_name, resp.status_code, resp.text))
         return False
+
+    def permissions_get(
+        self, grp_name, resource, url_prefix, auth, session, send_opts):
+        """
+        Args:
+            grp_name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+        """
+        req = self.get_permission_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            grp_name, resource)
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 201:
+            return resp.json()
+
+        print('Failed getting permissions for group {}, got HTTP response: ({}) - {}'.format(
+            grp_name, resp.status_code, resp.text))
+        return {}
+
+
+    def permissions_add(
+        self, grp_name, resource, permissions, url_prefix, auth, session, 
+        send_opts):
+        """
+        Args:
+            grp_name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            permissions (list): List of permissions to add to the given resource.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+        """
+        json = { 'permissions': permissions }
+        req = self.get_permission_request(
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            grp_name, resource, json)
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 201:
+            return True
+
+        print('Failed adding permissions to group {}, got HTTP response: ({}) - {}'.format(
+            grp_name, resp.status_code, resp.text))
+        return False
+
+    def permissions_delete(
+        self, grp_name, resource, permissions, url_prefix, auth, session, 
+        send_opts):
+        """
+        Args:
+            grp_name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            permissions (list): List of permissions to remove from the given resource.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+        """
 
     def list(self, resource, url_prefix, auth, session, send_opts):
         """List all resources of the same type as the given resource.

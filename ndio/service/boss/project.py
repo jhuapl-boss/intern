@@ -101,6 +101,43 @@ class ProjectService(Service):
             name, user, self.url_prefix, self.auth, self.session, 
             self.session_send_opts)
 
+    def permissions_get(self, grp_name, resource, version=LATEST_VERSION):
+        ps = self.get_api_impl(version)
+        """
+        Args:
+            grp_name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+        """
+        return ps.permissions_get(
+            grp_name, resource,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def permissions_add(
+        self, grp_name, resource, permissions, version=LATEST_VERSION):
+        """
+        Args:
+            grp_name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            permissions (list): List of permissions to add to the given resource.
+        """
+        ps = self.get_api_impl(version)
+        return ps.permissions_add(
+            grp_name, resource, permissions,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def permissions_delete(
+        self, grp_name, resource, permissions, version=LATEST_VERSION):
+        """
+        Args:
+            grp_name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            permissions (list): List of permissions to remove from the given resource.
+        """
+        ps = self.get_api_impl(version)
+        return ps.permissions_delete(
+            grp_name, resource, permissions,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
     def list(self, resource):
         """List all resources of the same type as the given resource.
 

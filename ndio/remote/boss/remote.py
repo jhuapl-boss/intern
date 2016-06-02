@@ -202,6 +202,20 @@ class Remote(NdRemote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.group_add_user(grp_name, user)
 
+    def permissions_get(self, grp_name, resource):
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.permissions_get(grp_name, resource)
+
+    def permissions_add(self, grp_name, resource, permissions):
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.permissions_add(
+            grp_name, resource, permissions)
+
+    def permissions_delete(self, grp_name, resource, permissions):
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.permissions_delete(
+            grp_name, resource, permissions)
+
     def project_list(self, resource):
         """List all instances of the given resource type.
 

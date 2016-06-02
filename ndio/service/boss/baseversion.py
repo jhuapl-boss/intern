@@ -234,7 +234,7 @@ class BaseVersion(metaclass=ABCMeta):
         return Request(method, url, headers = headers)
 
     def get_permission_request(
-        self, method, content, url_prefix, token, name, resource, json=None):
+        self, method, content, url_prefix, token, name, resource, data=None):
         """Generate a request for manipulating permissions of a data model object.
 
         Manipulate what members of the named group can do with the given data
@@ -247,7 +247,7 @@ class BaseVersion(metaclass=ABCMeta):
             token (string): Django Rest Framework token for auth.
             name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
-            json (dict): POST body data.  Defaults to None.
+            data (dict): POST body data.  Defaults to None.
 
         Returns:
             (requests.Request): A newly constructed Request object.
@@ -263,4 +263,4 @@ class BaseVersion(metaclass=ABCMeta):
         url = (url_prefix + '/' + self.version + '/permission/' + name + '/' +
                suffix)
         headers = self.get_headers(content, token)
-        return Request(method, url, headers = headers, json = json)
+        return Request(method, url, headers = headers, data = data)
