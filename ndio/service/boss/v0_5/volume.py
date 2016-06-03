@@ -97,4 +97,6 @@ class VolumeService_0_5(Base):
         if resp.status_code == 200:
             return blosc.unpack_array(resp.content)
 
+        print('Get cutout failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
         resp.raise_for_status()

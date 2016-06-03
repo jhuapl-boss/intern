@@ -56,7 +56,7 @@ class TestGroup(unittest.TestCase):
         grp_name = 'mygroup'
         mock_session.prepare_request.return_value = PreparedRequest()
         mock_resp.status_code = 200
-        mock_resp.json.return_value = {'name': grp_name }
+        mock_resp.json.return_value = True
         mock_session.send.return_value = mock_resp
 
         user = None
@@ -67,14 +67,14 @@ class TestGroup(unittest.TestCase):
         actual = self.prj.group_get(
             grp_name, user, url_prefix, auth, mock_session, send_opts)
 
-        self.assertEqual(grp_name, actual['name'])
+        self.assertTrue(actual)
 
     @patch('requests.Session', autospec=True)
     def test_group_get_failure(self, mock_session):
         grp_name = 'mygroup'
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
-        fake_resp.status_code = 403
+        fake_resp.status_code = 404
         mock_session.send.return_value = fake_resp
 
         user = None
@@ -85,7 +85,7 @@ class TestGroup(unittest.TestCase):
         actual = self.prj.group_get(
             grp_name, user, url_prefix, auth, mock_session, send_opts)
 
-        self.assertEqual({}, actual)
+        self.assertFalse(actual)
 
     @patch('requests.Session', autospec=True)
     def test_group_delete_success(self, mock_session):
@@ -167,7 +167,7 @@ class TestGroup(unittest.TestCase):
     def test_group_get_user_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
-        fake_resp.status_code = 403
+        fake_resp.status_code = 404
         mock_session.send.return_value = fake_resp
 
         user = 'you'

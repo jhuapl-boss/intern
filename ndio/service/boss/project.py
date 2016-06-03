@@ -121,6 +121,9 @@ class ProjectService(Service):
         Args:
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+
+        Returns:
+            (list): List of permissions.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
@@ -136,6 +139,9 @@ class ProjectService(Service):
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to add to the given resource.
+
+        Returns:
+            (bool): True on success.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
@@ -152,6 +158,9 @@ class ProjectService(Service):
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to remove from the given resource.
+
+        Returns:
+            (bool): True on success.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')

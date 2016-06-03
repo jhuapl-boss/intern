@@ -80,11 +80,11 @@ class ProjectGroupTest_v0_5(unittest.TestCase):
 
     def test_get_group(self):
         actual = self.rmt.group_get(self.existing_grp_name)
-        self.assertEqual(self.existing_grp_name, actual['name'])
+        self.assertTrue(actual)
 
     def test_get_group_doesnt_exist(self):
         actual = self.rmt.group_get('foo')
-        self.assertEqual({}, actual)
+        self.assertFalse(actual)
 
     def test_delete_group(self):
         self.assertTrue(self.rmt.group_delete(self.existing_grp_name))

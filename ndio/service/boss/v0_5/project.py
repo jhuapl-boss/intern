@@ -14,6 +14,7 @@
 
 from .base import Base
 from ndio.ndresource.boss.resource import *
+from requests import HTTPError
 import copy
 
 class ProjectService_0_5(Base):
@@ -49,9 +50,14 @@ class ProjectService_0_5(Base):
         if resp.status_code == 200:
             return resp.json()
 
-        print('Get failed for group {}, got HTTP response: ({}) - {}'.format(
+        msg = ('Get failed for group {}, got HTTP response: ({}) - {}'.format(
             name, resp.status_code, resp.text))
-        return {}
+
+        if resp.status_code == 404:
+            print(msg)
+            return False
+
+        raise HTTPError(msg, request = req, response = resp)
 
     def group_create(self, name, url_prefix, auth, session, send_opts):
         """Create a new group.
@@ -74,7 +80,7 @@ class ProjectService_0_5(Base):
         if resp.status_code == 201:
             return True
 
-        print('Create failed for group {}, got HTTP response: ({}) - {}'.format(
+        print ('Create failed for group {}, got HTTP response: ({}) - {}'.format(
             name, resp.status_code, resp.text))
         return False
 
@@ -103,7 +109,7 @@ class ProjectService_0_5(Base):
         if resp.status_code == 204:
             return True
 
-        print('Delete failed for group {}, got HTTP response: ({}) - {}'.format(
+        print ('Delete failed for group {}, got HTTP response: ({}) - {}'.format(
             name, resp.status_code, resp.text))
         return False
 
@@ -131,7 +137,7 @@ class ProjectService_0_5(Base):
         if resp.status_code == 201:
             return True
 
-        print('Failed adding user {} to group {}, got HTTP response: ({}) - {}'.format(
+        print ('Failed adding user {} to group {}, got HTTP response: ({}) - {}'.format(
             user, grp_name, resp.status_code, resp.text))
         return False
 
@@ -145,6 +151,9 @@ class ProjectService_0_5(Base):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list): List of permissions.
         """
         req = self.get_permission_request(
             'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
@@ -152,11 +161,12 @@ class ProjectService_0_5(Base):
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 201:
-            return resp.json()
+            json = resp.json()
+            return json.get('permissions', [])
 
-        print('Failed getting permissions for group {}, got HTTP response: ({}) - {}'.format(
+        err = ('Failed getting permissions for group {}, got HTTP response: ({}) - {}'.format(
             grp_name, resp.status_code, resp.text))
-        return {}
+        raise HTTPError(err, request = req, response = resp)
 
 
     def permissions_add(
@@ -171,6 +181,9 @@ class ProjectService_0_5(Base):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (bool): True on success.
         """
         json = { 'permissions': permissions }
         req = self.get_permission_request(
@@ -181,7 +194,7 @@ class ProjectService_0_5(Base):
         if resp.status_code == 201:
             return True
 
-        print('Failed adding permissions to group {}, got HTTP response: ({}) - {}'.format(
+        print ('Failed adding permissions to group {}, got HTTP response: ({}) - {}'.format(
             grp_name, resp.status_code, resp.text))
         return False
 
@@ -198,6 +211,18 @@ class ProjectService_0_5(Base):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
         """
+        json = { 'permissions': permissions }
+        req = self.get_permission_request(
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            grp_name, resource, json)
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            return True
+
+        print ('Failed deleting permissions to group {}, got HTTP response: ({}) - {}'.format(
+            grp_name, resp.status_code, resp.text))
+        return False
 
     def list(self, resource, url_prefix, auth, session, send_opts):
         """List all resources of the same type as the given resource.
@@ -226,9 +251,9 @@ class ProjectService_0_5(Base):
         if resp.status_code == 200:
             return resp.json()
 
-        print('List failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('List failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        resp.raise_for_status()
+        raise HTTPError(err, request = req, response = resp)
 
     def create(self, resource, url_prefix, auth, session, send_opts):
         """Create the given resource.

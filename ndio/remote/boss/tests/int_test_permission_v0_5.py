@@ -106,8 +106,8 @@ class ProjectPermissionTest_v0_5(unittest.TestCase):
         self.assertIsNotNone(ch)
 
         self.lyr.channels = [ch.id]
-        #layer = self.rmt.project_create(self.lyr)
-        #self.assertIsNotNone(layer)
+        layer = self.rmt.project_create(self.lyr)
+        self.assertIsNotNone(layer)
 
         self.assertTrue(self.rmt.group_create(self.grp_name))
 
@@ -116,35 +116,49 @@ class ProjectPermissionTest_v0_5(unittest.TestCase):
 
     def test_add_permissions_success(self):
         self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.chan, 'update,read,add_volumetric_data'))
-            #self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data']))
+            self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data']))
 
-    def test_add_permissions_invalid(self):
+    def test_add_permissions_invalid_collection_perm(self):
         self.assertFalse(self.rmt.permissions_add(
-            self.grp_name, self.coll, 'update,read,add_volumetric_data'))
-            #self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data']))
+            self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data']))
+
+    def test_add_permissions_invalid_experiment_perm(self):
+        self.assertFalse(self.rmt.permissions_add(
+            self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read']))
+
+    def test_add_volumetric_permission_success(self):
+        self.assertTrue(self.rmt.permissions_add(
+            self.grp_name, self.lyr, ['read', 'read_volumetric_data']))
 
     def test_add_permissions_append_success(self):
         self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.chan, 'update,add_volumetric_data'))
-            #self.grp_name, self.chan, ['update', 'add_volumetric_data']))
+            self.grp_name, self.chan, ['update', 'add_volumetric_data']))
 
         self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.chan, 'read'))
-            #self.grp_name, self.chan, ['read']))
+            self.grp_name, self.chan, ['read']))
 
         expected = ['update', 'add_volumetric_data', 'read']
         actual = self.rmt.permissions_get(self.grp_name, self.chan)
-        self.assertEqual(expected, actual['permissions'])
+        self.assertCountEqual(expected, actual)
 
     def test_permissions_get_success(self):
         self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.chan, 'update,read'))
-            #self.grp_name, self.chan, ['update', 'read']))
+            self.grp_name, self.chan, ['update', 'read']))
 
         expected = ['update', 'read']
         actual = self.rmt.permissions_get(self.grp_name, self.chan)
-        self.assertEqual(expected, actual['permissions'])
+        self.assertCountEqual(expected, actual)
+
+    def test_permissions_delete_success(self):
+        self.assertTrue(self.rmt.permissions_add(
+            self.grp_name, self.chan, ['update', 'add_volumetric_data']))
+
+        self.assertTrue(self.rmt.permissions_delete(
+            self.grp_name, self.chan, ['add_volumetric_data']))
+
+        expected = ['update']
+        actual = self.rmt.permissions_get(self.grp_name, self.chan)
+        self.assertCountEqual(expected, actual)
 
 
 if __name__ == '__main__':
