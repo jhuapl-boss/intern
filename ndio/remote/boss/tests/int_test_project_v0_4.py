@@ -14,10 +14,9 @@
  
 from ndio.remote.boss.remote import *
 from ndio.ndresource.boss.resource import *
-from requests import Session
 
 import requests
-from requests import Session
+from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
@@ -26,9 +25,6 @@ API_VER = 'v0.4'
 
 class ProjectServiceTest_v0_4(unittest.TestCase):
     """Integration tests of the Boss resource API.
-
-    Note that that there will be many "Delete failed" messages because DELETE
-    requests are made on all potentially created resources during test teardown. 
     """
 
     @classmethod
@@ -95,16 +91,46 @@ class ProjectServiceTest_v0_4(unittest.TestCase):
 
         This method is used by both tearDown() and setUpClass().
         """
-        self.rmt.project_delete(self.lyr_upd)
-        self.rmt.project_delete(self.lyr)
-        self.rmt.project_delete(self.chan_upd)
-        self.rmt.project_delete(self.chan)
-        self.rmt.project_delete(self.exp_upd)
-        self.rmt.project_delete(self.exp)
-        self.rmt.project_delete(self.coord_upd)
-        self.rmt.project_delete(self.coord)
-        self.rmt.project_delete(self.coll_upd)
-        self.rmt.project_delete(self.coll)
+        try:
+            self.rmt.project_delete(self.lyr_upd)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.lyr)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.chan_upd)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.chan)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.exp_upd)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.exp)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.coord_upd)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.coord)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.coll_upd)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.coll)
+        except HTTPError:
+            pass
 
     def setUp(self):
         self.initialize()
@@ -494,11 +520,11 @@ class ProjectServiceTest_v0_4(unittest.TestCase):
         layer = self.rmt.project_create(self.lyr)
         self.assertIsNotNone(layer)
         
-        self.assertTrue(self.rmt.project_delete(self.lyr))
-        self.assertTrue(self.rmt.project_delete(self.chan))
-        self.assertTrue(self.rmt.project_delete(self.exp))
-        self.assertTrue(self.rmt.project_delete(self.coord))
-        self.assertTrue(self.rmt.project_delete(self.coll))
+        self.rmt.project_delete(self.lyr)
+        self.rmt.project_delete(self.chan)
+        self.rmt.project_delete(self.exp)
+        self.rmt.project_delete(self.coord)
+        self.rmt.project_delete(self.coll)
 
 if __name__ == '__main__':
     unittest.main()

@@ -45,6 +45,9 @@ class ProjectService(Service):
 
         Returns:
             (mixed): Dictionary if getting group information or bool if a user name is supplied.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
@@ -61,14 +64,14 @@ class ProjectService(Service):
             name (string): Name of the group to create.
             version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
 
         ps = self.get_api_impl(version)
-        return ps.group_create(
+        ps.group_create(
             name, self.url_prefix, self.auth, self.session, 
             self.session_send_opts)
 
@@ -83,14 +86,14 @@ class ProjectService(Service):
             user_name (optional[string]): Defaults to None.  User to remove from group.
             version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
 
         ps = self.get_api_impl(version)
-        return ps.group_delete(
+        ps.group_delete(
             name, user_name, self.url_prefix, self.auth, self.session, 
             self.session_send_opts)
 
@@ -104,8 +107,8 @@ class ProjectService(Service):
             user_name (string): User to add to group.
             version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
@@ -124,6 +127,9 @@ class ProjectService(Service):
 
         Returns:
             (list): List of permissions.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
@@ -140,14 +146,14 @@ class ProjectService(Service):
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to add to the given resource.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
 
         ps = self.get_api_impl(version)
-        return ps.permissions_add(
+        ps.permissions_add(
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
@@ -159,14 +165,14 @@ class ProjectService(Service):
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to remove from the given resource.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
 
         ps = self.get_api_impl(version)
-        return ps.permissions_delete(
+        ps.permissions_delete(
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
@@ -235,11 +241,8 @@ class ProjectService(Service):
 
         Args:
             resource (ndio.resource.boss.Resource)
-
-        Returns:
-            (bool): True on success.
         """
         ps = self.get_api_impl(resource.version)
-        return ps.delete(
+        ps.delete(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)

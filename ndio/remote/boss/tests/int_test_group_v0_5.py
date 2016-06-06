@@ -14,10 +14,9 @@
  
 from ndio.remote.boss.remote import *
 from ndio.ndresource.boss.resource import *
-from requests import Session
 
 import requests
-from requests import Session
+from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
@@ -26,9 +25,6 @@ API_VER = 'v0.5'
 
 class ProjectGroupTest_v0_5(unittest.TestCase):
     """Integration tests of the Boss group API.
-
-    Note that that there will be many "Delete failed" messages because DELETE
-    requests are made on all potentially created groups/users during test teardown. 
     """
 
     @classmethod
@@ -62,10 +58,18 @@ class ProjectGroupTest_v0_5(unittest.TestCase):
     def cleanup_db(self):
         """Clean up the data model objects used by this test case.
 
-        This method is used by both tearDown() and setUpClass().
+        This method is used by both tearDown() and setUpClass().  Don't do
+        anything if an exception occurs during group_delete().  The group
+        may not have existed for a particular test.
         """
-        self.rmt.group_delete(self.create_grp_name)
-        self.rmt.group_delete(self.existing_grp_name)
+        try:
+            self.rmt.group_delete(self.create_grp_name)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.group_delete(self.existing_grp_name)
+        except HTTPError:
+            pass
 
     def setUp(self):
         self.initialize()
@@ -76,7 +80,7 @@ class ProjectGroupTest_v0_5(unittest.TestCase):
         self.cleanup_db()
 
     def test_create_group(self):
-        self.assertTrue(self.rmt.group_create(self.create_grp_name))
+        self.rmt.group_create(self.create_grp_name)
 
     def test_get_group(self):
         actual = self.rmt.group_get(self.existing_grp_name)
@@ -87,26 +91,36 @@ class ProjectGroupTest_v0_5(unittest.TestCase):
         self.assertFalse(actual)
 
     def test_delete_group(self):
-        self.assertTrue(self.rmt.group_delete(self.existing_grp_name))
+        self.rmt.group_delete(self.existing_grp_name)
 
     def test_delete_group_doesnt_exist(self):
-        self.assertFalse(self.rmt.group_delete('foo'))
+        with self.assertRaises(HTTPError):
+            self.rmt.group_delete('foo')
 
     def test_group_add_user(self):
-        self.assertTrue(self.rmt.group_add_user(self.existing_grp_name, self.user_name))
+        self.rmt.group_add_user(self.existing_grp_name, self.user_name)
+
+    def test_group_add_user_group_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.group_add_user('foo', self.user_name)
 
     def test_group_get_user(self):
-        self.assertTrue(self.rmt.group_add_user(self.existing_grp_name, self.user_name))
+        self.rmt.group_add_user(self.existing_grp_name, self.user_name)
         self.assertTrue(self.rmt.group_get(self.existing_grp_name, self.user_name))
 
+    def test_group_get_user_not_a_member(self):
+        self.assertFalse(self.rmt.group_get(self.existing_grp_name, self.user_name))
+
     def test_group_get_user_doesnt_exist(self):
-        self.assertFalse(self.rmt.group_get(self.existing_grp_name, 'foo'))
+        with self.assertRaises(HTTPError):
+            self.rmt.group_get(self.existing_grp_name, 'foo')
 
     def test_group_delete_user(self):
-        self.assertTrue(self.rmt.group_delete(self.existing_grp_name, self.user_name))
+        self.rmt.group_delete(self.existing_grp_name, self.user_name)
 
     def test_group_delete_user_doesnt_exist(self):
-        self.assertFalse(self.rmt.group_delete(self.existing_grp_name, 'foo'))
+        with self.assertRaises(HTTPError):
+            self.rmt.group_delete(self.existing_grp_name, 'foo')
 
 
 if __name__ == '__main__':

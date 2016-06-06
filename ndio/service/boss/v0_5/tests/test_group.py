@@ -14,7 +14,7 @@
 
 from ndio.service.boss.v0_5.project import ProjectService_0_5
 from ndio.ndresource.boss.resource import *
-from requests import PreparedRequest, Response, Session
+from requests import PreparedRequest, Response, Session, HTTPError
 import unittest
 from unittest.mock import patch
 
@@ -33,8 +33,8 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertTrue(self.prj.group_create(
-            'mygroup', url_prefix, auth, mock_session, send_opts))
+        self.prj.group_create(
+            'mygroup', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_group_create_failure(self, mock_session):
@@ -47,8 +47,9 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertFalse(self.prj.group_create(
-            'mygroup', url_prefix, auth, mock_session, send_opts))
+        with self.assertRaises(HTTPError):
+            self.prj.group_create(
+            'mygroup', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
@@ -82,10 +83,9 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.group_get(
-            grp_name, user, url_prefix, auth, mock_session, send_opts)
-
-        self.assertFalse(actual)
+        with self.assertRaises(HTTPError):
+            self.prj.group_get(
+                grp_name, user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_group_delete_success(self, mock_session):
@@ -99,8 +99,8 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertTrue(self.prj.group_delete(
-            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+        self.prj.group_delete(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_group_delete_failure(self, mock_session):
@@ -114,8 +114,9 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertFalse(self.prj.group_delete(
-            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+        with self.assertRaises(HTTPError):
+            self.prj.group_delete(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_group_add_user_success(self, mock_session):
@@ -129,8 +130,8 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertTrue(self.prj.group_add_user(
-            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+        self.prj.group_add_user(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_group_add_user_failure(self, mock_session):
@@ -144,8 +145,9 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertFalse(self.prj.group_add_user(
-            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+        with self.assertRaises(HTTPError):
+            self.prj.group_add_user(
+                'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
@@ -175,8 +177,9 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertFalse(self.prj.group_get(
-            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+        with self.assertRaises(HTTPError):
+            self.prj.group_get(
+                'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_group_delete_user_success(self, mock_session):
@@ -190,8 +193,8 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertTrue(self.prj.group_delete(
-            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+        self.prj.group_delete(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_group_delete_user_failure(self, mock_session):
@@ -205,8 +208,9 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertFalse(self.prj.group_delete(
-            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+        with self.assertRaises(HTTPError):
+            self.prj.group_delete(
+                'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
 if __name__ == '__main__':
     unittest.main()

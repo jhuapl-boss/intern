@@ -27,7 +27,7 @@ API_VER = 'v0.4'
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
 import requests
-from requests import Session
+from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 rmt.project_service.session_send_opts = { 'verify': False }
@@ -38,19 +38,21 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 grp_name = 'my_group'
 
 # Boss user names still in flux.
-user_name = 'dce21e38-a316-4ab4-accb-79029e'
+user_name = 'bossadmin'
 
 print('Creating group . . .')
-if not rmt.group_create(grp_name):
-    print('Failed to create group {}'.format(grp_name))
+try:
+    rmt.group_create(grp_name)
+except HTTPError as h:
+    # Assume group already exists if an exception raised.
+    print(h.response.content)
 
 print('Get info about group . . .')
 data = rmt.group_get(grp_name)
 print(data)
 
 print('Add user to group . . .')
-if not rmt.group_add_user(grp_name, user_name):
-    print('Failed to add {} to group {}'.format(user_name, grp_name))
+rmt.group_add_user(grp_name, user_name)
 
 print('Confirm user is member of group . . .')
 if rmt.group_get(grp_name, user_name):
@@ -59,8 +61,7 @@ else:
     print('NOT a member of the group')
 
 print('Remove user from group . . .')
-if not rmt.group_delete(grp_name, user_name):
-    print('Failed removing user from group')
+rmt.group_delete(grp_name, user_name)
 
 print('Confirm user is not a member of group . . .')
 if rmt.group_get(grp_name, user_name):
@@ -69,5 +70,4 @@ else:
     print('Confirmed')
 
 print('Deleting group . . .')
-if not rmt.group_delete(grp_name):
-    print('Failed to delete group {}'.format(grp_name))
+rmt.group_delete(grp_name)

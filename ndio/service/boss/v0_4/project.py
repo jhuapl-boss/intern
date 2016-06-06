@@ -14,6 +14,7 @@
 
 from .base import Base
 from ndio.ndresource.boss.resource import *
+from requests import HTTPError
 import copy
 
 class ProjectService_0_4(Base):
@@ -54,9 +55,9 @@ class ProjectService_0_4(Base):
         if resp.status_code == 200:
             return resp.json()
 
-        print('List failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('List failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        resp.raise_for_status()
+        raise HTTPError(err, request = req, response = resp)
 
     def create(self, resource, url_prefix, auth, session, send_opts):
         """Create the given resource.
@@ -70,6 +71,9 @@ class ProjectService_0_4(Base):
 
         Returns:
             (ndio.ndresource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         json = self._get_resource_params(resource)
         req = self.get_request(
@@ -84,9 +88,9 @@ class ProjectService_0_4(Base):
         if resp.status_code == 201:
             return self._create_resource_from_dict(resource, resp.json())
 
-        print('Create failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('Create failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        return None
+        raise HTTPError(err, request = req, response = resp)
 
     def get(self, resource, url_prefix, auth, session, send_opts):
         """Get attributes of the given resource.
@@ -100,6 +104,9 @@ class ProjectService_0_4(Base):
 
         Returns:
             (ndio.resource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_request(
             resource, 'GET', 'application/json', url_prefix, auth)
@@ -108,9 +115,9 @@ class ProjectService_0_4(Base):
         if resp.status_code == 200:
             return self._create_resource_from_dict(resource, resp.json())
 
-        print('Get failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('Get failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        return None
+        raise HTTPError(err, request = req, response = resp)
 
     def update(self, resource_name, resource, url_prefix, auth, session, send_opts):
         """Updates an entity in the data model using the given resource.
@@ -125,6 +132,9 @@ class ProjectService_0_4(Base):
 
         Returns:
             (ndio.resource.boss.Resource): Returns updated resource of given type on success.  Returns None on failure.
+
+        Raises:
+            requests.HTTPError on failure.
         """
 
         # Create a copy of the resource and change its name to resource_name
@@ -146,9 +156,9 @@ class ProjectService_0_4(Base):
         if resp.status_code == 200:
             return self._create_resource_from_dict(resource, resp.json())
 
-        print('Update failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('Update failed on {}, got HTTP response: ({}) - {}'.format(
             old_resource.name, resp.status_code, resp.text))
-        return None
+        raise HTTPError(err, request = req, response = resp)
 
 
     def delete(self, resource, url_prefix, auth, session, send_opts):
@@ -161,19 +171,19 @@ class ProjectService_0_4(Base):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_request(
             resource, 'DELETE', 'application/json', url_prefix, auth)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 204:
-            return True
+            return
 
-        print('Delete failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('Delete failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        return False
+        raise HTTPError(err, request = req, response = resp)
 
     def _get_resource_params(self, resource):
         """Get dictionary containing all parameters for the given resource.

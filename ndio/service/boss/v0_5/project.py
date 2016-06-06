@@ -41,6 +41,9 @@ class ProjectService_0_5(Base):
 
         Returns:
             (mixed): Dictionary if getting group information or bool if a user name is supplied.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_group_request(
             'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name, user_name)
@@ -52,10 +55,6 @@ class ProjectService_0_5(Base):
 
         msg = ('Get failed for group {}, got HTTP response: ({}) - {}'.format(
             name, resp.status_code, resp.text))
-
-        if resp.status_code == 404:
-            print(msg)
-            return False
 
         raise HTTPError(msg, request = req, response = resp)
 
@@ -69,8 +68,8 @@ class ProjectService_0_5(Base):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_group_request(
             'POST', 'application/x-www-form-urlencoded', url_prefix, auth, name, None)
@@ -78,11 +77,11 @@ class ProjectService_0_5(Base):
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 201:
-            return True
+            return
 
-        print ('Create failed for group {}, got HTTP response: ({}) - {}'.format(
+        msg = ('Create failed for group {}, got HTTP response: ({}) - {}'.format(
             name, resp.status_code, resp.text))
-        return False
+        raise HTTPError(msg, request = req, response = resp)
 
     def group_delete(self, name, user_name, url_prefix, auth, session, send_opts):
         """Delete given group or delete user from given group.
@@ -98,8 +97,8 @@ class ProjectService_0_5(Base):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_group_request(
             'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, name, user_name)
@@ -107,11 +106,11 @@ class ProjectService_0_5(Base):
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 204:
-            return True
+            return
 
-        print ('Delete failed for group {}, got HTTP response: ({}) - {}'.format(
+        msg = ('Delete failed for group {}, got HTTP response: ({}) - {}'.format(
             name, resp.status_code, resp.text))
-        return False
+        raise HTTPError(msg, request = req, response = resp)
 
     def group_add_user(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Add the given user to the named group.
@@ -126,8 +125,8 @@ class ProjectService_0_5(Base):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_group_request(
             'POST', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
@@ -135,11 +134,11 @@ class ProjectService_0_5(Base):
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 201:
-            return True
+            return
 
-        print ('Failed adding user {} to group {}, got HTTP response: ({}) - {}'.format(
+        msg = ('Failed adding user {} to group {}, got HTTP response: ({}) - {}'.format(
             user, grp_name, resp.status_code, resp.text))
-        return False
+        raise HTTPError(msg, request = req, response = resp)
 
     def permissions_get(
         self, grp_name, resource, url_prefix, auth, session, send_opts):
@@ -154,6 +153,9 @@ class ProjectService_0_5(Base):
 
         Returns:
             (list): List of permissions.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_permission_request(
             'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
@@ -181,9 +183,6 @@ class ProjectService_0_5(Base):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
-
-        Returns:
-            (bool): True on success.
         """
         json = { 'permissions': permissions }
         req = self.get_permission_request(
@@ -192,11 +191,11 @@ class ProjectService_0_5(Base):
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 201:
-            return True
+            return
 
-        print ('Failed adding permissions to group {}, got HTTP response: ({}) - {}'.format(
+        msg = ('Failed adding permissions to group {}, got HTTP response: ({}) - {}'.format(
             grp_name, resp.status_code, resp.text))
-        return False
+        raise HTTPError(msg, request = req, response = resp)
 
     def permissions_delete(
         self, grp_name, resource, permissions, url_prefix, auth, session, 
@@ -210,6 +209,9 @@ class ProjectService_0_5(Base):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Raises:
+            requests.HTTPError on failure.
         """
         json = { 'permissions': permissions }
         req = self.get_permission_request(
@@ -218,11 +220,11 @@ class ProjectService_0_5(Base):
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
-            return True
+            return
 
-        print ('Failed deleting permissions to group {}, got HTTP response: ({}) - {}'.format(
+        msg = ('Failed deleting permissions to group {}, got HTTP response: ({}) - {}'.format(
             grp_name, resp.status_code, resp.text))
-        return False
+        raise HTTPError(msg, request = req, response = resp)
 
     def list(self, resource, url_prefix, auth, session, send_opts):
         """List all resources of the same type as the given resource.
@@ -267,6 +269,9 @@ class ProjectService_0_5(Base):
 
         Returns:
             (ndio.ndresource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         json = self._get_resource_params(resource)
         req = self.get_request(
@@ -281,9 +286,9 @@ class ProjectService_0_5(Base):
         if resp.status_code == 201:
             return self._create_resource_from_dict(resource, resp.json())
 
-        print('Create failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('Create failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        return None
+        raise HTTPError(err, request = req, response = resp)
 
     def get(self, resource, url_prefix, auth, session, send_opts):
         """Get attributes of the given resource.
@@ -297,6 +302,9 @@ class ProjectService_0_5(Base):
 
         Returns:
             (ndio.resource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_request(
             resource, 'GET', 'application/json', url_prefix, auth)
@@ -305,9 +313,9 @@ class ProjectService_0_5(Base):
         if resp.status_code == 200:
             return self._create_resource_from_dict(resource, resp.json())
 
-        print('Get failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('Get failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        return None
+        raise HTTPError(err, request = req, response = resp)
 
     def update(self, resource_name, resource, url_prefix, auth, session, send_opts):
         """Updates an entity in the data model using the given resource.
@@ -322,6 +330,9 @@ class ProjectService_0_5(Base):
 
         Returns:
             (ndio.resource.boss.Resource): Returns updated resource of given type on success.  Returns None on failure.
+
+        Raises:
+            requests.HTTPError on failure.
         """
 
         # Create a copy of the resource and change its name to resource_name
@@ -343,9 +354,9 @@ class ProjectService_0_5(Base):
         if resp.status_code == 200:
             return self._create_resource_from_dict(resource, resp.json())
 
-        print('Update failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('Update failed on {}, got HTTP response: ({}) - {}'.format(
             old_resource.name, resp.status_code, resp.text))
-        return None
+        raise HTTPError(err, request = req, response = resp)
 
 
     def delete(self, resource, url_prefix, auth, session, send_opts):
@@ -358,19 +369,19 @@ class ProjectService_0_5(Base):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_request(
             resource, 'DELETE', 'application/json', url_prefix, auth)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 204:
-            return True
+            return
 
-        print('Delete failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('Delete failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        return False
+        raise HTTPError(err, request = req, response = resp)
 
     def _get_resource_params(self, resource):
         """Get dictionary containing all parameters for the given resource.

@@ -17,7 +17,7 @@ from ndio.ndresource.boss.resource import *
 from requests import Session
 
 import requests
-from requests import Session
+from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
@@ -83,12 +83,30 @@ class ProjectPermissionTest_v0_5(unittest.TestCase):
 
         This method is used by both tearDown() and setUpClass().
         """
-        self.rmt.group_delete(self.grp_name)
-        self.rmt.project_delete(self.lyr)
-        self.rmt.project_delete(self.chan)
-        self.rmt.project_delete(self.exp)
-        self.rmt.project_delete(self.coord)
-        self.rmt.project_delete(self.coll)
+        try:
+            self.rmt.group_delete(self.grp_name)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.lyr)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.chan)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.exp)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.coord)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.project_delete(self.coll)
+        except HTTPError:
+            pass
 
     def setUp(self):
         self.initialize()
@@ -109,52 +127,53 @@ class ProjectPermissionTest_v0_5(unittest.TestCase):
         layer = self.rmt.project_create(self.lyr)
         self.assertIsNotNone(layer)
 
-        self.assertTrue(self.rmt.group_create(self.grp_name))
+        self.rmt.group_create(self.grp_name)
 
     def tearDown(self):
         self.cleanup_db()
 
     def test_add_permissions_success(self):
-        self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data']))
+        self.rmt.permissions_add(
+            self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
 
     def test_add_permissions_invalid_collection_perm(self):
-        self.assertFalse(self.rmt.permissions_add(
-            self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data']))
+        with self.assertRaises(HTTPError):
+            self.rmt.permissions_add(
+            self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
 
     def test_add_permissions_invalid_experiment_perm(self):
-        self.assertFalse(self.rmt.permissions_add(
-            self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read']))
+        with self.assertRaises(HTTPError):
+            self.rmt.permissions_add(
+            self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
 
     def test_add_volumetric_permission_success(self):
-        self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.lyr, ['read', 'read_volumetric_data']))
+        self.rmt.permissions_add(
+            self.grp_name, self.lyr, ['read', 'read_volumetric_data'])
 
     def test_add_permissions_append_success(self):
-        self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.chan, ['update', 'add_volumetric_data']))
+        self.rmt.permissions_add(
+            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
 
-        self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.chan, ['read']))
+        self.rmt.permissions_add( self.grp_name, self.chan, ['read'])
 
         expected = ['update', 'add_volumetric_data', 'read']
         actual = self.rmt.permissions_get(self.grp_name, self.chan)
         self.assertCountEqual(expected, actual)
 
     def test_permissions_get_success(self):
-        self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.chan, ['update', 'read']))
+        self.rmt.permissions_add(
+            self.grp_name, self.chan, ['update', 'read'])
 
         expected = ['update', 'read']
         actual = self.rmt.permissions_get(self.grp_name, self.chan)
         self.assertCountEqual(expected, actual)
 
     def test_permissions_delete_success(self):
-        self.assertTrue(self.rmt.permissions_add(
-            self.grp_name, self.chan, ['update', 'add_volumetric_data']))
+        self.rmt.permissions_add(
+            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
 
-        self.assertTrue(self.rmt.permissions_delete(
-            self.grp_name, self.chan, ['add_volumetric_data']))
+        self.rmt.permissions_delete(
+            self.grp_name, self.chan, ['add_volumetric_data'])
 
         expected = ['update']
         actual = self.rmt.permissions_get(self.grp_name, self.chan)

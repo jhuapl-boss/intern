@@ -36,40 +36,31 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 
 coll = CollectionResource('gray', API_VER, 'Collection used for examples.')
 if rmt.project_get(coll) is None:
-    if not rmt.project_create(coll):
-        print('Couldn\'t create collection {}, aborting.'.format(coll.name))
-        sys.exit(1)
+    rmt.project_create(coll)
 
 coord = CoordinateFrameResource('StdFrame', API_VER, 'Standard coordinate frame for xyz.')
 coord_actual = rmt.project_get(coord)
 if coord_actual is None:
-    if not rmt.project_create(coord):
-        print('Couldn\'t create coordinate frame {}, aborting.'.format(coord.name))
-        sys.exit(1)
+    rmt.project_create(coord)
     coord_actual = rmt.project_get(coord)
 
 alpha_exp = ExperimentResource(
     'alpha', 'gray', API_VER, 'Alpha example experiment.', coord_actual.id, max_time_sample=600)
 if rmt.project_get(alpha_exp) is None:
-    if not rmt.project_create(alpha_exp):
-        print('Couldn\'t create experiment {}, aborting.'.format(alpha_exp.name))
-        sys.exit(1)
+    rmt.project_create(alpha_exp)
 
 omega_chan = ChannelResource(
     'omega', 'gray', 'alpha', API_VER, 'Example channel.', datatype='uint16')
 omega_actual = rmt.project_get(omega_chan)
 if omega_actual is None:
-    if not rmt.project_create(omega_chan):
-        print('Couldn\'t create channel {}, aborting.'.format(omega_chan.name))
-        sys.exit(1)
+    rmt.project_create(omega_chan)
     omega_actual = rmt.project_get(omega_chan)
-
 
 rho_layer = LayerResource(
     'rho', 'gray', 'alpha', API_VER, 'Example layer.', datatype='uint64', 
     channels=omega_actual.id)
-if not rmt.project_create(rho_layer):
-    print('Couldn\'t create layer {}, aborting.'.format(rho_layer.name))
-    sys.exit(1)
+rho_actual = rmt.project_get(rho_layer)
+if rho_actual is None:
+    rmt.project_create(rho_layer)
 
 print('Data model for examples setup.')

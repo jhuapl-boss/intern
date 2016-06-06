@@ -93,9 +93,8 @@ class TestProject_v0_4(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.create(self.chan, url_prefix, auth, mock_session, send_opts)
-
-        self.assertIsNone(actual)
+        with self.assertRaises(HTTPError):
+            self.prj.create(self.chan, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
@@ -148,8 +147,8 @@ class TestProject_v0_4(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.get(self.chan, url_prefix, auth, mock_session, send_opts)
-        self.assertIsNone(actual)
+        with self.assertRaises(HTTPError):
+            self.prj.get(self.chan, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
@@ -200,9 +199,8 @@ class TestProject_v0_4(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.update(self.chan.name, self.chan, url_prefix, auth, mock_session, send_opts)
-
-        self.assertFalse(actual)
+        with self.assertRaises(HTTPError):
+            self.prj.update(self.chan.name, self.chan, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_prj_delete_success(self, mock_session):
@@ -216,9 +214,8 @@ class TestProject_v0_4(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.delete(self.chan, url_prefix, auth, mock_session, send_opts)
+        self.prj.delete(self.chan, url_prefix, auth, mock_session, send_opts)
 
-        self.assertTrue(actual)
 
     @patch('requests.Session', autospec=True)
     def test_prj_delete_failure(self, mock_session):
@@ -232,9 +229,8 @@ class TestProject_v0_4(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.delete(self.chan, url_prefix, auth, mock_session, send_opts)
-
-        self.assertFalse(actual)
+        with self.assertRaises(HTTPError):
+            self.prj.delete(self.chan, url_prefix, auth, mock_session, send_opts)
 
     def test_get_resource_params_bad_type(self):
         with self.assertRaises(TypeError):
