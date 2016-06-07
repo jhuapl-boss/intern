@@ -17,12 +17,12 @@ This example shows how to work with the Boss' groups.  The Remote
 class methods that being with 'group_' perform group operations.
 """
 
-from ndio.remote.boss.remote import Remote
+from ndio.remote.boss.remote import Remote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
 
-rmt = Remote('test.cfg')
+rmt = Remote('example.cfg')
 
-API_VER = 'v0.4'
+API_VER = LATEST_VERSION
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.

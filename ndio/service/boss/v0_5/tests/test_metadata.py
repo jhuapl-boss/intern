@@ -14,6 +14,7 @@
 
 from ndio.service.boss.v0_5.metadata import MetadataService_0_5
 from ndio.ndresource.boss.resource import ChannelResource
+from ndio.service.boss.httperrorlist import HTTPErrorList
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
 from unittest.mock import patch
@@ -71,9 +72,7 @@ class TestMetadata_v0_5(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.meta.create(self.chan, key_vals, url_prefix, auth, mock_session, send_opts)
-
-        self.assertTrue(actual)
+        self.meta.create(self.chan, key_vals, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_meta_create_failure(self, mock_session):
@@ -88,9 +87,8 @@ class TestMetadata_v0_5(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.meta.create(self.chan, key_vals, url_prefix, auth, mock_session, send_opts)
-
-        self.assertFalse(actual)
+        with self.assertRaises(HTTPErrorList):
+            self.meta.create(self.chan, key_vals, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
@@ -140,9 +138,7 @@ class TestMetadata_v0_5(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.meta.update(self.chan, key_vals, url_prefix, auth, mock_session, send_opts)
-
-        self.assertTrue(actual)
+        self.meta.update(self.chan, key_vals, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_meta_update_failure(self, mock_session):
@@ -157,9 +153,8 @@ class TestMetadata_v0_5(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.meta.update(self.chan, key_vals, url_prefix, auth, mock_session, send_opts)
-
-        self.assertFalse(actual)
+        with self.assertRaises(HTTPErrorList):
+            self.meta.update(self.chan, key_vals, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_meta_delete_success(self, mock_session):
@@ -174,9 +169,7 @@ class TestMetadata_v0_5(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.meta.delete(self.chan, keys, url_prefix, auth, mock_session, send_opts)
-
-        self.assertTrue(actual)
+        self.meta.delete(self.chan, keys, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_meta_delete_failure(self, mock_session):
@@ -191,7 +184,8 @@ class TestMetadata_v0_5(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.meta.delete(self.chan, keys, url_prefix, auth, mock_session, send_opts)
+        with self.assertRaises(HTTPErrorList):
+            self.meta.delete(self.chan, keys, url_prefix, auth, mock_session, send_opts)
 
-        self.assertFalse(actual)
-
+if __name__ == '__main__':
+    unittest.main()

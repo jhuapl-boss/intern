@@ -295,11 +295,11 @@ class Remote(NdRemote):
         Args:
             resource (ndio.resource.boss.Resource)
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on a failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete(resource)
+        self.project_service.delete(resource)
 
     def metadata_list(self, resource):
         """List all keys associated with the given resource.
@@ -309,6 +309,9 @@ class Remote(NdRemote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on a failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.list(resource)
@@ -322,8 +325,8 @@ class Remote(NdRemote):
             resource (ndio.resource.boss.Resource)
             keys_vals (dictionary): Collection of key-value pairs to assign to given resource.
 
-        Returns:
-            (bool): False if at least one key failed.
+        Raises:
+            requests.HTTPError on a failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.create(resource, keys_vals)
@@ -354,8 +357,8 @@ class Remote(NdRemote):
             resource (ndio.resource.boss.Resource)
             keys_vals (dictionary): Collection of key-value pairs to update on the given resource.
 
-        Returns:
-            (bool): False if at least one key failed.
+        Raises:
+            requests.HTTPError on a failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.update(resource, keys_vals)
@@ -369,8 +372,8 @@ class Remote(NdRemote):
             resource (ndio.resource.boss.Resource)
             keys (list)
 
-        Returns:
-            (bool) False if deleting at least one key failed.
+        Raises:
+            requests.HTTPError on a failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.delete(resource, keys)

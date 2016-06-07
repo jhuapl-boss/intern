@@ -14,6 +14,8 @@
 
 from .base import Base
 from ndio.ndresource.boss.resource import *
+from ndio.service.boss.httperrorlist import HTTPErrorList
+from requests import HTTPError
 
 class MetadataService_0_4(Base):
     def __init__(self):
@@ -48,9 +50,9 @@ class MetadataService_0_4(Base):
             keys_dict = resp.json()
             return keys_dict['keys']
 
-        print('List failed on {}, got HTTP response: ({}) - {}'.format(
+        err = ('List failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        resp.raise_for_status()
+        raise HTTPError(err, request = req, response = resp)
 
     def create(self, resource, keys_vals, url_prefix, auth, session, send_opts):
         """Create the given key-value pairs for the given resource.
@@ -65,10 +67,12 @@ class MetadataService_0_4(Base):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
-        Returns:
-            (bool): True if create successful for all key-value pairs.
+        Raises:
+            requests.HTTPError on failure.
         """
         success = True
+        exc = HTTPErrorList('At least one key-value create failed.')
+
         for pair in keys_vals.items():
             key = pair[0]
             value = pair[1]
@@ -80,12 +84,14 @@ class MetadataService_0_4(Base):
             if resp.status_code == 201:
                 continue
 
-            print(
+            err = (
                 'Create failed for {}: {}:{}, got HTTP response: ({}) - {}'
                 .format(resource.name, key, value, resp.status_code, resp.text))
+            exc.http_errors.append(HTTPError(err, request=req, response=resp))
             success = False
 
-        return success
+        if not success:
+            raise exc
 
     def get(self, resource, keys, url_prefix, auth, session, send_opts):
         """Get metadata key-value pairs associated with the given resource.
@@ -113,9 +119,9 @@ class MetadataService_0_4(Base):
             if resp.status_code == 200:
                 resDict[key] = resp.json()['value']
             else:
-                print('Get failed on {}, got HTTP response: ({}) - {}'.format(
+                err = ('Get failed on {}, got HTTP response: ({}) - {}'.format(
                     resource.name, resp.status_code, resp.text))
-                resp.raise_for_status()
+                raise HTTPError(err, request=req, response=resp)
 
         return resDict
 
@@ -133,10 +139,12 @@ class MetadataService_0_4(Base):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
-        Returns:
-            (bool): True if update successful for all key-value pairs.
+        Raises:
+            requests.HTTPError on failure.
         """
         success = True
+        exc = HTTPErrorList('At least one key-value update failed.')
+
         for pair in keys_vals.items():
             key = pair[0]
             value = pair[1]
@@ -149,12 +157,14 @@ class MetadataService_0_4(Base):
             if resp.status_code == 200:
                 continue
 
-            print(
+            err = (
                 'Update failed for {}: {}:{}, got HTTP response: ({}) - {}'
                 .format(resource.name, key, value, resp.status_code, resp.text))
+            exc.http_errors.append(HTTPError(err, request=req, response=resp))
             success = False
 
-        return success
+        if not success:
+            raise exc
 
     def delete(self, resource, keys, url_prefix, auth, session, send_opts):
         """Delete metadata key-value pairs associated with the given resource.
@@ -170,10 +180,12 @@ class MetadataService_0_4(Base):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
-        Returns:
-            (bool): True if delete successful for all key-value pairs.
+        Raises:
+            requests.HTTPError on failure.
         """
         success = True
+        exc = HTTPErrorList('At least one key-value update failed.')
+
         for key in keys:
             req = self.get_metadata_request(
                 resource, 'DELETE', 'application/json', url_prefix, auth, key)
@@ -181,9 +193,11 @@ class MetadataService_0_4(Base):
             resp = session.send(prep, **send_opts)
             if resp.status_code == 200:
                 continue
-            print(
+            err = (
                 'Delete failed for {}: {}, got HTTP response: ({}) - {}'
                 .format(resource.name, key, resp.status_code, resp.text))
+            exc.http_errors.append(HTTPError(err, request=req, response=resp))
             success = False
 
-        return success
+        if not success:
+            raise exc

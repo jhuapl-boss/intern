@@ -28,12 +28,12 @@ the operation should be performed.  For create and update operations, the
 resource object also contains the parameters to place in the database.
 """
 
-from ndio.remote.boss.remote import Remote
+from ndio.remote.boss.remote import Remote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
 
 rmt = Remote('example.cfg')
 
-API_VER = 'v0.4'
+API_VER = LATEST_VERSION
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -72,8 +72,6 @@ newBetaChan = rmt.project_create(betaChan)
 # This new instance is populated with additional information, such as the id
 # used by the Boss API.  The new instance also has its `raw` attribute populated
 # with all the JSON data returned by the Boss API.
-if not newBetaChan:
-    print('Creating {} channel failed.'.format(betaChan.name))
 
 # Display raw channel data from the Boss API:
 print(newBetaChan.raw)
@@ -81,17 +79,14 @@ print(newBetaChan.raw)
 # We forgot, to set the channel's data type to uint16.  Let's fix that by
 # updating the channel.
 betaChan.datatype = 'uint16'
-if not rmt.project_update(betaChan.name, betaChan):
-    print('Updating {} channel failed.'.format(betaChan.name))
+betaChanUpdated = rmt.project_update(betaChan.name, betaChan)
 
-# Let's get the channel and verify the data type was updated.
-chan_data = rmt.project_get(betaChan)
-print(chan_data['datatype'])
+# Let's verify the data type was updated.
+print('beta channel data type: {}'.format(betaChanUpdated.datatype))
 
 # To demonstrate the final method available for project operations, we will
 # delete the beta channel.
-if not rmt.project_delete(betaChan):
-    print('Delete {} channel failed.'.format(betaChan.name))
+rmt.project_delete(betaChan)
 
 chan_list = rmt.project_list(channels)
 for chan in chan_list:

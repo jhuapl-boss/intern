@@ -27,14 +27,14 @@ a minimum.  The resource object identifies which data model object's metadata
 will be manipulated.
 """
 
-from ndio.remote.boss.remote import Remote
+from ndio.remote.boss.remote import Remote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
 from requests import HTTPError
 import sys
 
 rmt = Remote('example.cfg')
 
-API_VER = 'v0.4'
+API_VER = LATEST_VERSION
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -54,21 +54,16 @@ alpha_exp = ExperimentResource('alpha', 'gray', API_VER)
 omega_chan = ChannelResource('omega', 'gray', 'alpha', API_VER)
 
 # Add new metadata using metadata_create().
-if not rmt.metadata_create(coll, { 'mark': 'two', 'ten': 'four'}):
-    print('Failed to create metadata for collection.')
-if not rmt.metadata_create(alpha_exp, { 'date': '04May2016', 'time': '13:00' }):
-    print('Failed to create metadata for experiment.')
-if not rmt.metadata_create(
-    omega_chan, 
-    { 'algorithm': 'indigo', 'iterations': '1000', 'confidence': '75' }
-):
-    print('Failed to create metadata for channel.')
+rmt.metadata_create(coll, { 'mark': 'two', 'ten': 'four'})
+rmt.metadata_create(alpha_exp, { 'date': '04May2016', 'time': '13:00' })
+rmt.metadata_create(
+    omega_chan, { 'channel_prep': '342', 'microscope': 'sem4' })
 
 # Retrieve metadata with metadata_get().
 # Use a list with a single string if you only want a single value.
 mark = rmt.metadata_get(coll, ['mark'])
 print(mark['mark'])
-omega_metadata = rmt.metadata_get(omega_chan, ['algorithm', 'iterations', 'confidence'])
+omega_metadata = rmt.metadata_get(omega_chan, ['channel_prep', 'microscope'])
 print('omega\'s key-values:')
 for pair in omega_metadata.items():
     print('\t{}: {}'.format(pair[0], pair[1]))
@@ -84,20 +79,15 @@ for ko in omega_list:
     print('\t{}'.format(ko))
 
 # Update metadata using metadata_update().
-if not rmt.metadata_update(omega_chan, {'iterations': '2000', 'confidence': '80'}):
-    print('Failed updating metadata for channel.')
+rmt.metadata_update(omega_chan, {'channel_prep': '345', 'microscope': 'sem5'})
 
 # Confirm updated values.
-omega_metadata = rmt.metadata_get(omega_chan, ['iterations', 'confidence'])
-print(omega_metadata['iterations'])
-print(omega_metadata['confidence'])
+omega_metadata = rmt.metadata_get(omega_chan, ['channel_prep', 'microscope'])
+print(omega_metadata['channel_prep'])
+print(omega_metadata['microscope'])
 
 # Use metadata_delete() to remove keys and values.
-if not rmt.metadata_delete(alpha_exp, ['date', 'time']):
-    print('Failed to delete metadata from experiment')
-if not rmt.metadata_delete(coll, ['mark', 'ten']):
-    print('Failed to delete metadata for collection.')
-if not rmt.metadata_delete(
-    omega_chan, ['algorithm', 'iterations', 'confidence']
-):
-    print('Failed to delete metadata for channel.')
+rmt.metadata_delete(alpha_exp, ['date', 'time'])
+rmt.metadata_delete(coll, ['mark', 'ten'])
+rmt.metadata_delete(
+    omega_chan, ['channel_prep', 'microscope'])

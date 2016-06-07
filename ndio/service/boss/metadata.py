@@ -59,8 +59,8 @@ class MetadataService(Service):
             resource (ndio.ndresource.boss.Resource): List keys associated with this resource.
             keys_vals (dictionary): The metadata to associate with the resource.
 
-        Returns:
-            (bool): True if create successful for all key-value pairs.
+        Raises:
+            requests.HTTPError on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.create(
@@ -95,8 +95,8 @@ class MetadataService(Service):
             resource (ndio.ndresource.boss.Resource): Update values associated with this resource.
             keys_vals (dictionary): The metadata to update for the resource.
 
-        Returns:
-            (bool): True if update successful for all key-value pairs.
+        Raises:
+            requests.HTTPError on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.update(
@@ -113,8 +113,8 @@ class MetadataService(Service):
             resource (ndio.ndresource.boss.Resource): Delete key-value pairs associated with this resource.
             keys (list): Keys to delete.
 
-        Returns:
-            (bool): True if delete successful for all key-value pairs.
+        Raises:
+            requests.HTTPError on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.delete(

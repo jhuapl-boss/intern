@@ -1,11 +1,11 @@
-﻿from ndio.remote.boss.remote import Remote
+﻿from ndio.remote.boss.remote import Remote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
 import sys
 import numpy
 from requests import HTTPError
 
 rmt = Remote('example.cfg')
-API_VER = 'v0.4'
+API_VER = LATEST_VERSION
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
