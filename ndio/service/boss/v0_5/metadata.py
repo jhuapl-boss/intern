@@ -68,7 +68,7 @@ class MetadataService_0_5(Base):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Raises:
-            requests.HTTPError on failure.
+            requests.HTTPErrorList on failure.
         """
         success = True
         exc = HTTPErrorList('At least one key-value create failed.')
@@ -108,9 +108,12 @@ class MetadataService_0_5(Base):
             (dictionary): The requested metadata for the given resource.
 
         Raises:
-            requests.HTTPError on failure.
+            requests.HTTPErrorList on failure.
         """
         resDict = {}
+        success = True
+        exc = HTTPErrorList('At least one key-value update failed.')
+
         for key in keys:
             req = self.get_metadata_request(
                 resource, 'GET', 'application/json', url_prefix, auth, key)
@@ -121,7 +124,11 @@ class MetadataService_0_5(Base):
             else:
                 err = ('Get failed on {}, got HTTP response: ({}) - {}'.format(
                     resource.name, resp.status_code, resp.text))
-                raise HTTPError(err, request=req, response=resp)
+                exc.http_errors.append(HTTPError(err, request=req, response=resp))
+                success = False
+
+        if not success:
+            raise exc
 
         return resDict
 
@@ -140,7 +147,7 @@ class MetadataService_0_5(Base):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Raises:
-            requests.HTTPError on failure.
+            requests.HTTPErrorList on failure.
         """
         success = True
         exc = HTTPErrorList('At least one key-value update failed.')
@@ -181,7 +188,7 @@ class MetadataService_0_5(Base):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Raises:
-            requests.HTTPError on failure.
+            requests.HTTPErrorList on failure.
         """
         success = True
         exc = HTTPErrorList('At least one key-value update failed.')

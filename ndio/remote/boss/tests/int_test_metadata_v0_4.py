@@ -14,6 +14,7 @@
  
 from ndio.remote.boss.remote import *
 from ndio.ndresource.boss.resource import *
+from ndio.service.boss.httperrorlist import HTTPErrorList
 
 import requests
 from requests import Session, HTTPError
@@ -131,6 +132,10 @@ class MetadataServiceTest_v0_4(unittest.TestCase):
         actual = self.rmt.metadata_get(self.coll, list(keys_vals.keys()))
         self.assertCountEqual(keys_vals, actual)
 
+        with self.assertRaises(HTTPErrorList):
+            # Should fail when trying create keys that already exist.
+            self.rmt.metadata_create(self.coll, keys_vals)
+
         update = { 'two': 'six', 'inside': 'upside-down' }
         self.rmt.metadata_update(self.coll, update)
 
@@ -140,9 +145,14 @@ class MetadataServiceTest_v0_4(unittest.TestCase):
         actual_list_upd  = self.rmt.metadata_list(self.coll)
         self.assertCountEqual(list(keys_vals.keys()), actual_list_upd)
 
+        with self.assertRaises(HTTPErrorList):
+            # Try updating a non-existent key.
+            self.rmt.metadata_update(self.coll, {'foo': 'bar'})
+
         self.rmt.metadata_delete(self.coll, list(keys_vals.keys()))
 
-        with self.assertRaises(HTTPError):
+        with self.assertRaises(HTTPErrorList):
+            # Try getting keys that don't exist.
             self.rmt.metadata_get(self.coll, ['foo', 'bar'])
 
         actual_list_end = self.rmt.metadata_list(self.coll)
@@ -157,6 +167,10 @@ class MetadataServiceTest_v0_4(unittest.TestCase):
         actual = self.rmt.metadata_get(self.exp, list(keys_vals.keys()))
         self.assertCountEqual(keys_vals, actual)
 
+        with self.assertRaises(HTTPErrorList):
+            # Should fail when trying create keys that already exist.
+            self.rmt.metadata_create(self.exp, keys_vals)
+
         update = { 'two': 'six', 'inside': 'upside-down' }
         self.rmt.metadata_update(self.exp, update)
 
@@ -166,9 +180,14 @@ class MetadataServiceTest_v0_4(unittest.TestCase):
         actual_list_upd = self.rmt.metadata_list(self.exp)
         self.assertCountEqual(list(keys_vals.keys()), actual_list_upd)
 
+        with self.assertRaises(HTTPErrorList):
+            # Try updating a non-existent key.
+            self.rmt.metadata_update(self.exp, {'foo': 'bar'})
+
         self.rmt.metadata_delete(self.exp, list(keys_vals.keys()))
 
-        with self.assertRaises(HTTPError):
+        with self.assertRaises(HTTPErrorList):
+            # Try getting keys that don't exist.
             self.rmt.metadata_get(self.exp, ['foo', 'bar'])
 
         actual_list_end = self.rmt.metadata_list(self.exp)
@@ -183,6 +202,10 @@ class MetadataServiceTest_v0_4(unittest.TestCase):
         actual = self.rmt.metadata_get(self.chan, list(keys_vals.keys()))
         self.assertCountEqual(keys_vals, actual)
 
+        with self.assertRaises(HTTPErrorList):
+            # Should fail when trying create keys that already exist.
+            self.rmt.metadata_create(self.chan, keys_vals)
+
         update = { 'two': 'six', 'inside': 'upside-down' }
         self.rmt.metadata_update(self.chan, update)
 
@@ -192,9 +215,14 @@ class MetadataServiceTest_v0_4(unittest.TestCase):
         actual_list_upd = self.rmt.metadata_list(self.chan)
         self.assertCountEqual(keys_vals, actual_list_upd)
 
+        with self.assertRaises(HTTPErrorList):
+            # Try updating a non-existent key.
+            self.rmt.metadata_update(self.chan, {'foo': 'bar'})
+
         self.rmt.metadata_delete(self.chan, list(keys_vals.keys()))
 
-        with self.assertRaises(HTTPError):
+        with self.assertRaises(HTTPErrorList):
+            # Try getting keys that don't exist.
             self.rmt.metadata_get(self.chan, ['foo', 'bar'])
 
         actual_list_end = self.rmt.metadata_list(self.chan)
@@ -209,6 +237,10 @@ class MetadataServiceTest_v0_4(unittest.TestCase):
         actual = self.rmt.metadata_get(self.lyr, list(keys_vals.keys()))
         self.assertCountEqual(keys_vals, actual)
 
+        with self.assertRaises(HTTPErrorList):
+            # Should fail when trying create keys that already exist.
+            self.rmt.metadata_create(self.lyr, keys_vals)
+
         update = { 'two': 'six', 'inside': 'upside-down' }
         self.rmt.metadata_update(self.lyr, update)
 
@@ -218,9 +250,14 @@ class MetadataServiceTest_v0_4(unittest.TestCase):
         actual_list_upd = self.rmt.metadata_list(self.lyr)
         self.assertCountEqual(keys_vals, actual_list_upd)
 
+        with self.assertRaises(HTTPErrorList):
+            # Try updating a non-existent key.
+            self.rmt.metadata_update(self.lyr, {'foo': 'bar'})
+
         self.rmt.metadata_delete(self.lyr, list(keys_vals.keys()))
 
-        with self.assertRaises(HTTPError):
+        with self.assertRaises(HTTPErrorList):
+            # Try getting keys that don't exist.
             self.rmt.metadata_get(self.lyr, ['foo', 'bar'])
 
         actual_list_end = self.rmt.metadata_list(self.lyr)

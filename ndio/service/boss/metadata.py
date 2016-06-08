@@ -60,7 +60,7 @@ class MetadataService(Service):
             keys_vals (dictionary): The metadata to associate with the resource.
 
         Raises:
-            requests.HTTPError on failure.
+            requests.HTTPErrorList on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.create(
@@ -78,7 +78,7 @@ class MetadataService(Service):
             (dictionary): The requested metadata for the given resource.
 
         Raises:
-            requests.HTTPError on failure.
+            requests.HTTPErrorList on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.get(
@@ -96,7 +96,7 @@ class MetadataService(Service):
             keys_vals (dictionary): The metadata to update for the resource.
 
         Raises:
-            requests.HTTPError on failure.
+            requests.HTTPErrorList on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.update(
@@ -114,7 +114,7 @@ class MetadataService(Service):
             keys (list): Keys to delete.
 
         Raises:
-            requests.HTTPError on failure.
+            requests.HTTPErrorList on failure.
         """
         ps = self.get_api_impl(resource.version)
         return ps.delete(

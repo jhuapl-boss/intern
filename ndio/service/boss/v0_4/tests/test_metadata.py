@@ -120,7 +120,7 @@ class TestMetadata_v0_4(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        with self.assertRaises(HTTPError):
+        with self.assertRaises(HTTPErrorList):
             self.meta.get(self.chan, expected.keys(), url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
