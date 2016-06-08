@@ -13,16 +13,23 @@
 # limitations under the License.
 
 """
-This example shows how to work with the Boss' groups.  The Remote
-class methods that being with 'group_' perform group operations.
+This example shows how to work with the Boss' groups.  Specifically, this
+example demonstrates creating and deleting groups and managing the users that 
+belong to a group.  The Remote class methods that begin with 'group_' perform
+group operations.
+
+Groups are collections of users.  Permissions are associated with groups
+and resources.  The three combined determine what a user may do with a
+particular resource.
 """
 
 from ndio.remote.boss.remote import Remote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
 
-rmt = Remote('example.cfg')
-
 API_VER = LATEST_VERSION
+rmt = Remote('example.cfg')
+#rmt = Remote('test.cfg')
+rmt.group_perm_api_version = API_VER
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -47,9 +54,9 @@ except HTTPError as h:
     # Assume group already exists if an exception raised.
     print(h.response.content)
 
-print('Get info about group . . .')
-data = rmt.group_get(grp_name)
-print(data)
+print('Confirm group created . . .')
+if rmt.group_get(grp_name):
+    print('Confirmed')
 
 print('Add user to group . . .')
 rmt.group_add_user(grp_name, user_name)

@@ -14,14 +14,15 @@
 
 # This script sets up the data model used by the example scripts.
 
-from ndio.remote.boss.remote import Remote
+from ndio.remote.boss.remote import Remote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
 from requests import HTTPError
 import sys
 
+API_VER = LATEST_VERSION
 rmt = Remote('example.cfg')
-
-API_VER = 'v0.4'
+#rmt = Remote('test.cfg')
+rmt.group_perm_api_version = API_VER
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -34,32 +35,41 @@ rmt.metadata_service.session_send_opts = { 'verify': False }
 rmt.volume_service.session_send_opts = { 'verify': False }
 
 coll = CollectionResource('gray', API_VER, 'Collection used for examples.')
-if rmt.project_get(coll) is None:
+try:
+    rmt.project_get(coll)
+except HTTPError:
     rmt.project_create(coll)
 
 coord = CoordinateFrameResource('StdFrame', API_VER, 'Standard coordinate frame for xyz.')
-coord_actual = rmt.project_get(coord)
-if coord_actual is None:
-    rmt.project_create(coord)
+try:
     coord_actual = rmt.project_get(coord)
+except HTTPError:
+    coord_actual = rmt.project_create(coord)
 
 alpha_exp = ExperimentResource(
     'alpha', 'gray', API_VER, 'Alpha example experiment.', coord_actual.id, max_time_sample=600)
-if rmt.project_get(alpha_exp) is None:
+try:
+    rmt.project_get(alpha_exp)
+except HTTPError:
     rmt.project_create(alpha_exp)
 
 omega_chan = ChannelResource(
     'omega', 'gray', 'alpha', API_VER, 'Example channel.', datatype='uint16')
-omega_actual = rmt.project_get(omega_chan)
-if omega_actual is None:
-    rmt.project_create(omega_chan)
+try:
     omega_actual = rmt.project_get(omega_chan)
+except HTTPError:
+    omega_actual = rmt.project_create(omega_chan)
 
 rho_layer = LayerResource(
     'rho', 'gray', 'alpha', API_VER, 'Example layer.', datatype='uint64', 
     channels=omega_actual.id)
-rho_actual = rmt.project_get(rho_layer)
-if rho_actual is None:
+try:
+    rmt.project_get(rho_layer)
+except HTTPError:
     rmt.project_create(rho_layer)
+
+grp_name = 'example_group'
+if not rmt.group_get(grp_name):
+    rmt.group_create(grp_name)
 
 print('Data model for examples setup.')
