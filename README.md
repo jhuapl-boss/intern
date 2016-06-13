@@ -25,5 +25,4 @@ For example, on a *nix system, if ndio was cloned to ~/ndio:
 
 ## Getting Started
 
-See the examples in https://github.com/jhuapl-boss/ndio/tree/master/examples
-and the accompanying wiki page: https://github.com/jhuapl-boss/ndio/wiki/Examples
+See the ndio wiki: https://github.com/jhuapl-boss/ndio/wiki
