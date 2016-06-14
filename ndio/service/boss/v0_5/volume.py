@@ -14,6 +14,7 @@
 
 from .base import Base
 from ndio.ndresource.boss.resource import *
+from requests import HTTPError
 import blosc
 
 class VolumeService_0_5(Base):
@@ -41,9 +42,6 @@ class VolumeService_0_5(Base):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
-
-        Returns:
-            (bool): True on success.
         """
 
         compressed = blosc.pack_array(numpyVolume)
@@ -55,11 +53,11 @@ class VolumeService_0_5(Base):
         resp = session.send(prep, **send_opts)
         
         if resp.status_code == 201:
-            return True
+            return
 
-        print('Create cutout failed on {}, got HTTP response: ({}) - {}'.format(
+        msg = ('Create cutout failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        return False
+        raise HTTPError(msg, request = req, response = resp)
 
     def cutout_get(
         self, resource, resolution, x_range, y_range, z_range, time_range,
@@ -91,12 +89,11 @@ class VolumeService_0_5(Base):
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
         prep.headers['Accept'] = 'application/blosc-python'
-        #resp = session.send(prep, stream = True, **send_opts)
         resp = session.send(prep, **send_opts)
         
         if resp.status_code == 200:
             return blosc.unpack_array(resp.content)
 
-        print('Get cutout failed on {}, got HTTP response: ({}) - {}'.format(
+        msg = ('Get cutout failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        resp.raise_for_status()
+        raise HTTPError(msg, request = req, response = resp)

@@ -44,9 +44,6 @@ class VolumeService(Service):
             z_range (string): z range such as '10:20' which means z>=10 and z<20.
             numpyVolume (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
             time_range (optional [string]): time range such as 30:40 which means t>=30 and t<40.
-
-        Returns:
-            (bool): Return True on success.
         """
 
         ps = self.get_api_impl(resource.version)

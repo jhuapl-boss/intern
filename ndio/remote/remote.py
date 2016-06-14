@@ -61,6 +61,7 @@ class Remote(metaclass=ABCMeta):
 
         Raises:
             RuntimeError when given invalid resource.
+            Other exceptions may be raised depending on the volume service's implementation.
         """
 
         if not resource.valid_volume():
@@ -85,6 +86,7 @@ class Remote(metaclass=ABCMeta):
 
         Raises:
             RuntimeError when given invalid resource.
+            Other exceptions may be raised depending on the volume service's implementation.
         """
 
         if not resource.valid_volume():

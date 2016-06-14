@@ -42,11 +42,9 @@ class TestVolume_v0_5(unittest.TestCase):
         mock_session.send.return_value = fake_response
         send_opts = {}
 
-        actual = self.vol.cutout_create(
+        self.vol.cutout_create(
             self.chan, resolution, x_range, y_range, z_range, time_range, data,
             url_prefix, auth, mock_session, send_opts)
-
-        self.assertTrue(actual)
 
     @patch('requests.Session', autospec=True)
     def test_cutout_create_failure(self, mock_session):
@@ -65,11 +63,10 @@ class TestVolume_v0_5(unittest.TestCase):
         mock_session.send.return_value = fake_response
         send_opts = {}
 
-        actual = self.vol.cutout_create(
-            self.chan, resolution, x_range, y_range, z_range, time_range, data,
-            url_prefix, auth, mock_session, send_opts)
-
-        self.assertFalse(actual)
+        with self.assertRaises(HTTPError):
+            self.vol.cutout_create(
+                self.chan, resolution, x_range, y_range, z_range, time_range, data,
+                url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_cutout_get_success(self, mock_session):
