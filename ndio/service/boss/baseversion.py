@@ -90,7 +90,7 @@ class BaseVersion(metaclass=ABCMeta):
         urlWithKey = urlNoParams + '/?key=' + key
         if value is None:
             return urlWithKey
-        return urlWithKey + '&value=' + value
+        return urlWithKey + '&value=' + str(value)
 
     def build_cutout_url(
         self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range):
