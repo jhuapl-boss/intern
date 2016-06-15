@@ -4,8 +4,8 @@ import sys
 import numpy
 from requests import HTTPError
 
-#rmt = Remote('example.cfg')
-rmt = Remote('test.cfg')
+rmt = Remote('example.cfg')
+#rmt = Remote('test.cfg')
 API_VER = LATEST_VERSION
 
 # Turn off SSL cert verification.  This is necessary for interacting with
