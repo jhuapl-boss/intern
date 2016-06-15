@@ -18,7 +18,7 @@ from ndio.ndresource.boss.resource import CollectionResource
 from ndio.ndresource.boss.resource import ChannelResource
 import numpy
 
-VER = 'v0.4'
+VER = 'v0.5'
 
 class ProjectImpl(BaseVersion):
     """Create a concrete implementation of BaseVersion so it can be tested.
@@ -111,6 +111,77 @@ class BaseVersionTest(unittest.TestCase):
             actual.url)
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/json', actual.headers['Content-Type'])
+
+    def test_get_group_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        grp_name = 'fire'
+
+        expected = '{}/{}/group/{}/'.format(
+            url_prefix, self.test_project.version, grp_name)
+
+        actual = self.test_project.get_group_request(
+            'GET', 'application/json', url_prefix, token, grp_name, None)
+
+        self.assertEqual(expected, actual.url)
+
+    def test_get_group_request_user(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        grp_name = 'fire'
+        user_name = 'fox'
+
+        expected = '{}/{}/group-member/{}/{}/'.format(
+            url_prefix, self.test_project.version, grp_name, user_name)
+
+        actual = self.test_project.get_group_request(
+            'GET', 'application/json', url_prefix, token, grp_name, user_name)
+
+        self.assertEqual(expected, actual.url)
+
+    def test_get_permission_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        grp_name = 'fire'
+        resrc_path = self.chanResource.get_route()
+        data = { 'permissions': ['update', 'add', 'delete'] }
+
+        expected = '{}/{}/permission/{}/{}'.format(
+            url_prefix, self.test_volume.version, grp_name, resrc_path)
+
+        actual = self.test_project.get_permission_request(
+            'GET', 'application/json', url_prefix, token, grp_name, 
+            self.chanResource, data)
+
+        self.assertEqual(expected, actual.url)
+        self.assertEqual(data, actual.data)
+
+    def test_get_user_role_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        user = 'fire'
+        role = 'admin'
+
+        expected = '{}/{}/user-role/{}/{}'.format(
+            url_prefix, self.test_project.version, user, role)
+
+        actual = self.test_project.get_user_role_request(
+            'POST', 'application/json', url_prefix, token, user, role)
+
+        self.assertEqual(expected, actual.url)
+
+    def test_get_user_role_request_no_role(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        user = 'fire'
+
+        expected = '{}/{}/user-role/{}'.format(
+            url_prefix, self.test_project.version, user)
+
+        actual = self.test_project.get_user_role_request(
+            'POST', 'application/json', url_prefix, token, user)
+
+        self.assertEqual(expected, actual.url)
 
     ##
     ## Methods used for the metadata service.
@@ -208,46 +279,3 @@ class BaseVersionTest(unittest.TestCase):
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/blosc-python', actual.headers['Content-Type'])
 
-    def test_get_group_request(self):
-        url_prefix = 'https://api.theboss.io'
-        token = 'foobar'
-        grp_name = 'fire'
-
-        expected = '{}/{}/group/{}/'.format(
-            url_prefix, self.test_volume.version, grp_name)
-
-        actual = self.test_volume.get_group_request(
-            'GET', 'application/json', url_prefix, token, grp_name, None)
-
-        self.assertEqual(expected, actual.url)
-
-    def test_get_group_request_user(self):
-        url_prefix = 'https://api.theboss.io'
-        token = 'foobar'
-        grp_name = 'fire'
-        user_name = 'fox'
-
-        expected = '{}/{}/group-member/{}/{}/'.format(
-            url_prefix, self.test_volume.version, grp_name, user_name)
-
-        actual = self.test_volume.get_group_request(
-            'GET', 'application/json', url_prefix, token, grp_name, user_name)
-
-        self.assertEqual(expected, actual.url)
-
-    def test_get_permission_request(self):
-        url_prefix = 'https://api.theboss.io'
-        token = 'foobar'
-        grp_name = 'fire'
-        resrc_path = self.chanResource.get_route()
-        data = { 'permissions': ['update', 'add', 'delete'] }
-
-        expected = '{}/{}/permission/{}/{}'.format(
-            url_prefix, self.test_volume.version, grp_name, resrc_path)
-
-        actual = self.test_volume.get_permission_request(
-            'GET', 'application/json', url_prefix, token, grp_name, 
-            self.chanResource, data)
-
-        self.assertEqual(expected, actual.url)
-        self.assertEqual(data, actual.data)

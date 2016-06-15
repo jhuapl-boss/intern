@@ -120,7 +120,8 @@ class ProjectService(Service):
 
     def permissions_get(self, grp_name, resource, version=LATEST_VERSION):
         ps = self.get_api_impl(version)
-        """
+        """Get permissions associated the group has with the given resource.
+
         Args:
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
@@ -140,7 +141,8 @@ class ProjectService(Service):
 
     def permissions_add(
         self, grp_name, resource, permissions, version=LATEST_VERSION):
-        """
+        """ Add additional permissions for the group associated with the given resource.
+
         Args:
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
@@ -159,7 +161,8 @@ class ProjectService(Service):
 
     def permissions_delete(
         self, grp_name, resource, permissions, version=LATEST_VERSION):
-        """
+        """Removes permissions from the group for the given resource.
+
         Args:
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
@@ -175,6 +178,29 @@ class ProjectService(Service):
         ps.permissions_delete(
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def user_add_role(self, user, role, version=LATEST_VERSION):
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+        ps = self.get_api_impl(version)
+        ps.user_add_role(
+            user, role,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def user_delete_role(self, user, role, version=LATEST_VERSION):
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+        ps = self.get_api_impl(version)
+        ps.user_delete_role(
+            user, role,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def user_get_roles(self, user, version=LATEST_VERSION):
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+        ps = self.get_api_impl(version)
+        return ps.user_get_roles(
+            user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def list(self, resource):
         """List all resources of the same type as the given resource.

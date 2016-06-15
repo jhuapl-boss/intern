@@ -264,3 +264,35 @@ class BaseVersion(metaclass=ABCMeta):
                suffix)
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = data)
+
+    def get_user_role_request(
+        self, method, content, url_prefix, token, user, role=None):
+        """Generate a request for manipulating permissions of a data model object.
+
+        Manipulate what members of the named group can do with the given data
+        model object.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            user (string): Name of user.
+            role (optional[string]): Name of role.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = url_prefix + '/' + self.version + '/user-role/' + user
+        if role is not None:
+            url = url + '/' + role
+
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)

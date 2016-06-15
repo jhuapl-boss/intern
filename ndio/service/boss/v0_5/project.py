@@ -226,6 +226,51 @@ class ProjectService_0_5(Base):
             grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
+    def user_get_roles(self, user, url_prefix, auth, session, send_opts):
+        req = self.get_user_role_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            user)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            return resp.json()
+
+        msg = (
+            'Failed getting roles for user: {}, got HTTP response: ({}) - {}'
+            .format(user, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def user_add_role(self, user, role, url_prefix, auth, session, send_opts):
+        req = self.get_user_role_request(
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            user, role)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            return
+
+        msg = (
+            'Failed adding role: {} to user: {}, got HTTP response: ({}) - {}'
+            .format(role, user, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def user_delete_role(self, user, role, url_prefix, auth, session, send_opts):
+        req = self.get_user_role_request(
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            user, role)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 204:
+            return
+
+        msg = (
+            'Failed deleting role: {} from user: {}, got HTTP response: ({}) - {}'
+            .format(role, user, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
     def list(self, resource, url_prefix, auth, session, send_opts):
         """List all resources of the same type as the given resource.
 

@@ -226,19 +226,63 @@ class Remote(NdRemote):
             grp_name, user, self.group_perm_api_version)
 
     def permissions_get(self, grp_name, resource):
+        """Get permissions associated the group has with the given resource.
+
+        Args:
+            grp_name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+
+        Returns:
+            (list): List of permissions.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         self.project_service.set_auth(self._token_project)
         return self.project_service.permissions_get(
             grp_name, resource, self.group_perm_api_version)
 
     def permissions_add(self, grp_name, resource, permissions):
+        """Add additional permissions for the group associated with the given resource.
+
+        Args:
+            grp_name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            permissions (list): List of permissions to add to the given resource.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.permissions_add(
+        self.project_service.permissions_add(
             grp_name, resource, permissions, self.group_perm_api_version)
 
     def permissions_delete(self, grp_name, resource, permissions):
+        """Removes permissions from the group for the given resource.
+
+        Args:
+            grp_name (string): Name of group.
+            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            permissions (list): List of permissions to remove from the given resource.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.permissions_delete(
+        self.project_service.permissions_delete(
             grp_name, resource, permissions, self.group_perm_api_version)
+
+    def user_get_roles(self, user):
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.user_get_roles(user, self.group_perm_api_version)
+
+    def user_add_role(self, user, role):
+        self.project_service.set_auth(self._token_project)
+        self.project_service.user_add_role(user, role, self.group_perm_api_version)
+
+    def user_delete_role(self, user, role):
+        self.project_service.set_auth(self._token_project)
+        self.project_service.user_delete_role(user, role, self.group_perm_api_version)
 
     def project_list(self, resource):
         """List all instances of the given resource type.
