@@ -227,6 +227,21 @@ class ProjectService_0_5(Base):
         raise HTTPError(msg, request = req, response = resp)
 
     def user_get_roles(self, user, url_prefix, auth, session, send_opts):
+        """Get roles associated with the given user.
+
+        Args:
+            user (string): User name.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list): List of roles that user has.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         req = self.get_user_role_request(
             'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
             user)
@@ -242,6 +257,19 @@ class ProjectService_0_5(Base):
         raise HTTPError(msg, request = req, response = resp)
 
     def user_add_role(self, user, role, url_prefix, auth, session, send_opts):
+        """Add role to given user.
+
+        Args:
+            user (string): User name.
+            role (string): Role to assign.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         req = self.get_user_role_request(
             'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
             user, role)
@@ -257,6 +285,19 @@ class ProjectService_0_5(Base):
         raise HTTPError(msg, request = req, response = resp)
 
     def user_delete_role(self, user, role, url_prefix, auth, session, send_opts):
+        """Remove role from given user.
+
+        Args:
+            user (string): User name.
+            role (string): Role to remove.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         req = self.get_user_role_request(
             'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, 
             user, role)
@@ -269,6 +310,96 @@ class ProjectService_0_5(Base):
         msg = (
             'Failed deleting role: {} from user: {}, got HTTP response: ({}) - {}'
             .format(role, user, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def user_get(self, user, url_prefix, auth, session, send_opts):
+        """Get user's data (first and last name, email, etc).
+
+        Args:
+            user (string): User name.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (dictionary): User's data encoded in a dictionary.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        req = self.get_user_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            user)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            return resp.json()
+
+        msg = (
+            'Failed getting user: {}, got HTTP response: ({}) - {}'
+            .format(user, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def user_add(
+        self, user, first_name, last_name, email, password, 
+        url_prefix, auth, session, send_opts):
+        """Add a new user.
+
+        Args:
+            user (string): User name.
+            first_name (string): User's first name.
+            last_name (string): User's last name.
+            email: (string): User's email address.
+            password: (string): User's password.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        req = self.get_user_request(
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            user, first_name, last_name, email, password)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 201:
+            return
+
+        msg = (
+            'Failed adding user: {}, got HTTP response: ({}) - {}'
+            .format(user, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def user_delete(self, user, url_prefix, auth, session, send_opts):
+        """Delete the given user.
+
+        Args:
+            user (string): User name.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        req = self.get_user_request(
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            user)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 204:
+            return
+
+        msg = (
+            'Failed deleting user: {}, got HTTP response: ({}) - {}'
+            .format(user, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
     def list(self, resource, url_prefix, auth, session, send_opts):

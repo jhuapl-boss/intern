@@ -273,16 +273,91 @@ class Remote(NdRemote):
             grp_name, resource, permissions, self.group_perm_api_version)
 
     def user_get_roles(self, user):
+        """Get roles associated with the given user.
+
+        Args:
+            user (string): User name.
+
+        Returns:
+            (list): List of roles that user has.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         self.project_service.set_auth(self._token_project)
         return self.project_service.user_get_roles(user, self.group_perm_api_version)
 
     def user_add_role(self, user, role):
+        """Add role to given user.
+
+        Args:
+            user (string): User name.
+            role (string): Role to assign.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         self.project_service.set_auth(self._token_project)
         self.project_service.user_add_role(user, role, self.group_perm_api_version)
 
     def user_delete_role(self, user, role):
+        """Remove role from given user.
+
+        Args:
+            user (string): User name.
+            role (string): Role to remove.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         self.project_service.set_auth(self._token_project)
         self.project_service.user_delete_role(user, role, self.group_perm_api_version)
+
+    def user_get(self, user):
+        """Get user's data (first and last name, email, etc).
+
+        Args:
+            user (string): User name.
+
+        Returns:
+            (dictionary): User's data encoded in a dictionary.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.user_get(user, self.group_perm_api_version)
+
+    def user_add(
+        self, user, first_name=None, last_name=None, email=None, password=None):
+        """Add a new user.
+
+        Args:
+            user (string): User name.
+            first_name (optional[string]): User's first name.  Defaults to None.
+            last_name (optional[string]): User's last name.  Defaults to None.
+            email: (optional[string]): User's email address.  Defaults to None.
+            password: (optional[string]): User's password.  Defaults to None.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        self.project_service.user_add(
+            user, first_name, last_name, email, password, 
+            self.group_perm_api_version)
+
+    def user_delete(self, user):
+        """Delete the given user.
+
+        Args:
+            user (string): User name.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        self.project_service.user_delete(user, self.group_perm_api_version)
 
     def project_list(self, resource):
         """List all instances of the given resource type.

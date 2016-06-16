@@ -125,6 +125,7 @@ class ProjectService(Service):
         Args:
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Returns:
             (list): List of permissions.
@@ -147,6 +148,7 @@ class ProjectService(Service):
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to add to the given resource.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
@@ -167,6 +169,7 @@ class ProjectService(Service):
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to remove from the given resource.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
@@ -180,6 +183,16 @@ class ProjectService(Service):
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def user_add_role(self, user, role, version=LATEST_VERSION):
+        """Add role to given user.
+
+        Args:
+            user (string): User name.
+            role (string): Role to assign.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
         ps = self.get_api_impl(version)
@@ -188,6 +201,16 @@ class ProjectService(Service):
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def user_delete_role(self, user, role, version=LATEST_VERSION):
+        """Remove role from given user.
+
+        Args:
+            user (string): User name.
+            role (string): Role to remove.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
         ps = self.get_api_impl(version)
@@ -196,10 +219,80 @@ class ProjectService(Service):
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def user_get_roles(self, user, version=LATEST_VERSION):
+        """Get roles associated with the given user.
+
+        Args:
+            user (string): User name.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Returns:
+            (list): List of roles that user has.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
         if version == 'v0.4':
             raise NotImplementedError('ndio does not support this call for v0.4.')
         ps = self.get_api_impl(version)
         return ps.user_get_roles(
+            user, self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def user_add(
+        self, user, first_name=None, last_name=None, email=None, password=None,
+        version=LATEST_VERSION):
+        """Add a new user.
+
+        Args:
+            user (string): User name.
+            first_name (optional[string]): User's first name.  Defaults to None.
+            last_name (optional[string]): User's last name.  Defaults to None.
+            email: (optional[string]): User's email address.  Defaults to None.
+            password: (optional[string]): User's password.  Defaults to None.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+        ps = self.get_api_impl(version)
+        ps.user_add(
+            user, first_name, last_name, email, password,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def user_get(self, user, version=LATEST_VERSION):
+        """Get user's data (first and last name, email, etc).
+
+        Args:
+            user (string): User name.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Returns:
+            (dictionary): User's data encoded in a dictionary.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+        ps = self.get_api_impl(version)
+        return ps.user_get(
+            user, self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def user_delete(self, user, version=LATEST_VERSION):
+        """Delete the given user.
+
+        Args:
+            user (string): User name.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+        ps = self.get_api_impl(version)
+        ps.user_delete(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def list(self, resource):

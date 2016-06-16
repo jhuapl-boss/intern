@@ -18,13 +18,13 @@ from requests import PreparedRequest, Response, Session, HTTPError
 import unittest
 from unittest.mock import patch
 
-class TestUserRole(unittest.TestCase):
+class TestUser(unittest.TestCase):
     def setUp(self):
         self.prj = ProjectService_0_5()
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
-    def test_get_roles_success(self, mock_session, mock_resp):
+    def test_get_success(self, mock_session, mock_resp):
         expected = ['default']
         mock_resp.status_code = 200
         mock_resp.json.return_value = expected
@@ -35,12 +35,12 @@ class TestUserRole(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.user_get_roles(
+        actual = self.prj.user_get(
             'johndoe', url_prefix, auth, mock_session, send_opts)
         self.assertCountEqual(expected, actual)
 
     @patch('requests.Session', autospec=True)
-    def test_get_role_failure(self, mock_session):
+    def test_get_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -51,11 +51,11 @@ class TestUserRole(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.user_get_roles(
+            self.prj.user_get(
                 'johndoe', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_role_success(self, mock_session):
+    def test_add_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 200
@@ -65,11 +65,18 @@ class TestUserRole(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.user_add_role(
-            'johndoe', 'admin', url_prefix, auth, mock_session, send_opts)
+        user = 'johndoe'
+        first = 'john'
+        last = 'doe'
+        email = 'jd@me.com'
+        pw = 'password'
+
+        self.prj.user_add(
+            user, first, last, email, pw, 
+            url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_role_failure(self, mock_session):
+    def test_add_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -79,12 +86,19 @@ class TestUserRole(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
+        user = 'johndoe'
+        first = 'john'
+        last = 'doe'
+        email = 'jd@me.com'
+        pw = 'password'
+
         with self.assertRaises(HTTPError):
-            self.prj.user_add_role(
-                'johndoe', 'admin', url_prefix, auth, mock_session, send_opts)
+            self.prj.user_add(
+                user, first, last, email, pw, 
+                url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_role_success(self, mock_session):
+    def test_delete_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -94,23 +108,9 @@ class TestUserRole(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.user_delete_role(
-            'johndoe', 'admin', url_prefix, auth, mock_session, send_opts)
+        self.prj.user_delete(
+            'johndoe', url_prefix, auth, mock_session, send_opts)
 
-    @patch('requests.Session', autospec=True)
-    def test_add_delete_failure(self, mock_session):
-        mock_session.prepare_request.return_value = PreparedRequest()
-        fake_resp = Response()
-        fake_resp.status_code = 403
-        mock_session.send.return_value = fake_resp
-
-        url_prefix = 'https://api.theboss.io'
-        auth = 'mytoken'
-        send_opts = {}
-
-        with self.assertRaises(HTTPError):
-            self.prj.user_delete_role(
-                'johndoe', 'admin', url_prefix, auth, mock_session, send_opts)
 
 
 if __name__ == '__main__':
