@@ -58,7 +58,7 @@ class TestUserRole(unittest.TestCase):
     def test_add_role_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
-        fake_resp.status_code = 201
+        fake_resp.status_code = 200
         mock_session.send.return_value = fake_resp
 
         url_prefix = 'https://api.theboss.io'
