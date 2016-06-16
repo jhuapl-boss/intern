@@ -183,6 +183,107 @@ class BaseVersionTest(unittest.TestCase):
 
         self.assertEqual(expected, actual.url)
 
+    def test_get_user_request_just_username(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        user = 'fire'
+
+        expected = '{}/{}/user/{}'.format(
+            url_prefix, self.test_project.version, user)
+
+        actual = self.test_project.get_user_request(
+            'POST', 'application/json', url_prefix, token, user)
+
+        self.assertEqual(expected, actual.url)
+
+    def test_get_user_request_with_firstname(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        user = 'fire'
+        first = 'Roger'
+
+        expected = '{}/{}/user/{}'.format(
+            url_prefix, self.test_project.version, user)
+
+        expectedData = { 'first_name': first }
+
+        actual = self.test_project.get_user_request(
+            'POST', 'application/json', url_prefix, token, user, first)
+
+        self.assertEqual(expected, actual.url)
+        self.assertDictEqual(expectedData, actual.data)
+
+    def test_get_user_request_with_lastname(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        user = 'fire'
+        last = 'Roger'
+
+        expected = '{}/{}/user/{}'.format(
+            url_prefix, self.test_project.version, user)
+
+        expectedData = { 'last_name': last }
+
+        actual = self.test_project.get_user_request(
+            'POST', 'application/json', url_prefix, token, user, last_name=last)
+
+        self.assertEqual(expected, actual.url)
+        self.assertDictEqual(expectedData, actual.data)
+
+    def test_get_user_request_with_email(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        user = 'fire'
+        email = 'Roger@me.com'
+
+        expected = '{}/{}/user/{}'.format(
+            url_prefix, self.test_project.version, user)
+
+        expectedData = { 'email': email }
+
+        actual = self.test_project.get_user_request(
+            'POST', 'application/json', url_prefix, token, user, email=email)
+
+    def test_get_user_request_with_password(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        user = 'fire'
+        password = 'password'
+
+        expected = '{}/{}/user/{}'.format(
+            url_prefix, self.test_project.version, user)
+
+        expectedData = { 'password': password }
+
+        actual = self.test_project.get_user_request(
+            'POST', 'application/json', url_prefix, token, user, password=password)
+
+        self.assertEqual(expected, actual.url)
+        self.assertDictEqual(expectedData, actual.data)
+
+    def test_get_user_request_with_password(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        user = 'fire'
+        first = 'Roger'
+        last = 'Dodger'
+        email = 'Roger@me.com'
+        password = 'password'
+
+        expected = '{}/{}/user/{}'.format(
+            url_prefix, self.test_project.version, user)
+
+        expectedData = {
+            'first_name': first, 'last_name': last, 'email': email, 
+            'password': password }
+
+        actual = self.test_project.get_user_request(
+            'POST', 'application/json', url_prefix, token, user, first, last,
+            email, password)
+
+        self.assertEqual(expected, actual.url)
+        self.assertDictEqual(expectedData, actual.data)
+
     ##
     ## Methods used for the metadata service.
     ##

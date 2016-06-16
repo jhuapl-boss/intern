@@ -267,10 +267,7 @@ class BaseVersion(metaclass=ABCMeta):
 
     def get_user_role_request(
         self, method, content, url_prefix, token, user, role=None):
-        """Generate a request for manipulating permissions of a data model object.
-
-        Manipulate what members of the named group can do with the given data
-        model object.
+        """Generate a request for manipulating roles for a user.
 
         Args:
             method (string): HTTP verb such as 'GET'.
@@ -296,3 +293,47 @@ class BaseVersion(metaclass=ABCMeta):
 
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers)
+
+    def get_user_request(
+        self, method, content, url_prefix, token, user, first_name=None, 
+        last_name=None, email=None, password=None):
+        """Generate a request for working with the /users endpoint.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            user (string): Name of user.
+            first_name (optional[string]): User's first name.  Defaults to None.
+            last_name (optional[string]): User's last name.  Defaults to None.
+            email: (optional[string]): User's email address.  Defaults to None.
+            password: (optional[string]): User's password.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        data = {}
+
+        url = url_prefix + '/' + self.version + '/user/' + user
+
+        if first_name is not None:
+            data['first_name'] = first_name
+
+        if last_name is not None:
+            data['last_name'] = last_name
+
+        if email is not None:
+            data['email'] = email
+
+        if password is not None:
+            data['password'] = password
+
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers=headers, data=data)
