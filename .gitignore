@@ -23,3 +23,8 @@ nose2-junit.xml
 *.swp
 *.swo
 
+# Visual Studio Files
+.vs/
+*.suo
+
+
