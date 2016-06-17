@@ -328,6 +328,21 @@ class Remote(NdRemote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.user_get(user, self.group_perm_api_version)
 
+    def user_get_groups(self, user):
+        """Get user's group memberships.
+
+        Args:
+            user (string): User name.
+
+        Returns:
+            (list): User's groups.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.user_get_groups(user, self.group_perm_api_version)
+
     def user_add(
         self, user, first_name=None, last_name=None, email=None, password=None):
         """Add a new user.

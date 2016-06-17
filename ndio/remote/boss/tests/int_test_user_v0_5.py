@@ -36,6 +36,12 @@ class ProjectUserTest_v0_5(unittest.TestCase):
         """
         cls.initialize(cls)
         cls.cleanup_db(cls)
+        cls.rmt.group_create(cls.group)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.initialize(cls)
+        cls.rmt.group_delete(cls.group)
 
     def initialize(self):
         """Initialization for each test.
@@ -56,6 +62,8 @@ class ProjectUserTest_v0_5(unittest.TestCase):
         self.last_name = 'doe'
         self.email = 'jd@me.com'
         self.password = 'password'
+
+        self.group = 'int_user_test_group'
 
     def cleanup_db(self):
         """Clean up the data model objects used by this test case.
@@ -108,6 +116,20 @@ class ProjectUserTest_v0_5(unittest.TestCase):
     def test_get_invalid_user(self):
         with self.assertRaises(HTTPError):
             self.rmt.user_get('foo')
+
+    def test_get_groups(self):
+        self.rmt.user_add(
+            self.user, self.first_name, self.last_name, self.email, 
+            self.password)
+        self.rmt.group_add_user(self.group, self.user)
+
+        expected = ['boss-public', self.group]
+        actual = self.rmt.user_get_groups(self.user)
+        self.assertCountEqual(expected, actual)
+
+    def test_get_groups_invalid_user(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.user_get_groups('foo')
 
 
 if __name__ == '__main__':

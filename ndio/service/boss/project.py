@@ -279,6 +279,24 @@ class ProjectService(Service):
         return ps.user_get(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    def user_get_groups(self, user, version=LATEST_VERSION):
+        """Get user's group memberships.
+
+        Args:
+            user (string): User name.
+
+        Returns:
+            (dictionary): User's data encoded in a dictionary.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        if version == 'v0.4':
+            raise NotImplementedError('ndio does not support this call for v0.4.')
+        ps = self.get_api_impl(version)
+        return ps.user_get_groups(
+            user, self.url_prefix, self.auth, self.session, self.session_send_opts)
+
     def user_delete(self, user, version=LATEST_VERSION):
         """Delete the given user.
 

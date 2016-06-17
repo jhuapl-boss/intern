@@ -36,6 +36,13 @@ class ProjectUserRoleTest_v0_5(unittest.TestCase):
         """
         cls.initialize(cls)
         cls.cleanup_db(cls)
+        cls.rmt.user_add(cls.user)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.initialize(cls)
+        cls.rmt.user_delete(cls.user)
+
 
     def initialize(self):
         """Initialization for each test.
@@ -54,9 +61,7 @@ class ProjectUserRoleTest_v0_5(unittest.TestCase):
         self.admin = 'admin'
         self.user_mgr = 'user-manager'
         self.rsrc_mgr = 'resource-manager'
-
-        # User hard coded until users can be created programatically.
-        self.user = '5df48a49-760a-460e-a1d6-d11e1d'
+        self.user = 'role_test_user'
 
     def cleanup_db(self):
         """Clean up the data model objects used by this test case.
