@@ -276,7 +276,7 @@ class ProjectService_0_5(Base):
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
-        if resp.status_code == 200:
+        if resp.status_code == 201:
             return
 
         msg = (
