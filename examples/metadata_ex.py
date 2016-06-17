@@ -29,17 +29,15 @@ will be manipulated.
 
 from ndio.remote.boss.remote import Remote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
-from requests import HTTPError
-import sys
 
 rmt = Remote('example.cfg')
+#rmt = Remote('test.cfg')
 
 API_VER = LATEST_VERSION
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
 import requests
-from requests import Session
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 rmt.project_service.session_send_opts = { 'verify': False }

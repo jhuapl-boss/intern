@@ -35,7 +35,6 @@ rmt.group_perm_api_version = API_VER
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
 import requests
-from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 rmt.project_service.session_send_opts = { 'verify': False }

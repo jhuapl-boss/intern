@@ -11,7 +11,6 @@ API_VER = LATEST_VERSION
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
 import requests
-from requests import Session
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 rmt.project_service.session_send_opts = { 'verify': False }
