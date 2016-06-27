@@ -551,7 +551,7 @@ class ProjectService_0_5(Base):
         old_resource = copy.deepcopy(resource)
         old_resource.name = resource_name
 
-        json = self._get_resource_params(resource)
+        json = self._get_resource_params(resource, for_update=True)
 
         req = self.get_request(
             old_resource, 'PUT', 'application/x-www-form-urlencoded',
@@ -594,12 +594,17 @@ class ProjectService_0_5(Base):
             resource.name, resp.status_code, resp.text))
         raise HTTPError(err, request = req, response = resp)
 
-    def _get_resource_params(self, resource):
+    def _get_resource_params(self, resource, for_update=False):
         """Get dictionary containing all parameters for the given resource.
+
+        When getting params for a coordinate frame update, only name and 
+        description are returned because they are the only fields that can
+        be updated.
 
         Args:
             resource (ndio.ndresource.boss.resource.Resource): A sub-class
                 whose parameters will be extracted into a dictionary.
+            for_update (bool): True if params will be used for an update.
 
         Returns:
             (dictionary): A dictionary containing the resource's parameters as
@@ -615,7 +620,7 @@ class ProjectService_0_5(Base):
             return self._get_experiment_params(resource)
 
         if isinstance(resource, CoordinateFrameResource):
-            return self._get_coordinate_params(resource)
+            return self._get_coordinate_params(resource, for_update)
 
         if isinstance(resource, LayerResource):
             return self._get_layer_params(resource)
@@ -638,23 +643,26 @@ class ProjectService_0_5(Base):
             'max_time_sample': exp.max_time_sample
         }
 
-    def _get_coordinate_params(self, coord):
-        return {
-            'name': coord.name,
-            'description': coord.description ,
-            'x_start': coord.x_start,
-            'x_stop': coord.x_stop,
-            'y_start': coord.y_start,
-            'y_stop': coord.y_stop,
-            'z_start': coord.z_start,
-            'z_stop': coord.z_stop,
-            'x_voxel_size': coord.x_voxel_size,
-            'y_voxel_size': coord.y_voxel_size,
-            'z_voxel_size': coord.z_voxel_size,
-            'voxel_unit': coord.voxel_unit,
-            'time_step': coord.time_step,
-            'time_step_unit': coord.time_step_unit
-        }
+    def _get_coordinate_params(self, coord, for_update):
+        if not for_update:
+            return {
+                'name': coord.name,
+                'description': coord.description ,
+                'x_start': coord.x_start,
+                'x_stop': coord.x_stop,
+                'y_start': coord.y_start,
+                'y_stop': coord.y_stop,
+                'z_start': coord.z_start,
+                'z_stop': coord.z_stop,
+                'x_voxel_size': coord.x_voxel_size,
+                'y_voxel_size': coord.y_voxel_size,
+                'z_voxel_size': coord.z_voxel_size,
+                'voxel_unit': coord.voxel_unit,
+                'time_step': coord.time_step,
+                'time_step_unit': coord.time_step_unit
+            }
+
+        return { 'name': coord.name, 'description': coord.description }
 
     def _get_channel_params(self, chan):
         return {
