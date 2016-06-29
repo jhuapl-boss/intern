@@ -5,7 +5,7 @@ ____________
 ___________
 
 ### v0.5 changes:
-* New `ndio.remote.boss.remote.Remote` methods:
+* New `ndio.remote.boss.remote.Remote` methods that support user and access management:
  * `group_create()`
  * `group_delete()`
  * `group_get()`
@@ -13,6 +13,14 @@ ___________
  * `permissions_add()`
  * `permissions_get()`
  * `permissions_delete()`
+ * `user_get_roles()`
+ * `user_add_role()`
+ * `user_delete_role()`
+ * `user_get()`
+ * `user_get_groups()`
+ * `user_add()`
+ * `user_delete()`
+* Only the name and description of a coordinate frame, can be changed, after creation.
 
 ### General changes:
 * `ndio.remote.boss.remote.Remote` method changes:
