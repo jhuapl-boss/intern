@@ -19,6 +19,7 @@ import requests
 from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+import copy
 import unittest
 
 API_VER = 'v0.4'
@@ -57,9 +58,9 @@ class ProjectServiceTest_v0_4(unittest.TestCase):
         self.coord = CoordinateFrameResource(
             'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
-        self.coord_upd = CoordinateFrameResource(
-            'MouseFrame', API_VER, 'Mouse coordinate frame.', 4, 14, -10, 10, 0, 8,
-            2, 3, 4, 'micrometers', 1, 'microseconds')
+        self.coord_upd = copy.copy(self.coord)
+        self.coord_upd.name = 'MouseFrame'
+        self.coord_upd.description = 'Mouse coordinate frame.'
 
         # Coordinate frame of experiments needs to be set to a valid ID before
         # creating.
@@ -337,18 +338,6 @@ class ProjectServiceTest_v0_4(unittest.TestCase):
         cf = self.rmt.project_update(self.coord.name, self.coord_upd)
         self.assertEqual(self.coord_upd.name, cf.name)
         self.assertEqual(self.coord_upd.description, cf.description)
-        self.assertEqual(self.coord_upd.x_start, cf.x_start)
-        self.assertEqual(self.coord_upd.x_stop, cf.x_stop)
-        self.assertEqual(self.coord_upd.y_start, cf.y_start)
-        self.assertEqual(self.coord_upd.y_stop, cf.y_stop)
-        self.assertEqual(self.coord_upd.z_start, cf.z_start)
-        self.assertEqual(self.coord_upd.z_stop, cf.z_stop)
-        self.assertEqual(self.coord_upd.x_voxel_size, cf.x_voxel_size)
-        self.assertEqual(self.coord_upd.y_voxel_size, cf.y_voxel_size)
-        self.assertEqual(self.coord_upd.z_voxel_size, cf.z_voxel_size)
-        self.assertEqual(self.coord_upd.voxel_unit, cf.voxel_unit)
-        self.assertEqual(self.coord_upd.time_step, cf.time_step)
-        self.assertEqual(self.coord_upd.time_step_unit, cf.time_step_unit)
 
     def test_update_experiment(self):
         c = self.rmt.project_create(self.coll)

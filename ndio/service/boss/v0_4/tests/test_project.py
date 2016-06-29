@@ -252,9 +252,17 @@ class TestProject_v0_4(unittest.TestCase):
         self.assertTrue('hierarchy_method' in actual)
         self.assertTrue('max_time_sample' in actual)
 
+    def test_get_resource_params_coord_frame_for_update(self):
+
+        coord = CoordinateFrameResource('foo')
+        actual = self.prj._get_resource_params(coord, for_update=True)
+        self.assertEqual('foo', actual['name'])
+        self.assertTrue('description' in actual)
+        self.assertEqual(2, len(actual))
+
     def test_get_resource_params_coord_frame(self):
         coord = CoordinateFrameResource('foo')
-        actual = self.prj._get_resource_params(coord)
+        actual = self.prj._get_resource_params(coord, for_update=False)
         self.assertEqual('foo', actual['name'])
         self.assertTrue('description' in actual)
         self.assertTrue('x_start' in actual)
