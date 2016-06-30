@@ -27,7 +27,7 @@ ___________
  * Exceptions are raised when any non-2xx response received from the Boss.
  * Methods that previously returned True to indicate success no longer return a value.  Instead, an exception indicates failure (see above).
  * `project_create()` returns an `ndio.ndresource.boss.resource.Resource` instead of a dictionary.
- * `project_get()` returns an `ndio.ndresource.boss.resource.Resource` instead of a bool.
+ * `project_get()` returns an `ndio.ndresource.boss.resource.Resource` instead of a dictionary.
  * `project_update()` returns an `ndio.ndresource.boss.resource.Resource` instead of a bool.
 * `ndio.ndresource.boss.resource.ChannelResource` no longer allows the uint64 data type.
 
