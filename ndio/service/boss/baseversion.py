@@ -287,7 +287,7 @@ class BaseVersion(metaclass=ABCMeta):
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        url = url_prefix + '/' + self.version + '/user-role/' + user
+        url = url_prefix + '/' + self.version + '/sso/user-role/' + user
         if role is not None:
             url = url + '/' + role
 
@@ -321,7 +321,7 @@ class BaseVersion(metaclass=ABCMeta):
 
         data = {}
 
-        url = url_prefix + '/' + self.version + '/user/' + user
+        url = url_prefix + '/' + self.version + '/sso/user/' + user
 
         if first_name is not None:
             data['first_name'] = first_name

@@ -28,7 +28,7 @@ CONFIG_PROTOCOL = 'protocol'
 CONFIG_HOST = 'host'
 CONFIG_TOKEN = 'token'
 
-LATEST_VERSION='v0.5'
+LATEST_VERSION='v0.6'
 
 
 class Remote(NdRemote):

@@ -15,8 +15,9 @@
 from ndio.service.boss.service import Service
 from ndio.service.boss.v0_4.project import ProjectService_0_4
 from ndio.service.boss.v0_5.project import ProjectService_0_5
+from ndio.service.boss.v0_6.project import ProjectService_0_6
 
-LATEST_VERSION='v0.5'
+LATEST_VERSION='v0.6'
 
 class ProjectService(Service):
     """ProjectService routes calls to the appropriate API version.
@@ -32,7 +33,8 @@ class ProjectService(Service):
         self.base_url = base_url
         self._versions = {
             'v0.4': ProjectService_0_4(),
-            'v0.5': ProjectService_0_5()
+            'v0.5': ProjectService_0_5(),
+            'v0.6': ProjectService_0_6()
         }
 
     def group_get(self, name, user_name=None, version=LATEST_VERSION):
