@@ -50,6 +50,7 @@ class ProjectUserRoleTest_v0_6(unittest.TestCase):
         Called by both setUp() and setUpClass().
         """
         self.rmt = Remote('test.cfg')
+        self.rmt.group_perm_api_version = API_VER
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.

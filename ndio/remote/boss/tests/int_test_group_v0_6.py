@@ -21,9 +21,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
 
-API_VER = 'v0.5'
+API_VER = 'v0.6'
 
-class ProjectGroupTest_v0_5(unittest.TestCase):
+class ProjectGroupTest_v0_6(unittest.TestCase):
     """Integration tests of the Boss group API.
     """
 
