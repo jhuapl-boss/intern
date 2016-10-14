@@ -17,9 +17,8 @@ from ndio.ndresource.boss.resource import *
 
 import configparser
 import json
-from ndio.remote.boss.tests.get_token import create_session, request, elb_public_lookup
 import requests
-from requests import Session, HTTPError
+from requests import Session, HTTPError, Request
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import unittest
 import warnings
@@ -140,9 +139,13 @@ class ProjectUserTest_v0_6(unittest.TestCase):
             'Authorization': 'Bearer ' + token
         }
         protocol = parser['Project Service']['protocol']
+
+        # Hit one of the API endpoints to effectively, login.
         url = protocol + '://' + host + '/v0.6/resource/collections'
-        response = request(url, headers=headers)
-        print(response)
+        session = Session()
+        request = Request('GET', url, headers=headers)
+        prep = session.prepare_request(request)
+        response = session.send(prep, verify=False)
 
     def get_access_token(self):
         """Get the bearer token for the test user for login.
@@ -155,16 +158,11 @@ class ProjectUserTest_v0_6(unittest.TestCase):
         parser = configparser.ConfigParser()
         parser.read('test.cfg')
         # Get the beginning of the VPC name that test is running in.
-        domain = parser['Project Service']['host'].split('.', 3)[1]
-        creds_file = os.environ['AWS_CREDENTIALS']
-        with open(creds_file) as creds_fh:
-            session = create_session(creds_fh)
-        host = 'auth-' + domain
-        elb = elb_public_lookup(session, host)
-        self.assertIsNotNone(elb)
+        domain = parser['Project Service']['host'].split('.', 1)[1]
+        host = 'auth.' + domain
         protocol = parser['Project Service']['protocol']
-        url = protocol + '://' + elb + '/auth/realms/BOSS/protocol/openid-connect/token'
-        params = {
+        url = protocol + '://' + host + '/auth/realms/BOSS/protocol/openid-connect/token'
+        data = {
             'grant_type': 'password',
             'client_id': 'endpoint',
             'username': self.user,
@@ -173,28 +171,20 @@ class ProjectUserTest_v0_6(unittest.TestCase):
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        response = request(url, params, headers)
-        response = json.loads(response)
-        self.assertIn('access_token', response)
-        return response['access_token']
+        session = Session()
+        request = Request('POST', url, data=data, headers=headers)
+        prep = session.prepare_request(request)
+        response = session.send(prep, verify=False)
+        jresp = response.json()
+        self.assertIn('access_token', jresp)
+        return jresp['access_token']
 
     def test_get_groups(self):
         self.rmt.user_add(
             self.user, self.first_name, self.last_name, self.email, 
             self.password)
         token = self.get_access_token()
-
-        # Try saving token to disk and re-reading it.
-        with open('token.txt', 'w') as fh:
-            fh.write(token)
-        print('token is {}'.format(token))
-
-        #self.login_user(token)
-
-        # Read token back in to duplicate workflow of get_token.py and test_api.py
-        with open('token.txt', 'r') as fh:
-            encoded_token = fh.read()
-        self.login_user(encoded_token)
+        self.login_user(token)
 
         self.rmt.group_add_user(self.group, self.user)
 

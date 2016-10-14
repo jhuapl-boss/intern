@@ -358,15 +358,14 @@ class ProjectService_0_6(Base):
         Raises:
             requests.HTTPError on failure.
         """
-        req = self.get_user_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
-            user)
-        req.url = req.url + '/groups/'
+        req = self.get_user_groups_request(
+            'application/x-www-form-urlencoded', url_prefix, auth, user)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
             groups = []
+            print(resp.json())
             for dict in resp.json():
                 if 'name' in dict:
                     groups.append(dict['name'])
