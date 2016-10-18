@@ -324,15 +324,35 @@ class BaseVersionTest(unittest.TestCase):
     ## Methods used for the volume service.
     ##
 
+    def test_convert_int_list_range_to_str(self):
+        exp = '2:7'
+        actual = self.test_volume.convert_int_list_range_to_str([2,7])
+        self.assertEqual(exp, actual)
+        
+    def test_convert_int_list_range_to_str_bad_range(self):
+        with self.assertRaises(RuntimeError):
+            self.test_volume.convert_int_list_range_to_str([7,5])
+
+    def test_convert_int_list_range_to_str_wrong_number_of_elements(self):
+        with self.assertRaises(RuntimeError):
+            self.test_volume.convert_int_list_range_to_str([5, 7, 9])
+
+    def test_convert_int_list_range_to_str_no_list(self):
+        with self.assertRaises(RuntimeError):
+            self.test_volume.convert_int_list_range_to_str('5, 7')
+
     def test_build_cutout_url_no_time_range(self):
         res = 0
+        x_rng_lst = [20, 40]
         x_range = '20:40'
+        y_rng_lst = [50, 70]
         y_range = '50:70'
+        z_rng_lst = [30, 50]
         z_range = '30:50'
-        time_range = None
+        t_rng_lst = None
         actual = self.test_volume.build_cutout_url(
             self.chanResource, self.url_prefix,
-            res, x_range, y_range, z_range, time_range)
+            res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst)
 
         self.assertEqual(
             self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
@@ -343,13 +363,17 @@ class BaseVersionTest(unittest.TestCase):
 
     def test_build_cutout_url_with_time_range(self):
         res = 0
+        x_rng_lst = [20, 40]
         x_range = '20:40'
+        y_rng_lst = [50, 70]
         y_range = '50:70'
+        z_rng_lst = [30, 50]
         z_range = '30:50'
+        t_rng_lst = [10, 25]
         time_range = '10:25'
         actual = self.test_volume.build_cutout_url(
-            self.chanResource, self.url_prefix, 
-            res, x_range, y_range, z_range, time_range)
+            self.chanResource, self.url_prefix,
+            res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst)
 
         self.assertEqual(
             self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
@@ -362,15 +386,19 @@ class BaseVersionTest(unittest.TestCase):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         resolution = 0
+        x_rng_lst = [20, 40]
         x_range = '20:40'
+        y_rng_lst = [50, 70]
         y_range = '50:70'
+        z_rng_lst = [30, 50]
         z_range = '30:50'
+        t_rng_lst = [10, 25]
         time_range = '10:25'
         data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
 
         actual = self.test_volume.get_cutout_request(
             self.chanResource, 'GET', 'application/blosc-python', url_prefix, token,
-            resolution, x_range, y_range, z_range, time_range, data)
+            resolution, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst, data)
         self.assertEqual(
             '{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/'.format(url_prefix, self.test_volume.version,
             self.test_volume.endpoint, self.chanResource.coll_name, 
@@ -380,3 +408,6 @@ class BaseVersionTest(unittest.TestCase):
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/blosc-python', actual.headers['Content-Type'])
 
+
+if __name__ == '__main__':
+    unittest.main()

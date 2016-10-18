@@ -43,11 +43,11 @@ class VolumeService(Service):
         Args:
             resource (ndio.ndresource.resource.Resource): Resource compatible with cutout operations.
             resolution (int): 0 indicates native resolution.
-            x_range (string): x range such as '10:20' which means x>=10 and x<20.
-            y_range (string): y range such as '10:20' which means y>=10 and y<20.
-            z_range (string): z range such as '10:20' which means z>=10 and z<20.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             numpyVolume (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
-            time_range (optional [string]): time range such as 30:40 which means t>=30 and t<40.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
         """
 
         ps = self.get_api_impl(resource.version)
@@ -61,10 +61,10 @@ class VolumeService(Service):
         Args:
             resource (ndio.ndresource.boss.resource.ChannelLayerBaseResource): Channel or layer resource.
             resolution (int): 0 indicates native resolution.
-            x_range (string): x range such as '10:20' which means x>=10 and x<20.
-            y_range (string): y range such as '10:20' which means y>=10 and y<20.
-            z_range (string): z range such as '10:20' which means z>=10 and z<20.
-            time_range (optional [string]): time range such as 30:40 which means t>=30 and t<40.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
 
         Returns:
             (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
