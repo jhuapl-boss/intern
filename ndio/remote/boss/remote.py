@@ -28,7 +28,7 @@ CONFIG_PROTOCOL = 'protocol'
 CONFIG_HOST = 'host'
 CONFIG_TOKEN = 'token'
 
-LATEST_VERSION='v0.6'
+LATEST_VERSION='v0.7'
 
 
 class Remote(NdRemote):
@@ -170,7 +170,6 @@ class Remote(NdRemote):
         Args:
             name (string): Name of group to query.
             user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Returns:
             (mixed): Dictionary if getting group information or bool if a user name is supplied.
