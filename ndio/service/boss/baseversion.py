@@ -35,6 +35,28 @@ class BaseVersion(metaclass=ABCMeta):
         """Implementers define the name of the endpoint.
         """
 
+    def convert_int_list_range_to_str(self, int_list):
+        """Convert range in list of two ints to string representation.
+
+        Returned string can then be placed in URL as a query parameter.
+
+        Args:
+            int_list (list[int]): range such as [10, 20] which means x>=10 and x<20.
+
+        Returns:
+            (string): [10, 20] => '10:20'
+
+        Raises:
+            (RuntimeError): if given invalid range.
+        """
+        if len(int_list) != 2:
+            raise RuntimeError('int_list must contain exactly two values.')
+
+        if int_list[0] > int_list[1]:
+            raise RuntimeError('Invalid range: int_list[0] > int_list[1].')
+        
+        return '{}:{}'.format(int_list[0], int_list[1])
+
     def get_headers(self, content_type, token):
         """Get headers to place in Request object.
 
@@ -100,21 +122,29 @@ class BaseVersion(metaclass=ABCMeta):
         Args:
             url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
             resolution (int): 0 indicates native resolution.
-            x_range (string): x range such as '10:20' which means x>=10 and x<20.
-            y_range (string): y range such as '10:20' which means y>=10 and y<20.
-            z_range (string): z range such as '10:20' which means z>=10 and z<20.
-            time_range (string): None or time range such as 30:40 which means t>=30 and t<40.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
 
         Returns:
             (string): Full URL to access API.
+
+        Raises:
+            (RuntimeError): if *_range invalid.
         """
+        x_rng_lst = self.convert_int_list_range_to_str(x_range)
+        y_rng_lst = self.convert_int_list_range_to_str(y_range)
+        z_rng_lst = self.convert_int_list_range_to_str(z_range)
+
         urlWithParams = (
-            baseUrl + '/' + str(resolution) + '/' + x_range + '/' + y_range +
-            '/' + z_range + '/')
+            baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+            '/' + z_rng_lst + '/')
         if time_range is None:
             return urlWithParams
 
-        urlWithTime = urlWithParams + time_range + '/'
+        t_rng_lst = self.convert_int_list_range_to_str(time_range)
+        urlWithTime = urlWithParams + t_rng_lst + '/'
         return urlWithTime
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
@@ -185,10 +215,10 @@ class BaseVersion(metaclass=ABCMeta):
             url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
             token (string): Django Rest Framework token for auth.
             resolution (int): 0 indicates native resolution.
-            x_range (string): x range such as '10:20' which means x>=10 and x<20.
-            y_range (string): y range such as '10:20' which means y>=10 and y<20.
-            z_range (string): z range such as '10:20' which means z>=10 and z<20.
-            time_range (string): None or time range such as 30:40 which means t>=30 and t<40.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
             numpyVolume (numpy array): The data volume encoded in a numpy array.
 
         Returns:
