@@ -24,10 +24,10 @@ class TestCoordFrameResource(unittest.TestCase):
 
     def test_get_route(self):
         self.assertEqual(
-            'coordinateframes/{}'.format(self.cf.name), self.cf.get_route())
+            '{}'.format(self.cf.name), self.cf.get_route())
 
-    def test_get_project_list_route(self):
-        self.assertEqual('coordinateframes/', self.cf.get_project_list_route())
+    def test_get_list_route(self):
+        self.assertEqual('', self.cf.get_list_route())
 
     def test_voxel_unit_setter(self):
         exp = 'millimeters'
