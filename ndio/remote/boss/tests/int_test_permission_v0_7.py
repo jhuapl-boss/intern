@@ -67,7 +67,7 @@ class ProjectPermissionTest_v0_5(unittest.TestCase):
             'iso', 0)
 
         self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, API_VER, 'test channel', 
+            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
             0, 'uint8', 0)
 
         # Layer's channel list needs to be given a valid channel ID before 

@@ -82,7 +82,7 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
             0, 1, 'iso', 0)
 
         self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, API_VER, 'test channel', 
+            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
             0, 'uint8', 0)
 
         # self.lyr.channels must be set with valid id before creating.

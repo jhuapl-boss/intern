@@ -667,10 +667,17 @@ class ProjectService_0_7(Base):
                 'default_time_step': chan.default_time_step,
                 'datatype': chan.datatype,
                 'base_resolution': chan.base_resolution,
-                'is_channel': True
+                'type': chan.type,
+                'source': chan.source,
+                'related': chan.related
             }
 
-        return { 'name': chan.name, 'description': chan.description }
+        return { 
+            'name': chan.name,
+            'description': chan.description,
+            'source': chan.source,
+            'related': chan.related
+        }
 
     def _create_resource_from_dict(self, resource, dict):
         """
@@ -730,7 +737,7 @@ class ProjectService_0_7(Base):
     def _get_channel(self, dict, coll_name, exp_name):
         chan_keys = [
             'name', 'description', 'creator', 'default_time_step', 
-            'datatype', 'base_resolution'
+            'datatype', 'base_resolution', 'type'
         ]
 
         filtered = { k:v for (k, v) in dict.items() if k in chan_keys }

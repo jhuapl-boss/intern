@@ -23,7 +23,7 @@ from unittest.mock import patch
 class TestVolume_v0_7(unittest.TestCase):
     def setUp(self):
         self.vol = VolumeService_0_7()
-        self.chan = ChannelResource('chan', 'foo', 'bar', datatype='uint16')
+        self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
 
     @patch('requests.Session', autospec=True)
     def test_cutout_create_success(self, mock_session):

@@ -17,7 +17,29 @@ from ndio.ndresource.boss.resource import ChannelResource
 
 class TestChannelResource(unittest.TestCase):
     def setUp(self):
-        self.chan = ChannelResource('mychan', 'foo', 'bar')
+        self.chan = ChannelResource('mychan', 'foo', 'bar', 'image')
+
+    def test_default_source_is_empty(self):
+        self.assertEqual([], self.chan.source)
+
+    def test_default_related_is_empty(self):
+        self.assertEqual([], self.chan.related)
+
+    def test_source_string_stored_as_list(self):
+        self.chan.source = 'foo'
+        self.assertEqual(['foo'], self.chan.source)
+
+    def test_related_string_stored_as_list(self):
+        self.chan.related = 'foo'
+        self.assertEqual(['foo'], self.chan.related)
+
+    def test_source_list(self):
+        self.chan.source = ['foo', 'bar']
+        self.assertEqual(['foo', 'bar'], self.chan.source)
+
+    def test_related_list(self):
+        self.chan.related = ['foo', 'bar']
+        self.assertEqual(['foo', 'bar'], self.chan.related)
 
     def test_valid_volume(self):
         self.assertTrue(self.chan.valid_volume())

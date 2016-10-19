@@ -72,10 +72,10 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
             self.coord.name, 2, 'slice', 1)
 
         self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, API_VER, 'test channel', 
+            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
             0, 'uint8', 0)
         self.chan_upd = ChannelResource(
-            'yourChan', self.coll.name, self.exp.name, API_VER, 'your test channel', 
+            'yourChan', self.coll.name, self.exp.name, 'image', API_VER, 'your test channel', 
             1, 'uint8', 1)
 
 
@@ -152,7 +152,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        self.exp.coord_frame = cf.name
         e = self.rmt.project_create(self.exp)
         self.assertEqual(self.exp.name, e.name)
         self.assertEqual(self.exp.description, e.description)
@@ -169,7 +168,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        self.exp.coord_frame = cf.name
         e = self.rmt.project_create(self.exp)
         self.assertIsNotNone(e)
 
@@ -217,7 +215,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        self.exp.coord_frame = cf.name
         exp = self.rmt.project_create(self.exp)
         self.assertIsNotNone(exp)
 
@@ -237,7 +234,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        self.exp.coord_frame = cf.name
         e = self.rmt.project_create(self.exp)
         self.assertIsNotNone(e)
 
@@ -279,11 +275,9 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        self.exp.coord_frame = cf.name
         e = self.rmt.project_create(self.exp)
         self.assertIsNotNone(e)
 
-        self.exp_upd.coord_frame = cf.name
         eup = self.rmt.project_update(self.exp.name, self.exp_upd)
         self.assertEqual(self.exp_upd.name, eup.name)
         self.assertEqual(self.exp_upd.description, eup.description)
@@ -300,7 +294,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        self.exp.coord_frame = cf.name
         e = self.rmt.project_create(self.exp)
         self.assertIsNotNone(e)
 
@@ -341,7 +334,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        self.exp.coord_frame = cf.name
         exp = self.rmt.project_create(self.exp)
         self.assertIsNotNone(exp)
 
@@ -357,7 +349,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        self.exp.coord_frame = cf.name
         e = self.rmt.project_create(self.exp)
         self.assertIsNotNone(e)
 
@@ -381,7 +372,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        self.exp.coord_frame = cf.name
         e = self.rmt.project_create(self.exp)
         self.assertIsNotNone(e)
 

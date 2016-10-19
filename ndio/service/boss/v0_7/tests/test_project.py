@@ -21,7 +21,7 @@ from unittest.mock import patch
 class TestProject_v0_7(unittest.TestCase):
     def setUp(self):
         self.prj = ProjectService_0_7()
-        self.chan = ChannelResource('chan', 'foo', 'bar', datatype='uint16')
+        self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
@@ -105,7 +105,7 @@ class TestProject_v0_7(unittest.TestCase):
             'base_resolution': 0, 'linked_channel_layers': [], 'creator': 'me'
         }
         expected = ChannelResource(
-            chan_dict['name'], self.chan.coll_name, self.chan.exp_name) 
+            chan_dict['name'], self.chan.coll_name, self.chan.exp_name, 'image') 
         expected.description = chan_dict['description']
         expected.datatype = chan_dict['datatype']
         expected.base_resolution = chan_dict['base_resolution']
@@ -159,7 +159,7 @@ class TestProject_v0_7(unittest.TestCase):
             'base_resolution': 0, 'linked_channel_layers': [], 'creator': 'me'
         }
         expected = ChannelResource(
-            chan_dict['name'], self.chan.coll_name, self.chan.exp_name) 
+            chan_dict['name'], self.chan.coll_name, self.chan.exp_name, 'image') 
         expected.description = chan_dict['description']
         expected.datatype = chan_dict['datatype']
         expected.base_resolution = chan_dict['base_resolution']
@@ -278,7 +278,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertTrue('time_step_unit' in actual)
 
     def test_get_resource_params_channel(self):
-        chan = ChannelResource('foo', 'coll', 'exp')
+        chan = ChannelResource('foo', 'coll', 'exp', 'image')
         actual = self.prj._get_resource_params(chan)
         self.assertEqual('foo', actual['name'])
         self.assertTrue(actual['is_channel'])
@@ -366,7 +366,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_channel(self):
-        chan = ChannelResource('', 'coll1', 'exp1')
+        chan = ChannelResource('', 'coll1', 'exp1', 'image')
         dict = {
             'id': 7, 'name': 'fire', 'description': 'walker', 
             'experiment': 'exp1', 'creator': 'me',

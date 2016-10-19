@@ -295,28 +295,32 @@ class ChannelResource(Resource):
         version (string): The Boss API version to use.
         default_time_step (int):
         base_resolution (int):
-        type (string): 'image' or 'annotation'
+        _type (string): 'image' or 'annotation'
         _valid_datatypes (list[string]): Allowed data type values (static variable).
         _datatype (string):
     """
 
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
+    _valid_types = ['annotation', 'image']
 
-    def __init__(self, name, collection_name, experiment_name,
+    def __init__(self, name, collection_name, experiment_name, type, 
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
-        base_resolution=0, creator='', raw={}):
+        base_resolution=0, source=[], related=[], creator='', raw={}):
         """Constructor.
 
         Args:
             name (string): Channel name.
             collection_name (string): Parent collection name.
             experiment_name (string): Parent experiment name.
+            type (string): 'image' or 'annotation'
             version (optional[string]): API version to use.  Defaults to latest version.
             description (optional[string]): Layer description.  Defaults to empty.
             default_time_step (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
             base_resolution (optional[int]): Defaults to 0 (native).
+            source (optional[list[string]]): Channels this channel was derived from.
+            related (optiona[list[string]]): Channels related to this channel.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
@@ -325,7 +329,12 @@ class ChannelResource(Resource):
         self.coll_name = collection_name
         self.exp_name = experiment_name
 
+        self._type = self.validate_type(type)
         self._datatype = self.validate_datatype(datatype)
+
+        self.source = source
+
+        self.related = related
 
         #ToDo: validate data types.
         self.default_time_step = default_time_step
@@ -343,7 +352,53 @@ class ChannelResource(Resource):
         return True
 
     @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        if isinstance(value, str):
+            self._source = [value]
+        else:
+            self._source = value
+
+    @property
+    def related(self):
+        return self._related
+
+    @related.setter
+    def related(self, value):
+        if isinstance(value, str):
+            self._related = [value]
+        else:
+            self._related = value
+
+    @property
+    def type(self):
+        """Channel type.
+
+        Returns:
+            (string)
+        """
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        """
+        Args:
+            value (string): 'image', 'annotation'
+        Raises:
+            ValueError
+        """
+        self._type = self.validate_type(value)
+
+    @property
     def datatype(self):
+        """Channel bit depth.
+
+        Returns:
+            (string)
+        """
         return self._datatype
 
     @datatype.setter
@@ -355,6 +410,12 @@ class ChannelResource(Resource):
             ValueError
         """
         self._datatype = self.validate_datatype(value)
+
+    def validate_type(self, value):
+        lowered = value.lower()
+        if lowered in ChannelResource._valid_types:
+            return lowered
+        raise ValueError('{} is not a valid type.'.format(value))
 
     def validate_datatype(self, value):
         lowered = value.lower()

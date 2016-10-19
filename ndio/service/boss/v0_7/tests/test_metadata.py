@@ -22,7 +22,7 @@ from unittest.mock import patch
 class TestMetadata_v0_7(unittest.TestCase):
     def setUp(self):
         self.meta = MetadataService_0_7()
-        self.chan = ChannelResource('chan', 'foo', 'bar', datatype='uint16')
+        self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)

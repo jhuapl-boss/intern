@@ -60,7 +60,7 @@ class BaseVersionTest(unittest.TestCase):
     def setUp(self):
         self.resource = CollectionResource('coll1', VER)
         self.chanResource = ChannelResource(
-            'chan1', 'coll1', 'exp1', VER, 'null descr', 0, 'uint8', 0)
+            'chan1', 'coll1', 'exp1', 'image', VER, 'null descr', 0, 'uint8', 0)
         self.test_project = ProjectImpl()
         self.test_meta = MetadataImpl()
         self.test_volume = VolumeImpl()
