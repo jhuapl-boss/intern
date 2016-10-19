@@ -12,18 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
-from ndio.ndresource.boss.resource import CollectionResource
+from ndio.service.boss.baseversion import BaseVersion
+from . import BOSS_VERSION
 
-class TestCollectionResource(unittest.TestCase):
-    def setUp(self):
-        self.coll = CollectionResource('foo')
+class Base(BaseVersion):
+    """This is the common parent for all interfaces to the Boss v0.6.
 
-    def test_not_valid_volume(self):
-        self.assertFalse(self.coll.valid_volume())
+    Attributes:
+        _token (string): Django Rest Framework token used for auth.
+    """
 
-    def test_get_route(self):
-        self.assertEqual(self.coll.name, self.coll.get_route())
+    def __init__(self):
+        super().__init__()
+        self._token = None
 
-    def test_get_list_route(self):
-        self.assertEqual('', self.coll.get_list_route())
+    @property
+    def version(self):
+        """Version of the Boss API supported by this service instance.
+
+        Returns:
+            (string): Boss API version.
+        """
+        return BOSS_VERSION

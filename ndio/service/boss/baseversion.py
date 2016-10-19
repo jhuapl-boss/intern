@@ -14,6 +14,7 @@
 
 from abc import ABCMeta
 from abc import abstractmethod
+from ndio.ndresource.boss.resource import CoordinateFrameResource
 from requests import Request
 
 class BaseVersion(metaclass=ABCMeta):
@@ -27,12 +28,6 @@ class BaseVersion(metaclass=ABCMeta):
     @abstractmethod
     def version(self):
         """Implementers define the version of the Boss API the service uses.
-        """
-
-    @property
-    @abstractmethod
-    def endpoint(self):
-        """Implementers define the name of the endpoint.
         """
 
     def convert_int_list_range_to_str(self, int_list):
@@ -75,11 +70,12 @@ class BaseVersion(metaclass=ABCMeta):
             'Content-Type': content_type
         }
 
-    def build_url(self, resource, url_prefix, proj_list_req):
+    def build_url(self, resource, url_prefix, service, proj_list_req):
         """Build the url to access the Boss' project service.
 
         Args:
             url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            service (string): Name of service to access, such as collection, meta, coord, etc.
             proj_list_req (bool): If True generate a list request for the project service.
 
         Returns:
@@ -89,12 +85,12 @@ class BaseVersion(metaclass=ABCMeta):
             raise RuntimeError('url_prefix required.')
 
         if proj_list_req:
-            suffix = resource.get_project_list_route()
+            # No suffix required for a list request.
+            suffix = resource.get_list_route()
         else:
             suffix = resource.get_route()
 
-        url = (url_prefix + '/' + self.version + '/' + self.endpoint +
-            '/' + suffix)
+        url = (url_prefix + '/' + self.version + '/' + service + '/' + suffix)
         return url
 
     def build_metadata_url(self, resource, url_prefix, key, value=None):
@@ -108,7 +104,7 @@ class BaseVersion(metaclass=ABCMeta):
         Returns:
             (string): Full URL to access API.
         """
-        urlNoParams = self.build_url(resource, url_prefix, proj_list_req=False)
+        urlNoParams = self.build_url(resource, url_prefix, 'meta', proj_list_req=False)
         urlWithKey = urlNoParams + '/?key=' + key
         if value is None:
             return urlWithKey
@@ -116,7 +112,6 @@ class BaseVersion(metaclass=ABCMeta):
 
     def build_cutout_url(
         self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range):
-        baseUrl = self.build_url(resource, url_prefix, proj_list_req=False)
         """Build the url to access the cutout function of the Boss' volume service.
 
         Args:
@@ -133,6 +128,7 @@ class BaseVersion(metaclass=ABCMeta):
         Raises:
             (RuntimeError): if *_range invalid.
         """
+        baseUrl = self.build_url(resource, url_prefix, 'cutout', proj_list_req=False)
         x_rng_lst = self.convert_int_list_range_to_str(x_range)
         y_rng_lst = self.convert_int_list_range_to_str(y_range)
         z_rng_lst = self.convert_int_list_range_to_str(z_range)
@@ -148,7 +144,7 @@ class BaseVersion(metaclass=ABCMeta):
         return urlWithTime
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
-        """Create a request for accessing the Boss' services.
+        """Create a request for accessing the Boss' data model services.
 
         Use for the project service or listing keys via the metadata service.
 
@@ -168,7 +164,12 @@ class BaseVersion(metaclass=ABCMeta):
         Raises:
             RuntimeError if url_prefix is None or an empty string.
         """
-        url = self.build_url(resource, url_prefix, proj_list_req)
+        if isinstance(resource, CoordinateFrameResource):
+            service = 'coord'
+        else:
+            service = 'collection'
+
+        url = self.build_url(resource, url_prefix, service, proj_list_req)
         headers = self.get_headers(content, token)
         req = Request(method, url, headers = headers, json = json, data = data)
 

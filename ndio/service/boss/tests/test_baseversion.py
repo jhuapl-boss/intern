@@ -18,7 +18,7 @@ from ndio.ndresource.boss.resource import CollectionResource
 from ndio.ndresource.boss.resource import ChannelResource
 import numpy
 
-VER = 'v0.5'
+VER = 'v0.7'
 
 class ProjectImpl(BaseVersion):
     """Create a concrete implementation of BaseVersion so it can be tested.

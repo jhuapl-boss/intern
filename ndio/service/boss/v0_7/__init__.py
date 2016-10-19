@@ -12,18 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
-from ndio.ndresource.boss.resource import CollectionResource
+"""The Boss specific services using v0.7 of the API.
 
-class TestCollectionResource(unittest.TestCase):
-    def setUp(self):
-        self.coll = CollectionResource('foo')
+Author:
+    Tim Gion
+"""
 
-    def test_not_valid_volume(self):
-        self.assertFalse(self.coll.valid_volume())
-
-    def test_get_route(self):
-        self.assertEqual(self.coll.name, self.coll.get_route())
-
-    def test_get_list_route(self):
-        self.assertEqual('', self.coll.get_list_route())
+BOSS_VERSION = 'v0.7'
