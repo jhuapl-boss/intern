@@ -13,9 +13,6 @@
 # limitations under the License.
 
 from ndio.service.boss.service import Service
-from ndio.service.boss.v0_4.project import ProjectService_0_4
-from ndio.service.boss.v0_5.project import ProjectService_0_5
-from ndio.service.boss.v0_6.project import ProjectService_0_6
 from ndio.service.boss.v0_7.project import ProjectService_0_7
 
 LATEST_VERSION='v0.7'
@@ -33,9 +30,6 @@ class ProjectService(Service):
         super().__init__()
         self.base_url = base_url
         self._versions = {
-            'v0.4': ProjectService_0_4(),
-            'v0.5': ProjectService_0_5(),
-            'v0.6': ProjectService_0_6(),
             'v0.7': ProjectService_0_7()
         }
 

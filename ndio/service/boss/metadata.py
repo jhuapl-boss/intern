@@ -13,9 +13,6 @@
 # limitations under the License.
 
 from ndio.service.boss.service import Service
-from ndio.service.boss.v0_4.metadata import MetadataService_0_4
-from ndio.service.boss.v0_5.metadata import MetadataService_0_5
-from ndio.service.boss.v0_6.metadata import MetadataService_0_6
 from ndio.service.boss.v0_7.metadata import MetadataService_0_7
 
 class MetadataService(Service):
@@ -31,9 +28,6 @@ class MetadataService(Service):
         super().__init__()
         self.base_url = base_url
         self._versions = {
-            'v0.4': MetadataService_0_4(),
-            'v0.5': MetadataService_0_5(),
-            'v0.6': MetadataService_0_6(),
             'v0.7': MetadataService_0_7()
         }
 

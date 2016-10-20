@@ -23,9 +23,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
 
-API_VER = 'v0.6'
+API_VER = 'v0.7'
 
-class VolumeServiceTest_v0_6(unittest.TestCase):
+class VolumeServiceTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss volume service API.
 
     Because setup and teardown involves many REST calls, tests are only 

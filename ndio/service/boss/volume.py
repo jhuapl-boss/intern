@@ -13,9 +13,6 @@
 # limitations under the License.
 
 from ndio.service.boss.service import Service
-from ndio.service.boss.v0_4.volume import VolumeService_0_4
-from ndio.service.boss.v0_5.volume import VolumeService_0_5
-from ndio.service.boss.v0_6.volume import VolumeService_0_6
 from ndio.service.boss.v0_7.volume import VolumeService_0_7
 
 class VolumeService(Service):
@@ -30,9 +27,6 @@ class VolumeService(Service):
         super().__init__()
         self.base_url = base_url
         self._versions = {
-            'v0.4': VolumeService_0_4(),
-            'v0.5': VolumeService_0_5(),
-            'v0.6': VolumeService_0_6(),
             'v0.7': VolumeService_0_7()
         }
 
