@@ -70,25 +70,32 @@ class BaseVersion(metaclass=ABCMeta):
             'Content-Type': content_type
         }
 
-    def build_url(self, resource, url_prefix, service, proj_list_req):
+    def build_url(self, resource, url_prefix, service, req_type='normal'):
         """Build the url to access the Boss' project service.
 
         Args:
             url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
             service (string): Name of service to access, such as collection, meta, coord, etc.
-            proj_list_req (bool): If True generate a list request for the project service.
+            req_type (optional[string]): Valid values ['normal', 'list', 'cutout'].  Defaults to 'normal'.
 
         Returns:
             (string): Full URL to access API.
+
+        Raises:
+            (RuntimeError): if invalid req_type given or url_prefix not given.
         """
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        if proj_list_req:
+        if req_type == 'normal':
+            suffix = resource.get_route()
+        elif req_type == 'list':
             # No suffix required for a list request.
             suffix = resource.get_list_route()
+        elif req_type == 'cutout':
+            suffix = resource.get_cutout_route()
         else:
-            suffix = resource.get_route()
+            raise RuntimeError('Invalid request type: {}'.format(req_type))
 
         url = (url_prefix + '/' + self.version + '/' + service + '/' + suffix)
         return url
@@ -104,7 +111,7 @@ class BaseVersion(metaclass=ABCMeta):
         Returns:
             (string): Full URL to access API.
         """
-        urlNoParams = self.build_url(resource, url_prefix, 'meta', proj_list_req=False)
+        urlNoParams = self.build_url(resource, url_prefix, 'meta', req_type='normal')
         urlWithKey = urlNoParams + '/?key=' + key
         if value is None:
             return urlWithKey
@@ -128,7 +135,7 @@ class BaseVersion(metaclass=ABCMeta):
         Raises:
             (RuntimeError): if *_range invalid.
         """
-        baseUrl = self.build_url(resource, url_prefix, 'cutout', proj_list_req=False)
+        baseUrl = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
         x_rng_lst = self.convert_int_list_range_to_str(x_range)
         y_rng_lst = self.convert_int_list_range_to_str(y_range)
         z_rng_lst = self.convert_int_list_range_to_str(z_range)
@@ -169,7 +176,12 @@ class BaseVersion(metaclass=ABCMeta):
         else:
             service = 'collection'
 
-        url = self.build_url(resource, url_prefix, service, proj_list_req)
+        if proj_list_req:
+            req_type = 'list'
+        else:
+            req_type = 'normal'
+
+        url = self.build_url(resource, url_prefix, service, req_type)
         headers = self.get_headers(content, token)
         req = Request(method, url, headers = headers, json = json, data = data)
 

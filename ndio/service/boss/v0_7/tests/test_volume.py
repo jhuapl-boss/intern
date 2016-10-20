@@ -28,10 +28,10 @@ class TestVolume_v0_7(unittest.TestCase):
     @patch('requests.Session', autospec=True)
     def test_cutout_create_success(self, mock_session):
         resolution = 0
-        x_range = '20:40'
-        y_range = '50:70'
-        z_range = '30:50'
-        time_range = '10:25'
+        x_range = [20, 40]
+        y_range = [50, 70]
+        z_range = [30, 50]
+        time_range = [10, 25]
         data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
@@ -49,10 +49,10 @@ class TestVolume_v0_7(unittest.TestCase):
     @patch('requests.Session', autospec=True)
     def test_cutout_create_failure(self, mock_session):
         resolution = 0
-        x_range = '20:40'
-        y_range = '50:70'
-        z_range = '30:50'
-        time_range = '10:25'
+        x_range = [20, 40]
+        y_range = [50, 70]
+        z_range = [30, 50]
+        time_range = [10, 25]
         data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
@@ -71,10 +71,10 @@ class TestVolume_v0_7(unittest.TestCase):
     @patch('requests.Session', autospec=True)
     def test_cutout_get_success(self, mock_session):
         resolution = 0
-        x_range = '20:40'
-        y_range = '50:70'
-        z_range = '30:50'
-        time_range = '10:25'
+        x_range = [20, 40]
+        y_range = [50, 70]
+        z_range = [30, 50]
+        time_range = [10, 25]
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
 
@@ -99,10 +99,10 @@ class TestVolume_v0_7(unittest.TestCase):
     @patch('requests.Session', autospec=True)
     def test_cutout_get_failure(self, mock_session):
         resolution = 0
-        x_range = '20:40'
-        y_range = '50:70'
-        z_range = '30:50'
-        time_range = '10:25'
+        x_range = [20, 40]
+        y_range = [50, 70]
+        z_range = [30, 50]
+        time_range = [10, 25]
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
 

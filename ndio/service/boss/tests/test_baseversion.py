@@ -30,7 +30,7 @@ class ProjectImpl(BaseVersion):
 
     @property
     def endpoint(self):
-        return 'resource'
+        return 'collection'
 
 class MetadataImpl(BaseVersion):
     """Create a concrete implementation of BaseVersion so it can be tested.
@@ -75,16 +75,30 @@ class BaseVersionTest(unittest.TestCase):
         uses the plural form of the resource's type name rather than the
         resource's name.
         """
-        actual = self.test_project.build_url(self.resource, self.url_prefix, proj_list_req=True)
+        actual = self.test_project.build_url(
+            self.resource, self.url_prefix, 'collection', req_type='list')
         self.assertEqual(
             self.url_prefix + '/' + self.test_project.version + '/' + 
-            self.test_project.endpoint + '/collections',
+            self.test_project.endpoint + '/',
             actual)
 
-    def test_build_url_not_list(self):
+    def test_build_url_for_cutout(self):
+        """Cutout URLs are also different than standard operations."""
+        actual = self.test_project.build_url(
+            self.chanResource, self.url_prefix, 'cutout', req_type='cutout')
+        coll = self.chanResource.coll_name
+        exp = self.chanResource.exp_name
+        chan = self.chanResource.name
+        self.assertEqual(
+            self.url_prefix + '/' + self.test_project.version + '/' + 
+            'cutout/' + coll + '/' + exp + '/' + chan,
+            actual)
+
+    def test_build_url_normal(self):
         """Test standard use of BaseVersion.build_url().
         """
-        actual = self.test_project.build_url(self.resource, self.url_prefix, proj_list_req=False)
+        actual = self.test_project.build_url(
+            self.resource, self.url_prefix, 'collection', req_type='normal')
         self.assertEqual(
             self.url_prefix + '/' + self.test_project.version + '/' +
             self.test_project.endpoint + '/' + self.resource.name,
@@ -162,7 +176,7 @@ class BaseVersionTest(unittest.TestCase):
         user = 'fire'
         role = 'admin'
 
-        expected = '{}/{}/user-role/{}/{}'.format(
+        expected = '{}/{}/sso/user-role/{}/{}'.format(
             url_prefix, self.test_project.version, user, role)
 
         actual = self.test_project.get_user_role_request(
@@ -175,7 +189,7 @@ class BaseVersionTest(unittest.TestCase):
         token = 'foobar'
         user = 'fire'
 
-        expected = '{}/{}/user-role/{}'.format(
+        expected = '{}/{}/sso/user-role/{}'.format(
             url_prefix, self.test_project.version, user)
 
         actual = self.test_project.get_user_role_request(
@@ -188,7 +202,7 @@ class BaseVersionTest(unittest.TestCase):
         token = 'foobar'
         user = 'fire'
 
-        expected = '{}/{}/user/{}'.format(
+        expected = '{}/{}/sso/user/{}'.format(
             url_prefix, self.test_project.version, user)
 
         actual = self.test_project.get_user_request(
@@ -202,7 +216,7 @@ class BaseVersionTest(unittest.TestCase):
         user = 'fire'
         first = 'Roger'
 
-        expected = '{}/{}/user/{}'.format(
+        expected = '{}/{}/sso/user/{}'.format(
             url_prefix, self.test_project.version, user)
 
         expectedData = { 'first_name': first }
@@ -219,7 +233,7 @@ class BaseVersionTest(unittest.TestCase):
         user = 'fire'
         last = 'Roger'
 
-        expected = '{}/{}/user/{}'.format(
+        expected = '{}/{}/sso/user/{}'.format(
             url_prefix, self.test_project.version, user)
 
         expectedData = { 'last_name': last }
@@ -236,7 +250,7 @@ class BaseVersionTest(unittest.TestCase):
         user = 'fire'
         email = 'Roger@me.com'
 
-        expected = '{}/{}/user/{}'.format(
+        expected = '{}/{}/sso/user/{}'.format(
             url_prefix, self.test_project.version, user)
 
         expectedData = { 'email': email }
@@ -250,7 +264,7 @@ class BaseVersionTest(unittest.TestCase):
         user = 'fire'
         password = 'password'
 
-        expected = '{}/{}/user/{}'.format(
+        expected = '{}/{}/sso/user/{}'.format(
             url_prefix, self.test_project.version, user)
 
         expectedData = { 'password': password }
@@ -270,7 +284,7 @@ class BaseVersionTest(unittest.TestCase):
         email = 'Roger@me.com'
         password = 'password'
 
-        expected = '{}/{}/user/{}'.format(
+        expected = '{}/{}/sso/user/{}'.format(
             url_prefix, self.test_project.version, user)
 
         expectedData = {

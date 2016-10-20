@@ -67,6 +67,19 @@ class Resource(NdResource):
             endpoint such as 'mycollection/experiment'
         """
 
+    @abstractmethod
+    def get_cutout_route(self):
+        """Get the route for cutout operations.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+
 class CollectionResource(Resource):
     """Top level container for Boss projects.
     """
@@ -89,6 +102,9 @@ class CollectionResource(Resource):
 
     def get_list_route(self):
         return ''
+
+    def get_cutout_route(self):
+        raise RuntimeError('Not supported for collections.')
 
 
 class ExperimentResource(Resource):
@@ -155,6 +171,9 @@ class ExperimentResource(Resource):
 
     def get_list_route(self):
         return self.coll_name + '/experiment/'
+
+    def get_cutout_route(self):
+        raise RuntimeError('Not supported for experiments.')
 
     def validate_hierarchy_method(self, value):
         lowered = value.lower()
@@ -242,6 +261,9 @@ class CoordinateFrameResource(Resource):
 
     def get_list_route(self):
         return ''
+
+    def get_cutout_route(self):
+        raise RuntimeError('Not supported for coordinate frames.')
 
     @property
     def voxel_unit(self):
@@ -345,6 +367,9 @@ class ChannelResource(Resource):
 
     def get_list_route(self):
         return self.coll_name + '/experiment/' + self.exp_name + '/channel/'
+
+    def get_cutout_route(self):
+        return self.coll_name + '/' + self.exp_name + '/' + self.name
 
     def valid_volume(self):
         """Channels and layers are valid resources for interacting with the volume service.

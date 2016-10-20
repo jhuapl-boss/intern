@@ -44,12 +44,10 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         cls.cleanup_db(cls)
         cls.rmt.project_create(cls.coll)
         coord_actual = cls.rmt.project_create(cls.coord)
-        cls.exp.coord_frame = coord_actual.id;
         cls.rmt.project_create(cls.exp)
         cls.rmt.project_create(cls.chan16)
-        chan_actual = cls.rmt.project_create(cls.chan)
-        cls.lyr.channels = chan_actual.id
-        cls.rmt.project_create(cls.lyr)
+        cls.rmt.project_create(cls.chan)
+        cls.rmt.project_create(cls.ann_chan)
 
     @classmethod
     def tearDownClass(cls):
@@ -81,20 +79,19 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         # self.exp.coord_frame must be set with valid id before creating.
         self.exp = ExperimentResource(
             'exp2323x2', self.coll.name, API_VER, 'my experiment', 
-            0, 1, 'iso', 0)
+            'BestFrame', 1, 'iso', 0)
 
         self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, API_VER, 'test channel', 
+            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
             0, 'uint8', 0)
 
         self.chan16 = ChannelResource(
-            'my16bitChan', self.coll.name, self.exp.name, API_VER, '16 bit test channel', 
-            0, 'uint16', 0)
+            'my16bitChan', self.coll.name, self.exp.name, 'image', API_VER,
+            '16 bit test channel', 0, 'uint16', 0)
 
-        # self.lyr.channels must be set with valid id before creating.
-        self.lyr = LayerResource(
-            'topLayer', self.coll.name, self.exp.name, API_VER, 'test layer',
-            0, 'uint64', 0)
+        self.ann_chan = ChannelResource(
+            'annChan', self.coll.name, self.exp.name, 'annotation', API_VER, 
+            'annotation test channel', 0, 'uint64', 0, source=[self.chan.name])
 
     def cleanup_db(self):
         """Clean up the data model objects used by this test case.
@@ -102,7 +99,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         This method is used by both tearDownClass() and setUpClass().
         """
         try:
-            self.rmt.project_delete(self.lyr)
+            self.rmt.project_delete(self.ann_chan)
         except HTTPError:
             pass
         try:
@@ -133,9 +130,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         pass
 
     def test_upload_and_download_to_channel(self):
-        x_rng = '0:8'
-        y_rng = '0:4'
-        z_rng = '0:5'
+        x_rng = [0, 8]
+        y_rng = [0, 4]
+        z_rng = [0, 5]
 
         data = numpy.random.randint(0, 3000, (5, 4, 8))
         data = data.astype(numpy.uint8)
@@ -145,13 +142,13 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         numpy.testing.assert_array_equal(data, actual)
 
     def test_upload_and_download_subsection_to_channel(self):
-        x_rng = '10:20'
-        y_rng = '5:10'
-        z_rng = '10:19'
+        x_rng = [10, 20]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
 
-        sub_x = '12:14'
-        sub_y = '7:10'
-        sub_z = '12:17'
+        sub_x = [12, 14]
+        sub_y = [7, 10]
+        sub_z = [12, 17]
 
         data = numpy.random.randint(0, 3000, (9, 5, 10))
         data = data.astype(numpy.uint8)
@@ -161,9 +158,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         numpy.testing.assert_array_equal(data[2:7, 2:5, 2:4], actual)
 
     def test_upload_to_x_edge_of_channel(self):
-        x_rng = '10:100'
-        y_rng = '5:10'
-        z_rng = '10:19'
+        x_rng = [10, 100]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 5, 90))
         data = data.astype(numpy.uint8)
@@ -171,9 +168,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.cutout_create(self.chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_to_y_edge_of_channel(self):
-        x_rng = '10:20'
-        y_rng = '5:50'
-        z_rng = '10:19'
+        x_rng = [10, 20]
+        y_rng = [5, 50]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 45, 10))
         data = data.astype(numpy.uint8)
@@ -181,9 +178,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.cutout_create(self.chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_to_z_edge_of_channel(self):
-        x_rng = '10:20'
-        y_rng = '5:10'
-        z_rng = '10:20'
+        x_rng = [10, 20]
+        y_rng = [5, 10]
+        z_rng = [10, 20]
 
         data = numpy.random.randint(0, 3000, (10, 5, 10))
         data = data.astype(numpy.uint8)
@@ -191,9 +188,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.cutout_create(self.chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_x_edge_of_channel(self):
-        x_rng = '10:101'
-        y_rng = '5:10'
-        z_rng = '10:19'
+        x_rng = [10, 101]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 5, 91))
         data = data.astype(numpy.uint8)
@@ -202,9 +199,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             self.rmt.cutout_create(self.chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_y_edge_of_channel(self):
-        x_rng = '10:20'
-        y_rng = '5:51'
-        z_rng = '10:19'
+        x_rng = [10, 20]
+        y_rng = [5, 51]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 46, 10))
         data = data.astype(numpy.uint8)
@@ -213,9 +210,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             self.rmt.cutout_create(self.chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_z_edge_of_channel(self):
-        x_rng = '10:20'
-        y_rng = '5:10'
-        z_rng = '10:21'
+        x_rng = [10, 20]
+        y_rng = [5, 10]
+        z_rng = [10, 21]
 
         data = numpy.random.randint(0, 3000, (11, 5, 10))
         data = data.astype(numpy.uint16)
@@ -224,9 +221,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             self.rmt.cutout_create(self.chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_and_download_to_channel_16bit(self):
-        x_rng = '0:8'
-        y_rng = '0:4'
-        z_rng = '0:5'
+        x_rng = [0, 8]
+        y_rng = [0, 4]
+        z_rng = [0, 5]
 
         data = numpy.random.randint(0, 3000, (5, 4, 8))
         data = data.astype(numpy.uint16)
@@ -236,13 +233,13 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         numpy.testing.assert_array_equal(data, actual)
 
     def test_upload_and_download_subsection_to_channel_16bit(self):
-        x_rng = '10:20'
-        y_rng = '5:10'
-        z_rng = '10:19'
+        x_rng = [10, 20]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
 
-        sub_x = '12:14'
-        sub_y = '7:10'
-        sub_z = '12:17'
+        sub_x = [12, 14]
+        sub_y = [7, 10]
+        sub_z = [12, 17]
 
         data = numpy.random.randint(0, 3000, (9, 5, 10))
         data = data.astype(numpy.uint16)
@@ -252,9 +249,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         numpy.testing.assert_array_equal(data[2:7, 2:5, 2:4], actual)
 
     def test_upload_to_x_edge_of_channel_16bit(self):
-        x_rng = '10:100'
-        y_rng = '5:10'
-        z_rng = '10:19'
+        x_rng = [10, 100]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 5, 90))
         data = data.astype(numpy.uint16)
@@ -262,9 +259,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.cutout_create(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_to_y_edge_of_channel_16bit(self):
-        x_rng = '10:20'
-        y_rng = '5:50'
-        z_rng = '10:19'
+        x_rng = [10, 20]
+        y_rng = [5, 50]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 45, 10))
         data = data.astype(numpy.uint16)
@@ -272,9 +269,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.cutout_create(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_to_z_edge_of_channel_16bit(self):
-        x_rng = '10:20'
-        y_rng = '5:10'
-        z_rng = '10:20'
+        x_rng = [10, 20]
+        y_rng = [5, 10]
+        z_rng = [10, 20]
 
         data = numpy.random.randint(0, 3000, (10, 5, 10))
         data = data.astype(numpy.uint16)
@@ -282,9 +279,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.cutout_create(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_x_edge_of_channel_16bit(self):
-        x_rng = '10:101'
-        y_rng = '5:10'
-        z_rng = '10:19'
+        x_rng = [10, 101]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 5, 91))
         data = data.astype(numpy.uint16)
@@ -293,9 +290,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             self.rmt.cutout_create(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_y_edge_of_channel_16bit(self):
-        x_rng = '10:20'
-        y_rng = '5:51'
-        z_rng = '10:19'
+        x_rng = [10, 20]
+        y_rng = [5, 51]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 46, 10))
         data = data.astype(numpy.uint16)
@@ -304,9 +301,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             self.rmt.cutout_create(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_z_edge_of_channel_16bit(self):
-        x_rng = '10:20'
-        y_rng = '5:10'
-        z_rng = '10:21'
+        x_rng = [10, 20]
+        y_rng = [5, 10]
+        z_rng = [10, 21]
 
         data = numpy.random.randint(0, 3000, (11, 5, 10))
         data = data.astype(numpy.uint16)
@@ -315,95 +312,95 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             self.rmt.cutout_create(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_and_download_to_layer(self):
-        x_rng = '0:8'
-        y_rng = '0:4'
-        z_rng = '0:5'
+        x_rng = [0, 8]
+        y_rng = [0, 4]
+        z_rng = [0, 5]
 
         data = numpy.random.randint(0, 3000, (5, 4, 8))
         data = data.astype(numpy.uint64)
 
-        self.rmt.cutout_create(self.lyr, 0, x_rng, y_rng, z_rng, data)
-        actual = self.rmt.cutout_get(self.lyr, 0, x_rng, y_rng, z_rng)
+        self.rmt.cutout_create(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
+        actual = self.rmt.cutout_get(self.ann_chan, 0, x_rng, y_rng, z_rng)
         numpy.testing.assert_array_equal(data, actual)
 
     def test_upload_and_download_subsection_to_layer(self):
-        x_rng = '10:20'
-        y_rng = '5:10'
-        z_rng = '10:19'
+        x_rng = [10, 20]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
 
-        sub_x = '12:14'
-        sub_y = '7:10'
-        sub_z = '12:17'
+        sub_x = [12, 14]
+        sub_y = [7, 10]
+        sub_z = [12, 17]
 
         data = numpy.random.randint(0, 3000, (9, 5, 10))
         data = data.astype(numpy.uint64)
 
-        self.rmt.cutout_create(self.lyr, 0, x_rng, y_rng, z_rng, data)
-        actual = self.rmt.cutout_get(self.lyr, 0, sub_x, sub_y, sub_z)
+        self.rmt.cutout_create(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
+        actual = self.rmt.cutout_get(self.ann_chan, 0, sub_x, sub_y, sub_z)
         numpy.testing.assert_array_equal(data[2:7, 2:5, 2:4], actual)
 
     def test_upload_to_x_edge_of_layer(self):
-        x_rng = '10:100'
-        y_rng = '5:10'
-        z_rng = '10:19'
+        x_rng = [10, 100]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 5, 90))
         data = data.astype(numpy.uint64)
 
-        self.rmt.cutout_create(self.lyr, 0, x_rng, y_rng, z_rng, data)
+        self.rmt.cutout_create(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_to_y_edge_of_layer(self):
-        x_rng = '10:20'
-        y_rng = '5:50'
-        z_rng = '10:19'
+        x_rng = [10, 20]
+        y_rng = [5, 50]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 45, 10))
         data = data.astype(numpy.uint64)
 
-        self.rmt.cutout_create(self.lyr, 0, x_rng, y_rng, z_rng, data)
+        self.rmt.cutout_create(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_to_z_edge_of_layer(self):
-        x_rng = '10:20'
-        y_rng = '5:10'
-        z_rng = '10:20'
+        x_rng = [10, 20]
+        y_rng = [5, 10]
+        z_rng = [10, 20]
 
         data = numpy.random.randint(0, 3000, (10, 5, 10))
         data = data.astype(numpy.uint64)
 
-        self.rmt.cutout_create(self.lyr, 0, x_rng, y_rng, z_rng, data)
+        self.rmt.cutout_create(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_x_edge_of_layer(self):
-        x_rng = '10:101'
-        y_rng = '5:10'
-        z_rng = '10:19'
+        x_rng = [10, 101]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 5, 91))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
-            self.rmt.cutout_create(self.lyr, 0, x_rng, y_rng, z_rng, data)
+            self.rmt.cutout_create(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_y_edge_of_layer(self):
-        x_rng = '10:20'
-        y_rng = '5:51'
-        z_rng = '10:19'
+        x_rng = [10, 20]
+        y_rng = [5, 51]
+        z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 46, 10))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
-            self.rmt.cutout_create(self.lyr, 0, x_rng, y_rng, z_rng, data)
+            self.rmt.cutout_create(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_z_edge_of_layer(self):
-        x_rng = '10:20'
-        y_rng = '5:10'
-        z_rng = '10:21'
+        x_rng = [10, 20]
+        y_rng = [5, 10]
+        z_rng = [10, 21]
 
         data = numpy.random.randint(0, 3000, (11, 5, 10))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
-            self.rmt.cutout_create(self.lyr, 0, x_rng, y_rng, z_rng, data)
+            self.rmt.cutout_create(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
 if __name__ == '__main__':
     unittest.main()
