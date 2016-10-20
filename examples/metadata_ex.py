@@ -48,7 +48,7 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 # data model.  Notice, that only the minimal information needed to identify
 # the objects of interest is given to the resources' constructors.
 coll = CollectionResource('gray', API_VER)
-alpha_exp = ExperimentResource('alpha', 'gray', API_VER)
+alpha_exp = ExperimentResource('alpha', 'gray', 'StdFrame', API_VER)
 omega_chan = ChannelResource('omega', 'gray', 'alpha', API_VER)
 
 # Add new metadata using metadata_create().

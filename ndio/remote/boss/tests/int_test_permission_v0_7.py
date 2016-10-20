@@ -24,7 +24,7 @@ import unittest
 
 API_VER = 'v0.7'
 
-class ProjectPermissionTest_v0_5(unittest.TestCase):
+class ProjectPermissionTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss permission API.
 
     Note that that there will be many "Delete failed" messages because DELETE
@@ -63,18 +63,12 @@ class ProjectPermissionTest_v0_5(unittest.TestCase):
         # Coordinate frame of experiments needs to be set to a valid ID before
         # creating.
         self.exp = ExperimentResource(
-            'exp2309-2', self.coll.name, API_VER, 'my experiment', 0, 1, 
+            'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment', 1, 
             'iso', 0)
 
         self.chan = ChannelResource(
             'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
             0, 'uint8', 0)
-
-        # Layer's channel list needs to be given a valid channel ID before 
-        # creating.
-        self.lyr = LayerResource(
-            'topLayer', self.coll.name, self.exp.name, API_VER, 'test layer',
-            0, 'uint64', 0)
 
         self.grp_name = 'int_test_exists'
 
@@ -85,10 +79,6 @@ class ProjectPermissionTest_v0_5(unittest.TestCase):
         """
         try:
             self.rmt.group_delete(self.grp_name)
-        except HTTPError:
-            pass
-        try:
-            self.rmt.project_delete(self.lyr)
         except HTTPError:
             pass
         try:
@@ -110,23 +100,10 @@ class ProjectPermissionTest_v0_5(unittest.TestCase):
 
     def setUp(self):
         self.initialize()
-        c = self.rmt.project_create(self.coll)
-        self.assertIsNotNone(c)
-
-        cf = self.rmt.project_create(self.coord)
-        self.assertIsNotNone(cf)
-
-        self.exp.coord_frame = cf.id
-        e = self.rmt.project_create(self.exp)
-        self.assertIsNotNone(e)
-
-        ch = self.rmt.project_create(self.chan)
-        self.assertIsNotNone(ch)
-
-        self.lyr.channels = [ch.id]
-        layer = self.rmt.project_create(self.lyr)
-        self.assertIsNotNone(layer)
-
+        self.rmt.project_create(self.coll)
+        self.rmt.project_create(self.coord)
+        self.rmt.project_create(self.exp)
+        self.rmt.project_create(self.chan)
         self.rmt.group_create(self.grp_name)
 
     def tearDown(self):
@@ -148,7 +125,7 @@ class ProjectPermissionTest_v0_5(unittest.TestCase):
 
     def test_add_volumetric_permission_success(self):
         self.rmt.permissions_add(
-            self.grp_name, self.lyr, ['read', 'read_volumetric_data'])
+            self.grp_name, self.chan, ['read', 'read_volumetric_data'])
 
     def test_add_permissions_append_success(self):
         self.rmt.permissions_add(

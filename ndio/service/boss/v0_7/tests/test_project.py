@@ -245,7 +245,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertTrue('description' in actual)
 
     def test_get_resource_params_experiment(self):
-        exp = ExperimentResource('foo', 'coll')
+        exp = ExperimentResource('foo', 'coll', 'coordframe')
         actual = self.prj._get_resource_params(exp)
         self.assertEqual('foo', actual['name'])
         self.assertTrue('description' in actual)
@@ -306,7 +306,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_experiment(self):
-        exp = ExperimentResource('', 'pyro')
+        exp = ExperimentResource('', 'pyro', 'coordframe')
         dict = { 
             'name': 'fire', 'description': 'walker', 
             'creator': 'auto', 'coord_frame': 3, 

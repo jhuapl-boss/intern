@@ -17,7 +17,7 @@ from ndio.ndresource.boss.resource import ExperimentResource
 
 class TestExperimentResource(unittest.TestCase):
     def setUp(self):
-        self.er = ExperimentResource('foo', 'bar')
+        self.er = ExperimentResource('foo', 'bar', 'coords')
 
     def test_not_valid_volume(self):
         self.assertFalse(self.er.valid_volume())

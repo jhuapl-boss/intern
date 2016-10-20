@@ -46,8 +46,6 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         cls.exp.coord_frame = coord_actual.id;
         cls.rmt.project_create(cls.exp)
         chan_actual = cls.rmt.project_create(cls.chan)
-        cls.lyr.channels = chan_actual.id
-        cls.rmt.project_create(cls.lyr)
 
     @classmethod
     def tearDownClass(cls):
@@ -76,29 +74,20 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
             'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
-        # self.exp.coord_frame must be set with valid id before creating.
         self.exp = ExperimentResource(
-            'exp2309x2', self.coll.name, API_VER, 'my experiment', 
-            0, 1, 'iso', 0)
+            'exp2309x2', self.coll.name, self.coord.name, API_VER, 'my experiment', 
+            1, 'iso', 0)
 
         self.chan = ChannelResource(
             'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
             0, 'uint8', 0)
 
-        # self.lyr.channels must be set with valid id before creating.
-        self.lyr = LayerResource(
-            'topLayer', self.coll.name, self.exp.name, API_VER, 'test layer',
-            0, 'uint64', 0)
 
     def cleanup_db(self):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDownClass() and setUpClass().
         """
-        try:
-            self.rmt.project_delete(self.lyr)
-        except HTTPError:
-            pass
         try:
             self.rmt.project_delete(self.chan)
         except HTTPError:
@@ -228,40 +217,6 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         actual_list_end = self.rmt.metadata_list(self.chan)
         self.assertEqual([], actual_list_end)
 
-    def test_layer(self):
-        actual_list = self.rmt.metadata_list(self.lyr)
-        self.assertEqual([], actual_list)
-
-        keys_vals = { 'red': 'green', 'two': 'four', 'inside': 'out'}
-        self.rmt.metadata_create(self.lyr, keys_vals)
-        actual = self.rmt.metadata_get(self.lyr, list(keys_vals.keys()))
-        self.assertCountEqual(keys_vals, actual)
-
-        with self.assertRaises(HTTPErrorList):
-            # Should fail when trying create keys that already exist.
-            self.rmt.metadata_create(self.lyr, keys_vals)
-
-        update = { 'two': 'six', 'inside': 'upside-down' }
-        self.rmt.metadata_update(self.lyr, update)
-
-        actual_upd = self.rmt.metadata_get(self.lyr, list(update.keys()))
-        self.assertCountEqual(update, actual_upd)
-
-        actual_list_upd = self.rmt.metadata_list(self.lyr)
-        self.assertCountEqual(keys_vals, actual_list_upd)
-
-        with self.assertRaises(HTTPErrorList):
-            # Try updating a non-existent key.
-            self.rmt.metadata_update(self.lyr, {'foo': 'bar'})
-
-        self.rmt.metadata_delete(self.lyr, list(keys_vals.keys()))
-
-        with self.assertRaises(HTTPErrorList):
-            # Try getting keys that don't exist.
-            self.rmt.metadata_get(self.lyr, ['foo', 'bar'])
-
-        actual_list_end = self.rmt.metadata_list(self.lyr)
-        self.assertEqual([], actual_list_end)
 
 if __name__ == '__main__':
     unittest.main()

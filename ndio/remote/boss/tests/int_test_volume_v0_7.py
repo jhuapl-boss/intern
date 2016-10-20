@@ -78,8 +78,8 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         # self.exp.coord_frame must be set with valid id before creating.
         self.exp = ExperimentResource(
-            'exp2323x2', self.coll.name, API_VER, 'my experiment', 
-            'BestFrame', 1, 'iso', 0)
+            'exp2323x2', self.coll.name, 'BestFrame', API_VER, 'my experiment', 
+            1, 'iso', 0)
 
         self.chan = ChannelResource(
             'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 

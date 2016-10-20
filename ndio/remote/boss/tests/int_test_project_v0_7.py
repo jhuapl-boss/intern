@@ -65,11 +65,11 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         # Coordinate frame of experiments needs to be set to a valid ID before
         # creating.
         self.exp = ExperimentResource(
-            'exp2309-2', self.coll.name, API_VER, 'my experiment', 
-            self.coord.name, 1, 'iso', 0)
+            'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment', 
+            1, 'iso', 0)
         self.exp_upd = ExperimentResource(
-            'exp2309-2a', self.coll.name, API_VER, 'my first experiment', 
-            self.coord.name, 2, 'slice', 1)
+            'exp2309-2a', self.coll.name, self.coord.name, API_VER, 
+            'my first experiment', 2, 'slice', 1)
 
         self.chan = ChannelResource(
             'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 

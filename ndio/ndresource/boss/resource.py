@@ -117,17 +117,18 @@ class ExperimentResource(Resource):
         hierarchy_method (string):
         max_time_sample (int):
     """
-    def __init__(self, name, collection_name,
-        version=BOSS_DEFAULT_VERSION, description='', coord_frame=0,
+    def __init__(self, name, collection_name, coord_frame,
+        version=BOSS_DEFAULT_VERSION, description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
         max_time_sample=0, creator='', raw={}):
         """Constructor.
 
         Args:
             name (string): Experiment name.
+            collection_name (string): Collection name.
+            coord_frame (string): Name of coordinate frame used by experiment.
             version (optional[string]): Defaults to latest version.
             description (optional[string]): Experiment description.  Defaults to empty.
-            coord_frame (optional[int]): Id of coordinate frame used by experiment.  Defaults to 0.
             num_hierarchy_levels (optional[int]): Defaults to 1.
             hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
             max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.

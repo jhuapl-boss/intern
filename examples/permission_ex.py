@@ -44,7 +44,7 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 grp_name = 'example_group'
 
 coll = CollectionResource('gray')
-exp = ExperimentResource('alpha', coll.name)
+exp = ExperimentResource('alpha', coll.name, 'StdFrame')
 chan = ChannelResource('omega', coll.name, exp.name)
 lyr = LayerResource('rho', coll.name, exp.name)
 
