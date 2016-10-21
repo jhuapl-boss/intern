@@ -157,7 +157,7 @@ class BaseVersionTest(unittest.TestCase):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         grp_name = 'fire'
-        resrc_path = self.chanResource.get_route()
+        resrc_path = self.chanResource.get_permission_route()
         data = { 'permissions': ['update', 'add', 'delete'] }
 
         expected = '{}/{}/permission/{}/{}'.format(

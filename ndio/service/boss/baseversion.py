@@ -302,7 +302,7 @@ class BaseVersion(metaclass=ABCMeta):
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        suffix = resource.get_route()
+        suffix = resource.get_permission_route()
         url = (url_prefix + '/' + self.version + '/permission/' + name + '/' +
                suffix)
         headers = self.get_headers(content, token)
