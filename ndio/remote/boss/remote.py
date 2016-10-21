@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.remote.remote import Remote as NdRemote
+from ndio.remote import Remote
 from ndio.service.boss.project import ProjectService
 from ndio.service.boss.metadata import MetadataService
 from ndio.service.boss.volume import VolumeService
@@ -31,7 +31,7 @@ CONFIG_TOKEN = 'token'
 LATEST_VERSION='v0.7'
 
 
-class Remote(NdRemote):
+class BossRemote(Remote):
     """Remote provides an SDK to the Boss API.
 
     The methods for working with groups, users, and permissions use the 

@@ -27,11 +27,11 @@ a minimum.  The resource object identifies which data model object's metadata
 will be manipulated.
 """
 
-from ndio.remote.boss.remote import Remote, LATEST_VERSION
+from ndio.remote.boss import BossRemote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
 
-rmt = Remote('example.cfg')
-#rmt = Remote('test.cfg')
+rmt = BossRemote('example.cfg')
+#rmt = BossRemote('test.cfg')
 
 API_VER = LATEST_VERSION
 

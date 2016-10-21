@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.remote.boss.remote import *
+from ndio.remote.boss import BossRemote
+from ndio.remote.boss.remote import (
+    CONFIG_PROJECT_SECTION, CONFIG_PROTOCOL, CONFIG_HOST, CONFIG_TOKEN,
+    CONFIG_METADATA_SECTION, CONFIG_VOLUME_SECTION)
 import unittest
 
 class RemoteConfigTest(unittest.TestCase):
     def setUp(self):
-        self.remote = Remote()
+        self.remote = BossRemote()
         self.config = """[Project Service]
         protocol = https
         host = pro.theboss.io
@@ -54,3 +57,7 @@ class RemoteConfigTest(unittest.TestCase):
         self.assertEqual('http', actual[CONFIG_PROTOCOL])
         self.assertEqual('vol.theboss.io', actual[CONFIG_HOST])
         self.assertEqual('my_secret_token3', actual[CONFIG_TOKEN])
+
+
+if __name__ == '__main__':
+    unittest.main()

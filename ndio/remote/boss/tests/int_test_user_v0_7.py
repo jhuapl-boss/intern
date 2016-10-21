@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
  
-from ndio.remote.boss.remote import *
+from ndio.remote.boss import BossRemote
 from ndio.ndresource.boss.resource import *
 
 import configparser
@@ -53,7 +53,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = Remote('test.cfg')
+        self.rmt = BossRemote('test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.

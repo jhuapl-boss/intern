@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
  
-from ndio.remote.boss.remote import *
+from ndio.remote.boss import BossRemote
 from ndio.ndresource.boss.resource import *
 
+import configparser
 import requests
 from requests import Session, HTTPError, Request
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -44,7 +45,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = Remote('test.cfg')
+        self.rmt = BossRemote('test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
@@ -58,7 +59,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         self.user_name = 'bossadmin'
 
         # This user will be created during at least one test.
-        self.create_user = 'johndoe'
+        self.create_user = 'johndoeski'
 
     def cleanup_db(self):
         """Clean up the data model objects used by this test case.
@@ -134,13 +135,16 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
     def test_get_groups(self):
         password = 'myPassW0rd'
         self.rmt.user_add(
-            self.create_user, 'Roger', 'Wilco', 'rwil@me.com', password)
+            self.create_user, 'John', 'Doeski', 'jdoe@me.com', password)
         token = self.get_access_token(self.create_user, password)
         self.login_user(token)
 
         self.rmt.group_add_user(self.existing_grp_name, self.create_user)
 
-        expected = ['boss-public', self.existing_grp_name]
+        # Name of auto-created group for user.
+        users_group = self.create_user + '-primary'
+
+        expected = ['boss-public', users_group, self.existing_grp_name]
         actual = self.rmt.user_get_groups(self.create_user)
         self.assertCountEqual(expected, actual)
 

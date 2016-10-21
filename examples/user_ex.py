@@ -17,13 +17,13 @@ This example demonstrates user management.  To run this example, you must have
 a user with either the user-manager role or the admin role.
 """
 
-from ndio.remote.boss.remote import Remote, LATEST_VERSION
+from ndio.remote.boss import BossRemote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
 from requests import HTTPError
 
 API_VER = LATEST_VERSION
-rmt = Remote('example.cfg')
-#rmt = Remote('test.cfg')
+rmt = BossRemote('example.cfg')
+#rmt = BossRemote('test.cfg')
 rmt.group_perm_api_version = API_VER
 
 # Turn off SSL cert verification.  This is necessary for interacting with
