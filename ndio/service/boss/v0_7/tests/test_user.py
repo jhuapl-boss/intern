@@ -58,7 +58,7 @@ class TestUser(unittest.TestCase):
     @patch('requests.Session', autospec=True)
     def test_get_groups_success(self, mock_session, mock_resp):
         expected = ['default', 'proofreader']
-        data = [{'name': 'default'}, {'name': 'proofreader'}]
+        data = { 'groups': ['default', 'proofreader'] }
         mock_resp.status_code = 200
         mock_resp.json.return_value = data
         mock_session.prepare_request.return_value = PreparedRequest()

@@ -22,9 +22,6 @@ class MetadataService_0_7(Base):
         super().__init__()
 
     def list(self, resource, url_prefix, auth, session, send_opts):
-        req = self.get_request(
-            resource, 'GET', 'application/json', url_prefix, auth, 
-            proj_list_req = False)
         """List metadata keys associated with the given resource.
 
         Args:
@@ -40,6 +37,10 @@ class MetadataService_0_7(Base):
         Raises:
             requests.HTTPError on failure.
         """
+
+        req = self.get_metadata_request(
+            resource, 'GET', 'application/json', url_prefix, auth)
+
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:

@@ -361,10 +361,9 @@ class ProjectService_0_7(Base):
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
             groups = []
-            print(resp.json())
-            for dict in resp.json():
-                if 'name' in dict:
-                    groups.append(dict['name'])
+            dict = resp.json()
+            if 'groups' in dict:
+                groups = dict['groups']
             return groups
 
         msg = (

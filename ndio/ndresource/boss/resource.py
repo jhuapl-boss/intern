@@ -81,8 +81,8 @@ class Resource(NdResource):
         """
 
     @abstractmethod
-    def get_permission_route(self):
-        """Get the route for permission operations.
+    def get_meta_or_permission_route(self):
+        """Get the route for metadata or permission operations.
 
         Not all resources will support this operation.
 
@@ -119,7 +119,7 @@ class CollectionResource(Resource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for collections.')
 
-    def get_permission_route(self):
+    def get_meta_or_permission_route(self):
         return self.name
 
 class ExperimentResource(Resource):
@@ -191,7 +191,7 @@ class ExperimentResource(Resource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for experiments.')
 
-    def get_permission_route(self):
+    def get_meta_or_permission_route(self):
         return self.coll_name + '/' + self.name
 
     def validate_hierarchy_method(self, value):
@@ -284,7 +284,7 @@ class CoordinateFrameResource(Resource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
-    def get_permission_route(self):
+    def get_meta_or_permission_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
     @property
@@ -393,7 +393,7 @@ class ChannelResource(Resource):
     def get_cutout_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
-    def get_permission_route(self):
+    def get_meta_or_permission_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
     def valid_volume(self):

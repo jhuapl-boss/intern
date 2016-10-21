@@ -43,7 +43,6 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         cls.cleanup_db(cls)
         cls.rmt.project_create(cls.coll)
         coord_actual = cls.rmt.project_create(cls.coord)
-        cls.exp.coord_frame = coord_actual.id;
         cls.rmt.project_create(cls.exp)
         chan_actual = cls.rmt.project_create(cls.chan)
 

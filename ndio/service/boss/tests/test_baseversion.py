@@ -153,11 +153,11 @@ class BaseVersionTest(unittest.TestCase):
 
         self.assertEqual(expected, actual.url)
 
-    def test_get_permission_request(self):
+    def test_get_meta_or_permission_request(self):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         grp_name = 'fire'
-        resrc_path = self.chanResource.get_permission_route()
+        resrc_path = self.chanResource.get_meta_or_permission_route()
         data = { 'permissions': ['update', 'add', 'delete'] }
 
         expected = '{}/{}/permission/{}/{}'.format(
@@ -329,8 +329,9 @@ class BaseVersionTest(unittest.TestCase):
         actual = self.test_meta.get_metadata_request(
             self.resource, 'GET', 'application/json', url_prefix, token, key)
         self.assertEqual(
-            '{}/{}/{}/{}/?key={}'.format(url_prefix, self.test_meta.version, self.test_meta.endpoint, self.resource.name, key), 
-            actual.url)
+            '{}/{}/{}/{}/?key={}'.format(url_prefix, self.test_meta.version,
+             self.test_meta.endpoint, self.resource.name, key), 
+             actual.url)
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/json', actual.headers['Content-Type'])
 

@@ -111,10 +111,18 @@ class BaseVersion(metaclass=ABCMeta):
         Returns:
             (string): Full URL to access API.
         """
-        urlNoParams = self.build_url(resource, url_prefix, 'meta', req_type='normal')
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        suffix = resource.get_meta_or_permission_route()
+        urlNoParams = (url_prefix + '/' + self.version + '/meta/' + suffix)
+        if key is None:
+            return urlNoParams
+
         urlWithKey = urlNoParams + '/?key=' + key
         if value is None:
             return urlWithKey
+
         return urlWithKey + '&value=' + str(value)
 
     def build_cutout_url(
@@ -302,7 +310,7 @@ class BaseVersion(metaclass=ABCMeta):
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        suffix = resource.get_permission_route()
+        suffix = resource.get_meta_or_permission_route()
         url = (url_prefix + '/' + self.version + '/permission/' + name + '/' +
                suffix)
         headers = self.get_headers(content, token)
@@ -354,7 +362,7 @@ class BaseVersion(metaclass=ABCMeta):
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        url = url_prefix + '/' + self.version + '/user/' + user + '/groups/'
+        url = url_prefix + '/' + self.version + '/group-member/?username=' + user
 
         headers = self.get_headers(content, token)
         return Request(method, url, headers=headers)
