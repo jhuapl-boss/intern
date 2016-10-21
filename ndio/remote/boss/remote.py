@@ -48,11 +48,19 @@ class BossRemote(Remote):
         _group_perm_api_version (string): Boss API version to use when calling group_*() and permissions_*() methods.
     """
 
-    def __init__(self, cfg_file=CONFIG_FILE):
+    def __init__(self, *, cfg_file=None, cfg_str=None):
         """Constructor.
 
+        If not config arguments are passed in, ~/.ndio/ndio.cfg is read by 
+        default.  Config data is in INI format.  If both cfg_file and cfg_str
+        are passed in, the value in cfg_str is used.
+
         Args:
-            cfg_file (string): Path to config file in INI format.
+            cfg_file (optional[string]): Path to config file in INI format.
+            cfg_str (optional[string]): Config in INI format encoded in a string.
+
+        Raises:
+            (FileNotFoundError): if can't load given config file.
         """
 
         self._token_project = None
@@ -60,13 +68,18 @@ class BossRemote(Remote):
         self._token_volume = None
         self._group_perm_api_version = LATEST_VERSION
 
+        if cfg_file is None and cfg_str is None:
+            cfg_file = CONFIG_FILE
+
         try:
-            self._config = self.load_config_file(os.path.expanduser(cfg_file))
+            if cfg_str is not None:
+                self._config = self.load_config(cfg_str)
+            else:
+                self._config = self.load_config_file(os.path.expanduser(cfg_file))
+                
             self._init_project_service()
             self._init_metadata_service()
             self._init_volume_service()
-        except FileNotFoundError:
-            print('Config file {} not found.'.format(cfg_file))
         except KeyError as k:
             print('Could not find key {} in {}'.format(k, cfg_file))
 

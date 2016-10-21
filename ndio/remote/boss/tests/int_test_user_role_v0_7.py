@@ -49,7 +49,7 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote('test.cfg')
+        self.rmt = BossRemote(cfg_file='test.cfg')
         self.rmt.group_perm_api_version = API_VER
 
         # Turn off SSL cert verification.  This is necessary for interacting with

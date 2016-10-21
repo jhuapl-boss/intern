@@ -30,8 +30,8 @@ will be manipulated.
 from ndio.remote.boss import BossRemote, LATEST_VERSION
 from ndio.ndresource.boss.resource import *
 
-rmt = BossRemote('example.cfg')
-#rmt = BossRemote('test.cfg')
+rmt = BossRemote(cfg_file='example.cfg')
+#rmt = BossRemote(cfg_file='test.cfg')
 
 API_VER = LATEST_VERSION
 

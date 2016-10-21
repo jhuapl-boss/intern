@@ -20,7 +20,7 @@ import unittest
 
 class RemoteConfigTest(unittest.TestCase):
     def setUp(self):
-        self.remote = BossRemote()
+        self.remote = BossRemote(cfg_file='examples/example.cfg')
         self.config = """[Project Service]
         protocol = https
         host = pro.theboss.io
@@ -36,6 +36,28 @@ class RemoteConfigTest(unittest.TestCase):
         host = vol.theboss.io
         token = my_secret_token3
         """
+
+    def test_init_with_file(self):
+        """Exercise code path when cfg_file parameter used."""
+        with self.assertRaises(FileNotFoundError):
+            rmt = BossRemote(cfg_file='nofile.cfg')
+
+    def test_init_with_config_str(self):
+        rmt = BossRemote(cfg_str=self.config)
+        actual_prj = rmt._config[CONFIG_PROJECT_SECTION]
+        self.assertEqual('https', actual_prj[CONFIG_PROTOCOL])
+        self.assertEqual('pro.theboss.io', actual_prj[CONFIG_HOST])
+        self.assertEqual('my_secret_token', actual_prj[CONFIG_TOKEN])
+
+        actual_meta = rmt._config[CONFIG_METADATA_SECTION]
+        self.assertEqual('file', actual_meta[CONFIG_PROTOCOL])
+        self.assertEqual('meta.theboss.io', actual_meta[CONFIG_HOST])
+        self.assertEqual('my_secret_token2', actual_meta[CONFIG_TOKEN])
+
+        actual_vol = rmt._config[CONFIG_VOLUME_SECTION]
+        self.assertEqual('http', actual_vol[CONFIG_PROTOCOL])
+        self.assertEqual('vol.theboss.io', actual_vol[CONFIG_HOST])
+        self.assertEqual('my_secret_token3', actual_vol[CONFIG_TOKEN])
 
     def test_load_project_config(self):
         cfgParser = self.remote.load_config(self.config)

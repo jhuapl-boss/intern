@@ -61,7 +61,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote('test.cfg')
+        self.rmt = BossRemote(cfg_file='test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.

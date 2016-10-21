@@ -20,8 +20,8 @@ from requests import HTTPError
 import sys
 
 API_VER = LATEST_VERSION
-rmt = BossRemote('example.cfg')
-#rmt = BossRemote('test.cfg')
+rmt = BossRemote(cfg_file='example.cfg')
+#rmt = BossRemote(cfg_file='test.cfg')
 rmt.group_perm_api_version = API_VER
 
 # Turn off SSL cert verification.  This is necessary for interacting with

@@ -4,8 +4,8 @@ import sys
 import numpy
 from requests import HTTPError
 
-rmt = BossRemote('example.cfg')
-#rmt = BossRemote('test.cfg')
+rmt = BossRemote(cfg_file='example.cfg')
+#rmt = BossRemote(cfg_file='test.cfg')
 API_VER = LATEST_VERSION
 
 # Turn off SSL cert verification.  This is necessary for interacting with
