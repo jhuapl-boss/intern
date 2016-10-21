@@ -18,4 +18,4 @@ Author:
     Tim Gion
 """
 
-BOSS_DEFAULT_VERSION='v0.5'
+BOSS_DEFAULT_VERSION='v0.7'
