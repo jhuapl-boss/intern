@@ -15,6 +15,7 @@
 from ndio.remote.boss import BossRemote
 from ndio.resource.boss.resource import *
 
+import random
 import requests
 from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -53,11 +54,14 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        cls.coll = CollectionResource('collection2309', API_VER, 'bar')
-        cls.coll_upd = CollectionResource('collection2310', API_VER, 'latest')
+        coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
+        self.coll = CollectionResource(coll_name, API_VER, 'bar')
+        coll_name_upd = '{}-{}'.format(coll_name, random.randint(0, 9999))
+        self.coll_upd = CollectionResource('collection2310', API_VER, 'latest')
 
-        cls.coord = CoordinateFrameResource(
-            'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
+        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        self.coord = CoordinateFrameResource(
+            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 2, 'nanoseconds')
         cls.coord_upd = copy.copy(cls.coord)
         cls.coord_upd.name = 'MouseFrame'
