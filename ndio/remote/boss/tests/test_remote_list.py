@@ -15,26 +15,15 @@
 from ndio.remote import Remote
 from ndio.remote.boss import BossRemote
 import unittest
-from unittest.mock import patch
+from mock import patch
+
 
 class TestRemoteListMethods(unittest.TestCase):
     def setUp(self):
-        config = """[Project Service]
-        protocol = https
-        host = pro.theboss.io
-        token = my_secret_token
-
-        [Metadata Service]
-        protocol = file
-        host = meta.theboss.io
-        token = my_secret_token2
-
-        [Volume Service]
-        protocol = http
-        host = vol.theboss.io
-        token = my_secret_token3
-        """
-        self.remote = BossRemote(cfg_str=config)
+        config = {"protocol": "https",
+                  "host": "test.theboss.io",
+                  "token": "my_secret"}
+        self.remote = BossRemote(config)
 
     def test_list_collections(self):
         with patch.object(Remote, 'list_project') as list_prj_fake:

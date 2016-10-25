@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from ndio.remote import Remote
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 from ndio.service.boss.project import ProjectService
 from ndio.service.boss.metadata import MetadataService
 from ndio.service.boss.volume import VolumeService

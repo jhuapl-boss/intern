@@ -59,15 +59,15 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cls.coord = CoordinateFrameResource(
             'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 2, 'nanoseconds')
-        self.coord_upd = copy.copy(self.coord)
-        self.coord_upd.name = 'MouseFrame'
-        self.coord_upd.description = 'Mouse coordinate frame.'
+        cls.coord_upd = copy.copy(cls.coord)
+        cls.coord_upd.name = 'MouseFrame'
+        cls.coord_upd.description = 'Mouse coordinate frame.'
 
-        self.exp = ExperimentResource(
-            'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment',
+        cls.exp = ExperimentResource(
+            'exp2309-2', cls.coll.name, cls.coord.name, API_VER, 'my experiment',
             1, 'iso', 1)
-        self.exp_upd = ExperimentResource(
-            'exp2309-2a', self.coll.name, self.coord.name, API_VER,
+        cls.exp_upd = ExperimentResource(
+            'exp2309-2a', cls.coll.name, cls.coord.name, API_VER,
             'my first experiment', 2, 'slice', 3)
 
         cls.chan = ChannelResource(

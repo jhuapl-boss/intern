@@ -11,18 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+import six
 from ndio.remote.boss import BossRemote
 from ndio.resource.boss.resource import *
-from requests import Session
 
 import requests
-from requests import Session, HTTPError
+from requests import HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
 
 API_VER = 'v0.7'
+
 
 class ProjectPermissionTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss permission API.
@@ -38,63 +38,65 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
+        cls.initialize()
+        cls.cleanup_db()
 
-    def initialize(self):
+    @classmethod
+    def initialize(cls):
         """Initialization for each test.
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote('test.cfg')
+        cls.rmt = BossRemote('test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        self.rmt.project_service.session_send_opts = { 'verify': False }
-        self.rmt.metadata_service.session_send_opts = { 'verify': False }
-        self.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = { 'verify': False }
+        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
+        cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.coll = CollectionResource('collection2309', API_VER, 'bar')
-        self.coord = CoordinateFrameResource(
+        cls.coll = CollectionResource('collection2309', API_VER, 'bar')
+        cls.coord = CoordinateFrameResource(
             'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         # Coordinate frame of experiments needs to be set to a valid ID before
         # creating.
-        self.exp = ExperimentResource(
-            'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment', 1, 
+        cls.exp = ExperimentResource(
+            'exp2309-2', cls.coll.name, cls.coord.name, API_VER, 'my experiment', 1,
             'iso', 0)
 
-        self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
+        cls.chan = ChannelResource(
+            'myChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
-        self.grp_name = 'int_test_exists'
+        cls.grp_name = 'int_test_exists'
 
-    def cleanup_db(self):
+    @classmethod
+    def cleanup_db(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().
         """
         try:
-            self.rmt.group_delete(self.grp_name)
+            cls.rmt.group_delete(cls.grp_name)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.chan)
+            cls.rmt.project_delete(cls.chan)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.exp)
+            cls.rmt.project_delete(cls.exp)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coord)
+            cls.rmt.project_delete(cls.coord)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coll)
+            cls.rmt.project_delete(cls.coll)
         except HTTPError:
             pass
 
@@ -135,7 +137,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
         expected = ['update', 'add_volumetric_data', 'read']
         actual = self.rmt.permissions_get(self.grp_name, self.chan)
-        self.assertCountEqual(expected, actual)
+        six.assertCountEqual(self, expected, actual)
 
     def test_permissions_get_success(self):
         self.rmt.permissions_add(
@@ -143,7 +145,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
         expected = ['update', 'read']
         actual = self.rmt.permissions_get(self.grp_name, self.chan)
-        self.assertCountEqual(expected, actual)
+        six.assertCountEqual(self, expected, actual)
 
     def test_permissions_delete_success(self):
         self.rmt.permissions_add(
@@ -154,7 +156,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
         expected = ['update']
         actual = self.rmt.permissions_get(self.grp_name, self.chan)
-        self.assertCountEqual(expected, actual)
+        six.assertCountEqual(self, expected, actual)
 
 
 if __name__ == '__main__':

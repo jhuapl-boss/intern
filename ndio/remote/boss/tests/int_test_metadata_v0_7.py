@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+import six
 from ndio.remote.boss import BossRemote
 from ndio.resource.boss.resource import *
 from ndio.service.boss.httperrorlist import HTTPErrorList
@@ -39,8 +39,8 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
+        cls.initialize()
+        cls.cleanup_db()
         cls.rmt.project_create(cls.coll)
         coord_actual = cls.rmt.project_create(cls.coord)
         cls.rmt.project_create(cls.exp)
@@ -50,57 +50,58 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
     def tearDownClass(cls):
         """Remove all data model objects created in the DB.
         """
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
+        cls.initialize()
+        cls.cleanup_db()
 
-    def initialize(self):
+    @classmethod
+    def initialize(cls):
         """Initialization for each test.
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote('test.cfg')
+        cls.rmt = BossRemote('test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        self.rmt.project_service.session_send_opts = { 'verify': False }
-        self.rmt.metadata_service.session_send_opts = { 'verify': False }
-        self.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = { 'verify': False }
+        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
+        cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.coll = CollectionResource('collection2309', API_VER, 'bar')
+        cls.coll = CollectionResource('collection2309', API_VER, 'bar')
 
-        self.coord = CoordinateFrameResource(
+        cls.coord = CoordinateFrameResource(
             'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
-        self.exp = ExperimentResource(
-            'exp2309x2', self.coll.name, self.coord.name, API_VER, 'my experiment', 
+        cls.exp = ExperimentResource(
+            'exp2309x2', cls.coll.name, cls.coord.name, API_VER, 'my experiment',
             1, 'iso', 0)
 
-        self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
+        cls.chan = ChannelResource(
+            'myChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
-
-    def cleanup_db(self):
+    @classmethod
+    def cleanup_db(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDownClass() and setUpClass().
         """
         try:
-            self.rmt.project_delete(self.chan)
+            cls.rmt.project_delete(cls.chan)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.exp)
+            cls.rmt.project_delete(cls.exp)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coord)
+            cls.rmt.project_delete(cls.coord)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coll)
+            cls.rmt.project_delete(cls.coll)
         except HTTPError:
             pass
 
@@ -114,24 +115,24 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         actual_list = self.rmt.metadata_list(self.coll)
         self.assertEqual([], actual_list)
 
-        keys_vals = { 'red': 'green', 'two': 'four', 'inside': 'out' }
+        keys_vals = {'red': 'green', 'two': 'four', 'inside': 'out'}
         self.rmt.metadata_create(self.coll, keys_vals)
 
         actual = self.rmt.metadata_get(self.coll, list(keys_vals.keys()))
-        self.assertCountEqual(keys_vals, actual)
+        six.assertCountEqual(self,keys_vals, actual)
 
         with self.assertRaises(HTTPErrorList):
             # Should fail when trying create keys that already exist.
             self.rmt.metadata_create(self.coll, keys_vals)
 
-        update = { 'two': 'six', 'inside': 'upside-down' }
+        update = {'two': 'six', 'inside': 'upside-down'}
         self.rmt.metadata_update(self.coll, update)
 
         actual_upd = self.rmt.metadata_get(self.coll, list(update.keys()))
-        self.assertCountEqual(update, actual_upd)
+        six.assertCountEqual(self, update, actual_upd)
 
-        actual_list_upd  = self.rmt.metadata_list(self.coll)
-        self.assertCountEqual(list(keys_vals.keys()), actual_list_upd)
+        actual_list_upd = self.rmt.metadata_list(self.coll)
+        six.assertCountEqual(self, list(keys_vals.keys()), actual_list_upd)
 
         with self.assertRaises(HTTPErrorList):
             # Try updating a non-existent key.
@@ -150,10 +151,10 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         actual_list = self.rmt.metadata_list(self.exp)
         self.assertEqual([], actual_list)
 
-        keys_vals = { 'red': 'green', 'two': 'four', 'inside': 'out'}
+        keys_vals = {'red': 'green', 'two': 'four', 'inside': 'out'}
         self.rmt.metadata_create(self.exp, keys_vals)
         actual = self.rmt.metadata_get(self.exp, list(keys_vals.keys()))
-        self.assertCountEqual(keys_vals, actual)
+        six.assertCountEqual(self, keys_vals, actual)
 
         with self.assertRaises(HTTPErrorList):
             # Should fail when trying create keys that already exist.
@@ -163,10 +164,10 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         self.rmt.metadata_update(self.exp, update)
 
         actual_upd = self.rmt.metadata_get(self.exp, list(update.keys()))
-        self.assertCountEqual(update, actual_upd)
+        six.assertCountEqual(self, update, actual_upd)
 
         actual_list_upd = self.rmt.metadata_list(self.exp)
-        self.assertCountEqual(list(keys_vals.keys()), actual_list_upd)
+        six.assertCountEqual(self, list(keys_vals.keys()), actual_list_upd)
 
         with self.assertRaises(HTTPErrorList):
             # Try updating a non-existent key.
@@ -188,7 +189,7 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         keys_vals = { 'red': 'green', 'two': 'four', 'inside': 'out'}
         self.rmt.metadata_create(self.chan, keys_vals)
         actual = self.rmt.metadata_get(self.chan, list(keys_vals.keys()))
-        self.assertCountEqual(keys_vals, actual)
+        six.assertCountEqual(self, keys_vals, actual)
 
         with self.assertRaises(HTTPErrorList):
             # Should fail when trying create keys that already exist.
@@ -198,10 +199,10 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         self.rmt.metadata_update(self.chan, update)
 
         actual_upd = self.rmt.metadata_get(self.chan, list(update.keys()))
-        self.assertCountEqual(update, actual_upd)
+        six.assertCountEqual(self,update, actual_upd)
 
         actual_list_upd = self.rmt.metadata_list(self.chan)
-        self.assertCountEqual(keys_vals, actual_list_upd)
+        six.assertCountEqual(self,keys_vals, actual_list_upd)
 
         with self.assertRaises(HTTPErrorList):
             # Try updating a non-existent key.

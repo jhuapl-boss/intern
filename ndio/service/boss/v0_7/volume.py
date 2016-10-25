@@ -16,6 +16,7 @@ from ndio.service.boss.v0_7 import BOSS_API_VERSION
 from ndio.resource.boss.resource import *
 from requests import HTTPError
 import blosc
+import numpy as np
 
 
 class VolumeService_0_7(BaseVersion):
@@ -27,6 +28,17 @@ class VolumeService_0_7(BaseVersion):
         """Return the API Version for this implementation
         """
         return BOSS_API_VERSION
+
+    def get_bit_width(self, resource):
+        """Method to return the bit width for blosc based on the Resource"""
+        datatype = resource.datatype
+
+        if ("uint" in datatype):
+            bit_width = int(datatype.split("uint")[1])
+        else:
+            raise ValueError("Unsupported datatype: {}".format(datatype))
+
+        return bit_width
 
     def cutout_create(
         self, resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
@@ -46,10 +58,10 @@ class VolumeService_0_7(BaseVersion):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
         """
+        compressed = blosc.compress(numpyVolume, typesize=self.get_bit_width(resource))
 
-        compressed = blosc.pack_array(numpyVolume)
         req = self.get_cutout_request(
-            resource, 'POST', 'application/blosc-python',
+            resource, 'POST', 'application/blosc',
             url_prefix, auth,
             resolution, x_range, y_range, z_range, time_range, compressed)
         prep = session.prepare_request(req)
@@ -60,7 +72,7 @@ class VolumeService_0_7(BaseVersion):
 
         msg = ('Create cutout failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        raise HTTPError(msg, request = req, response = resp)
+        raise HTTPError(msg, request=req, response=resp)
 
     def cutout_get(
         self, resource, resolution, x_range, y_range, z_range, time_range,
@@ -87,16 +99,33 @@ class VolumeService_0_7(BaseVersion):
         """
 
         req = self.get_cutout_request(
-            resource, 'GET', 'application/blosc-python',
+            resource, 'GET', 'application/blosc',
             url_prefix, auth, resolution, x_range, y_range, z_range, time_range)
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
-        prep.headers['Accept'] = 'application/blosc-python'
+        prep.headers['Accept'] = 'application/blosc'
         resp = session.send(prep, **send_opts)
         
         if resp.status_code == 200:
-            return blosc.unpack_array(resp.content)
+            raw_data = blosc.decompress(resp.content)
+            data_mat = np.fromstring(raw_data, dtype=resource.datatype)
+
+            if time_range:
+                # Reshape including time
+                return np.reshape(data_mat,
+                                  (time_range[1] - time_range[0],
+                                   z_range[1] - z_range[0],
+                                   y_range[1] - y_range[0],
+                                   x_range[1] - x_range[0]),
+                                  order='C')
+            else:
+                # Reshape without including time
+                return np.reshape(data_mat,
+                                  (z_range[1] - z_range[0],
+                                   y_range[1] - y_range[0],
+                                   x_range[1] - x_range[0]),
+                                  order='C')
 
         msg = ('Get cutout failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
-        raise HTTPError(msg, request = req, response = resp)
+        raise HTTPError(msg, request=req, response=resp)

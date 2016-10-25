@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+import six
 from ndio.remote.boss import BossRemote
 from ndio.resource.boss.resource import *
 
@@ -34,37 +34,38 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
+        cls.initialize()
+        cls.cleanup_db()
         cls.rmt.user_add(cls.user, 'John', 'Doe', 'jd@me.com', 'password')
 
     @classmethod
     def tearDownClass(cls):
-        cls.initialize(cls)
+        cls.initialize()
         cls.rmt.user_delete(cls.user)
 
-
-    def initialize(self):
+    @classmethod
+    def initialize(cls):
         """Initialization for each test.
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote('test.cfg')
-        self.rmt.group_perm_api_version = API_VER
+        cls.rmt = BossRemote('test.cfg')
+        cls.rmt.group_perm_api_version = API_VER
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        self.rmt.project_service.session_send_opts = { 'verify': False }
-        self.rmt.metadata_service.session_send_opts = { 'verify': False }
-        self.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = { 'verify': False }
+        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
+        cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.admin = 'admin'
-        self.user_mgr = 'user-manager'
-        self.rsrc_mgr = 'resource-manager'
-        self.user = 'role_test_user'
+        cls.admin = 'admin'
+        cls.user_mgr = 'user-manager'
+        cls.rsrc_mgr = 'resource-manager'
+        cls.user = 'role_test_user'
 
-    def cleanup_db(self):
+    @classmethod
+    def cleanup_db(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().  Don't do
@@ -72,15 +73,15 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         may not have existed for a particular test.
         """
         try:
-            self.rmt.user_delete_role(self.user, self.admin)
+            cls.rmt.user_delete_role(cls.user, cls.admin)
         except HTTPError:
             pass
         try:
-            self.rmt.user_delete_role(self.user, self.user_mgr)
+            cls.rmt.user_delete_role(cls.user, cls.user_mgr)
         except HTTPError:
             pass
         try:
-            self.rmt.user_delete_role(self.user, self.rsrc_mgr)
+            cls.rmt.user_delete_role(cls.user, cls.rsrc_mgr)
         except HTTPError:
             pass
 
@@ -102,7 +103,7 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         expected = [self.admin, self.user_mgr, self.rsrc_mgr]
         actual = self.rmt.user_get_roles(self.user)
 
-        self.assertCountEqual(expected, actual)
+        six.assertCountEqual(self, expected, actual)
 
     def test_add_invalid_user(self):
         with self.assertRaises(HTTPError):

@@ -38,38 +38,40 @@ class ProjectUserTest_v0_7(unittest.TestCase):
         """
         warnings.filterwarnings('ignore')
 
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
+        cls.initialize()
+        cls.cleanup_db()
         cls.rmt.group_create(cls.group)
 
     @classmethod
     def tearDownClass(cls):
-        cls.initialize(cls)
+        cls.initialize()
         cls.rmt.group_delete(cls.group)
 
-    def initialize(self):
+    @classmethod
+    def initialize(cls):
         """Initialization for each test.
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote('test.cfg')
+        cls.rmt = BossRemote('test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        self.rmt.project_service.session_send_opts = { 'verify': False }
-        self.rmt.metadata_service.session_send_opts = { 'verify': False }
-        self.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = { 'verify': False }
+        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
+        cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.user = 'johndoe'
-        self.first_name = 'john'
-        self.last_name = 'doe'
-        self.email = 'jd@me.com'
-        self.password = 'password'
+        cls.user = 'johndoe'
+        cls.first_name = 'john'
+        cls.last_name = 'doe'
+        cls.email = 'jd@me.com'
+        cls.password = 'password'
 
-        self.group = 'int_user_test_group'
+        cls.group = 'int_user_test_group'
 
-    def cleanup_db(self):
+    @classmethod
+    def cleanup_db(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().  Don't do
@@ -77,7 +79,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
         may not have existed for a particular test.
         """
         try:
-            self.rmt.user_delete(self.user)
+            cls.rmt.user_delete(cls.user)
         except HTTPError:
             pass
 
@@ -118,7 +120,11 @@ class ProjectUserTest_v0_7(unittest.TestCase):
 
         # get also returns generated values that we cannot test for such 
         # as creation time.
-        self.assertTrue(expected.items() <= actual.items())
+        self.assertTrue(len(expected.items()) <= len(actual.items()))
+        self.assertEqual(expected["email"], actual["email"])
+        self.assertEqual(expected["username"], actual["username"])
+        self.assertEqual(expected["firstName"], actual["firstName"])
+        self.assertEqual(expected["lastName"], actual["lastName"])
 
     def test_get_invalid_user(self):
         with self.assertRaises(HTTPError):

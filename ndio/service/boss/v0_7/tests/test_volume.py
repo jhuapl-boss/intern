@@ -84,7 +84,7 @@ class TestVolume_v0_7(unittest.TestCase):
         mock_session.prepare_request.return_value = fake_prepped_req 
 
         data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
-        compressed_data = blosc.pack_array(data)
+        compressed_data = blosc.compress(data, typesize=16)
         fake_response = Response()
         fake_response.status_code = 200
         fake_response._content = compressed_data

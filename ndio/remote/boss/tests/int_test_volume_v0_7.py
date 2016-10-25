@@ -40,8 +40,8 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
+        cls.initialize()
+        cls.cleanup_db()
         cls.rmt.project_create(cls.coll)
         coord_actual = cls.rmt.project_create(cls.coord)
         cls.rmt.project_create(cls.exp)
@@ -53,8 +53,8 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
     def tearDownClass(cls):
         """Remove all data model objects created in the DB.
         """
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
+        cls.initialize()
+        cls.cleanup_db()
 
     @classmethod
     def initialize(cls):
@@ -80,10 +80,10 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         # self.exp.coord_frame must be set with valid id before creating.
         cls.exp = ExperimentResource(
             'exp2323x2', cls.coll.name, 'BestFrame', API_VER, 'my experiment',
-            1, 'iso', 0)
+            1, 'iso', 10)
 
         cls.chan = ChannelResource(
-            'myChan', self.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
+            'myChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
         cls.chan16 = ChannelResource(
@@ -136,11 +136,24 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [0, 4]
         z_rng = [0, 5]
 
-        data = numpy.random.randint(0, 3000, (5, 4, 8))
+        data = numpy.random.randint(1, 254, (5, 4, 8))
         data = data.astype(numpy.uint8)
 
         self.rmt.cutout_create(self.chan, 0, x_rng, y_rng, z_rng, data)
         actual = self.rmt.cutout_get(self.chan, 0, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(data, actual)
+
+    def test_upload_and_download_to_channel_with_time(self):
+        x_rng = [0, 8]
+        y_rng = [0, 4]
+        z_rng = [0, 5]
+        t_rng = [3, 6]
+
+        data = numpy.random.randint(1, 254, (3, 5, 4, 8))
+        data = data.astype(numpy.uint8)
+
+        self.rmt.cutout_create(self.chan, 0, x_rng, y_rng, z_rng, data, time_range=t_rng)
+        actual = self.rmt.cutout_get(self.chan, 0, x_rng, y_rng, z_rng, time_range=t_rng)
         numpy.testing.assert_array_equal(data, actual)
 
     def test_upload_and_download_subsection_to_channel(self):

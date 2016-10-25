@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+import six
 from ndio.remote.boss import BossRemote
 from ndio.resource.boss.resource import *
 
@@ -148,7 +148,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
 
         expected = ['bosspublic', users_group, self.existing_grp_name]
         actual = self.rmt.user_get_groups(self.create_user)
-        self.assertCountEqual(expected, actual)
+        six.assertCountEqual(self, expected, actual)
 
     def test_get_groups_invalid_user(self):
         with self.assertRaises(HTTPError):
