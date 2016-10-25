@@ -57,19 +57,17 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
         self.coord = CoordinateFrameResource(
             'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
-            1, 1, 1, 'nanometers', 0, 'nanoseconds')
+            1, 1, 1, 'nanometers', 2, 'nanoseconds')
         self.coord_upd = copy.copy(self.coord)
         self.coord_upd.name = 'MouseFrame'
         self.coord_upd.description = 'Mouse coordinate frame.'
 
-        # Coordinate frame of experiments needs to be set to a valid ID before
-        # creating.
         self.exp = ExperimentResource(
             'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment', 
-            1, 'iso', 0)
+            1, 'iso', 1)
         self.exp_upd = ExperimentResource(
             'exp2309-2a', self.coll.name, self.coord.name, API_VER, 
-            'my first experiment', 2, 'slice', 1)
+            'my first experiment', 2, 'slice', 3)
 
         self.chan = ChannelResource(
             'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
@@ -309,25 +307,25 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.chan_upd.default_time_step, ch.default_time_step)
         self.assertEqual(self.chan_upd.base_resolution, ch.base_resolution)
 
-    def test_list_collection(self):
+    def test_list_collections(self):
         coll = self.rmt.project_create(self.coll)
         self.assertIsNotNone(coll)
 
-        coll_list = self.rmt.project_list(self.coll)
+        coll_list = self.rmt.list_collections()
         c = [name for name in coll_list if name == self.coll.name]
         self.assertEqual(1, len(c))
         self.assertEqual(self.coll.name, c[0])
 
-    def test_list_coord_frame(self):
+    def test_list_coord_frames(self):
         cf = self.rmt.project_create(self.coord)
         self.assertIsNotNone(cf)
 
-        cf_list = self.rmt.project_list(self.coord)
+        cf_list = self.rmt.list_coordinate_frames()
         c = [name for name in cf_list if name == self.coord.name]
         self.assertEqual(1, len(c))
         self.assertEqual(self.coord.name, c[0])
 
-    def test_list_experiment(self):
+    def test_list_experiments(self):
         c = self.rmt.project_create(self.coll)
         self.assertIsNotNone(c)
 
@@ -337,12 +335,12 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         exp = self.rmt.project_create(self.exp)
         self.assertIsNotNone(exp)
 
-        exp_list = self.rmt.project_list(self.exp)
+        exp_list = self.rmt.list_experiments(self.coll.name)
         e = [name for name in exp_list if name == self.exp.name]
         self.assertEqual(1, len(e))
         self.assertEqual(self.exp.name, e[0])
 
-    def test_list_channel(self):
+    def test_list_channels(self):
         c = self.rmt.project_create(self.coll)
         self.assertIsNotNone(c)
 
@@ -355,7 +353,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         chan = self.rmt.project_create(self.chan)
         self.assertIsNotNone(chan)
 
-        chan_list = self.rmt.project_list(self.chan)
+        chan_list = self.rmt.list_channels(self.coll.name, self.exp.name)
         ch = [name for name in chan_list if name == self.chan.name]
         self.assertEqual(1, len(ch))
         self.assertEqual(self.chan.name, ch[0])

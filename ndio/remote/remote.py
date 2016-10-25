@@ -45,6 +45,19 @@ class Remote(metaclass=ABCMeta):
     def object_service(self):
         return self._object
 
+    def list_project(self, **kwargs):
+        """Perform list operation on the project.
+
+        What this does is highly dependent on project's data model.
+
+        Args:
+            (**kwargs): Args are implementation dependent.
+
+        Returns:
+            (list)
+        """
+        return self._project.list(**kwargs)
+
     def cutout_get(self, resource, resolution, x_range, y_range, z_range, time_range=None):
         """Get a cutout from the volume service.
 

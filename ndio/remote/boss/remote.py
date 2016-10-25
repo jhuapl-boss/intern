@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from ndio.remote import Remote
+from ndio.ndresource.boss.resource import *
 from ndio.service.boss.project import ProjectService
 from ndio.service.boss.metadata import MetadataService
 from ndio.service.boss.volume import VolumeService
@@ -386,8 +387,14 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         self.project_service.user_delete(user, self.group_perm_api_version)
 
-    def project_list(self, resource):
+    def _list_resource(self, resource):
         """List all instances of the given resource type.
+
+        Use the specific list_<resource>() methods instead:
+            list_collections()
+            list_experiments()
+            list_channels()
+            list_coordinate_frames()
 
         Args:
             resource (ndio.resource.boss.Resource): resource.name may be an empty string.
@@ -396,7 +403,55 @@ class BossRemote(Remote):
             (list)
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.list(resource)
+        return super().list_project(resource=resource)
+
+    def list_collections(self):
+        """List all collections.
+
+        Returns:
+            (list)
+        """
+        coll = CollectionResource(name='')
+        return self._list_resource(coll)
+
+    def list_experiments(self, collection_name):
+        """List all experiments that belong to a collection.
+
+        Args:
+            collection_name (string): Name of the parent collection.
+
+        Returns:
+            (list)
+        """
+        exp = ExperimentResource(
+            name='', collection_name=collection_name, coord_frame='foo')
+        return self._list_resource(exp)
+
+    def list_channels(self, collection_name, experiment_name):
+        """List all channels belonging to the named experiment that is part 
+        of the named collection.
+
+        Args:
+            collection_name (string): Name of the parent collection.
+            experiment_name (string): Name of the parent experiment.
+
+        Returns:
+            (list)
+        """
+        dont_care = 'image'
+        chan = ChannelResource(
+            name='', collection_name=collection_name, 
+            experiment_name=experiment_name, type=dont_care)
+        return self._list_resource(chan)
+
+    def list_coordinate_frames(self):
+        """List all coordinate_frames.
+
+        Returns:
+            (list)
+        """
+        cf = CoordinateFrameResource(name='')
+        return self._list_resource(cf)
 
     def project_create(self, resource):
         """Create the entity described by the given resource.
