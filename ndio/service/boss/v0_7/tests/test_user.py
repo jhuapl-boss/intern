@@ -11,12 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import six
 from ndio.service.boss.v0_7.project import ProjectService_0_7
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 from requests import PreparedRequest, Response, Session, HTTPError
 import unittest
-from unittest.mock import patch
+from mock import patch
+
 
 class TestUser(unittest.TestCase):
     def setUp(self):
@@ -37,7 +38,7 @@ class TestUser(unittest.TestCase):
 
         actual = self.prj.user_get(
             'johndoe', url_prefix, auth, mock_session, send_opts)
-        self.assertCountEqual(expected, actual)
+        six.assertCountEqual(self, expected, actual)
 
     @patch('requests.Session', autospec=True)
     def test_get_failure(self, mock_session):
@@ -70,7 +71,7 @@ class TestUser(unittest.TestCase):
 
         actual = self.prj.user_get_groups(
             'johndoe', url_prefix, auth, mock_session, send_opts)
-        self.assertCountEqual(expected, actual)
+        six.assertCountEqual(self, expected, actual)
 
     @patch('requests.Session', autospec=True)
     def test_get_groups_failure(self, mock_session):

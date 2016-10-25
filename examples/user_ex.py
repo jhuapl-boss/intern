@@ -18,7 +18,7 @@ a user with either the user-manager role or the admin role.
 """
 
 from ndio.remote.boss import BossRemote, LATEST_VERSION
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 from requests import HTTPError
 
 API_VER = LATEST_VERSION

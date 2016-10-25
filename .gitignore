@@ -28,3 +28,5 @@ nose2-junit.xml
 *.suo
 
 
+/.idea
+/ndio/test.cfg

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import unittest
-from ndio.ndresource.boss.resource import CoordinateFrameResource
+from ndio.resource.boss.resource import CoordinateFrameResource
 
 class TestCoordFrameResource(unittest.TestCase):
     def setUp(self):

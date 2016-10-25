@@ -13,9 +13,8 @@
 # limitations under the License.
  
 from ndio.remote.boss import BossRemote
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 
-import configparser
 import json
 import requests
 from requests import Session, HTTPError, Request
@@ -53,7 +52,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote(cfg_file='test.cfg')
+        self.rmt = BossRemote('test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.

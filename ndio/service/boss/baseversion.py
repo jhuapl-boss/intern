@@ -11,24 +11,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from abc import ABCMeta
-from abc import abstractmethod
-from ndio.ndresource.boss.resource import CoordinateFrameResource
+import six
+from abc import ABCMeta, abstractmethod
+from ndio.resource.boss.resource import CoordinateFrameResource
 from requests import Request
 
-class BaseVersion(metaclass=ABCMeta):
+
+@six.add_metaclass(ABCMeta)
+class BaseVersion(object):
     """BaseVersion is the base class for all versioned interfaces to the
     Boss API.
     """
     def __init__(self):
-        pass
+        self._token = None
 
     @property
     @abstractmethod
     def version(self):
         """Implementers define the version of the Boss API the service uses.
         """
+        raise NotImplemented
 
     def convert_int_list_range_to_str(self, int_list):
         """Convert range in list of two ints to string representation.

@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss.service import Service
+from ndio.service.boss import BossService
 from ndio.service.boss.v0_7.volume import VolumeService_0_7
 
-class VolumeService(Service):
+class VolumeService(BossService):
     """VolumeService routes calls to the appropriate API version.
     """
     def __init__(self, base_url):
@@ -24,7 +24,7 @@ class VolumeService(Service):
         Args:
             base_url (string): Base url (host) of project service such as 'api.boss.io'.
         """
-        super().__init__()
+        BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
             'v0.7': VolumeService_0_7()

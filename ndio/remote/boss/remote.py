@@ -11,15 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from ndio.remote import Remote
 from ndio.service.boss.project import ProjectService
 from ndio.service.boss.metadata import MetadataService
 from ndio.service.boss.volume import VolumeService
-import configparser
-import os
 
-CONFIG_FILE='~/.ndio/ndio.cfg'
+
 CONFIG_PROJECT_SECTION = 'Project Service'
 CONFIG_METADATA_SECTION = 'Metadata Service'
 CONFIG_VOLUME_SECTION = 'Volume Service'
@@ -28,7 +25,7 @@ CONFIG_PROTOCOL = 'protocol'
 CONFIG_HOST = 'host'
 CONFIG_TOKEN = 'token'
 
-LATEST_VERSION='v0.7'
+LATEST_VERSION = 'v0.7'
 
 
 class BossRemote(Remote):
@@ -48,7 +45,7 @@ class BossRemote(Remote):
         _group_perm_api_version (string): Boss API version to use when calling group_*() and permissions_*() methods.
     """
 
-    def __init__(self, *, cfg_file=None, cfg_str=None):
+    def __init__(self, cfg_file_or_dict=None):
         """Constructor.
 
         If not config arguments are passed in, ~/.ndio/ndio.cfg is read by 
@@ -62,29 +59,22 @@ class BossRemote(Remote):
         Raises:
             (FileNotFoundError): if can't load given config file.
         """
+        Remote.__init__(self, cfg_file_or_dict)
 
-        self._token_project = None
-        self._token_metadata = None
-        self._token_volume = None
         self._group_perm_api_version = LATEST_VERSION
 
-        if cfg_file is None and cfg_str is None:
-            cfg_file = CONFIG_FILE
-
-        try:
-            if cfg_str is not None:
-                self._config = self.load_config(cfg_str)
-            else:
-                self._config = self.load_config_file(os.path.expanduser(cfg_file))
-                
-            self._init_project_service()
-            self._init_metadata_service()
-            self._init_volume_service()
-        except KeyError as k:
-            print('Could not find key {} in {}'.format(k, cfg_file))
+        # Init the services
+        self._init_project_service()
+        self._init_metadata_service()
+        self._init_volume_service()
 
     def _init_project_service(self):
-        project_cfg = self._config[CONFIG_PROJECT_SECTION]
+        """Method to initialize the Project Service from the config data
+
+        Returns:
+            None
+        """
+        project_cfg = self._load_config_section(CONFIG_PROJECT_SECTION)
         self._token_project = project_cfg[CONFIG_TOKEN]
         proto = project_cfg[CONFIG_PROTOCOL]
         host = project_cfg[CONFIG_HOST]
@@ -94,7 +84,12 @@ class BossRemote(Remote):
         self._project.set_auth(self._token_project)
 
     def _init_metadata_service(self):
-        metadata_cfg = self._config[CONFIG_METADATA_SECTION]
+        """Method to initialize the Metadata Service from the config data
+
+        Returns:
+            None
+        """
+        metadata_cfg = self._load_config_section(CONFIG_METADATA_SECTION)
         self._token_metadata = metadata_cfg[CONFIG_TOKEN]
         proto = metadata_cfg[CONFIG_PROTOCOL]
         host = metadata_cfg[CONFIG_HOST]
@@ -104,7 +99,12 @@ class BossRemote(Remote):
         self._metadata.set_auth(self._token_metadata)
 
     def _init_volume_service(self):
-        volume_cfg = self._config[CONFIG_VOLUME_SECTION]
+        """Method to initialize the Volume Service from the config data
+
+        Returns:
+            None
+        """
+        volume_cfg = self._load_config_section(CONFIG_VOLUME_SECTION)
         self._token_volume = volume_cfg[CONFIG_TOKEN]
         proto = volume_cfg[CONFIG_PROTOCOL]
         host = volume_cfg[CONFIG_HOST]
@@ -113,34 +113,29 @@ class BossRemote(Remote):
         self._volume.base_protocol = proto
         self._volume.set_auth(self._token_volume)
 
-    def load_config(self, config_str):
-        """Load config data for the Remote.
+    def _load_config_section(self, section_name):
+        """Method to load the specific Service section from the config file if it exists, or fall back to the default
 
         Args:
-            config_str (string): Config data encoded in a string.
+            section_name (str): The desired service section name
 
         Returns:
-            (configparser.ConfigParser)
+            (dict): the section parameters
         """
-        cfg_parser = configparser.ConfigParser()
-        cfg_parser.read_string(config_str)
-        return cfg_parser
+        if self._config.has_section(section_name):
+            # Load specific section
+            section = dict(self._config.items(section_name))
+        elif self._config.has_section("Default"):
+            # Load Default section
+            section = dict(self._config.items("Default"))
+        else:
+            raise KeyError("'{}' was not found in the configuration file and no default configuration was provided.".format(section_name))
 
-    def load_config_file(self, path):
-        """Load config data for Remote from file.
-
-        Args:
-            path (string): Path (and filename) to config file.
-
-        Returns:
-            (configparser.ConfigParser)
-
-        Raises:
-            FileNotFoundError
-        """
-        with open(path, 'r') as f:
-            data = f.read()
-            return self.load_config(data)
+        # Make sure section is valid
+        if "protocol" in section and "host" in section and "token" in section:
+            return section
+        else:
+            raise KeyError("Missing values in configuration data. Must contain: protocol, host, token")
 
     @property
     def token_project(self):

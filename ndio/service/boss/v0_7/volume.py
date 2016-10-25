@@ -11,15 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from .base import Base
-from ndio.ndresource.boss.resource import *
+from ndio.service.boss import BaseVersion
+from ndio.service.boss.v0_7 import BOSS_API_VERSION
+from ndio.resource.boss.resource import *
 from requests import HTTPError
 import blosc
 
-class VolumeService_0_7(Base):
+
+class VolumeService_0_7(BaseVersion):
     def __init__(self):
-        super().__init__()
+        BaseVersion.__init__(self)
+
+    @property
+    def version(self):
+        """Return the API Version for this implementation
+        """
+        return BOSS_API_VERSION
 
     def cutout_create(
         self, resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,

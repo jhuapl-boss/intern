@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import six
+from abc import ABCMeta, abstractmethod
 
-from abc import ABCMeta
-from abc import abstractmethod
 
-class Service(metaclass=ABCMeta):
+@six.add_metaclass(ABCMeta)
+class Service(object):
     def __init__(self):
         self._auth = None
         self._base_url = ''

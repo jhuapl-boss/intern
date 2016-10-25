@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.service import Service as NdService
-from abc import abstractmethod
+from ndio.service.service import Service
 from requests import Session
 
-class Service(NdService):
+
+class BossService(Service):
     """Partial implementation of ndio.service.service.Service for the Boss' services.
 
     Attributes:
@@ -26,7 +26,7 @@ class Service(NdService):
     """
 
     def __init__(self):
-        super().__init__()
+        Service.__init__(self)
         self._versions = {}
         self._session = Session()
         self._session_send_opts = {}

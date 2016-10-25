@@ -13,7 +13,7 @@
 # limitations under the License.
  
 from ndio.remote.boss import BossRemote
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 
 import requests
 from requests import Session, HTTPError
@@ -35,85 +35,86 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
+        cls.initialize()
+        cls.cleanup_db()
 
-    def initialize(self):
+    @classmethod
+    def initialize(cls):
         """Initialization for each test.
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote(cfg_file='test.cfg')
+        cls.rmt = BossRemote('test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        self.rmt.project_service.session_send_opts = { 'verify': False }
-        self.rmt.metadata_service.session_send_opts = { 'verify': False }
-        self.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = { 'verify': False }
+        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
+        cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.coll = CollectionResource('collection2309', API_VER, 'bar')
-        self.coll_upd = CollectionResource('collection2310', API_VER, 'latest')
+        cls.coll = CollectionResource('collection2309', API_VER, 'bar')
+        cls.coll_upd = CollectionResource('collection2310', API_VER, 'latest')
 
-        self.coord = CoordinateFrameResource(
+        cls.coord = CoordinateFrameResource(
             'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
-        self.coord_upd = copy.copy(self.coord)
-        self.coord_upd.name = 'MouseFrame'
-        self.coord_upd.description = 'Mouse coordinate frame.'
+        cls.coord_upd = copy.copy(cls.coord)
+        cls.coord_upd.name = 'MouseFrame'
+        cls.coord_upd.description = 'Mouse coordinate frame.'
 
         # Coordinate frame of experiments needs to be set to a valid ID before
         # creating.
-        self.exp = ExperimentResource(
-            'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment', 
+        cls.exp = ExperimentResource(
+            'exp2309-2', cls.coll.name, cls.coord.name, API_VER, 'my experiment',
             1, 'iso', 0)
-        self.exp_upd = ExperimentResource(
-            'exp2309-2a', self.coll.name, self.coord.name, API_VER, 
+        cls.exp_upd = ExperimentResource(
+            'exp2309-2a', cls.coll.name, cls.coord.name, API_VER,
             'my first experiment', 2, 'slice', 1)
 
-        self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
+        cls.chan = ChannelResource(
+            'myChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
-        self.chan_upd = ChannelResource(
-            'yourChan', self.coll.name, self.exp.name, 'image', API_VER, 'your test channel', 
+        cls.chan_upd = ChannelResource(
+            'yourChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'your test channel',
             1, 'uint8', 1)
 
-
-    def cleanup_db(self):
+    @classmethod
+    def cleanup_db(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().
         """
         try:
-            self.rmt.project_delete(self.chan_upd)
+            cls.rmt.project_delete(cls.chan_upd)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.chan)
+            cls.rmt.project_delete(cls.chan)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.exp_upd)
+            cls.rmt.project_delete(cls.exp_upd)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.exp)
+            cls.rmt.project_delete(cls.exp)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coord_upd)
+            cls.rmt.project_delete(cls.coord_upd)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coord)
+            cls.rmt.project_delete(cls.coord)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coll_upd)
+            cls.rmt.project_delete(cls.coll_upd)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coll)
+            cls.rmt.project_delete(cls.coll)
         except HTTPError:
             pass
 

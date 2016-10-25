@@ -25,7 +25,7 @@ the Blue Mouse experiment.
 """
 
 from ndio.remote.boss import BossRemote, LATEST_VERSION
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 
 API_VER = LATEST_VERSION
 rmt = BossRemote(cfg_file='example.cfg')

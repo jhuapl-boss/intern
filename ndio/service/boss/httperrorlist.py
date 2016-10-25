@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class HTTPErrorList(Exception):
     """HTTPErrorList stores a list of requests.HTTPError exceptions.
 
@@ -23,7 +24,7 @@ class HTTPErrorList(Exception):
     """
 
     def __init__(self, message):
-        super().__init__(message)
+        super(Exception, self).__init__(self, message)
         self.http_errors = []
 
     def __str__(self):

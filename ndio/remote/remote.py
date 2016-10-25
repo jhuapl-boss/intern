@@ -11,32 +11,82 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import six
 from abc import ABCMeta
-from abc import abstractmethod
+from six.moves import configparser
+import os
 
-class Remote(metaclass=ABCMeta):
-    """Base class for communicating with remote neuro data stores.
+CONFIG_FILE ='~/.ndio/ndio.cfg'
+
+
+@six.add_metaclass(ABCMeta)
+class Remote(object):
+    """Base class for communicating with remote data stores.
 
     Attributes:
-        _volume (ndio.service.service.Service): Class that communicates with the volume service.
-        _metadata (ndio.service.service.Service): Class that communicates with the metadata service.
-        _project (ndio.service.service.Service): Class that communicates with the project service.
-        _object (ndio.service.service.Service): Class that communicates with the volume service.
+        _volume (ndio.service.Service): Class that communicates with the volume service.
+        _metadata (ndio.service.Service): Class that communicates with the metadata service.
+        _project (ndio.service.Service): Class that communicates with the project service.
+        _object (ndio.service.Service): Class that communicates with the object service.
     """
 
-    def __init__(self):
+    def __init__(self, cfg_file_or_dict=None):
+        # Service Objects
         self._volume = None
         self._metadata = None
         self._project = None
         self._object = None
 
+        # Configuration data loaded from file or passed directly to the constructor
+        # Is available for children Remote classes to use as needed
+        self._config = None
+
+        # Tokens for Services
+        self._token_project = None
+        self._token_metadata = None
+        self._token_volume = None
+        self._token_object = None
+
+        if cfg_file_or_dict is None:
+            # Default to the config file in the user directory if no config file was provided
+            cfg_file_or_dict = os.path.expanduser(CONFIG_FILE)
+
+        if isinstance(cfg_file_or_dict, dict) is True:
+            # A config dictionary was provided directly. Keep things consistent by creating an INI string.
+            cfg_str = "[Default]\n"
+            for key in cfg_file_or_dict:
+                cfg_str = "{}{} = {}\n".format(cfg_str, key, cfg_file_or_dict[key])
+            self._config = self.load_config_file(six.StringIO(cfg_str))
+
+        else:
+            # A file path was provided by the user
+            if os.path.isfile(cfg_file_or_dict):
+                with open(cfg_file_or_dict, 'r') as cfg_file_handle:
+                    self._config = self.load_config_file(cfg_file_handle)
+            else:
+                raise IOError("Configuration file not found: {}".format(cfg_file_or_dict))
+
+    def load_config_file(self, config_handle):
+        """Load config data for the Remote.
+
+        Args:
+            config_handle (io.StringIO): Config data encoded in a string.
+
+        Returns:
+            (configparser.ConfigParser)
+        """
+        cfg_parser = configparser.ConfigParser()
+        cfg_parser.readfp(config_handle)
+        return cfg_parser
+
     @property
     def volume_service(self):
         return self._volume
+
     @property
     def project_service(self):
         return self._project
+
     @property
     def metadata_service(self):
         return self._metadata
@@ -88,7 +138,6 @@ class Remote(metaclass=ABCMeta):
             RuntimeError when given invalid resource.
             Other exceptions may be raised depending on the volume service's implementation.
         """
-
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.cutout_create(

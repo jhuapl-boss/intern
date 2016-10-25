@@ -13,10 +13,11 @@
 # limitations under the License.
 
 from ndio.service.boss.v0_7.project import ProjectService_0_7
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
-from unittest.mock import patch
+from mock import patch
+
 
 class TestProject_v0_7(unittest.TestCase):
     def setUp(self):

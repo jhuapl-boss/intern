@@ -13,7 +13,7 @@
 # limitations under the License.
  
 from ndio.remote.boss import BossRemote
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 from ndio.service.boss.httperrorlist import HTTPErrorList
 import numpy
 
@@ -56,70 +56,72 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         cls.initialize(cls)
         cls.cleanup_db(cls)
 
-    def initialize(self):
+    @classmethod
+    def initialize(cls):
         """Initialization for each test.
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote(cfg_file='test.cfg')
+        cls.rmt = BossRemote('test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        self.rmt.project_service.session_send_opts = { 'verify': False }
-        self.rmt.metadata_service.session_send_opts = { 'verify': False }
-        self.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = { 'verify': False }
+        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
+        cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.coll = CollectionResource('collection2323', API_VER, 'bar')
+        cls.coll = CollectionResource('collection2323', API_VER, 'bar')
 
-        self.coord = CoordinateFrameResource(
+        cls.coord = CoordinateFrameResource(
             'BestFrame', API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20, 
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         # self.exp.coord_frame must be set with valid id before creating.
-        self.exp = ExperimentResource(
-            'exp2323x2', self.coll.name, 'BestFrame', API_VER, 'my experiment', 
+        cls.exp = ExperimentResource(
+            'exp2323x2', cls.coll.name, 'BestFrame', API_VER, 'my experiment',
             1, 'iso', 0)
 
-        self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
+        cls.chan = ChannelResource(
+            'myChan', self.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
-        self.chan16 = ChannelResource(
-            'my16bitChan', self.coll.name, self.exp.name, 'image', API_VER,
+        cls.chan16 = ChannelResource(
+            'my16bitChan', cls.coll.name, cls.exp.name, 'image', API_VER,
             '16 bit test channel', 0, 'uint16', 0)
 
-        self.ann_chan = ChannelResource(
-            'annChan', self.coll.name, self.exp.name, 'annotation', API_VER, 
-            'annotation test channel', 0, 'uint64', 0, source=[self.chan.name])
+        cls.ann_chan = ChannelResource(
+            'annChan', cls.coll.name, cls.exp.name, 'annotation', API_VER,
+            'annotation test channel', 0, 'uint64', 0, source=[cls.chan.name])
 
-    def cleanup_db(self):
+    @classmethod
+    def cleanup_db(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDownClass() and setUpClass().
         """
         try:
-            self.rmt.project_delete(self.ann_chan)
+            cls.rmt.project_delete(cls.ann_chan)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.chan16)
+            cls.rmt.project_delete(cls.chan16)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.chan)
+            cls.rmt.project_delete(cls.chan)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.exp)
+            cls.rmt.project_delete(cls.exp)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coord)
+            cls.rmt.project_delete(cls.coord)
         except HTTPError:
             pass
         try:
-            self.rmt.project_delete(self.coll)
+            cls.rmt.project_delete(cls.coll)
         except HTTPError:
             pass
 

@@ -2,8 +2,6 @@ pillow
 numpy
 h5py
 requests
-pymcubes
-pycollada
-blosc
-jsonschema
-json-spec
+blosc==1.4.1
+six
+mock

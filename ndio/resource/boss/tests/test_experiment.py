@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import unittest
-from ndio.ndresource.boss.resource import ExperimentResource
+from ndio.resource.boss.resource import ExperimentResource
 
 class TestExperimentResource(unittest.TestCase):
     def setUp(self):

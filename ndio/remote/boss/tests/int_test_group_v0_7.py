@@ -13,9 +13,8 @@
 # limitations under the License.
  
 from ndio.remote.boss import BossRemote
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 
-import configparser
 import requests
 from requests import Session, HTTPError, Request
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -24,6 +23,7 @@ import unittest
 import warnings
 
 API_VER = 'v0.7'
+
 
 class ProjectGroupTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss group API.
@@ -37,31 +37,33 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         attempts to clean up during tearDown().
         """
         warnings.filterwarnings('ignore')
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
+        cls.initialize()
+        cls.cleanup_db()
 
-    def initialize(self):
+    @classmethod
+    def initialize(cls):
         """Initialization for each test.
 
         Called by both setUp() and setUpClass().
         """
-        self.rmt = BossRemote(cfg_file='test.cfg')
+        cls.rmt = BossRemote('test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        self.rmt.project_service.session_send_opts = { 'verify': False }
-        self.rmt.metadata_service.session_send_opts = { 'verify': False }
-        self.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = { 'verify': False }
+        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
+        cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.create_grp_name = 'int_test_group'
-        self.existing_grp_name = 'int_test_exists'
-        self.user_name = 'bossadmin'
+        cls.create_grp_name = 'int_test_group'
+        cls.existing_grp_name = 'int_test_exists'
+        cls.user_name = 'bossadmin'
 
         # This user will be created during at least one test.
-        self.create_user = 'johndoeski'
+        cls.create_user = 'johndoeski'
 
-    def cleanup_db(self):
+    @classmethod
+    def cleanup_db(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().  Don't do
@@ -69,15 +71,15 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         may not have existed for a particular test.
         """
         try:
-            self.rmt.group_delete(self.create_grp_name)
+            cls.rmt.group_delete(cls.create_grp_name)
         except HTTPError:
             pass
         try:
-            self.rmt.group_delete(self.existing_grp_name)
+            cls.rmt.group_delete(cls.existing_grp_name)
         except HTTPError:
             pass
         try:
-            self.rmt.user_delete(self.create_user)
+            cls.rmt.user_delete(cls.create_user)
         except HTTPError:
             pass
 
@@ -158,14 +160,17 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         Args:
             token (string): Bearer token used to for authentication.
         """
-        parser = configparser.ConfigParser()
-        parser.read('test.cfg')
-        host = parser['Project Service']['host']
+        if "Project Service" in self.rmt._config.sections():
+            host = self.rmt._config.get("Project Service", "host")
+            protocol = self.rmt._config.get("Project Service", "protocol")
+        else:
+            host = self.rmt._config.get("Default", "host")
+            protocol = self.rmt._config.get("Default", "protocol")
+
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': 'Bearer ' + token
         }
-        protocol = parser['Project Service']['protocol']
 
         # Hit one of the API endpoints to effectively, login.
         url = protocol + '://' + host + '/' + API_VER + '/collection/'
@@ -182,12 +187,14 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         Returns:
             (string): Bearer token.
         """
-        parser = configparser.ConfigParser()
-        parser.read('test.cfg')
-        # Get the beginning of the VPC name that test is running in.
-        (api_host, domain) = parser['Project Service']['host'].split('.', 1)
+        if "Project Service" in self.rmt._config.sections():
+            (api_host, domain) = self.rmt._config.get("Project Service", "host").split('.', 1)
+            protocol = self.rmt._config.get("Project Service", "protocol")
+        else:
+            (api_host, domain) = self.rmt._config.get("Default", "host").split('.', 1)
+            protocol = self.rmt._config.get("Default", "protocol")
+
         host = api_host.replace('api', 'auth', 1) + '.' + domain
-        protocol = parser['Project Service']['protocol']
         url = protocol + '://' + host + '/auth/realms/BOSS/protocol/openid-connect/token'
         data = {
             'grant_type': 'password',

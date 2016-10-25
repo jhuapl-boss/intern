@@ -11,12 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from ndio.ndresource.resource import Resource as NdResource
+from ndio.resource import Resource
 from . import BOSS_DEFAULT_VERSION
 from abc import abstractmethod
 
-class Resource(NdResource):
+
+class BossResource(Resource):
     """Base class for Boss resources.
 
     Attributes:
@@ -27,8 +27,7 @@ class Resource(NdResource):
         creator (string): Resource creator.
         raw (dictionary): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
     """
-    def __init__(
-        self, name, description, version=BOSS_DEFAULT_VERSION, creator='', raw={}):
+    def __init__(self, name, description, version=BOSS_DEFAULT_VERSION, creator='', raw={}):
         """Constructor.
 
         Args:
@@ -57,6 +56,7 @@ class Resource(NdResource):
             (string): A string that can be appended to the location of an
             endpoint such as 'mycollection/experiment/exp1/channel/chan2'
         """
+        assert NotImplemented
 
     @abstractmethod
     def get_list_route(self):
@@ -66,6 +66,7 @@ class Resource(NdResource):
             (string): A string that can be appended to the location of an
             endpoint such as 'mycollection/experiment'
         """
+        assert NotImplemented
 
     @abstractmethod
     def get_cutout_route(self):
@@ -79,6 +80,7 @@ class Resource(NdResource):
         Raises:
             (RuntimeError): if operation not supported by the resource.
         """
+        assert NotImplemented
 
     @abstractmethod
     def get_meta_or_permission_route(self):
@@ -92,8 +94,10 @@ class Resource(NdResource):
         Raises:
             (RuntimeError): if operation not supported by the resource.
         """
+        assert NotImplemented
 
-class CollectionResource(Resource):
+
+class CollectionResource(BossResource):
     """Top level container for Boss projects.
     """
     def __init__(
@@ -108,7 +112,7 @@ class CollectionResource(Resource):
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
-        super().__init__(name, description, version, creator, raw)
+        BossResource.__init__(self, name, description, version, creator, raw)
 
     def get_route(self):
         return self.name
@@ -122,7 +126,8 @@ class CollectionResource(Resource):
     def get_meta_or_permission_route(self):
         return self.name
 
-class ExperimentResource(Resource):
+
+class ExperimentResource(BossResource):
     """Experiments reside inside a collection and contain channels and
     layers.
 
@@ -151,8 +156,8 @@ class ExperimentResource(Resource):
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
-        
-        super().__init__(name, description, version, creator, raw)
+
+        BossResource.__init__(self, name, description, version, creator, raw)
         self.coll_name = collection_name
 
         self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
@@ -201,7 +206,7 @@ class ExperimentResource(Resource):
         raise ValueError('{} is not a valid hierarchy method.'.format(value))
 
 
-class CoordinateFrameResource(Resource):
+class CoordinateFrameResource(BossResource):
     """
     Coordinate frame used by experiment(s).
 
@@ -254,7 +259,7 @@ class CoordinateFrameResource(Resource):
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
-        super().__init__(name, description, version, raw=raw)
+        BossResource.__init__(self, name, description, version, raw=raw)
 
         self._valid_voxel_units = [
             'nanometers', 'micrometers', 'millimeters', 'centimeters']
@@ -328,7 +333,7 @@ class CoordinateFrameResource(Resource):
         raise ValueError('{} is not a valid time unit.'.format(value))
 
 
-class ChannelResource(Resource):
+class ChannelResource(BossResource):
     """
     Holds channel data.
 
@@ -369,7 +374,7 @@ class ChannelResource(Resource):
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
-        super().__init__(name, description, version, creator, raw)
+        BossResource.__init__(self, name, description, version, creator, raw)
         self.coll_name = collection_name
         self.exp_name = experiment_name
 
@@ -472,42 +477,3 @@ class ChannelResource(Resource):
         if lowered in ChannelResource._valid_datatypes:
             return lowered
         raise ValueError('{} is not a valid data type.'.format(value))
-
-
-#class ChannelResource(ChannelLayerBaseResource):
-#    """
-#    Channels store collected data.
-#    """
-#    def __init__(self, name, collection_name, experiment_name,
-#        version=BOSS_DEFAULT_VERSION,
-#        description='', default_time_step=0, datatype='uint8',
-#        base_resolution=0, creator='', raw={}):
-#        """Constructor.
-
-#        Args:
-#            name (string): Channel name.
-#            collection_name (string): Parent collection name.
-#            experiment_name (string): Parent experiment name.
-#            version (optional[string]): API version to use.
-#            description (optional[string]): Layer description.
-#            default_time_step (optional[int]): Defaults to 0.
-#            datatype (optional[string]): 'uint8', 'uint16'
-#            base_resolution (optional[int]): Defaults to 0 (native).
-#            creator (optional[string]): Resource creator.
-#            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
-#        """
-
-#        self._valid_datatypes = ['uint8', 'uint16']
-
-#        super().__init__(name, collection_name, experiment_name, version,
-#            description, default_time_step, datatype, base_resolution, creator, raw)
-
-#    def get_project_list_route(self):
-#        return self.coll_name + '/' + self.exp_name + '/channels'
-
-#    def validate_datatype(self, value):
-#        lowered = value.lower()
-#        if lowered in self._valid_datatypes:
-#            return lowered
-#        raise ValueError('{} is not a valid data type.'.format(value))
-

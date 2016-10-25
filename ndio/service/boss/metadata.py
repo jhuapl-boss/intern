@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss.service import Service
+from ndio.service.boss import BossService
 from ndio.service.boss.v0_7.metadata import MetadataService_0_7
 
-class MetadataService(Service):
+
+class MetadataService(BossService):
     """MetadataService routes calls to the appropriate API version.
     """
 
@@ -25,7 +26,7 @@ class MetadataService(Service):
         Attributes:
             base_url (string): Base url to project service such as 'api.boss.io'.
         """
-        super().__init__()
+        BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
             'v0.7': MetadataService_0_7()

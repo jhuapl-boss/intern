@@ -11,26 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import six
+from abc import ABCMeta, abstractmethod
 
-from ndio.service.boss.baseversion import BaseVersion
-from . import BOSS_VERSION
 
-class Base(BaseVersion):
-    """This is the common parent for all interfaces to the Boss v0.6.
-
-    Attributes:
-        _token (string): Django Rest Framework token used for auth.
+@six.add_metaclass(ABCMeta)
+class Resource(object):
+    """Base class used as a parameter by ndio.service.Service object methods.
     """
 
-    def __init__(self):
-        super().__init__()
-        self._token = None
+    @abstractmethod
+    def valid_volume(self):
+        """Returns True if resource is something that can access the volume service.
 
-    @property
-    def version(self):
-        """Version of the Boss API supported by this service instance.
+        Args:
 
         Returns:
-            (string): Boss API version.
+            (bool) : True if calls to volume service may be made.
         """
-        return BOSS_VERSION
+        raise NotImplemented

@@ -17,3 +17,4 @@
 Author:
     Tim Gion
 """
+from ndio.service.service import Service

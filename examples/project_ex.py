@@ -29,7 +29,7 @@ resource object also contains the parameters to place in the database.
 """
 
 from ndio.remote.boss import BossRemote, LATEST_VERSION
-from ndio.ndresource.boss.resource import *
+from ndio.resource.boss.resource import *
 
 rmt = BossRemote(cfg_file='example.cfg')
 #rmt = BossRemote(cfg_file='test.cfg')

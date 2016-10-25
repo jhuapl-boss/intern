@@ -13,12 +13,13 @@
 # limitations under the License.
 
 from ndio.service.boss.v0_7.volume import VolumeService_0_7
-from ndio.ndresource.boss.resource import ChannelResource
+from ndio.resource.boss.resource import ChannelResource
 import blosc
 import numpy
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
-from unittest.mock import patch
+from mock import patch
+
 
 class TestVolume_v0_7(unittest.TestCase):
     def setUp(self):
