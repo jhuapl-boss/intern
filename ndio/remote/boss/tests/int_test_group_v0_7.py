@@ -146,7 +146,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         # Name of auto-created group for user.
         users_group = self.create_user + '-primary'
 
-        expected = ['boss-public', users_group, self.existing_grp_name]
+        expected = ['bosspublic', users_group, self.existing_grp_name]
         actual = self.rmt.user_get_groups(self.create_user)
         self.assertCountEqual(expected, actual)
 

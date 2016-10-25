@@ -312,11 +312,11 @@ class ProjectService(BossService):
         ps.user_delete(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def list(self, resource):
+    def list(self, resource=None, **kwargs):
         """List all resources of the same type as the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): List resources of the same type as this..
+            resource (ndio.ndresource.boss.Resource): List resources of the same type as this resource.
 
         Returns:
             (list): List of resources.

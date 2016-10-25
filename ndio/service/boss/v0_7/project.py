@@ -642,7 +642,13 @@ class ProjectService_0_7(BaseVersion):
                 'max_time_sample': exp.max_time_sample
             }
 
-        return { 'name': exp.name, 'description': exp.description }
+        return {
+            'name': exp.name,
+            'description': exp.description ,
+            'num_hierarchy_levels': exp.num_hierarchy_levels,
+            'hierarchy_method': exp.hierarchy_method,
+            'max_time_sample': exp.max_time_sample
+        }
 
     def _get_coordinate_params(self, coord, for_update):
         if not for_update:
@@ -681,6 +687,8 @@ class ProjectService_0_7(BaseVersion):
         return { 
             'name': chan.name,
             'description': chan.description,
+            'base_resolution': chan.base_resolution,
+            'default_time_step': chan.default_time_step,
             'source': chan.source,
             'related': chan.related
         }
