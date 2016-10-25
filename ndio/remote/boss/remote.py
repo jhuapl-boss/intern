@@ -403,7 +403,7 @@ class BossRemote(Remote):
             (list)
         """
         self.project_service.set_auth(self._token_project)
-        return super().list_project(resource=resource)
+        return super(BossRemote, self).list_project(resource=resource)
 
     def list_collections(self):
         """List all collections.
