@@ -151,7 +151,7 @@ class ExperimentResource(Resource):
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
-        
+
         super().__init__(name, description, version, creator, raw)
         self.coll_name = collection_name
 
@@ -264,7 +264,7 @@ class CoordinateFrameResource(Resource):
 
         self.x_start = x_start
         self.x_stop = x_stop
-        self.y_start = y_start 
+        self.y_start = y_start
         self.y_stop = y_stop
         self.z_start = z_start
         self.z_stop = z_stop
@@ -347,10 +347,10 @@ class ChannelResource(Resource):
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
     _valid_types = ['annotation', 'image']
 
-    def __init__(self, name, collection_name, experiment_name, type, 
+    def __init__(self, name, collection_name, experiment_name, type,
         version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
-        base_resolution=0, source=[], related=[], creator='', raw={}):
+        base_resolution=0, sources=[], related=[], creator='', raw={}):
         """Constructor.
 
         Args:
@@ -363,7 +363,7 @@ class ChannelResource(Resource):
             default_time_step (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
             base_resolution (optional[int]): Defaults to 0 (native).
-            source (optional[list[string]]): Channels this channel was derived from.
+            sources (optional[list[string]]): Channels this channel was derived from.
             related (optiona[list[string]]): Channels related to this channel.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
@@ -376,7 +376,7 @@ class ChannelResource(Resource):
         self._type = self.validate_type(type)
         self._datatype = self.validate_datatype(datatype)
 
-        self.source = source
+        self.sources = sources
 
         self.related = related
 
@@ -402,15 +402,15 @@ class ChannelResource(Resource):
         return True
 
     @property
-    def source(self):
-        return self._source
+    def sources(self):
+        return self._sources
 
-    @source.setter
-    def source(self, value):
+    @sources.setter
+    def sources(self, value):
         if isinstance(value, str):
-            self._source = [value]
+            self._sources = [value]
         else:
-            self._source = value
+            self._sources = value
 
     @property
     def related(self):
@@ -510,4 +510,3 @@ class ChannelResource(Resource):
 #        if lowered in self._valid_datatypes:
 #            return lowered
 #        raise ValueError('{} is not a valid data type.'.format(value))
-

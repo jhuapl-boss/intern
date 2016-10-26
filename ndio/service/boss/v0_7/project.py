@@ -154,7 +154,7 @@ class ProjectService_0_7(Base):
             requests.HTTPError on failure.
         """
         req = self.get_permission_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth,
             grp_name, resource)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -168,7 +168,7 @@ class ProjectService_0_7(Base):
 
 
     def permissions_add(
-        self, grp_name, resource, permissions, url_prefix, auth, session, 
+        self, grp_name, resource, permissions, url_prefix, auth, session,
         send_opts):
         """
         Args:
@@ -182,7 +182,7 @@ class ProjectService_0_7(Base):
         """
         json = { 'permissions': permissions }
         req = self.get_permission_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth,
             grp_name, resource, json)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -194,7 +194,7 @@ class ProjectService_0_7(Base):
         raise HTTPError(msg, request = req, response = resp)
 
     def permissions_delete(
-        self, grp_name, resource, permissions, url_prefix, auth, session, 
+        self, grp_name, resource, permissions, url_prefix, auth, session,
         send_opts):
         """
         Args:
@@ -211,7 +211,7 @@ class ProjectService_0_7(Base):
         """
         json = { 'permissions': permissions }
         req = self.get_permission_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth,
             grp_name, resource, json)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -239,7 +239,7 @@ class ProjectService_0_7(Base):
             requests.HTTPError on failure.
         """
         req = self.get_user_role_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth,
             user)
 
         prep = session.prepare_request(req)
@@ -267,7 +267,7 @@ class ProjectService_0_7(Base):
             requests.HTTPError on failure.
         """
         req = self.get_user_role_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth,
             user, role)
 
         prep = session.prepare_request(req)
@@ -295,7 +295,7 @@ class ProjectService_0_7(Base):
             requests.HTTPError on failure.
         """
         req = self.get_user_role_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth,
             user, role)
 
         prep = session.prepare_request(req)
@@ -325,7 +325,7 @@ class ProjectService_0_7(Base):
             requests.HTTPError on failure.
         """
         req = self.get_user_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth,
             user)
 
         prep = session.prepare_request(req)
@@ -372,7 +372,7 @@ class ProjectService_0_7(Base):
         raise HTTPError(msg, request = req, response = resp)
 
     def user_add(
-        self, user, first_name, last_name, email, password, 
+        self, user, first_name, last_name, email, password,
         url_prefix, auth, session, send_opts):
         """Add a new user.
 
@@ -391,7 +391,7 @@ class ProjectService_0_7(Base):
             requests.HTTPError on failure.
         """
         req = self.get_user_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth,
             user, first_name, last_name, email, password)
 
         prep = session.prepare_request(req)
@@ -418,7 +418,7 @@ class ProjectService_0_7(Base):
             requests.HTTPError on failure.
         """
         req = self.get_user_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, 
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth,
             user)
 
         prep = session.prepare_request(req)
@@ -591,7 +591,7 @@ class ProjectService_0_7(Base):
     def _get_resource_params(self, resource, for_update=False):
         """Get dictionary containing all parameters for the given resource.
 
-        When getting params for a coordinate frame update, only name and 
+        When getting params for a coordinate frame update, only name and
         description are returned because they are the only fields that can
         be updated.
 
@@ -674,16 +674,16 @@ class ProjectService_0_7(Base):
                 'datatype': chan.datatype,
                 'base_resolution': chan.base_resolution,
                 'type': chan.type,
-                'source': chan.source,
+                'sources': chan.sources,
                 'related': chan.related
             }
 
-        return { 
+        return {
             'name': chan.name,
             'description': chan.description,
             'base_resolution': chan.base_resolution,
             'default_time_step': chan.default_time_step,
-            'source': chan.source,
+            'sources': chan.sources,
             'related': chan.related
         }
 
@@ -723,7 +723,7 @@ class ProjectService_0_7(Base):
 
     def _get_experiment(self, dict, coll_name):
         exp_keys = [
-            'name', 'description', 'creator', 'coord_frame', 
+            'name', 'description', 'creator', 'coord_frame',
             'num_hierarchy_levels', 'hierarchy_method', 'max_time_sample'
         ]
 
@@ -733,8 +733,8 @@ class ProjectService_0_7(Base):
 
     def _get_coordinate(self, dict):
         coord_keys = [
-            'name', 'description', 'x_start', 'x_stop', 
-            'y_start', 'y_stop', 'z_start', 'z_stop', 
+            'name', 'description', 'x_start', 'x_stop',
+            'y_start', 'y_stop', 'z_start', 'z_stop',
             'x_voxel_size', 'y_voxel_size', 'z_voxel_size',
             'voxel_unit', 'time_step', 'time_step_unit'
         ]
@@ -744,8 +744,8 @@ class ProjectService_0_7(Base):
 
     def _get_channel(self, dict, coll_name, exp_name):
         chan_keys = [
-            'name', 'description', 'creator', 'default_time_step', 
-            'datatype', 'base_resolution', 'type'
+            'name', 'description', 'creator', 'default_time_step',
+            'datatype', 'base_resolution', 'type', 'sources', 'related'
         ]
 
         filtered = { k:v for (k, v) in dict.items() if k in chan_keys }

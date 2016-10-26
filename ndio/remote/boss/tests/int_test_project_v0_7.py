@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+
 from ndio.remote.boss import BossRemote
 from ndio.ndresource.boss.resource import *
 
@@ -44,26 +44,26 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         coll_name_upd = '{}-{}'.format(coll_name, random.randint(0, 9999))
         self.coll_upd = CollectionResource('collection2310', API_VER, 'latest')
 
-        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        cf_name = 'ProjTestFrame{}'.format(random.randint(0, 9999))
         self.coord = CoordinateFrameResource(
-            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
+            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 2, 'nanoseconds')
         self.coord_upd = copy.copy(self.coord)
         self.coord_upd.name = 'MouseFrame'
         self.coord_upd.description = 'Mouse coordinate frame.'
 
         self.exp = ExperimentResource(
-            'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment', 
+            'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment',
             1, 'iso', 1)
         self.exp_upd = ExperimentResource(
-            'exp2309-2a', self.coll.name, self.coord.name, API_VER, 
+            'exp2309-2a', self.coll.name, self.coord.name, API_VER,
             'my first experiment', 2, 'slice', 3)
 
         self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
+            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
         self.chan_upd = ChannelResource(
-            'yourChan', self.coll.name, self.exp.name, 'image', API_VER, 'your test channel', 
+            'yourChan', self.coll.name, self.exp.name, 'image', API_VER, 'your test channel',
             1, 'uint8', 1)
 
 
@@ -340,7 +340,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_delete_all(self):
         """Formally test delete at all levels of the data model.
-        
+
         Delete happens all the time in the tearDown() but specifically test
         it here.
         """

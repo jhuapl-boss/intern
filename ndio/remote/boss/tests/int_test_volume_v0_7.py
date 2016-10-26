@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+
 from ndio.remote.boss import BossRemote
 from ndio.ndresource.boss.resource import *
 from ndio.service.boss.httperrorlist import HTTPErrorList
@@ -29,7 +29,7 @@ API_VER = 'v0.7'
 class VolumeServiceTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss volume service API.
 
-    Because setup and teardown involves many REST calls, tests are only 
+    Because setup and teardown involves many REST calls, tests are only
     divided into tests of the different types of data model resources.  All
     operations are performed within a single test of each resource.
     """
@@ -42,7 +42,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         attempts to clean up during tearDown().
         """
         cls.initialize(cls)
-        cls.cleanup_db(cls)
+        # cls.cleanup_db(cls)
         cls.rmt.project_create(cls.coll)
         coord_actual = cls.rmt.project_create(cls.coord)
         cls.rmt.project_create(cls.exp)
@@ -54,7 +54,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
     def tearDownClass(cls):
         """Remove all data model objects created in the DB.
         """
-        cls.initialize(cls)
+        # cls.initialize(cls)
         cls.cleanup_db(cls)
 
     def initialize(self):
@@ -71,30 +71,30 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        coll_name = 'collection2323-{}'.format(random.randint(0, 9999))
+        coll_name = 'collection2323{}'.format(random.randint(0, 9999))
         self.coll = CollectionResource(coll_name, API_VER, 'bar')
 
         cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
         self.coord = CoordinateFrameResource(
-            cf_name, API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20, 
+            cf_name, API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         # self.exp.coord_frame must be set with valid id before creating.
         self.exp = ExperimentResource(
-            'exp2323x2', self.coll.name, 'BestFrame', API_VER, 'my experiment', 
+            'exp2323x2', self.coll.name, self.coord.name, API_VER, 'my experiment',
             1, 'iso', 0)
 
         self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
+            'myVolChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
         self.chan16 = ChannelResource(
-            'my16bitChan', self.coll.name, self.exp.name, 'image', API_VER,
+            'myVol16bitChan', self.coll.name, self.exp.name, 'image', API_VER,
             '16 bit test channel', 0, 'uint16', 0)
 
         self.ann_chan = ChannelResource(
-            'annChan', self.coll.name, self.exp.name, 'annotation', API_VER, 
-            'annotation test channel', 0, 'uint64', 0, source=[self.chan.name])
+            'annVolChan', self.coll.name, self.exp.name, 'annotation', API_VER,
+            'annotation test channel', 0, 'uint64', 0, sources=[self.chan.name])
 
     def cleanup_db(self):
         """Clean up the data model objects used by this test case.

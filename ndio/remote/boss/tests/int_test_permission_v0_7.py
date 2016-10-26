@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+
 from ndio.remote.boss import BossRemote
 from ndio.ndresource.boss.resource import *
 from requests import Session
@@ -29,7 +29,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss permission API.
 
     Note that that there will be many "Delete failed" messages because DELETE
-    requests are made on all potentially created groups/users during test teardown. 
+    requests are made on all potentially created groups/users during test teardown.
     """
 
     @classmethod
@@ -61,7 +61,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
         cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
         self.coord = CoordinateFrameResource(
-            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
+            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         self.exp = ExperimentResource(
@@ -69,7 +69,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
             'iso', 0)
 
         self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
+            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
         self.grp_name = 'int_test_exists'
@@ -101,7 +101,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
             pass
 
     def setUp(self):
-        self.initialize()
+        # self.initialize()
         self.rmt.project_create(self.coll)
         self.rmt.project_create(self.coord)
         self.rmt.project_create(self.exp)
@@ -161,4 +161,3 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

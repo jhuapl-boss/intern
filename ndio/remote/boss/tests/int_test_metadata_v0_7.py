@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+
 from ndio.remote.boss import BossRemote
 from ndio.ndresource.boss.resource import *
 from ndio.service.boss.httperrorlist import HTTPErrorList
@@ -28,7 +28,7 @@ API_VER = 'v0.7'
 class MetadataServiceTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss metadata API.
 
-    Because setup and teardown involves many REST calls, tests are only 
+    Because setup and teardown involves many REST calls, tests are only
     divided into tests of the different types of data model resources.  All
     operations are performed within a single test of each resource.
     """
@@ -68,20 +68,20 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         self.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
+        coll_name = 'coll2309_{}'.format(random.randint(0, 9999))
         self.coll = CollectionResource(coll_name, API_VER, 'bar')
 
-        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        cf_name = 'MetaFrame{}'.format(random.randint(0, 9999))
         self.coord = CoordinateFrameResource(
-            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
+            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 1, 'nanoseconds')
 
         self.exp = ExperimentResource(
-            'myexp2309', self.coll.name, self.coord.name, API_VER, 'my experiment', 
+            'myMetaExp2309', self.coll.name, self.coord.name, API_VER, 'my experiment',
             1, 'iso', 0)
 
         self.chan = ChannelResource(
-            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel', 
+            'myTestMetaChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
 
