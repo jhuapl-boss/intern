@@ -121,7 +121,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
             pass
 
     def setUp(self):
-        self.initialize()
+        pass
 
     def tearDown(self):
         self.cleanup_db()

@@ -101,7 +101,6 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
             pass
 
     def setUp(self):
-        self.initialize()
         self.rmt.project_create(self.coll)
         self.rmt.project_create(self.coord)
         self.rmt.project_create(self.exp)

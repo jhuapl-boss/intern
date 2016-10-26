@@ -50,7 +50,6 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
     def tearDownClass(cls):
         """Remove all data model objects created in the DB.
         """
-        cls.initialize()
         cls.cleanup_db()
 
     @classmethod
@@ -106,7 +105,7 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
             pass
 
     def setUp(self):
-        self.initialize()
+        pass
 
     def tearDown(self):
         pass

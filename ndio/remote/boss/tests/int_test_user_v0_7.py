@@ -80,6 +80,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
         """
         try:
             cls.rmt.user_delete(cls.user)
+            cls.rmt.group_delete(cls.group)
         except HTTPError:
             pass
 
