@@ -59,7 +59,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         coll_name_upd = '{}-{}'.format(coll_name, random.randint(0, 9999))
         self.coll_upd = CollectionResource('collection2310', API_VER, 'latest')
 
-        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        cf_name = 'ProjTestFrame{}'.format(random.randint(0, 9999))
         self.coord = CoordinateFrameResource(
             cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 2, 'nanoseconds')
@@ -67,26 +67,22 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cls.coord_upd.name = 'MouseFrame'
         cls.coord_upd.description = 'Mouse coordinate frame.'
 
-        cls.exp = ExperimentResource(
-            'exp2309-2', cls.coll.name, cls.coord.name, API_VER, 'my experiment',
+        self.exp = ExperimentResource(
+            'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment',
             1, 'iso', 1)
-        cls.exp_upd = ExperimentResource(
-            'exp2309-2a', cls.coll.name, cls.coord.name, API_VER,
+        self.exp_upd = ExperimentResource(
+            'exp2309-2a', self.coll.name, self.coord.name, API_VER,
             'my first experiment', 2, 'slice', 3)
 
-        cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
+        self.chan = ChannelResource(
+            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
-        cls.chan_upd = ChannelResource(
-            'yourChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'your test channel',
+        self.chan_upd = ChannelResource(
+            'yourChan', self.coll.name, self.exp.name, 'image', API_VER, 'your test channel',
             1, 'uint8', 1)
 
-    @classmethod
-    def cleanup_db(cls):
-        """Clean up the data model objects used by this test case.
 
-        This method is used by both tearDown() and setUpClass().
-        """
+    def tearDown(self):
         try:
             cls.rmt.project_delete(cls.chan_upd)
         except HTTPError:

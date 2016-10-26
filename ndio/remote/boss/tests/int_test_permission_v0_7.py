@@ -15,6 +15,7 @@ import six
 from ndio.remote.boss import BossRemote
 from ndio.resource.boss.resource import *
 
+import random
 import requests
 from requests import HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -28,7 +29,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss permission API.
 
     Note that that there will be many "Delete failed" messages because DELETE
-    requests are made on all potentially created groups/users during test teardown. 
+    requests are made on all potentially created groups/users during test teardown.
     """
 
     @classmethod
@@ -56,19 +57,20 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        cls.coll = CollectionResource('collection2309', API_VER, 'bar')
-        cls.coord = CoordinateFrameResource(
-            'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
+        coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
+        self.coll = CollectionResource(coll_name, API_VER, 'bar')
+
+        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        self.coord = CoordinateFrameResource(
+            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
-        # Coordinate frame of experiments needs to be set to a valid ID before
-        # creating.
-        cls.exp = ExperimentResource(
-            'exp2309-2', cls.coll.name, cls.coord.name, API_VER, 'my experiment', 1,
+        self.exp = ExperimentResource(
+            'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment', 1,
             'iso', 0)
 
-        cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
+        self.chan = ChannelResource(
+            'myChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
         cls.grp_name = 'int_test_exists'
@@ -160,4 +162,3 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

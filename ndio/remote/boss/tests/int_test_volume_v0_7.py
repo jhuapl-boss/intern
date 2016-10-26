@@ -11,12 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+
 from ndio.remote.boss import BossRemote
 from ndio.resource.boss.resource import *
 from ndio.service.boss.httperrorlist import HTTPErrorList
 import numpy
 
+import random
 import requests
 from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -28,7 +29,7 @@ API_VER = 'v0.7'
 class VolumeServiceTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss volume service API.
 
-    Because setup and teardown involves many REST calls, tests are only 
+    Because setup and teardown involves many REST calls, tests are only
     divided into tests of the different types of data model resources.  All
     operations are performed within a single test of each resource.
     """
@@ -71,28 +72,30 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        cls.coll = CollectionResource('collection2323', API_VER, 'bar')
+        coll_name = 'collection2323{}'.format(random.randint(0, 9999))
+        self.coll = CollectionResource(coll_name, API_VER, 'bar')
 
-        cls.coord = CoordinateFrameResource(
-            'BestFrame', API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20, 
+        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        self.coord = CoordinateFrameResource(
+            cf_name, API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         # self.exp.coord_frame must be set with valid id before creating.
-        cls.exp = ExperimentResource(
-            'exp2323x2', cls.coll.name, 'BestFrame', API_VER, 'my experiment',
-            1, 'iso', 10)
+        self.exp = ExperimentResource(
+            'exp2323x2', self.coll.name, self.coord.name, API_VER, 'my experiment',
+            1, 'iso', 0)
 
-        cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
+        self.chan = ChannelResource(
+            'myVolChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
-        cls.chan16 = ChannelResource(
-            'my16bitChan', cls.coll.name, cls.exp.name, 'image', API_VER,
+        self.chan16 = ChannelResource(
+            'myVol16bitChan', self.coll.name, self.exp.name, 'image', API_VER,
             '16 bit test channel', 0, 'uint16', 0)
 
-        cls.ann_chan = ChannelResource(
-            'annChan', cls.coll.name, cls.exp.name, 'annotation', API_VER,
-            'annotation test channel', 0, 'uint64', 0, source=[cls.chan.name])
+        self.ann_chan = ChannelResource(
+            'annVolChan', self.coll.name, self.exp.name, 'annotation', API_VER,
+            'annotation test channel', 0, 'uint64', 0, sources=[self.chan.name])
 
     @classmethod
     def cleanup_db(cls):
@@ -126,7 +129,8 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             pass
 
     def setUp(self):
-        self.initialize()
+        #self.initialize()
+        self.rmt = BossRemote(cfg_file='test.cfg')
 
     def tearDown(self):
         pass

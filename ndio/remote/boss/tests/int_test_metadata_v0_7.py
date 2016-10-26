@@ -16,6 +16,7 @@ from ndio.remote.boss import BossRemote
 from ndio.resource.boss.resource import *
 from ndio.service.boss.httperrorlist import HTTPErrorList
 
+import random
 import requests
 from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -27,7 +28,7 @@ API_VER = 'v0.7'
 class MetadataServiceTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss metadata API.
 
-    Because setup and teardown involves many REST calls, tests are only 
+    Because setup and teardown involves many REST calls, tests are only
     divided into tests of the different types of data model resources.  All
     operations are performed within a single test of each resource.
     """
@@ -67,18 +68,20 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         cls.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        cls.coll = CollectionResource('collection2309', API_VER, 'bar')
+        coll_name = 'coll2309_{}'.format(random.randint(0, 9999))
+        self.coll = CollectionResource(coll_name, API_VER, 'bar')
 
-        cls.coord = CoordinateFrameResource(
-            'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
-            1, 1, 1, 'nanometers', 0, 'nanoseconds')
+        cf_name = 'MetaFrame{}'.format(random.randint(0, 9999))
+        self.coord = CoordinateFrameResource(
+            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
+            1, 1, 1, 'nanometers', 1, 'nanoseconds')
 
-        cls.exp = ExperimentResource(
-            'exp2309x2', cls.coll.name, cls.coord.name, API_VER, 'my experiment',
+        self.exp = ExperimentResource(
+            'myMetaExp2309', self.coll.name, self.coord.name, API_VER, 'my experiment',
             1, 'iso', 0)
 
-        cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
+        self.chan = ChannelResource(
+            'myTestMetaChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
     @classmethod
