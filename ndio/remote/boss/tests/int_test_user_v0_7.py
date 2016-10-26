@@ -13,17 +13,16 @@
 # limitations under the License.
  
 from ndio.remote.boss import BossRemote
-from ndio.resource.boss.resource import *
+import random
 
-import json
 import requests
-from requests import Session, HTTPError, Request
+from requests import HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import unittest
 import warnings
-import time
 
 API_VER = 'v0.7'
+
 
 class ProjectUserTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss user API.
@@ -38,58 +37,34 @@ class ProjectUserTest_v0_7(unittest.TestCase):
         """
         warnings.filterwarnings('ignore')
 
-        cls.initialize()
-        cls.cleanup_db()
-        cls.rmt.group_create(cls.group)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.initialize()
-        cls.rmt.group_delete(cls.group)
-
-    @classmethod
-    def initialize(cls):
-        """Initialization for each test.
-
-        Called by both setUp() and setUpClass().
-        """
         cls.rmt = BossRemote('test.cfg')
+        cls.rmt.group_perm_api_version = API_VER
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        cls.rmt.project_service.session_send_opts = { 'verify': False }
-        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
-        cls.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = {'verify': False}
+        cls.rmt.metadata_service.session_send_opts = {'verify': False}
+        cls.rmt.volume_service.session_send_opts = {'verify': False}
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        cls.user = 'johndoe'
+        cls.user = 'user_test_user{}'.format(random.randint(0, 9999))
         cls.first_name = 'john'
         cls.last_name = 'doe'
-        cls.email = 'jd@me.com'
+        cls.email = 'jd{}@me.com'.format(random.randint(0, 9999))
         cls.password = 'password'
 
-        cls.group = 'int_user_test_group'
-
     @classmethod
-    def cleanup_db(cls):
-        """Clean up the data model objects used by this test case.
-
-        This method is used by both tearDown() and setUpClass().  Don't do
-        anything if an exception occurs during user_delete().  The user
-        may not have existed for a particular test.
-        """
+    def tearDownClass(cls):
         try:
             cls.rmt.user_delete(cls.user)
-            cls.rmt.group_delete(cls.group)
         except HTTPError:
             pass
 
-    def setUp(self):
-        self.initialize()
-        self.rmt.group_perm_api_version = API_VER
-
     def tearDown(self):
-        self.cleanup_db()
+        try:
+            self.rmt.user_delete(self.user)
+        except HTTPError:
+            pass
 
     def test_add(self):
         self.rmt.user_add(

@@ -60,6 +60,21 @@ class VolumeService_0_7(BaseVersion):
         """
         compressed = blosc.compress(numpyVolume, typesize=self.get_bit_width(resource))
 
+        if numpyVolume.ndim == 3:
+            # Can't have time
+            if time_range is not None:
+                raise ValueError(
+                    "You must provide a 4D matrix if specifying a time range")
+        elif numpyVolume.ndim == 4:
+            # must have time
+            if time_range is None:
+                raise ValueError(
+                    "You must specifying a time range if providing a 4D matrix")
+        else:
+            raise ValueError(
+                "Invalid data format. Only 3D or 4D cutouts are supported. Number of dimensions: {}".format(
+                    numpyVolume.ndim))
+
         req = self.get_cutout_request(
             resource, 'POST', 'application/blosc',
             url_prefix, auth,

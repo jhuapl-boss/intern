@@ -26,6 +26,7 @@ import unittest
 
 API_VER = 'v0.7'
 
+
 class VolumeServiceTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss volume service API.
 
@@ -41,10 +42,42 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize()
-        cls.cleanup_db()
+        cls.rmt = BossRemote('test.cfg')
+
+        # Turn off SSL cert verification.  This is necessary for interacting with
+        # developer instances of the Boss.
+        cls.rmt.project_service.session_send_opts = {'verify': False}
+        cls.rmt.metadata_service.session_send_opts = {'verify': False}
+        cls.rmt.volume_service.session_send_opts = {'verify': False}
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+        coll_name = 'collection2323{}'.format(random.randint(0, 9999))
+        cls.coll = CollectionResource(coll_name, API_VER, 'bar')
+
+        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        cls.coord = CoordinateFrameResource(
+            cf_name, API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20,
+            1, 1, 1, 'nanometers', 0, 'nanoseconds')
+
+        # cls.exp.coord_frame must be set with valid id before creating.
+        cls.exp = ExperimentResource(
+            'exp2323x2', cls.coll.name, cls.coord.name, API_VER, 'my experiment',
+            1, 'iso', 10)
+
+        cls.chan = ChannelResource(
+            'myVolChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
+            0, 'uint8', 0)
+
+        cls.chan16 = ChannelResource(
+            'myVol16bitChan', cls.coll.name, cls.exp.name, 'image', API_VER,
+            '16 bit test channel', 0, 'uint16', 0)
+
+        cls.ann_chan = ChannelResource(
+            'annVolChan', cls.coll.name, cls.exp.name, 'annotation', API_VER,
+            'annotation test channel', 0, 'uint64', 0, sources=[cls.chan.name])
+
         cls.rmt.project_create(cls.coll)
-        coord_actual = cls.rmt.project_create(cls.coord)
+        cls.rmt.project_create(cls.coord)
         cls.rmt.project_create(cls.exp)
         cls.rmt.project_create(cls.chan16)
         cls.rmt.project_create(cls.chan)
@@ -52,53 +85,6 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """Remove all data model objects created in the DB.
-        """
-        cls.initialize()
-        cls.cleanup_db()
-
-    @classmethod
-    def initialize(cls):
-        """Initialization for each test.
-
-        Called by both setUp() and setUpClass().
-        """
-        cls.rmt = BossRemote('test.cfg')
-
-        # Turn off SSL cert verification.  This is necessary for interacting with
-        # developer instances of the Boss.
-        cls.rmt.project_service.session_send_opts = { 'verify': False }
-        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
-        cls.rmt.volume_service.session_send_opts = { 'verify': False }
-        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
-        coll_name = 'collection2323{}'.format(random.randint(0, 9999))
-        self.coll = CollectionResource(coll_name, API_VER, 'bar')
-
-        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
-        self.coord = CoordinateFrameResource(
-            cf_name, API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20,
-            1, 1, 1, 'nanometers', 0, 'nanoseconds')
-
-        # self.exp.coord_frame must be set with valid id before creating.
-        self.exp = ExperimentResource(
-            'exp2323x2', self.coll.name, self.coord.name, API_VER, 'my experiment',
-            1, 'iso', 0)
-
-        self.chan = ChannelResource(
-            'myVolChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
-            0, 'uint8', 0)
-
-        self.chan16 = ChannelResource(
-            'myVol16bitChan', self.coll.name, self.exp.name, 'image', API_VER,
-            '16 bit test channel', 0, 'uint16', 0)
-
-        self.ann_chan = ChannelResource(
-            'annVolChan', self.coll.name, self.exp.name, 'annotation', API_VER,
-            'annotation test channel', 0, 'uint64', 0, sources=[self.chan.name])
-
-    @classmethod
-    def cleanup_db(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDownClass() and setUpClass().
@@ -129,8 +115,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             pass
 
     def setUp(self):
-        #self.initialize()
-        self.rmt = BossRemote(cfg_file='test.cfg')
+        self.rmt = BossRemote('test.cfg')
 
     def tearDown(self):
         pass

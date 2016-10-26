@@ -20,14 +20,14 @@ class TestChannelResource(unittest.TestCase):
         self.chan = ChannelResource('mychan', 'foo', 'bar', 'image')
 
     def test_default_source_is_empty(self):
-        self.assertEqual([], self.chan.source)
+        self.assertEqual([], self.chan.sources)
 
     def test_default_related_is_empty(self):
         self.assertEqual([], self.chan.related)
 
     def test_source_string_stored_as_list(self):
-        self.chan.source = 'foo'
-        self.assertEqual(['foo'], self.chan.source)
+        self.chan.sources = 'foo'
+        self.assertEqual(['foo'], self.chan.sources)
 
     def test_related_string_stored_as_list(self):
         self.chan.related = 'foo'

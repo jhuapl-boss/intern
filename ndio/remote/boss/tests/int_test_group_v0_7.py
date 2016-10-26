@@ -13,7 +13,7 @@
 # limitations under the License.
 import six
 from ndio.remote.boss import BossRemote
-from ndio.resource.boss.resource import *
+import random
 
 import requests
 from requests import Session, HTTPError, Request
@@ -37,33 +37,28 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         attempts to clean up during tearDown().
         """
         warnings.filterwarnings('ignore')
-        cls.initialize()
-        cls.cleanup_db()
-
-    @classmethod
-    def initialize(cls):
-        """Initialization for each test.
-
-        Called by both setUp() and setUpClass().
-        """
         cls.rmt = BossRemote('test.cfg')
+        cls.rmt.group_perm_api_version = API_VER
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        cls.rmt.project_service.session_send_opts = { 'verify': False }
-        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
-        cls.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = {'verify': False}
+        cls.rmt.metadata_service.session_send_opts = {'verify': False}
+        cls.rmt.volume_service.session_send_opts = {'verify': False}
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        cls.create_grp_name = 'int_test_group'
-        cls.existing_grp_name = 'int_test_exists'
+        cls.create_grp_name = 'int_test_group{}'.format(random.randint(0, 9999))
+        cls.existing_grp_name = 'int_test_group_exists{}'.format(random.randint(0, 9999))
         cls.user_name = 'bossadmin'
 
         # This user will be created during at least one test.
-        cls.create_user = 'johndoeski'
+        cls.create_user = 'group_test_johndoeski{}'.format(random.randint(0, 9999))
+
+        cls.rmt.group_create(cls.existing_grp_name)
+
 
     @classmethod
-    def cleanup_db(cls):
+    def tearDownClass(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().  Don't do
@@ -83,13 +78,12 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         except HTTPError:
             pass
 
-    def setUp(self):
-        self.initialize()
-        self.rmt.group_perm_api_version = API_VER
-        self.rmt.group_create(self.existing_grp_name)
-
     def tearDown(self):
-        self.cleanup_db()
+        #try:
+        #    self.rmt.group_delete(self.create_grp_name)
+        #except HTTPError:
+        #    pass
+        pass
 
     def test_create_group(self):
         self.rmt.group_create(self.create_grp_name)
@@ -103,7 +97,16 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         self.assertFalse(actual)
 
     def test_delete_group(self):
+        actual = self.rmt.group_get(self.existing_grp_name)
+        self.assertTrue(actual)
+
         self.rmt.group_delete(self.existing_grp_name)
+        actual = self.rmt.group_get(self.existing_grp_name)
+        self.assertFalse(actual)
+
+        self.rmt.group_create(self.existing_grp_name)
+        actual = self.rmt.group_get(self.existing_grp_name)
+        self.assertTrue(actual)
 
     def test_delete_group_doesnt_exist(self):
         with self.assertRaises(HTTPError):
@@ -116,12 +119,13 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         with self.assertRaises(HTTPError):
             self.rmt.group_add_user('foo', self.user_name)
 
-    def test_group_get_user(self):
+    def test_group_membership(self):
+        # Test not in the group
+        self.assertFalse(self.rmt.group_get(self.existing_grp_name, self.user_name))
+
+        # Add to group
         self.rmt.group_add_user(self.existing_grp_name, self.user_name)
         self.assertTrue(self.rmt.group_get(self.existing_grp_name, self.user_name))
-
-    def test_group_get_user_not_a_member(self):
-        self.assertFalse(self.rmt.group_get(self.existing_grp_name, self.user_name))
 
     def test_group_get_user_doesnt_exist(self):
         with self.assertRaises(HTTPError):

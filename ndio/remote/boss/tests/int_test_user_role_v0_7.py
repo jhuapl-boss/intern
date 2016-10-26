@@ -13,7 +13,7 @@
 # limitations under the License.
 import six
 from ndio.remote.boss import BossRemote
-from ndio.resource.boss.resource import *
+import random
 
 import requests
 from requests import Session, HTTPError
@@ -34,35 +34,28 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize()
-        cls.cleanup_db()
-        cls.rmt.user_add(cls.user, 'John', 'Doe', 'jd@me.com', 'password')
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.initialize()
-        cls.rmt.user_delete(cls.user)
-
-    @classmethod
-    def initialize(cls):
-        """Initialization for each test.
-
-        Called by both setUp() and setUpClass().
-        """
         cls.rmt = BossRemote('test.cfg')
         cls.rmt.group_perm_api_version = API_VER
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        cls.rmt.project_service.session_send_opts = { 'verify': False }
-        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
-        cls.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = {'verify': False}
+        cls.rmt.metadata_service.session_send_opts = {'verify': False}
+        cls.rmt.volume_service.session_send_opts = {'verify': False}
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
         cls.admin = 'admin'
         cls.user_mgr = 'user-manager'
         cls.rsrc_mgr = 'resource-manager'
-        cls.user = 'role_test_user'
+        cls.user = 'role_test_user{}'.format(random.randint(0, 9999))
+
+        cls.rmt.user_add(cls.user, 'John', 'Doe', 'jd{}@me.com'.format(random.randint(0, 9999)), 'password')
+        cls.cleanup_db()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.cleanup_db()
+        cls.rmt.user_delete(cls.user)
 
     @classmethod
     def cleanup_db(cls):
@@ -86,7 +79,6 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
             pass
 
     def setUp(self):
-        self.initialize()
         self.rmt.group_perm_api_version = API_VER
 
     def tearDown(self):

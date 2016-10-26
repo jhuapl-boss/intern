@@ -69,19 +69,19 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
         coll_name = 'coll2309_{}'.format(random.randint(0, 9999))
-        self.coll = CollectionResource(coll_name, API_VER, 'bar')
+        cls.coll = CollectionResource(coll_name, API_VER, 'bar')
 
         cf_name = 'MetaFrame{}'.format(random.randint(0, 9999))
-        self.coord = CoordinateFrameResource(
+        cls.coord = CoordinateFrameResource(
             cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 1, 'nanoseconds')
 
-        self.exp = ExperimentResource(
-            'myMetaExp2309', self.coll.name, self.coord.name, API_VER, 'my experiment',
+        cls.exp = ExperimentResource(
+            'myMetaExp2309', cls.coll.name, cls.coord.name, API_VER, 'my experiment',
             1, 'iso', 0)
 
-        self.chan = ChannelResource(
-            'myTestMetaChan', self.coll.name, self.exp.name, 'image', API_VER, 'test channel',
+        cls.chan = ChannelResource(
+            'myTestMetaChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
             0, 'uint8', 0)
 
     @classmethod
