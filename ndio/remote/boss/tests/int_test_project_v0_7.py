@@ -29,21 +29,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss resource API.
     """
 
-    @classmethod
-    def setUpClass(cls):
-        """Do an initial DB clean up in case something went wrong the last time.
-
-        If a test failed really badly, the DB might be in a bad state despite
-        attempts to clean up during tearDown().
-        """
-        cls.initialize(cls)
-        cls.cleanup_db(cls)
-
-    def initialize(self):
-        """Initialization for each test.
-
-        Called by both setUp() and setUpClass().
-        """
+    def setUp(self):
         self.rmt = BossRemote(cfg_file='test.cfg')
 
         # Turn off SSL cert verification.  This is necessary for interacting with
@@ -81,11 +67,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
             1, 'uint8', 1)
 
 
-    def cleanup_db(self):
-        """Clean up the data model objects used by this test case.
-
-        This method is used by both tearDown() and setUpClass().
-        """
+    def tearDown(self):
         try:
             self.rmt.project_delete(self.chan_upd)
         except HTTPError:
@@ -118,12 +100,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
             self.rmt.project_delete(self.coll)
         except HTTPError:
             pass
-
-    def setUp(self):
-        self.initialize()
-
-    def tearDown(self):
-        self.cleanup_db()
 
     def test_create_coord_frame(self):
         cf = self.rmt.project_create(self.coord)

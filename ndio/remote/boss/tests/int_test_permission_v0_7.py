@@ -16,6 +16,7 @@ from ndio.remote.boss import BossRemote
 from ndio.ndresource.boss.resource import *
 from requests import Session
 
+import random
 import requests
 from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -55,13 +56,14 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         self.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.coll = CollectionResource('collection2309', API_VER, 'bar')
+        coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
+        self.coll = CollectionResource(coll_name, API_VER, 'bar')
+
+        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
         self.coord = CoordinateFrameResource(
-            'BestFrame', API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
+            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6, 
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
-        # Coordinate frame of experiments needs to be set to a valid ID before
-        # creating.
         self.exp = ExperimentResource(
             'exp2309-2', self.coll.name, self.coord.name, API_VER, 'my experiment', 1, 
             'iso', 0)

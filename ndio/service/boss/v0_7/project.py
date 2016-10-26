@@ -632,7 +632,8 @@ class ProjectService_0_7(Base):
                 'coord_frame': exp.coord_frame,
                 'num_hierarchy_levels': exp.num_hierarchy_levels,
                 'hierarchy_method': exp.hierarchy_method,
-                'max_time_sample': exp.max_time_sample
+                'max_time_sample': exp.max_time_sample,
+                'collection': exp.coll_name
             }
 
         return {

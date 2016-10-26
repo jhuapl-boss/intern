@@ -17,6 +17,7 @@ from ndio.ndresource.boss.resource import *
 from ndio.service.boss.httperrorlist import HTTPErrorList
 import numpy
 
+import random
 import requests
 from requests import Session, HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -70,10 +71,12 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.coll = CollectionResource('collection2323', API_VER, 'bar')
+        coll_name = 'collection2323-{}'.format(random.randint(0, 9999))
+        self.coll = CollectionResource(coll_name, API_VER, 'bar')
 
+        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
         self.coord = CoordinateFrameResource(
-            'BestFrame', API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20, 
+            cf_name, API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20, 
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         # self.exp.coord_frame must be set with valid id before creating.
@@ -124,7 +127,8 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             pass
 
     def setUp(self):
-        self.initialize()
+        #self.initialize()
+        self.rmt = BossRemote(cfg_file='test.cfg')
 
     def tearDown(self):
         pass
