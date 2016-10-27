@@ -58,9 +58,9 @@ class VolumeImpl(BaseVersion):
 
 class BaseVersionTest(unittest.TestCase):
     def setUp(self):
-        self.resource = CollectionResource('coll1', VER)
+        self.resource = CollectionResource('coll1')
         self.chanResource = ChannelResource(
-            'chan1', 'coll1', 'exp1', 'image', VER, 'null descr', 0, 'uint8', 0)
+            'chan1', 'coll1', 'exp1', 'image', 'null descr', 0, 'uint8', 0)
         self.test_project = ProjectImpl()
         self.test_meta = MetadataImpl()
         self.test_volume = VolumeImpl()
@@ -78,7 +78,7 @@ class BaseVersionTest(unittest.TestCase):
         actual = self.test_project.build_url(
             self.resource, self.url_prefix, 'collection', req_type='list')
         self.assertEqual(
-            self.url_prefix + '/' + self.test_project.version + '/' + 
+            self.url_prefix + '/' + self.test_project.version + '/' +
             self.test_project.endpoint + '/',
             actual)
 
@@ -90,7 +90,7 @@ class BaseVersionTest(unittest.TestCase):
         exp = self.chanResource.exp_name
         chan = self.chanResource.name
         self.assertEqual(
-            self.url_prefix + '/' + self.test_project.version + '/' + 
+            self.url_prefix + '/' + self.test_project.version + '/' +
             'cutout/' + coll + '/' + exp + '/' + chan,
             actual)
 
@@ -118,10 +118,10 @@ class BaseVersionTest(unittest.TestCase):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         actual = self.test_project.get_request(
-            self.resource, 'GET', 'application/json', url_prefix, token, 
+            self.resource, 'GET', 'application/json', url_prefix, token,
             proj_list_req=False)
         self.assertEqual(
-            '{}/{}/{}/{}'.format(url_prefix, self.test_project.version, self.test_project.endpoint, self.resource.name), 
+            '{}/{}/{}/{}'.format(url_prefix, self.test_project.version, self.test_project.endpoint, self.resource.name),
             actual.url)
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/json', actual.headers['Content-Type'])
@@ -164,7 +164,7 @@ class BaseVersionTest(unittest.TestCase):
             url_prefix, self.test_volume.version, grp_name, resrc_path)
 
         actual = self.test_project.get_permission_request(
-            'GET', 'application/json', url_prefix, token, grp_name, 
+            'GET', 'application/json', url_prefix, token, grp_name,
             self.chanResource, data)
 
         self.assertEqual(expected, actual.url)
@@ -288,7 +288,7 @@ class BaseVersionTest(unittest.TestCase):
             url_prefix, self.test_project.version, user)
 
         expectedData = {
-            'first_name': first, 'last_name': last, 'email': email, 
+            'first_name': first, 'last_name': last, 'email': email,
             'password': password }
 
         actual = self.test_project.get_user_request(
@@ -307,7 +307,7 @@ class BaseVersionTest(unittest.TestCase):
         actual = self.test_meta.build_metadata_url(
             self.resource, self.url_prefix, key)
         self.assertEqual(
-            self.url_prefix + '/' + self.test_meta.version + '/' + 
+            self.url_prefix + '/' + self.test_meta.version + '/' +
             self.test_meta.endpoint + '/' + self.resource.name + '/?key=' + key,
             actual)
 
@@ -317,8 +317,8 @@ class BaseVersionTest(unittest.TestCase):
         actual = self.test_meta.build_metadata_url(
             self.resource, self.url_prefix, key, value)
         self.assertEqual(
-            self.url_prefix + '/' + self.test_meta.version + '/' + 
-            self.test_meta.endpoint + '/' + self.resource.name + '/?key=' + 
+            self.url_prefix + '/' + self.test_meta.version + '/' +
+            self.test_meta.endpoint + '/' + self.resource.name + '/?key=' +
             key + '&value=' + value,
             actual)
 
@@ -330,7 +330,7 @@ class BaseVersionTest(unittest.TestCase):
             self.resource, 'GET', 'application/json', url_prefix, token, key)
         self.assertEqual(
             '{}/{}/{}/{}/?key={}'.format(url_prefix, self.test_meta.version,
-             self.test_meta.endpoint, self.resource.name, key), 
+             self.test_meta.endpoint, self.resource.name, key),
              actual.url)
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/json', actual.headers['Content-Type'])
@@ -343,7 +343,7 @@ class BaseVersionTest(unittest.TestCase):
         exp = '2:7'
         actual = self.test_volume.convert_int_list_range_to_str([2,7])
         self.assertEqual(exp, actual)
-        
+
     def test_convert_int_list_range_to_str_bad_range(self):
         with self.assertRaises(RuntimeError):
             self.test_volume.convert_int_list_range_to_str([7,5])
@@ -416,9 +416,9 @@ class BaseVersionTest(unittest.TestCase):
             resolution, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst, data)
         self.assertEqual(
             '{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/'.format(url_prefix, self.test_volume.version,
-            self.test_volume.endpoint, self.chanResource.coll_name, 
-            self.chanResource.exp_name, self.chanResource.name, resolution, 
-            x_range, y_range, z_range, time_range), 
+            self.test_volume.endpoint, self.chanResource.coll_name,
+            self.chanResource.exp_name, self.chanResource.name, resolution,
+            x_range, y_range, z_range, time_range),
             actual.url)
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/blosc-python', actual.headers['Content-Type'])

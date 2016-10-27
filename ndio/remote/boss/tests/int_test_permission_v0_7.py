@@ -58,19 +58,19 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
         coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
-        cls.coll = CollectionResource(coll_name, API_VER, 'bar')
+        cls.coll = CollectionResource(coll_name, 'bar')
 
         cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
         cls.coord = CoordinateFrameResource(
-            cf_name, API_VER, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
+            cf_name, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         cls.exp = ExperimentResource(
-            'exp2309-2', cls.coll.name, cls.coord.name, API_VER, 'my experiment', 1,
+            'exp2309-2', cls.coll.name, cls.coord.name, 'my experiment', 1,
             'iso', 0)
 
         cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
+            'myChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
             0, 'uint8', 0)
 
         cls.grp_name = 'int_test_exists'

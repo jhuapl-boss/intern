@@ -65,7 +65,7 @@ class TestProject_v0_7(unittest.TestCase):
         mock_session.prepare_request.return_value = PreparedRequest()
         mock_resp.status_code = 201
         mock_resp.json.return_value = {
-            'type': 'image', 'name': 'chan', 'description': 'walker', 
+            'type': 'image', 'name': 'chan', 'description': 'walker',
             'experiment': 'bar', 'creator': 'me',
             'default_time_step': 2, 'datatype': 'uint16', 'base_resolution': 0
         }
@@ -102,14 +102,14 @@ class TestProject_v0_7(unittest.TestCase):
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
     def test_prj_get_success(self, mock_session, mock_resp):
-        chan_dict = { 
-            'name': 'bar', 'description': 'none', 'experiment': 8, 
+        chan_dict = {
+            'name': 'bar', 'description': 'none', 'experiment': 8,
             'default_time_step': 0, 'datatype': 'uint16',
             'base_resolution': 0, 'linked_channel_layers': [], 'creator': 'me',
             'type': 'image'
         }
         expected = ChannelResource(
-            chan_dict['name'], self.chan.coll_name, self.chan.exp_name, 'image') 
+            chan_dict['name'], self.chan.coll_name, self.chan.exp_name, 'image')
         expected.description = chan_dict['description']
         expected.datatype = chan_dict['datatype']
         expected.base_resolution = chan_dict['base_resolution']
@@ -157,13 +157,13 @@ class TestProject_v0_7(unittest.TestCase):
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
     def test_prj_update_success(self, mock_session, mock_resp):
-        chan_dict = { 
+        chan_dict = {
             'name': 'bar', 'description': 'none', 'experiment': 8, 'type': 'image',
             'is_channel': True, 'default_time_step': 0, 'datatype': 'uint16',
             'base_resolution': 0, 'linked_channel_layers': [], 'creator': 'me'
         }
         expected = ChannelResource(
-            chan_dict['name'], self.chan.coll_name, self.chan.exp_name, 'image') 
+            chan_dict['name'], self.chan.coll_name, self.chan.exp_name, 'image')
         expected.description = chan_dict['description']
         expected.datatype = chan_dict['datatype']
         expected.base_resolution = chan_dict['base_resolution']
@@ -303,14 +303,13 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual('fire', actual.name)
         self.assertEqual('walker', actual.description)
         self.assertEqual('auto', actual.creator)
-        self.assertEqual(self.prj.version, actual.version)
         self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_experiment(self):
         exp = ExperimentResource('', 'pyro', 'coordframe')
-        dict = { 
-            'name': 'fire', 'description': 'walker', 
-            'creator': 'auto', 'coord_frame': 3, 
+        dict = {
+            'name': 'fire', 'description': 'walker',
+            'creator': 'auto', 'coord_frame': 3,
             'num_hierarchy_levels': 1, 'hierarchy_method': 'near_iso',
             'max_time_sample': 500
         }
@@ -324,17 +323,16 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual('near_iso', actual.hierarchy_method)
         self.assertEqual(500, actual.max_time_sample)
         self.assertEqual('pyro', actual.coll_name)
-        self.assertEqual(self.prj.version, actual.version)
         self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_coordinate(self):
         coord = CoordinateFrameResource('')
         dict = {
-            'name': 'fire', 'description': 'walker', 
-            'x_start': 0, 'x_stop': 100, 
-            'y_start': 50, 'y_stop': 150, 'z_start': 75, 'z_stop': 125, 
+            'name': 'fire', 'description': 'walker',
+            'x_start': 0, 'x_stop': 100,
+            'y_start': 50, 'y_stop': 150, 'z_start': 75, 'z_stop': 125,
             'x_voxel_size': 2, 'y_voxel_size': 4, 'z_voxel_size': 6,
-            'voxel_unit': 'centimeters', 
+            'voxel_unit': 'centimeters',
             'time_step': 2, 'time_step_unit': 'milliseconds'}
 
         actual = self.prj._create_resource_from_dict(coord, dict)
@@ -357,7 +355,7 @@ class TestProject_v0_7(unittest.TestCase):
     def test_create_resource_from_dict_channel(self):
         chan = ChannelResource('', 'coll1', 'exp1', 'image')
         dict = {
-            'name': 'fire', 'description': 'walker', 
+            'name': 'fire', 'description': 'walker',
             'experiment': 'exp1', 'creator': 'me', 'type': 'image',
             'default_time_step': 2, 'datatype': 'uint16', 'base_resolution': 0
         }
@@ -376,4 +374,3 @@ class TestProject_v0_7(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

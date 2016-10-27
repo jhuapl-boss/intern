@@ -52,28 +52,28 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
         coll_name = 'collection2323{}'.format(random.randint(0, 9999))
-        cls.coll = CollectionResource(coll_name, API_VER, 'bar')
+        cls.coll = CollectionResource(coll_name, 'bar')
 
         cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
         cls.coord = CoordinateFrameResource(
-            cf_name, API_VER, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20,
+            cf_name, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         # cls.exp.coord_frame must be set with valid id before creating.
         cls.exp = ExperimentResource(
-            'exp2323x2', cls.coll.name, cls.coord.name, API_VER, 'my experiment',
+            'exp2323x2', cls.coll.name, cls.coord.name, 'my experiment',
             1, 'iso', 10)
 
         cls.chan = ChannelResource(
-            'myVolChan', cls.coll.name, cls.exp.name, 'image', API_VER, 'test channel',
+            'myVolChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
             0, 'uint8', 0)
 
         cls.chan16 = ChannelResource(
-            'myVol16bitChan', cls.coll.name, cls.exp.name, 'image', API_VER,
+            'myVol16bitChan', cls.coll.name, cls.exp.name, 'image',
             '16 bit test channel', 0, 'uint16', 0)
 
         cls.ann_chan = ChannelResource(
-            'annVolChan', cls.coll.name, cls.exp.name, 'annotation', API_VER,
+            'annVolChan', cls.coll.name, cls.exp.name, 'annotation',
             'annotation test channel', 0, 'uint64', 0, sources=[cls.chan.name])
 
         cls.rmt.project_create(cls.coll)

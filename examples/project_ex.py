@@ -24,17 +24,17 @@ methods are:
 
 All of these methods take a ndio.ndresource.boss.resource.Resource object, as
 a minimum.  The resource object identifies where in the data model hierarchy
-the operation should be performed.  For create and update operations, the 
+the operation should be performed.  For create and update operations, the
 resource object also contains the parameters to place in the database.
 """
 
 from ndio.remote.boss import BossRemote, LATEST_VERSION
 from ndio.resource.boss.resource import *
 
-rmt = BossRemote(cfg_file='example.cfg')
-#rmt = BossRemote(cfg_file='test.cfg')
-
 API_VER = LATEST_VERSION
+
+rmt = BossRemote(cfg_file='example.cfg', API_VER)
+#rmt = BossRemote(cfg_file='test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -46,18 +46,12 @@ rmt.metadata_service.session_send_opts = { 'verify': False }
 rmt.volume_service.session_send_opts = { 'verify': False }
 
 # List current collections.
-# In general, when performing a list operation, any resource may be used as 
-# long as it is the same type.
-# For example, to list collections, a CollectionResource without a name (an 
-# empty string) may be used.
-coll = CollectionResource('', API_VER)
-coll_list = rmt.project_list(coll)
+coll_list = rmt.list_collections()
 
 # For resources below the collection level, the parents must be specified.
-# For example to list all the channels that are part of the gray collection 
+# For example to list all the channels that are part of the gray collection
 # and alpha experiment:
-channels = ChannelResource('', 'gray', 'alpha', API_VER)
-chan_list = rmt.project_list(channels)
+chan_list = rmt.list_channels('gray', 'alpha')
 for chan in chan_list:
     print(chan['name'])
 
@@ -65,7 +59,7 @@ for chan in chan_list:
 # the required attributes populated.
 # For example, to add a channel named beta to the alpha experiment referenced
 # in the previous example:
-betaChan = ChannelResource('beta', 'gray', 'alpha', API_VER, 'test channel')
+betaChan = ChannelResource('beta', 'gray', 'alpha', 'test channel')
 newBetaChan = rmt.project_create(betaChan)
 
 # Note that the create method returns a new instance of the ChannelResource.

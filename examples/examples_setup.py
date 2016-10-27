@@ -33,35 +33,35 @@ rmt.project_service.session_send_opts = { 'verify': False }
 rmt.metadata_service.session_send_opts = { 'verify': False }
 rmt.volume_service.session_send_opts = { 'verify': False }
 
-coll = CollectionResource('gray', API_VER, 'Collection used for examples.')
+coll = CollectionResource('gray', 'Collection used for examples.')
 try:
     rmt.project_get(coll)
 except HTTPError:
     rmt.project_create(coll)
 
 coord = CoordinateFrameResource(
-    'StdFrame', API_VER, 'Standard coordinate frame for xyz.', 0, 50, 0, 50, 0, 50)
+    'StdFrame', 'Standard coordinate frame for xyz.', 0, 50, 0, 50, 0, 50)
 try:
     coord_actual = rmt.project_get(coord)
 except HTTPError:
     coord_actual = rmt.project_create(coord)
 
 alpha_exp = ExperimentResource(
-    'alpha', 'gray', coord_actual.name, API_VER, 'Alpha example experiment.',
+    'alpha', 'gray', coord_actual.name, 'Alpha example experiment.',
 try:
     rmt.project_get(alpha_exp)
 except HTTPError:
     rmt.project_create(alpha_exp)
 
 omega_chan = ChannelResource(
-    'omega', 'gray', 'alpha', API_VER, 'Example channel.', datatype='uint16')
+    'omega', 'gray', 'alpha', 'Example channel.', datatype='uint16')
 try:
     omega_actual = rmt.project_get(omega_chan)
 except HTTPError:
     omega_actual = rmt.project_create(omega_chan)
 
 rho_layer = LayerResource(
-    'rho', 'gray', 'alpha', API_VER, 'Example layer.', datatype='uint64', 
+    'rho', 'gray', 'alpha', 'Example layer.', datatype='uint64',
     channels=omega_actual.id)
 try:
     rmt.project_get(rho_layer)

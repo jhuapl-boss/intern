@@ -28,9 +28,8 @@ from ndio.remote.boss import BossRemote, LATEST_VERSION
 from ndio.resource.boss.resource import *
 
 API_VER = LATEST_VERSION
-rmt = BossRemote(cfg_file='example.cfg')
-#rmt = BossRemote(cfg_file='test.cfg')
-rmt.group_perm_api_version = API_VER
+rmt = BossRemote(cfg_file='example.cfg', API_VER)
+#rmt = BossRemote(cfg_file='test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -81,7 +80,7 @@ print('Visually confirm permission added to the {} experiment . . .'.format(exp.
 print(rmt.permissions_get(grp_name, exp))
 
 
-# Channels and layers have three additional permissions: 
+# Channels and layers have three additional permissions:
 # 'add_volumetric_data'
 # 'read_volumetric_data'
 # 'delete_volumetric_data'
@@ -100,4 +99,3 @@ rmt.permissions_delete(grp_name, chan, ['delete', 'delete_volumetric_data'])
 
 print('Visually confirm permissions removed from the {} channel . . .'.format(chan.name))
 print(rmt.permissions_get(grp_name, chan))
-

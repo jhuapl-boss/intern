@@ -30,10 +30,10 @@ will be manipulated.
 from ndio.remote.boss import BossRemote, LATEST_VERSION
 from ndio.resource.boss.resource import *
 
-rmt = BossRemote(cfg_file='example.cfg')
-#rmt = BossRemote(cfg_file='test.cfg')
-
 API_VER = LATEST_VERSION
+
+rmt = BossRemote(cfg_file='example.cfg', API_VER)
+#rmt = BossRemote(cfg_file='test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -47,9 +47,9 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 # First, create resource objects that identify the objects of interest in the
 # data model.  Notice, that only the minimal information needed to identify
 # the objects of interest is given to the resources' constructors.
-coll = CollectionResource('gray', API_VER)
-alpha_exp = ExperimentResource('alpha', 'gray', 'StdFrame', API_VER)
-omega_chan = ChannelResource('omega', 'gray', 'alpha', API_VER)
+coll = CollectionResource('gray')
+alpha_exp = ExperimentResource('alpha', 'gray', 'StdFrame')
+omega_chan = ChannelResource('omega', 'gray', 'alpha')
 
 # Add new metadata using metadata_create().
 rmt.metadata_create(coll, { 'mark': 'two', 'ten': 'four'})

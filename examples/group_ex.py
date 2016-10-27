@@ -14,7 +14,7 @@
 
 """
 This example shows how to work with the Boss' groups.  Specifically, this
-example demonstrates creating and deleting groups and managing the users that 
+example demonstrates creating and deleting groups and managing the users that
 belong to a group.  The Remote class methods that begin with 'group_' perform
 group operations.
 
@@ -28,9 +28,8 @@ from ndio.resource.boss.resource import *
 from requests import HTTPError
 
 API_VER = LATEST_VERSION
-rmt = BossRemote(cfg_file='example.cfg')
-#rmt = BossRemote(cfg_file='test.cfg')
-rmt.group_perm_api_version = API_VER
+rmt = BossRemote(cfg_file='example.cfg', API_VER)
+#rmt = BossRemote(cfg_file='test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.

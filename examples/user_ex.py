@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-This example demonstrates user management.  To run this example, you must have 
+This example demonstrates user management.  To run this example, you must have
 a user with either the user-manager role or the admin role.
 """
 
@@ -22,9 +22,8 @@ from ndio.resource.boss.resource import *
 from requests import HTTPError
 
 API_VER = LATEST_VERSION
-rmt = BossRemote(cfg_file='example.cfg')
-#rmt = BossRemote(cfg_file='test.cfg')
-rmt.group_perm_api_version = API_VER
+rmt = BossRemote(cfg_file='example.cfg', API_VER)
+#rmt = BossRemote(cfg_file='test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from ndio.resource import Resource
-from . import BOSS_DEFAULT_VERSION
 from abc import abstractmethod
 
 
@@ -23,23 +22,19 @@ class BossResource(Resource):
         name (string): Name of resource.  Used as identifier when talking to
         the Boss API.
         description (string): Text description of resource.
-        version (string): API version of Boss to use.
         creator (string): Resource creator.
         raw (dictionary): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
     """
-    def __init__(self, name, description, version=BOSS_DEFAULT_VERSION, creator='', raw={}):
+    def __init__(self, name, description, creator='', raw={}):
         """Constructor.
 
         Args:
             name (string): Name of resource.
             description (string): Description of resource.
-            version (optional[string]): Defaults to latest version.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
-        # ToDo: validate version.
-        self.version = version
         self.name = name
         self.description = description
         self.creator = creator
@@ -101,18 +96,16 @@ class CollectionResource(BossResource):
     """Top level container for Boss projects.
     """
     def __init__(
-        self, name, version=BOSS_DEFAULT_VERSION, description='',
-        creator='', raw={}):
+        self, name, description='', creator='', raw={}):
         """Constructor.
 
         Args:
             name (string): Collection name.
-            version (optional[string]): Defaults to latest version.
             description (optional[string]): Collection description.  Defaults to empty.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
-        BossResource.__init__(self, name, description, version, creator, raw)
+        BossResource.__init__(self, name, description, creator, raw)
 
     def get_route(self):
         return self.name
@@ -137,8 +130,7 @@ class ExperimentResource(BossResource):
         hierarchy_method (string):
         max_time_sample (int):
     """
-    def __init__(self, name, collection_name, coord_frame,
-        version=BOSS_DEFAULT_VERSION, description='',
+    def __init__(self, name, collection_name, coord_frame, description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
         max_time_sample=0, creator='', raw={}):
         """Constructor.
@@ -147,7 +139,6 @@ class ExperimentResource(BossResource):
             name (string): Experiment name.
             collection_name (string): Collection name.
             coord_frame (string): Name of coordinate frame used by experiment.
-            version (optional[string]): Defaults to latest version.
             description (optional[string]): Experiment description.  Defaults to empty.
             num_hierarchy_levels (optional[int]): Defaults to 1.
             hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
@@ -157,7 +148,7 @@ class ExperimentResource(BossResource):
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
-        BossResource.__init__(self, name, description, version, creator, raw)
+        BossResource.__init__(self, name, description, creator, raw)
         self.coll_name = collection_name
 
         self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
@@ -214,7 +205,6 @@ class CoordinateFrameResource(BossResource):
 
     Attributes:
         name (string): Coordinate frame name.
-        version (string): Defaults to latest version.
         description (string): Coordinate frame description.  Defaults to empty.
         x_start (int): Minimum x coordinate (defaults to 0).
         x_stop (int): Maximum x coordinate - exclusive (defaults to 1).
@@ -230,7 +220,7 @@ class CoordinateFrameResource(BossResource):
         time_step_unit (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
     """
     def __init__(
-        self, name, version=BOSS_DEFAULT_VERSION, description='',
+        self, name, description='',
         x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
         x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
         time_step=0, time_step_unit='seconds', creator='', raw={}):
@@ -240,7 +230,6 @@ class CoordinateFrameResource(BossResource):
 
         Args:
             name (string): Coordinate frame name.
-            version (optional[string]): Defaults to latest version.
             description (optional[string]): Coordinate frame description.  Defaults to empty.
             x_start (optional[int]): Minimum x coordinate (defaults to 0).
             x_stop (optional[int]): Maximum x coordinate - exclusive (defaults to 1).
@@ -259,7 +248,7 @@ class CoordinateFrameResource(BossResource):
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
-        BossResource.__init__(self, name, description, version, raw=raw)
+        BossResource.__init__(self, name, description, raw=raw)
 
         self._valid_voxel_units = [
             'nanometers', 'micrometers', 'millimeters', 'centimeters']
@@ -341,7 +330,6 @@ class ChannelResource(BossResource):
         coll_name (string): Name of collection containing this resource.
         exp_name (string): Name of experiment containing this resource.
         description (string): Description of channel or layer.
-        version (string): The Boss API version to use.
         default_time_step (int):
         base_resolution (int):
         _type (string): 'image' or 'annotation'
@@ -353,7 +341,6 @@ class ChannelResource(BossResource):
     _valid_types = ['annotation', 'image']
 
     def __init__(self, name, collection_name, experiment_name, type,
-        version=BOSS_DEFAULT_VERSION,
         description='', default_time_step=0, datatype='uint8',
         base_resolution=0, sources=[], related=[], creator='', raw={}):
         """Constructor.
@@ -363,7 +350,6 @@ class ChannelResource(BossResource):
             collection_name (string): Parent collection name.
             experiment_name (string): Parent experiment name.
             type (string): 'image' or 'annotation'
-            version (optional[string]): API version to use.  Defaults to latest version.
             description (optional[string]): Layer description.  Defaults to empty.
             default_time_step (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
@@ -374,7 +360,7 @@ class ChannelResource(BossResource):
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
-        BossResource.__init__(self, name, description, version, creator, raw)
+        BossResource.__init__(self, name, description, creator, raw)
         self.coll_name = collection_name
         self.exp_name = experiment_name
 

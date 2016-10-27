@@ -22,7 +22,7 @@ EXP_NAME = 'alpha'
 CHAN_NAME = 'ex_EM'
 
 chan_setup = ChannelResource(
-    CHAN_NAME, COLL_NAME, EXP_NAME, API_VER, 'Example channel.', datatype='uint16')
+    CHAN_NAME, COLL_NAME, EXP_NAME, 'Example channel.', datatype='uint16')
 try:
     chan_actual = rmt.project_get(chan_setup)
 except HTTPError:
