@@ -42,7 +42,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.rmt = BossRemote('test.cfg')
+        cls.rmt = BossRemote('test.cfg', API_VER)
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.

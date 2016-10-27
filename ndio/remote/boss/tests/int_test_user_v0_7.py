@@ -37,8 +37,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
         """
         warnings.filterwarnings('ignore')
 
-        cls.rmt = BossRemote('test.cfg')
-        cls.rmt.group_perm_api_version = API_VER
+        cls.rmt = BossRemote('test.cfg', API_VER)
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.

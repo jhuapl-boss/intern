@@ -32,21 +32,13 @@ LATEST_VERSION = 'v0.7'
 class BossRemote(Remote):
     """Remote provides an SDK to the Boss API.
 
-    The methods for working with groups, users, and permissions use the 
-    group_perm_api_version property to determine which version of the Boss
-    API to use.  If not set, it defaults to using the latest version.
-
-    Note that ndio support for groups, users, and permissions was first added
-    in v0.5.
-
     Attributes:
         _token_project (string): Django Rest Framework token for auth to the project service.
         _token_metadata (string): Django Rest Framework token for auth to the metadata service.
         _token_volume (string): Django Rest Framework token for auth to the volume service.
-        _group_perm_api_version (string): Boss API version to use when calling group_*() and permissions_*() methods.
     """
 
-    def __init__(self, cfg_file_or_dict=None):
+    def __init__(self, cfg_file_or_dict=None, version=None):
         """Constructor.
 
         If not config arguments are passed in, ~/.ndio/ndio.cfg is read by 
@@ -54,63 +46,83 @@ class BossRemote(Remote):
         are passed in, the value in cfg_str is used.
 
         Args:
-            cfg_file (optional[string]): Path to config file in INI format.
-            cfg_str (optional[string]): Config in INI format encoded in a string.
+            version (optional[string]): Version of Boss API to use.
+            cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.
 
         Raises:
             (FileNotFoundError): if can't load given config file.
+            (KeyError): if given invalid version.
         """
         Remote.__init__(self, cfg_file_or_dict)
 
-        self._group_perm_api_version = LATEST_VERSION
+        if version is None:
+            version = LATEST_VERSION
 
         # Init the services
-        self._init_project_service()
-        self._init_metadata_service()
-        self._init_volume_service()
+        self._init_project_service(version)
+        self._init_metadata_service(version)
+        self._init_volume_service(version)
 
-    def _init_project_service(self):
+    def _init_project_service(self, version):
         """Method to initialize the Project Service from the config data
+
+        Args:
+            version (string): Version of Boss API to use.
 
         Returns:
             None
+
+        Raises:
+            (KeyError): if given invalid version.
         """
         project_cfg = self._load_config_section(CONFIG_PROJECT_SECTION)
         self._token_project = project_cfg[CONFIG_TOKEN]
         proto = project_cfg[CONFIG_PROTOCOL]
         host = project_cfg[CONFIG_HOST]
 
-        self._project = ProjectService(host)
+        self._project = ProjectService(host, version)
         self._project.base_protocol = proto
         self._project.set_auth(self._token_project)
 
-    def _init_metadata_service(self):
+    def _init_metadata_service(self, version):
         """Method to initialize the Metadata Service from the config data
+
+        Args:
+            version (string): Version of Boss API to use.
 
         Returns:
             None
+
+        Raises:
+            (KeyError): if given invalid version.
         """
         metadata_cfg = self._load_config_section(CONFIG_METADATA_SECTION)
         self._token_metadata = metadata_cfg[CONFIG_TOKEN]
         proto = metadata_cfg[CONFIG_PROTOCOL]
         host = metadata_cfg[CONFIG_HOST]
 
-        self._metadata = MetadataService(host)
+        self._metadata = MetadataService(host, version)
         self._metadata.base_protocol = proto
         self._metadata.set_auth(self._token_metadata)
 
-    def _init_volume_service(self):
+    def _init_volume_service(self, version):
         """Method to initialize the Volume Service from the config data
+
+        Args:
+            version (string): Version of Boss API to use.
 
         Returns:
             None
+
+        Raises:
+            (KeyError): if given invalid version.
         """
         volume_cfg = self._load_config_section(CONFIG_VOLUME_SECTION)
         self._token_volume = volume_cfg[CONFIG_TOKEN]
         proto = volume_cfg[CONFIG_PROTOCOL]
         host = volume_cfg[CONFIG_HOST]
 
-        self._volume = VolumeService(host)
+        self._volume = VolumeService(host, version)
         self._volume.base_protocol = proto
         self._volume.set_auth(self._token_volume)
 
@@ -165,14 +177,6 @@ class BossRemote(Remote):
         self._token_volume = value
         self.volume_service.set_auth(self._token_volume)
 
-    @property
-    def group_perm_api_version(self):
-        return self._group_perm_api_version
-
-    @group_perm_api_version.setter
-    def group_perm_api_version(self, value):
-        self._group_perm_api_version = value
-
     def group_get(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
@@ -184,8 +188,7 @@ class BossRemote(Remote):
             (mixed): Dictionary if getting group information or bool if a user name is supplied.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_get(
-            name, user_name, self.group_perm_api_version)
+        return self.project_service.group_get(name, user_name)
 
     def group_create(self, name):
         """Create a new group.
@@ -197,8 +200,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_create(
-            name, self.group_perm_api_version)
+        return self.project_service.group_create(name)
 
     def group_delete(self, name, user_name=None):
         """Delete given group or delete user from given group.
@@ -214,8 +216,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_delete(
-            name, user_name, self.group_perm_api_version)
+        return self.project_service.group_delete(name, user_name)
 
     def group_add_user(self, grp_name, user):
         """Add the given user to the named group.
@@ -230,8 +231,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_add_user(
-            grp_name, user, self.group_perm_api_version)
+        return self.project_service.group_add_user(grp_name, user)
 
     def permissions_get(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
@@ -247,8 +247,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.permissions_get(
-            grp_name, resource, self.group_perm_api_version)
+        return self.project_service.permissions_get(grp_name, resource)
 
     def permissions_add(self, grp_name, resource, permissions):
         """Add additional permissions for the group associated with the given resource.
@@ -262,8 +261,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.permissions_add(
-            grp_name, resource, permissions, self.group_perm_api_version)
+        self.project_service.permissions_add(grp_name, resource, permissions)
 
     def permissions_delete(self, grp_name, resource, permissions):
         """Removes permissions from the group for the given resource.
@@ -278,7 +276,7 @@ class BossRemote(Remote):
         """
         self.project_service.set_auth(self._token_project)
         self.project_service.permissions_delete(
-            grp_name, resource, permissions, self.group_perm_api_version)
+            grp_name, resource, permissions)
 
     def user_get_roles(self, user):
         """Get roles associated with the given user.
@@ -293,7 +291,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.user_get_roles(user, self.group_perm_api_version)
+        return self.project_service.user_get_roles(user)
 
     def user_add_role(self, user, role):
         """Add role to given user.
@@ -306,7 +304,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.user_add_role(user, role, self.group_perm_api_version)
+        self.project_service.user_add_role(user, role)
 
     def user_delete_role(self, user, role):
         """Remove role from given user.
@@ -319,7 +317,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.user_delete_role(user, role, self.group_perm_api_version)
+        self.project_service.user_delete_role(user, role)
 
     def user_get(self, user):
         """Get user's data (first and last name, email, etc).
@@ -334,7 +332,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.user_get(user, self.group_perm_api_version)
+        return self.project_service.user_get(user)
 
     def user_get_groups(self, user):
         """Get user's group memberships.
@@ -349,7 +347,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.user_get_groups(user, self.group_perm_api_version)
+        return self.project_service.user_get_groups(user)
 
     def user_add(
         self, user, first_name=None, last_name=None, email=None, password=None):
@@ -367,8 +365,7 @@ class BossRemote(Remote):
         """
         self.project_service.set_auth(self._token_project)
         self.project_service.user_add(
-            user, first_name, last_name, email, password, 
-            self.group_perm_api_version)
+            user, first_name, last_name, email, password)
 
     def user_delete(self, user):
         """Delete the given user.
@@ -380,7 +377,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.user_delete(user, self.group_perm_api_version)
+        self.project_service.user_delete(user)
 
     def _list_resource(self, resource):
         """List all instances of the given resource type.

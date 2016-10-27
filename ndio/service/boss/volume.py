@@ -18,17 +18,22 @@ from ndio.service.boss.v0_7.volume import VolumeService_0_7
 class VolumeService(BossService):
     """VolumeService routes calls to the appropriate API version.
     """
-    def __init__(self, base_url):
+    def __init__(self, base_url, version):
         """Constructor.
 
         Args:
             base_url (string): Base url (host) of project service such as 'api.boss.io'.
+            version (string): Version of Boss API to use.
+
+        Raises:
+            (KeyError): if given invalid version.
         """
         BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
             'v0.7': VolumeService_0_7()
         }
+        self.service = self.get_api_impl(version)
 
     def cutout_create(
         self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None):
@@ -44,8 +49,7 @@ class VolumeService(BossService):
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
         """
 
-        ps = self.get_api_impl(resource.version)
-        return ps.cutout_create(
+        return self.service.cutout_create(
             resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
@@ -67,7 +71,6 @@ class VolumeService(BossService):
             requests.HTTPError on error.
         """
 
-        ps = self.get_api_impl(resource.version)
-        return ps.cutout_get(
+        return self.service.cutout_get(
             resource, resolution, x_range, y_range, z_range, time_range,
             self.url_prefix, self.auth, self.session, self.session_send_opts)

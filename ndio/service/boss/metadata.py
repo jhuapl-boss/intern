@@ -20,17 +20,22 @@ class MetadataService(BossService):
     """MetadataService routes calls to the appropriate API version.
     """
 
-    def __init__(self, base_url):
+    def __init__(self, base_url, version):
         """Constructor.
 
         Attributes:
             base_url (string): Base url to project service such as 'api.boss.io'.
+            version (string): Version of Boss API to use.
+
+        Raises:
+            (KeyError): if given invalid version.
         """
         BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
             'v0.7': MetadataService_0_7()
         }
+        self.service = self.get_api_impl(version)
 
     def list(self, resource):
         """List metadata keys associated with the given resource.
@@ -44,8 +49,7 @@ class MetadataService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        ps = self.get_api_impl(resource.version)
-        return ps.list(
+        return self.service.list(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -61,8 +65,7 @@ class MetadataService(BossService):
         Raises:
             requests.HTTPErrorList on failure.
         """
-        ps = self.get_api_impl(resource.version)
-        return ps.create(
+        return self.service.create(
             resource, keys_vals, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -79,8 +82,7 @@ class MetadataService(BossService):
         Raises:
             requests.HTTPErrorList on failure.
         """
-        ps = self.get_api_impl(resource.version)
-        return ps.get(
+        return self.service.get(
             resource, keys, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -97,8 +99,7 @@ class MetadataService(BossService):
         Raises:
             requests.HTTPErrorList on failure.
         """
-        ps = self.get_api_impl(resource.version)
-        return ps.update(
+        return self.service.update(
             resource, keys_vals, self.url_prefix, self.auth, 
             self.session, self.session_send_opts)
 
@@ -115,7 +116,6 @@ class MetadataService(BossService):
         Raises:
             requests.HTTPErrorList on failure.
         """
-        ps = self.get_api_impl(resource.version)
-        return ps.delete(
+        return self.service.delete(
             resource, keys, self.url_prefix, self.auth, self.session,
             self.session_send_opts)

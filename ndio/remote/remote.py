@@ -31,6 +31,12 @@ class Remote(object):
     """
 
     def __init__(self, cfg_file_or_dict=None):
+        """Constructor.
+
+        Args:
+            cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.
+        """
+
         # Service Objects
         self._volume = None
         self._metadata = None

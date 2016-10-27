@@ -34,8 +34,7 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.rmt = BossRemote('test.cfg')
-        cls.rmt.group_perm_api_version = API_VER
+        cls.rmt = BossRemote('test.cfg', API_VER)
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
@@ -79,7 +78,7 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
             pass
 
     def setUp(self):
-        self.rmt.group_perm_api_version = API_VER
+        pass
 
     def tearDown(self):
         self.cleanup_db()

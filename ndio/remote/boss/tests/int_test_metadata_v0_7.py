@@ -59,7 +59,7 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
 
         Called by both setUp() and setUpClass().
         """
-        cls.rmt = BossRemote('test.cfg')
+        cls.rmt = BossRemote('test.cfg', API_VER)
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.

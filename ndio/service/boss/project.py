@@ -15,32 +15,36 @@
 from ndio.service.boss import BossService
 from ndio.service.boss.v0_7.project import ProjectService_0_7
 
-LATEST_VERSION='v0.7'
+#LATEST_VERSION='v0.7'
 
 
 class ProjectService(BossService):
     """ProjectService routes calls to the appropriate API version.
     """
 
-    def __init__(self, base_url):
+    def __init__(self, base_url, version):
         """Constructor.
 
-        Attributes:
+        Args:
             base_url (string): Base url to project service such as 'api.boss.io'.
+            version (string): Version of Boss API to use.
+
+        Raises:
+            (KeyError): if given invalid version.
         """
         BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
             'v0.7': ProjectService_0_7()
         }
+        self.service = self.get_api_impl(version)
 
-    def group_get(self, name, user_name=None, version=LATEST_VERSION):
+    def group_get(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
         Args:
             name (string): Name of group to query.
             user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Returns:
             (mixed): Dictionary if getting group information or bool if a user name is supplied.
@@ -48,33 +52,24 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-
-        ps = self.get_api_impl(version)
-        return ps.group_get(
+        return self.service.group_get(
             name, user_name, self.url_prefix, self.auth, self.session, 
             self.session_send_opts)
 
-    def group_create(self, name, version=LATEST_VERSION):
+    def group_create(self, name):
         """Create a new group.
 
         Args:
             name (string): Name of the group to create.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-
-        ps = self.get_api_impl(version)
-        ps.group_create(
+        self.service.group_create(
             name, self.url_prefix, self.auth, self.session, 
             self.session_send_opts)
 
-    def group_delete(self, name, user_name=None, version=LATEST_VERSION):
+    def group_delete(self, name, user_name=None):
         """Delete given group or delete user from given group.
 
         If user_name is provided, the user will be removed from the group.
@@ -83,20 +78,15 @@ class ProjectService(BossService):
         Args:
             name (string): Name of group.
             user_name (optional[string]): Defaults to None.  User to remove from group.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-
-        ps = self.get_api_impl(version)
-        ps.group_delete(
+        self.service.group_delete(
             name, user_name, self.url_prefix, self.auth, self.session, 
             self.session_send_opts)
 
-    def group_add_user(self, name, user, version=LATEST_VERSION):
+    def group_add_user(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -109,16 +99,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-
-        ps = self.get_api_impl(version)
-        return ps.group_add_user(
+        return self.service.group_add_user(
             name, user, self.url_prefix, self.auth, self.session, 
             self.session_send_opts)
 
-    def permissions_get(self, grp_name, resource, version=LATEST_VERSION):
-        ps = self.get_api_impl(version)
+    def permissions_get(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
 
         Args:
@@ -132,36 +117,28 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-
-        return ps.permissions_get(
+        return self.service.permissions_get(
             grp_name, resource,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def permissions_add(
-        self, grp_name, resource, permissions, version=LATEST_VERSION):
+        self, grp_name, resource, permissions):
         """ Add additional permissions for the group associated with the given resource.
 
         Args:
             grp_name (string): Name of group.
             resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to add to the given resource.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-
-        ps = self.get_api_impl(version)
-        ps.permissions_add(
+        self.service.permissions_add(
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def permissions_delete(
-        self, grp_name, resource, permissions, version=LATEST_VERSION):
+        self, grp_name, resource, permissions):
         """Removes permissions from the group for the given resource.
 
         Args:
@@ -173,56 +150,43 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-
-        ps = self.get_api_impl(version)
-        ps.permissions_delete(
+        self.service.permissions_delete(
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_add_role(self, user, role, version=LATEST_VERSION):
+    def user_add_role(self, user, role):
         """Add role to given user.
 
         Args:
             user (string): User name.
             role (string): Role to assign.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-        ps = self.get_api_impl(version)
-        ps.user_add_role(
+        self.service.user_add_role(
             user, role,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_delete_role(self, user, role, version=LATEST_VERSION):
+    def user_delete_role(self, user, role):
         """Remove role from given user.
 
         Args:
             user (string): User name.
             role (string): Role to remove.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-        ps = self.get_api_impl(version)
-        ps.user_delete_role(
+        self.service.user_delete_role(
             user, role,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_get_roles(self, user, version=LATEST_VERSION):
+    def user_get_roles(self, user):
         """Get roles associated with the given user.
 
         Args:
             user (string): User name.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Returns:
             (list): List of roles that user has.
@@ -230,15 +194,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-        ps = self.get_api_impl(version)
-        return ps.user_get_roles(
+        return self.service.user_get_roles(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def user_add(
-        self, user, first_name=None, last_name=None, email=None, password=None,
-        version=LATEST_VERSION):
+        self, user, first_name=None, last_name=None, email=None, password=None):
         """Add a new user.
 
         Args:
@@ -247,24 +207,19 @@ class ProjectService(BossService):
             last_name (optional[string]): User's last name.  Defaults to None.
             email: (optional[string]): User's email address.  Defaults to None.
             password: (optional[string]): User's password.  Defaults to None.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-        ps = self.get_api_impl(version)
-        ps.user_add(
+        self.service.user_add(
             user, first_name, last_name, email, password,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_get(self, user, version=LATEST_VERSION):
+    def user_get(self, user):
         """Get user's data (first and last name, email, etc).
 
         Args:
             user (string): User name.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Returns:
             (dictionary): User's data encoded in a dictionary.
@@ -272,13 +227,10 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-        ps = self.get_api_impl(version)
-        return ps.user_get(
+        return self.service.user_get(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_get_groups(self, user, version=LATEST_VERSION):
+    def user_get_groups(self, user):
         """Get user's group memberships.
 
         Args:
@@ -290,26 +242,19 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-        ps = self.get_api_impl(version)
-        return ps.user_get_groups(
+        return self.service.user_get_groups(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_delete(self, user, version=LATEST_VERSION):
+    def user_delete(self, user):
         """Delete the given user.
 
         Args:
             user (string): User name.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        if version == 'v0.4':
-            raise NotImplementedError('ndio does not support this call for v0.4.')
-        ps = self.get_api_impl(version)
-        ps.user_delete(
+        self.service.user_delete(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def list(self, resource=None, **kwargs):
@@ -324,8 +269,7 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        ps = self.get_api_impl(resource.version)
-        return ps.list(
+        return self.service.list(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -338,8 +282,7 @@ class ProjectService(BossService):
         Returns:
             (ndio.ndresource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
         """
-        ps = self.get_api_impl(resource.version)
-        return ps.create(
+        return self.service.create(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -352,8 +295,7 @@ class ProjectService(BossService):
         Returns:
             (ndio.resource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
         """
-        ps = self.get_api_impl(resource.version)
-        return ps.get(
+        return self.service.get(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -367,8 +309,7 @@ class ProjectService(BossService):
         Returns:
             (ndio.resource.boss.Resource): Returns updated resource of given type on success.  Returns None on failure.
         """
-        ps = self.get_api_impl(resource.version)
-        return ps.update(
+        return self.service.update(
             resource_name, resource, self.url_prefix, self.auth, 
             self.session, self.session_send_opts)
 
@@ -378,7 +319,6 @@ class ProjectService(BossService):
         Args:
             resource (ndio.resource.boss.Resource)
         """
-        ps = self.get_api_impl(resource.version)
-        ps.delete(
+        self.service.delete(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
