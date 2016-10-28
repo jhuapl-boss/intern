@@ -17,10 +17,10 @@ This example shows how to work with the Boss' data model.  The Remote
 class methods that being with 'project_' operate on the data model. These
 methods are:
     list_project()
-    project_create()
-    project_get()
-    project_update()
-    project_delete()
+    create_project()
+    get_project()
+    update_project()
+    delete_project()
 
 All of these methods take a intern.resource.boss.resource.Resource object, as
 a minimum.  The resource object identifies where in the data model hierarchy
@@ -60,7 +60,7 @@ for chan in chan_list:
 # For example, to add a channel named beta to the alpha experiment referenced
 # in the previous example:
 betaChan = ChannelResource('beta', 'gray', 'alpha', 'test channel')
-newBetaChan = rmt.project_create(betaChan)
+newBetaChan = rmt.create_project(betaChan)
 
 # Note that the create method returns a new instance of the ChannelResource.
 # This new instance is populated with additional information, such as the id
@@ -73,14 +73,14 @@ print(newBetaChan.raw)
 # We forgot, to set the channel's data type to uint16.  Let's fix that by
 # updating the channel.
 betaChan.datatype = 'uint16'
-betaChanUpdated = rmt.project_update(betaChan.name, betaChan)
+betaChanUpdated = rmt.update_project(betaChan.name, betaChan)
 
 # Let's verify the data type was updated.
 print('beta channel data type: {}'.format(betaChanUpdated.datatype))
 
 # To demonstrate the final method available for project operations, we will
 # delete the beta channel.
-rmt.project_delete(betaChan)
+rmt.delete_project(betaChan)
 
 chan_list = rmt.list_project(channels)
 for chan in chan_list:

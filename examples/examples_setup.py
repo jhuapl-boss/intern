@@ -35,38 +35,38 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 
 coll = CollectionResource('gray', 'Collection used for examples.')
 try:
-    rmt.project_get(coll)
+    rmt.get_project(coll)
 except HTTPError:
-    rmt.project_create(coll)
+    rmt.create_project(coll)
 
 coord = CoordinateFrameResource(
     'StdFrame', 'Standard coordinate frame for xyz.', 0, 50, 0, 50, 0, 50)
 try:
-    coord_actual = rmt.project_get(coord)
+    coord_actual = rmt.get_project(coord)
 except HTTPError:
-    coord_actual = rmt.project_create(coord)
+    coord_actual = rmt.create_project(coord)
 
 alpha_exp = ExperimentResource(
     'alpha', 'gray', coord_actual.name, 'Alpha example experiment.',
 try:
-    rmt.project_get(alpha_exp)
+    rmt.get_project(alpha_exp)
 except HTTPError:
-    rmt.project_create(alpha_exp)
+    rmt.create_project(alpha_exp)
 
 omega_chan = ChannelResource(
     'omega', 'gray', 'alpha', 'Example channel.', datatype='uint16')
 try:
-    omega_actual = rmt.project_get(omega_chan)
+    omega_actual = rmt.get_project(omega_chan)
 except HTTPError:
-    omega_actual = rmt.project_create(omega_chan)
+    omega_actual = rmt.create_project(omega_chan)
 
 rho_layer = LayerResource(
     'rho', 'gray', 'alpha', 'Example layer.', datatype='uint64',
     channels=omega_actual.id)
 try:
-    rmt.project_get(rho_layer)
+    rmt.get_project(rho_layer)
 except HTTPError:
-    rmt.project_create(rho_layer)
+    rmt.create_project(rho_layer)
 
 grp_name = 'example_group'
 if not rmt.group_get(grp_name):

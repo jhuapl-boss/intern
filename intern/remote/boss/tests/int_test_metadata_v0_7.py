@@ -42,10 +42,10 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         """
         cls.initialize()
         cls.cleanup_db()
-        cls.rmt.project_create(cls.coll)
-        coord_actual = cls.rmt.project_create(cls.coord)
-        cls.rmt.project_create(cls.exp)
-        chan_actual = cls.rmt.project_create(cls.chan)
+        cls.rmt.create_project(cls.coll)
+        coord_actual = cls.rmt.create_project(cls.coord)
+        cls.rmt.create_project(cls.exp)
+        chan_actual = cls.rmt.create_project(cls.chan)
 
     @classmethod
     def tearDownClass(cls):
@@ -91,19 +91,19 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         This method is used by both tearDownClass() and setUpClass().
         """
         try:
-            cls.rmt.project_delete(cls.chan)
+            cls.rmt.delete_project(cls.chan)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.exp)
+            cls.rmt.delete_project(cls.exp)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coord)
+            cls.rmt.delete_project(cls.coord)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coll)
+            cls.rmt.delete_project(cls.coll)
         except HTTPError:
             pass
 

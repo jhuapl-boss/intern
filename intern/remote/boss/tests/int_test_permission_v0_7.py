@@ -86,27 +86,27 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.chan)
+            cls.rmt.delete_project(cls.chan)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.exp)
+            cls.rmt.delete_project(cls.exp)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coord)
+            cls.rmt.delete_project(cls.coord)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coll)
+            cls.rmt.delete_project(cls.coll)
         except HTTPError:
             pass
 
     def setUp(self):
-        self.rmt.project_create(self.coll)
-        self.rmt.project_create(self.coord)
-        self.rmt.project_create(self.exp)
-        self.rmt.project_create(self.chan)
+        self.rmt.create_project(self.coll)
+        self.rmt.create_project(self.coord)
+        self.rmt.create_project(self.exp)
+        self.rmt.create_project(self.chan)
         self.rmt.group_create(self.grp_name)
 
     def tearDown(self):

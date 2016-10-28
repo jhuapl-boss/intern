@@ -24,9 +24,9 @@ CHAN_NAME = 'ex_EM'
 chan_setup = ChannelResource(
     CHAN_NAME, COLL_NAME, EXP_NAME, 'Example channel.', datatype='uint16')
 try:
-    chan_actual = rmt.project_get(chan_setup)
+    chan_actual = rmt.get_project(chan_setup)
 except HTTPError:
-    chan_actual = rmt.project_create(chan_setup)
+    chan_actual = rmt.create_project(chan_setup)
 
 print('Data model setup.')
 
@@ -61,4 +61,4 @@ time_cutout_data = rmt.get_cutout(chan_actual, 0, x_rng, y_rng, z_rng, time_rng)
 numpy.testing.assert_array_equal(time_data, time_cutout_data)
 
 # Clean up.
-rmt.project_delete(chan_actual)
+rmt.delete_project(chan_actual)

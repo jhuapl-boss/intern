@@ -445,7 +445,7 @@ class BossRemote(Remote):
         cf = CoordinateFrameResource(name='')
         return self._list_resource(cf)
 
-    def project_create(self, resource):
+    def create_project(self, resource):
         """Create the entity described by the given resource.
 
         Args:
@@ -457,7 +457,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.create(resource)
 
-    def project_get(self, resource):
+    def get_project(self, resource):
         """Get attributes of the data model object named by the given resource.
 
         Args:
@@ -469,7 +469,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.get(resource)
 
-    def project_update(self, resource_name, resource):
+    def update_project(self, resource_name, resource):
         """Updates an entity in the data model using the given resource.
 
         Args:
@@ -482,7 +482,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.update(resource_name, resource)
 
-    def project_delete(self, resource):
+    def delete_project(self, resource):
         """Deletes the entity described by the given resource.
 
         Args:

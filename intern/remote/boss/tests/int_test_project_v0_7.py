@@ -84,35 +84,35 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
     @classmethod
     def cleanup_db(cls):
         try:
-            cls.rmt.project_delete(cls.chan_upd)
+            cls.rmt.delete_project(cls.chan_upd)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.chan)
+            cls.rmt.delete_project(cls.chan)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.exp_upd)
+            cls.rmt.delete_project(cls.exp_upd)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.exp)
+            cls.rmt.delete_project(cls.exp)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coord_upd)
+            cls.rmt.delete_project(cls.coord_upd)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coord)
+            cls.rmt.delete_project(cls.coord)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coll_upd)
+            cls.rmt.delete_project(cls.coll_upd)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coll)
+            cls.rmt.delete_project(cls.coll)
         except HTTPError:
             pass
 
@@ -123,7 +123,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.cleanup_db()
 
     def test_create_coord_frame(self):
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertEqual(self.coord.name, cf.name)
         self.assertEqual(self.coord.description, cf.description)
         self.assertEqual(self.coord.x_start, cf.x_start)
@@ -140,18 +140,18 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.coord.time_step_unit, cf.time_step_unit)
 
     def test_create_collection(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertEqual(self.coll.name, c.name)
         self.assertEqual(self.coll.description, c.description)
 
     def test_create_experiment(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
-        e = self.rmt.project_create(self.exp)
+        e = self.rmt.create_project(self.exp)
         self.assertEqual(self.exp.name, e.name)
         self.assertEqual(self.exp.description, e.description)
         self.assertEqual(self.coll.name, e.coll_name)
@@ -161,16 +161,16 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp.max_time_sample, e.max_time_sample)
 
     def test_create_channel(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
-        e = self.rmt.project_create(self.exp)
+        e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        ch = self.rmt.project_create(self.chan)
+        ch = self.rmt.create_project(self.chan)
         self.assertEqual(self.chan.name, ch.name)
         self.assertEqual(self.exp.name, ch.exp_name)
         self.assertEqual(self.chan.description, ch.description)
@@ -180,18 +180,18 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.chan.base_resolution, ch.base_resolution)
 
     def test_get_collection(self):
-        coll = self.rmt.project_create(self.coll)
+        coll = self.rmt.create_project(self.coll)
         self.assertIsNotNone(coll)
 
-        c = self.rmt.project_get(self.coll)
+        c = self.rmt.get_project(self.coll)
         self.assertEqual(self.coll.name, c.name)
         self.assertEqual(self.coll.description, c.description)
 
     def test_get_coord_frame(self):
-        coord = self.rmt.project_create(self.coord)
+        coord = self.rmt.create_project(self.coord)
         self.assertIsNotNone(coord)
 
-        cf = self.rmt.project_get(self.coord)
+        cf = self.rmt.get_project(self.coord)
         self.assertEqual(self.coord.name, cf.name)
         self.assertEqual(self.coord.description, cf.description)
         self.assertEqual(self.coord.x_start, cf.x_start)
@@ -208,16 +208,16 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.coord.time_step_unit, cf.time_step_unit)
 
     def test_get_experiment(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
-        exp = self.rmt.project_create(self.exp)
+        exp = self.rmt.create_project(self.exp)
         self.assertIsNotNone(exp)
 
-        e = self.rmt.project_get(self.exp)
+        e = self.rmt.get_project(self.exp)
         self.assertEqual(self.exp.name, e.name)
         self.assertEqual(self.exp.description, e.description)
         self.assertEqual(self.coll.name, e.coll_name)
@@ -227,19 +227,19 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp.max_time_sample, e.max_time_sample)
 
     def test_get_channel(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
-        e = self.rmt.project_create(self.exp)
+        e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        chan = self.rmt.project_create(self.chan)
+        chan = self.rmt.create_project(self.chan)
         self.assertIsNotNone(chan)
 
-        ch = self.rmt.project_get(self.chan)
+        ch = self.rmt.get_project(self.chan)
         self.assertEqual(self.chan.name, ch.name)
         self.assertEqual(self.exp.name, ch.exp_name)
         self.assertEqual(self.chan.description, ch.description)
@@ -249,35 +249,35 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.chan.base_resolution, ch.base_resolution)
 
     def test_update_collection(self):
-        coll = self.rmt.project_create(self.coll)
+        coll = self.rmt.create_project(self.coll)
         self.assertIsNotNone(coll)
 
-        c = self.rmt.project_update(self.coll.name, self.coll_upd)
+        c = self.rmt.update_project(self.coll.name, self.coll_upd)
         self.assertEqual(self.coll_upd.name, c.name)
         self.assertEqual(self.coll_upd.description, c.description)
 
     def test_update_coord_frame(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        coord = self.rmt.project_create(self.coord)
+        coord = self.rmt.create_project(self.coord)
         self.assertIsNotNone(coord)
 
-        cf = self.rmt.project_update(self.coord.name, self.coord_upd)
+        cf = self.rmt.update_project(self.coord.name, self.coord_upd)
         self.assertEqual(self.coord_upd.name, cf.name)
         self.assertEqual(self.coord_upd.description, cf.description)
 
     def test_update_experiment(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
-        e = self.rmt.project_create(self.exp)
+        e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        eup = self.rmt.project_update(self.exp.name, self.exp_upd)
+        eup = self.rmt.update_project(self.exp.name, self.exp_upd)
         self.assertEqual(self.exp_upd.name, eup.name)
         self.assertEqual(self.exp_upd.description, eup.description)
         self.assertEqual(self.coll.name, eup.coll_name)
@@ -287,19 +287,19 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp_upd.max_time_sample, eup.max_time_sample)
 
     def test_update_channel(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
-        e = self.rmt.project_create(self.exp)
+        e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        chan = self.rmt.project_create(self.chan)
+        chan = self.rmt.create_project(self.chan)
         self.assertIsNotNone(chan)
 
-        ch = self.rmt.project_update(self.chan.name, self.chan_upd)
+        ch = self.rmt.update_project(self.chan.name, self.chan_upd)
         self.assertEqual(self.chan_upd.name, ch.name)
         self.assertEqual(self.exp.name, ch.exp_name)
         self.assertEqual(self.chan_upd.description, ch.description)
@@ -309,7 +309,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.chan_upd.base_resolution, ch.base_resolution)
 
     def test_list_collections(self):
-        coll = self.rmt.project_create(self.coll)
+        coll = self.rmt.create_project(self.coll)
         self.assertIsNotNone(coll)
 
         coll_list = self.rmt.list_collections()
@@ -318,7 +318,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.coll.name, c[0])
 
     def test_list_coord_frames(self):
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
         cf_list = self.rmt.list_coordinate_frames()
@@ -327,13 +327,13 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.coord.name, c[0])
 
     def test_list_experiments(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
-        exp = self.rmt.project_create(self.exp)
+        exp = self.rmt.create_project(self.exp)
         self.assertIsNotNone(exp)
 
         exp_list = self.rmt.list_experiments(self.coll.name)
@@ -342,16 +342,16 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp.name, e[0])
 
     def test_list_channels(self):
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
-        e = self.rmt.project_create(self.exp)
+        e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        chan = self.rmt.project_create(self.chan)
+        chan = self.rmt.create_project(self.chan)
         self.assertIsNotNone(chan)
 
         chan_list = self.rmt.list_channels(self.coll.name, self.exp.name)
@@ -365,22 +365,22 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         Delete happens all the time in the tearDown() but specifically test
         it here.
         """
-        c = self.rmt.project_create(self.coll)
+        c = self.rmt.create_project(self.coll)
         self.assertIsNotNone(c)
 
-        cf = self.rmt.project_create(self.coord)
+        cf = self.rmt.create_project(self.coord)
         self.assertIsNotNone(cf)
 
-        e = self.rmt.project_create(self.exp)
+        e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        ch = self.rmt.project_create(self.chan)
+        ch = self.rmt.create_project(self.chan)
         self.assertIsNotNone(ch)
 
-        self.rmt.project_delete(self.chan)
-        self.rmt.project_delete(self.exp)
-        self.rmt.project_delete(self.coord)
-        self.rmt.project_delete(self.coll)
+        self.rmt.delete_project(self.chan)
+        self.rmt.delete_project(self.exp)
+        self.rmt.delete_project(self.coord)
+        self.rmt.delete_project(self.coll)
 
 if __name__ == '__main__':
     unittest.main()

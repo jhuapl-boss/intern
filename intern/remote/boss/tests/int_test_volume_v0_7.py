@@ -76,12 +76,12 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             'annVolChan', cls.coll.name, cls.exp.name, 'annotation',
             'annotation test channel', 0, 'uint64', 0, sources=[cls.chan.name])
 
-        cls.rmt.project_create(cls.coll)
-        cls.rmt.project_create(cls.coord)
-        cls.rmt.project_create(cls.exp)
-        cls.rmt.project_create(cls.chan16)
-        cls.rmt.project_create(cls.chan)
-        cls.rmt.project_create(cls.ann_chan)
+        cls.rmt.create_project(cls.coll)
+        cls.rmt.create_project(cls.coord)
+        cls.rmt.create_project(cls.exp)
+        cls.rmt.create_project(cls.chan16)
+        cls.rmt.create_project(cls.chan)
+        cls.rmt.create_project(cls.ann_chan)
 
     @classmethod
     def tearDownClass(cls):
@@ -90,27 +90,27 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         This method is used by both tearDownClass() and setUpClass().
         """
         try:
-            cls.rmt.project_delete(cls.ann_chan)
+            cls.rmt.delete_project(cls.ann_chan)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.chan16)
+            cls.rmt.delete_project(cls.chan16)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.chan)
+            cls.rmt.delete_project(cls.chan)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.exp)
+            cls.rmt.delete_project(cls.exp)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coord)
+            cls.rmt.delete_project(cls.coord)
         except HTTPError:
             pass
         try:
-            cls.rmt.project_delete(cls.coll)
+            cls.rmt.delete_project(cls.coll)
         except HTTPError:
             pass
 
