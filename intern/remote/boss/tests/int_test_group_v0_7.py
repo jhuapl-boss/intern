@@ -73,7 +73,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         except HTTPError:
             pass
         try:
-            cls.rmt.user_delete(cls.create_user)
+            cls.rmt.delete_user(cls.create_user)
         except HTTPError:
             pass
 
@@ -139,7 +139,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
 
     def test_get_groups(self):
         password = 'myPassW0rd'
-        self.rmt.user_add(
+        self.rmt.add_user(
             self.create_user, 'John', 'Doeski', 'jdoe@me.com', password)
         token = self.get_access_token(self.create_user, password)
         self.login_user(token)
@@ -150,12 +150,12 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         users_group = self.create_user + '-primary'
 
         expected = ['bosspublic', users_group, self.existing_grp_name]
-        actual = self.rmt.user_get_groups(self.create_user)
+        actual = self.rmt.get_user_groups(self.create_user)
         six.assertCountEqual(self, expected, actual)
 
     def test_get_groups_invalid_user(self):
         with self.assertRaises(HTTPError):
-            self.rmt.user_get_groups('foo')
+            self.rmt.get_user_groups('foo')
 
     def login_user(self, token):
         """User must login once before user can be added to a group.

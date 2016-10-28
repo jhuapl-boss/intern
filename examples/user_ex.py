@@ -37,26 +37,26 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 user = 'example_user'
 
 print('Creating user . . .')
-rmt.user_add(user, 'John', 'Doe', 'jd@me.com', 'secure_password')
+rmt.add_user(user, 'John', 'Doe', 'jd@me.com', 'secure_password')
 
 print('\nGet the user just created . . .')
-user_data = rmt.user_get(user)
+user_data = rmt.get_user(user)
 print(user_data)
 
 print('\nMake the user a resource manager . . .')
-rmt.user_add_role(user, 'resource-manager')
+rmt.add_user_role(user, 'resource-manager')
 
 print('\nList the user\'s roles . . .')
-print(rmt.user_get_roles(user))
+print(rmt.get_user_roles(user))
 
 print('\nRemove the resource manager role . . .')
-rmt.user_delete_role(user, 'resource-manager')
+rmt.delete_user_role(user, 'resource-manager')
 
 print('\nList the user\'s roles again. . .')
-print(rmt.user_get_roles(user))
+print(rmt.get_user_roles(user))
 
 print('\nList the user\'s groups . . .')
-print(rmt.user_get_groups(user))
+print(rmt.get_user_groups(user))
 
 print('\nClean up be deleting the user . . .')
-rmt.user_delete(user)
+rmt.delete_user(user)

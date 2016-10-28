@@ -229,7 +229,7 @@ class ProjectService_0_7(BaseVersion):
             grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def user_get_roles(self, user, url_prefix, auth, session, send_opts):
+    def get_user_roles(self, user, url_prefix, auth, session, send_opts):
         """Get roles associated with the given user.
 
         Args:
@@ -259,7 +259,7 @@ class ProjectService_0_7(BaseVersion):
             .format(user, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def user_add_role(self, user, role, url_prefix, auth, session, send_opts):
+    def add_user_role(self, user, role, url_prefix, auth, session, send_opts):
         """Add role to given user.
 
         Args:
@@ -287,7 +287,7 @@ class ProjectService_0_7(BaseVersion):
             .format(role, user, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def user_delete_role(self, user, role, url_prefix, auth, session, send_opts):
+    def delete_user_role(self, user, role, url_prefix, auth, session, send_opts):
         """Remove role from given user.
 
         Args:
@@ -315,7 +315,7 @@ class ProjectService_0_7(BaseVersion):
             .format(role, user, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def user_get(self, user, url_prefix, auth, session, send_opts):
+    def get_user(self, user, url_prefix, auth, session, send_opts):
         """Get user's data (first and last name, email, etc).
 
         Args:
@@ -345,7 +345,7 @@ class ProjectService_0_7(BaseVersion):
             .format(user, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def user_get_groups(self, user, url_prefix, auth, session, send_opts):
+    def get_user_groups(self, user, url_prefix, auth, session, send_opts):
         """Get user's group memberships.
 
         Args:
@@ -378,7 +378,7 @@ class ProjectService_0_7(BaseVersion):
             .format(user, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def user_add(
+    def add_user(
         self, user, first_name, last_name, email, password,
         url_prefix, auth, session, send_opts):
         """Add a new user.
@@ -411,7 +411,7 @@ class ProjectService_0_7(BaseVersion):
             .format(user, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def user_delete(self, user, url_prefix, auth, session, send_opts):
+    def delete_user(self, user, url_prefix, auth, session, send_opts):
         """Delete the given user.
 
         Args:

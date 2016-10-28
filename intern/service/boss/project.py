@@ -154,7 +154,7 @@ class ProjectService(BossService):
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_add_role(self, user, role):
+    def add_user_role(self, user, role):
         """Add role to given user.
 
         Args:
@@ -164,11 +164,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        self.service.user_add_role(
+        self.service.add_user_role(
             user, role,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_delete_role(self, user, role):
+    def delete_user_role(self, user, role):
         """Remove role from given user.
 
         Args:
@@ -178,11 +178,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        self.service.user_delete_role(
+        self.service.delete_user_role(
             user, role,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_get_roles(self, user):
+    def get_user_roles(self, user):
         """Get roles associated with the given user.
 
         Args:
@@ -194,10 +194,10 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.user_get_roles(
+        return self.service.get_user_roles(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_add(
+    def add_user(
         self, user, first_name=None, last_name=None, email=None, password=None):
         """Add a new user.
 
@@ -211,11 +211,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        self.service.user_add(
+        self.service.add_user(
             user, first_name, last_name, email, password,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_get(self, user):
+    def get_user(self, user):
         """Get user's data (first and last name, email, etc).
 
         Args:
@@ -227,10 +227,10 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.user_get(
+        return self.service.get_user(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_get_groups(self, user):
+    def get_user_groups(self, user):
         """Get user's group memberships.
 
         Args:
@@ -242,10 +242,10 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.user_get_groups(
+        return self.service.get_user_groups(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def user_delete(self, user):
+    def delete_user(self, user):
         """Delete the given user.
 
         Args:
@@ -254,7 +254,7 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        self.service.user_delete(
+        self.service.delete_user(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def list(self, resource=None, **kwargs):

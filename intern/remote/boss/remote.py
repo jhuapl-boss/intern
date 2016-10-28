@@ -278,7 +278,7 @@ class BossRemote(Remote):
         self.project_service.permissions_delete(
             grp_name, resource, permissions)
 
-    def user_get_roles(self, user):
+    def get_user_roles(self, user):
         """Get roles associated with the given user.
 
         Args:
@@ -291,9 +291,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.user_get_roles(user)
+        return self.project_service.get_user_roles(user)
 
-    def user_add_role(self, user, role):
+    def add_user_role(self, user, role):
         """Add role to given user.
 
         Args:
@@ -304,9 +304,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.user_add_role(user, role)
+        self.project_service.add_user_role(user, role)
 
-    def user_delete_role(self, user, role):
+    def delete_user_role(self, user, role):
         """Remove role from given user.
 
         Args:
@@ -317,9 +317,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.user_delete_role(user, role)
+        self.project_service.delete_user_role(user, role)
 
-    def user_get(self, user):
+    def get_user(self, user):
         """Get user's data (first and last name, email, etc).
 
         Args:
@@ -332,9 +332,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.user_get(user)
+        return self.project_service.get_user(user)
 
-    def user_get_groups(self, user):
+    def get_user_groups(self, user):
         """Get user's group memberships.
 
         Args:
@@ -347,9 +347,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.user_get_groups(user)
+        return self.project_service.get_user_groups(user)
 
-    def user_add(
+    def add_user(
         self, user, first_name=None, last_name=None, email=None, password=None):
         """Add a new user.
 
@@ -364,10 +364,10 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.user_add(
+        self.project_service.add_user(
             user, first_name, last_name, email, password)
 
-    def user_delete(self, user):
+    def delete_user(self, user):
         """Delete the given user.
 
         Args:
@@ -377,7 +377,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.user_delete(user)
+        self.project_service.delete_user(user)
 
     def _list_resource(self, resource):
         """List all instances of the given resource type.

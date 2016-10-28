@@ -36,7 +36,7 @@ class TestUserRole(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.user_get_roles(
+        actual = self.prj.get_user_roles(
             'johndoe', url_prefix, auth, mock_session, send_opts)
         six.assertCountEqual(self, expected, actual)
 
@@ -52,7 +52,7 @@ class TestUserRole(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.user_get_roles(
+            self.prj.get_user_roles(
                 'johndoe', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
@@ -66,7 +66,7 @@ class TestUserRole(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.user_add_role(
+        self.prj.add_user_role(
             'johndoe', 'admin', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
@@ -81,7 +81,7 @@ class TestUserRole(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.user_add_role(
+            self.prj.add_user_role(
                 'johndoe', 'admin', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
@@ -95,7 +95,7 @@ class TestUserRole(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.user_delete_role(
+        self.prj.delete_user_role(
             'johndoe', 'admin', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
@@ -110,7 +110,7 @@ class TestUserRole(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.user_delete_role(
+            self.prj.delete_user_role(
                 'johndoe', 'admin', url_prefix, auth, mock_session, send_opts)
 
 

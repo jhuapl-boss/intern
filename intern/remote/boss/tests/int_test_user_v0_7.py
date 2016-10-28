@@ -55,43 +55,43 @@ class ProjectUserTest_v0_7(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         try:
-            cls.rmt.user_delete(cls.user)
+            cls.rmt.delete_user(cls.user)
         except HTTPError:
             pass
 
     def tearDown(self):
         try:
-            self.rmt.user_delete(self.user)
+            self.rmt.delete_user(self.user)
         except HTTPError:
             pass
 
     def test_add(self):
-        self.rmt.user_add(
+        self.rmt.add_user(
             self.user, self.first_name, self.last_name, self.email,
             self.password)
 
     def test_add_user_already_exists(self):
-        self.rmt.user_add(
+        self.rmt.add_user(
             self.user, self.first_name, self.last_name, self.email,
             self.password)
 
         with self.assertRaises(HTTPError):
-            self.rmt.user_add(
+            self.rmt.add_user(
                 self.user, self.first_name, self.last_name, self.email,
                 self.password)
 
     def test_delete(self):
-        self.rmt.user_add(
+        self.rmt.add_user(
             self.user, self.first_name, self.last_name, self.email,
             self.password)
-        self.rmt.user_delete(self.user)
+        self.rmt.delete_user(self.user)
 
     def test_delete_invalid_user(self):
         with self.assertRaises(HTTPError):
-            self.rmt.user_delete('foo')
+            self.rmt.delete_user('foo')
 
     def test_get(self):
-        self.rmt.user_add(
+        self.rmt.add_user(
             self.user, self.first_name, self.last_name, self.email,
             self.password)
 
@@ -101,7 +101,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
             'lastName': self.last_name,
             'email': self.email }
 
-        actual = self.rmt.user_get(self.user)
+        actual = self.rmt.get_user(self.user)
 
         # get also returns generated values that we cannot test for such
         # as creation time.
@@ -113,7 +113,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
 
     def test_get_invalid_user(self):
         with self.assertRaises(HTTPError):
-            self.rmt.user_get('foo')
+            self.rmt.get_user('foo')
 
 
 if __name__ == '__main__':

@@ -36,7 +36,7 @@ class TestUser(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.user_get(
+        actual = self.prj.get_user(
             'johndoe', url_prefix, auth, mock_session, send_opts)
         six.assertCountEqual(self, expected, actual)
 
@@ -52,7 +52,7 @@ class TestUser(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.user_get(
+            self.prj.get_user(
                 'johndoe', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -69,7 +69,7 @@ class TestUser(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        actual = self.prj.user_get_groups(
+        actual = self.prj.get_user_groups(
             'johndoe', url_prefix, auth, mock_session, send_opts)
         six.assertCountEqual(self, expected, actual)
 
@@ -85,7 +85,7 @@ class TestUser(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.user_get_groups(
+            self.prj.get_user_groups(
                 'johndoe', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
@@ -105,7 +105,7 @@ class TestUser(unittest.TestCase):
         email = 'jd@me.com'
         pw = 'password'
 
-        self.prj.user_add(
+        self.prj.add_user(
             user, first, last, email, pw,
             url_prefix, auth, mock_session, send_opts)
 
@@ -127,7 +127,7 @@ class TestUser(unittest.TestCase):
         pw = 'password'
 
         with self.assertRaises(HTTPError):
-            self.prj.user_add(
+            self.prj.add_user(
                 user, first, last, email, pw,
                 url_prefix, auth, mock_session, send_opts)
 
@@ -142,7 +142,7 @@ class TestUser(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.user_delete(
+        self.prj.delete_user(
             'johndoe', url_prefix, auth, mock_session, send_opts)
 
 

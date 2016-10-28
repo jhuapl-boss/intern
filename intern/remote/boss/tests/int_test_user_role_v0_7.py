@@ -48,32 +48,32 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         cls.rsrc_mgr = 'resource-manager'
         cls.user = 'role_test_user{}'.format(random.randint(0, 9999))
 
-        cls.rmt.user_add(cls.user, 'John', 'Doe', 'jd{}@me.com'.format(random.randint(0, 9999)), 'password')
+        cls.rmt.add_user(cls.user, 'John', 'Doe', 'jd{}@me.com'.format(random.randint(0, 9999)), 'password')
         cls.cleanup_db()
 
     @classmethod
     def tearDownClass(cls):
         cls.cleanup_db()
-        cls.rmt.user_delete(cls.user)
+        cls.rmt.delete_user(cls.user)
 
     @classmethod
     def cleanup_db(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().  Don't do
-        anything if an exception occurs during user_delete_role().  The role
+        anything if an exception occurs during delete_user_role().  The role
         may not have existed for a particular test.
         """
         try:
-            cls.rmt.user_delete_role(cls.user, cls.admin)
+            cls.rmt.delete_user_role(cls.user, cls.admin)
         except HTTPError:
             pass
         try:
-            cls.rmt.user_delete_role(cls.user, cls.user_mgr)
+            cls.rmt.delete_user_role(cls.user, cls.user_mgr)
         except HTTPError:
             pass
         try:
-            cls.rmt.user_delete_role(cls.user, cls.rsrc_mgr)
+            cls.rmt.delete_user_role(cls.user, cls.rsrc_mgr)
         except HTTPError:
             pass
 
@@ -84,48 +84,48 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         self.cleanup_db()
 
     def test_add_role(self):
-        self.rmt.user_add_role(self.user, self.admin)
+        self.rmt.add_user_role(self.user, self.admin)
 
     def test_add_multiple_roles(self):
-        self.rmt.user_add_role(self.user, self.admin)
-        self.rmt.user_add_role(self.user, self.user_mgr)
-        self.rmt.user_add_role(self.user, self.rsrc_mgr)
+        self.rmt.add_user_role(self.user, self.admin)
+        self.rmt.add_user_role(self.user, self.user_mgr)
+        self.rmt.add_user_role(self.user, self.rsrc_mgr)
 
         expected = [self.admin, self.user_mgr, self.rsrc_mgr]
-        actual = self.rmt.user_get_roles(self.user)
+        actual = self.rmt.get_user_roles(self.user)
 
         six.assertCountEqual(self, expected, actual)
 
     def test_add_invalid_user(self):
         with self.assertRaises(HTTPError):
-            self.rmt.user_add_role('foo', self.admin)
+            self.rmt.add_user_role('foo', self.admin)
 
     def test_add_invalid_role(self):
         with self.assertRaises(HTTPError):
-            self.rmt.user_add_role(self.user, 'foo')
+            self.rmt.add_user_role(self.user, 'foo')
 
     def test_delete_role(self):
-        self.rmt.user_add_role(self.user, self.admin)
-        self.rmt.user_delete_role(self.user, self.admin)
+        self.rmt.add_user_role(self.user, self.admin)
+        self.rmt.delete_user_role(self.user, self.admin)
 
-        actual = self.rmt.user_get_roles(self.user)
+        actual = self.rmt.get_user_roles(self.user)
         self.assertEqual([], actual)
 
     def test_delete_invalid_user(self):
         with self.assertRaises(HTTPError):
-            self.rmt.user_delete_role('foo', self.admin)
+            self.rmt.delete_user_role('foo', self.admin)
 
     def test_delete_invalid_role(self):
         with self.assertRaises(HTTPError):
-            self.rmt.user_delete_role(self.user, 'foo')
+            self.rmt.delete_user_role(self.user, 'foo')
 
     def test_get_roles(self):
-        actual = self.rmt.user_get_roles(self.user)
+        actual = self.rmt.get_user_roles(self.user)
         self.assertEqual([], actual)
 
     def test_get_roles_invalid_user(self):
         with self.assertRaises(HTTPError):
-            self.rmt.user_get_roles('foo')
+            self.rmt.get_user_roles('foo')
 
 
 if __name__ == '__main__':
