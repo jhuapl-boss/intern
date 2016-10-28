@@ -35,7 +35,7 @@ class VolumeService(BossService):
         }
         self.service = self.get_api_impl(version)
 
-    def cutout_create(
+    def create_cutout(
         self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None):
         """Upload a cutout to the volume service.
 
@@ -49,11 +49,11 @@ class VolumeService(BossService):
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
         """
 
-        return self.service.cutout_create(
+        return self.service.create_cutout(
             resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def cutout_get(self, resource, resolution, x_range, y_range, z_range, time_range=None):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None):
         """Get a cutout from the volume service.
 
         Args:
@@ -71,6 +71,6 @@ class VolumeService(BossService):
             requests.HTTPError on error.
         """
 
-        return self.service.cutout_get(
+        return self.service.get_cutout(
             resource, resolution, x_range, y_range, z_range, time_range,
             self.url_prefix, self.auth, self.session, self.session_send_opts)

@@ -27,7 +27,7 @@ class TestVolume_v0_7(unittest.TestCase):
         self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
 
     @patch('requests.Session', autospec=True)
-    def test_cutout_create_success(self, mock_session):
+    def test_create_cutout_success(self, mock_session):
         resolution = 0
         x_range = [20, 40]
         y_range = [50, 70]
@@ -43,12 +43,12 @@ class TestVolume_v0_7(unittest.TestCase):
         mock_session.send.return_value = fake_response
         send_opts = {}
 
-        self.vol.cutout_create(
+        self.vol.create_cutout(
             self.chan, resolution, x_range, y_range, z_range, time_range, data,
             url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_cutout_create_failure(self, mock_session):
+    def test_create_cutout_failure(self, mock_session):
         resolution = 0
         x_range = [20, 40]
         y_range = [50, 70]
@@ -65,12 +65,12 @@ class TestVolume_v0_7(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.vol.cutout_create(
+            self.vol.create_cutout(
                 self.chan, resolution, x_range, y_range, z_range, time_range, data,
                 url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_cutout_get_success(self, mock_session):
+    def test_get_cutout_success(self, mock_session):
         resolution = 0
         x_range = [20, 40]
         y_range = [50, 70]
@@ -91,14 +91,14 @@ class TestVolume_v0_7(unittest.TestCase):
         mock_session.send.return_value = fake_response
         send_opts = {}
 
-        actual = self.vol.cutout_get(
+        actual = self.vol.get_cutout(
             self.chan, resolution, x_range, y_range, z_range, time_range,
             url_prefix, auth, mock_session, send_opts)
 
         numpy.testing.assert_array_equal(data, actual)
 
     @patch('requests.Session', autospec=True)
-    def test_cutout_get_failure(self, mock_session):
+    def test_get_cutout_failure(self, mock_session):
         resolution = 0
         x_range = [20, 40]
         y_range = [50, 70]
@@ -116,6 +116,6 @@ class TestVolume_v0_7(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            actual = self.vol.cutout_get(
+            actual = self.vol.get_cutout(
                 self.chan, resolution, x_range, y_range, z_range, time_range,
                 url_prefix, auth, mock_session, send_opts)

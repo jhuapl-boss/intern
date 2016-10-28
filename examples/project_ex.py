@@ -16,7 +16,7 @@
 This example shows how to work with the Boss' data model.  The Remote
 class methods that being with 'project_' operate on the data model. These
 methods are:
-    project_list()
+    list_project()
     project_create()
     project_get()
     project_update()
@@ -82,6 +82,6 @@ print('beta channel data type: {}'.format(betaChanUpdated.datatype))
 # delete the beta channel.
 rmt.project_delete(betaChan)
 
-chan_list = rmt.project_list(channels)
+chan_list = rmt.list_project(channels)
 for chan in chan_list:
     print(chan['name'])

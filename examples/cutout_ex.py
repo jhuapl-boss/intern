@@ -41,23 +41,23 @@ data = numpy.random.randint(0, 3000, (5, 4, 8))
 data = data.astype(numpy.uint16)
 
 # Upload the cutout to the channel.
-rmt.cutout_create(chan_actual, 0, x_rng, y_rng, z_rng, data)
+rmt.create_cutout(chan_actual, 0, x_rng, y_rng, z_rng, data)
 
 # Verify that the cutout uploaded correctly.
-cutout_data = rmt.cutout_get(chan_actual, 0, x_rng, y_rng, z_rng)
+cutout_data = rmt.get_cutout(chan_actual, 0, x_rng, y_rng, z_rng)
 numpy.testing.assert_array_equal(data, cutout_data)
 
 # Get only a small piece of the cutout.
-small_cutout_data = rmt.cutout_get(chan_actual, 0, '0:1', '0:1', '0:5')
+small_cutout_data = rmt.get_cutout(chan_actual, 0, '0:1', '0:1', '0:5')
 numpy.testing.assert_array_equal(data[0:5, 0:1, 0:1], small_cutout_data)
 
 # For times series data, the matrix is in t, Z, Y, X order.
 time_rng = '0:3'
 time_data = numpy.random.randint(0, 3000, (3, 5, 4, 8), numpy.uint16)
 
-rmt.cutout_create(chan_actual, 0, x_rng, y_rng, z_rng, time_data, time_rng)
+rmt.create_cutout(chan_actual, 0, x_rng, y_rng, z_rng, time_data, time_rng)
 
-time_cutout_data = rmt.cutout_get(chan_actual, 0, x_rng, y_rng, z_rng, time_rng)
+time_cutout_data = rmt.get_cutout(chan_actual, 0, x_rng, y_rng, z_rng, time_rng)
 numpy.testing.assert_array_equal(time_data, time_cutout_data)
 
 # Clean up.

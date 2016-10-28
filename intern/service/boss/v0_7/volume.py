@@ -40,7 +40,7 @@ class VolumeService_0_7(BaseVersion):
 
         return bit_width
 
-    def cutout_create(
+    def create_cutout(
         self, resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
         url_prefix, auth, session, send_opts):
         """Upload a cutout to the Boss data store.
@@ -89,7 +89,7 @@ class VolumeService_0_7(BaseVersion):
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
 
-    def cutout_get(
+    def get_cutout(
         self, resource, resolution, x_range, y_range, z_range, time_range,
         url_prefix, auth, session, send_opts):
         """Upload a cutout to the Boss data store.
