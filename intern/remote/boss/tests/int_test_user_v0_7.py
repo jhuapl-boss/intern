@@ -70,6 +70,16 @@ class ProjectUserTest_v0_7(unittest.TestCase):
             self.user, self.first_name, self.last_name, self.email,
             self.password)
 
+    def test_add_user_already_exists(self):
+        self.rmt.user_add(
+            self.user, self.first_name, self.last_name, self.email,
+            self.password)
+
+        with self.assertRaises(HTTPError):
+            self.rmt.user_add(
+                self.user, self.first_name, self.last_name, self.email,
+                self.password)
+
     def test_delete(self):
         self.rmt.user_add(
             self.user, self.first_name, self.last_name, self.email,
