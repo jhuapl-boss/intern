@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Services used by the ndio.remote module.
+"""Services used by the intern.remote module.
 
 Author:
     Tim Gion
 """
-from ndio.service.service import Service
+from intern.service.service import Service

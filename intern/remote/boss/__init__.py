@@ -13,10 +13,10 @@
 # limitations under the License.
 
 """
-Contains implementation of ndio.remote.Remote for the Boss API.
+Contains implementation of intern.remote.Remote for the Boss API.
 
 Author:
     Tim Gion
 """
 
-from ndio.remote.boss.remote import BossRemote, LATEST_VERSION
+from intern.remote.boss.remote import BossRemote, LATEST_VERSION

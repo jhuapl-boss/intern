@@ -11,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
-from ndio.remote.boss import BossRemote
+
+from intern.remote.boss import BossRemote
 import random
 
 import requests
@@ -67,12 +67,12 @@ class ProjectUserTest_v0_7(unittest.TestCase):
 
     def test_add(self):
         self.rmt.user_add(
-            self.user, self.first_name, self.last_name, self.email, 
+            self.user, self.first_name, self.last_name, self.email,
             self.password)
 
     def test_delete(self):
         self.rmt.user_add(
-            self.user, self.first_name, self.last_name, self.email, 
+            self.user, self.first_name, self.last_name, self.email,
             self.password)
         self.rmt.user_delete(self.user)
 
@@ -82,7 +82,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
 
     def test_get(self):
         self.rmt.user_add(
-            self.user, self.first_name, self.last_name, self.email, 
+            self.user, self.first_name, self.last_name, self.email,
             self.password)
 
         expected = {
@@ -93,7 +93,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
 
         actual = self.rmt.user_get(self.user)
 
-        # get also returns generated values that we cannot test for such 
+        # get also returns generated values that we cannot test for such
         # as creation time.
         self.assertTrue(len(expected.items()) <= len(actual.items()))
         self.assertEqual(expected["email"], actual["email"])

@@ -7,12 +7,12 @@ version = "1.0.0"
 
 def check_version():
     """
-    Tells you if you have an old version of ndio.
+    Tells you if you have an old version of intern.
     """
     import requests
-    r = requests.get('https://pypi.python.org/pypi/ndio/json').json()
+    r = requests.get('https://pypi.python.org/pypi/intern/json').json()
     r = r['info']['version']
     if r != version:
-        print("A newer version of ndio is available. " +
-              "'pip install -U ndio' to update.")
+        print("A newer version of intern is available. " +
+              "'pip install -U intern' to update.")
     return r

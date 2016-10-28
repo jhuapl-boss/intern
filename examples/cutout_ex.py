@@ -1,5 +1,5 @@
-﻿from ndio.remote.boss import BossRemote, LATEST_VERSION
-from ndio.resource.boss.resource import *
+﻿from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.resource.boss.resource import *
 import sys
 import numpy
 from requests import HTTPError

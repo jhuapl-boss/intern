@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import six
-from ndio.service.boss.v0_7.project import ProjectService_0_7
-from ndio.resource.boss.resource import *
+from intern.service.boss.v0_7.project import ProjectService_0_7
+from intern.resource.boss.resource import *
 from requests import PreparedRequest, Response, Session, HTTPError
 import unittest
 from mock import patch
@@ -106,7 +106,7 @@ class TestUser(unittest.TestCase):
         pw = 'password'
 
         self.prj.user_add(
-            user, first, last, email, pw, 
+            user, first, last, email, pw,
             url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
@@ -128,7 +128,7 @@ class TestUser(unittest.TestCase):
 
         with self.assertRaises(HTTPError):
             self.prj.user_add(
-                user, first, last, email, pw, 
+                user, first, last, email, pw,
                 url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
@@ -149,4 +149,3 @@ class TestUser(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

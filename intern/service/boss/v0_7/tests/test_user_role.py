@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import six
-from ndio.service.boss.v0_7.project import ProjectService_0_7
-from ndio.resource.boss.resource import *
+from intern.service.boss.v0_7.project import ProjectService_0_7
+from intern.resource.boss.resource import *
 from requests import PreparedRequest, Response, HTTPError
 import unittest
 from mock import patch
@@ -116,4 +116,3 @@ class TestUserRole(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

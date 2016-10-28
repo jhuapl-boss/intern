@@ -22,13 +22,13 @@ methods are:
     metadata_update()
     metadata_delete()
 
-All of these methods take a ndio.ndresource.boss.resource.Resource object, as
+All of these methods take a intern.resource.boss.resource.Resource object, as
 a minimum.  The resource object identifies which data model object's metadata
 will be manipulated.
 """
 
-from ndio.remote.boss import BossRemote, LATEST_VERSION
-from ndio.resource.boss.resource import *
+from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.resource.boss.resource import *
 
 API_VER = LATEST_VERSION
 

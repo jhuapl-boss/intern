@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.remote import Remote
-from ndio.remote.boss import BossRemote
+from intern.remote import Remote
+from intern.remote.boss import BossRemote
 import unittest
 from mock import patch
 

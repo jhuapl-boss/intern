@@ -17,7 +17,7 @@ from abc import ABCMeta, abstractmethod
 
 @six.add_metaclass(ABCMeta)
 class Resource(object):
-    """Base class used as a parameter by ndio.service.Service object methods.
+    """Base class used as a parameter by intern.service.Service object methods.
     """
 
     @abstractmethod

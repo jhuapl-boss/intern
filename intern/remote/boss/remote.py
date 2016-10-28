@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from ndio.remote import Remote
-from ndio.resource.boss.resource import *
-from ndio.service.boss.project import ProjectService
-from ndio.service.boss.metadata import MetadataService
-from ndio.service.boss.volume import VolumeService
+from intern.remote import Remote
+from intern.resource.boss.resource import *
+from intern.service.boss.project import ProjectService
+from intern.service.boss.metadata import MetadataService
+from intern.service.boss.volume import VolumeService
 
 
 CONFIG_PROJECT_SECTION = 'Project Service'
@@ -41,7 +41,7 @@ class BossRemote(Remote):
     def __init__(self, cfg_file_or_dict=None, version=None):
         """Constructor.
 
-        If not config arguments are passed in, ~/.ndio/ndio.cfg is read by 
+        If not config arguments are passed in, ~/.intern/intern.cfg is read by
         default.  Config data is in INI format.  If both cfg_file and cfg_str
         are passed in, the value in cfg_str is used.
 
@@ -238,7 +238,7 @@ class BossRemote(Remote):
 
         Args:
             grp_name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
 
         Returns:
             (list): List of permissions.
@@ -254,7 +254,7 @@ class BossRemote(Remote):
 
         Args:
             grp_name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to add to the given resource.
 
         Raises:
@@ -268,7 +268,7 @@ class BossRemote(Remote):
 
         Args:
             grp_name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
             permissions (list): List of permissions to remove from the given resource.
 
         Raises:
@@ -389,7 +389,7 @@ class BossRemote(Remote):
             list_coordinate_frames()
 
         Args:
-            resource (ndio.resource.boss.Resource): resource.name may be an empty string.
+            resource (intern.resource.boss.BossResource): resource.name may be an empty string.
 
         Returns:
             (list)
@@ -420,7 +420,7 @@ class BossRemote(Remote):
         return self._list_resource(exp)
 
     def list_channels(self, collection_name, experiment_name):
-        """List all channels belonging to the named experiment that is part 
+        """List all channels belonging to the named experiment that is part
         of the named collection.
 
         Args:
@@ -432,7 +432,7 @@ class BossRemote(Remote):
         """
         dont_care = 'image'
         chan = ChannelResource(
-            name='', collection_name=collection_name, 
+            name='', collection_name=collection_name,
             experiment_name=experiment_name, type=dont_care)
         return self._list_resource(chan)
 
@@ -449,10 +449,10 @@ class BossRemote(Remote):
         """Create the entity described by the given resource.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (intern.resource.boss.BossResource)
 
         Returns:
-            (ndio.ndresource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create(resource)
@@ -461,10 +461,10 @@ class BossRemote(Remote):
         """Get attributes of the data model object named by the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): resource.name as well as any parents must be identified to succeed.
+            resource (intern.resource.boss.BossResource): resource.name as well as any parents must be identified to succeed.
 
         Returns:
-            (ndio.resource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get(resource)
@@ -474,10 +474,10 @@ class BossRemote(Remote):
 
         Args:
             resource_name (string): Current name of the resource (in case the resource is getting its name changed).
-            resource (ndio.resource.boss.Resource): New attributes for the resource.
+            resource (intern.resource.boss.BossResource): New attributes for the resource.
 
         Returns:
-            (ndio.resource.boss.Resource): Returns updated resource of given type on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns updated resource of given type on success.  Returns None on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.update(resource_name, resource)
@@ -486,7 +486,7 @@ class BossRemote(Remote):
         """Deletes the entity described by the given resource.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (intern.resource.boss.BossResource)
 
         Raises:
             requests.HTTPError on a failure.
@@ -498,7 +498,7 @@ class BossRemote(Remote):
         """List all keys associated with the given resource.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (intern.resource.boss.BossResource)
 
         Returns:
             (list)
@@ -515,7 +515,7 @@ class BossRemote(Remote):
         Will attempt to add all key-value pairs even if some fail.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (intern.resource.boss.BossResource)
             keys_vals (dictionary): Collection of key-value pairs to assign to given resource.
 
         Raises:
@@ -528,7 +528,7 @@ class BossRemote(Remote):
         """Gets the values for given keys associated with the given resource.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (intern.resource.boss.BossResource)
             keys (list)
 
         Returns:
@@ -547,7 +547,7 @@ class BossRemote(Remote):
         Keys must already exist.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (intern.resource.boss.BossResource)
             keys_vals (dictionary): Collection of key-value pairs to update on the given resource.
 
         Raises:
@@ -562,7 +562,7 @@ class BossRemote(Remote):
         Will attempt to delete all key-value pairs even if some fail.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (intern.resource.boss.BossResource)
             keys (list)
 
         Raises:

@@ -23,8 +23,8 @@ and resources.  The three combined determine what a user may do with a
 particular resource.
 """
 
-from ndio.remote.boss import BossRemote, LATEST_VERSION
-from ndio.resource.boss.resource import *
+from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.resource.boss.resource import *
 from requests import HTTPError
 
 API_VER = LATEST_VERSION

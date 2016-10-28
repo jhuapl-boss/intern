@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss import BossService
-from ndio.service.boss.v0_7.metadata import MetadataService_0_7
+from intern.service.boss import BossService
+from intern.service.boss.v0_7.metadata import MetadataService_0_7
 
 
 class MetadataService(BossService):
@@ -41,7 +41,7 @@ class MetadataService(BossService):
         """List metadata keys associated with the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): List keys associated with this resource.
+            resource (intern.resource.boss.BossResource): List keys associated with this resource.
 
         Returns:
             (list): List of key names.
@@ -59,7 +59,7 @@ class MetadataService(BossService):
         Will attempt to create all key-value pairs even if a failure is encountered.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): List keys associated with this resource.
+            resource (intern.resource.boss.BossResource): List keys associated with this resource.
             keys_vals (dictionary): The metadata to associate with the resource.
 
         Raises:
@@ -73,7 +73,7 @@ class MetadataService(BossService):
         """Get metadata key-value pairs associated with the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Get key-value pairs associated with this resource.
+            resource (intern.resource.boss.BossResource): Get key-value pairs associated with this resource.
             keys (list): Keys to retrieve.
 
         Returns:
@@ -89,18 +89,18 @@ class MetadataService(BossService):
     def update(self, resource, keys_vals):
         """Update the given key-value pairs for the given resource.
 
-        Keys must already exist before they may be updated.  Will attempt to 
-        update all key-value pairs even if a failure is encountered.  
+        Keys must already exist before they may be updated.  Will attempt to
+        update all key-value pairs even if a failure is encountered.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Update values associated with this resource.
+            resource (intern.resource.boss.BossResource): Update values associated with this resource.
             keys_vals (dictionary): The metadata to update for the resource.
 
         Raises:
             requests.HTTPErrorList on failure.
         """
         return self.service.update(
-            resource, keys_vals, self.url_prefix, self.auth, 
+            resource, keys_vals, self.url_prefix, self.auth,
             self.session, self.session_send_opts)
 
     def delete(self, resource, keys):
@@ -110,7 +110,7 @@ class MetadataService(BossService):
         occurs.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Delete key-value pairs associated with this resource.
+            resource (intern.resource.boss.BossResource): Delete key-value pairs associated with this resource.
             keys (list): Keys to delete.
 
         Raises:

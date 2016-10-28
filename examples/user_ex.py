@@ -17,8 +17,8 @@ This example demonstrates user management.  To run this example, you must have
 a user with either the user-manager role or the admin role.
 """
 
-from ndio.remote.boss import BossRemote, LATEST_VERSION
-from ndio.resource.boss.resource import *
+from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.resource.boss.resource import *
 from requests import HTTPError
 
 API_VER = LATEST_VERSION

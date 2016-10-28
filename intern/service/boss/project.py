@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss import BossService
-from ndio.service.boss.v0_7.project import ProjectService_0_7
+from intern.service.boss import BossService
+from intern.service.boss.v0_7.project import ProjectService_0_7
 
 #LATEST_VERSION='v0.7'
 
@@ -53,7 +53,7 @@ class ProjectService(BossService):
             requests.HTTPError on failure.
         """
         return self.service.group_get(
-            name, user_name, self.url_prefix, self.auth, self.session, 
+            name, user_name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def group_create(self, name):
@@ -66,7 +66,7 @@ class ProjectService(BossService):
             requests.HTTPError on failure.
         """
         self.service.group_create(
-            name, self.url_prefix, self.auth, self.session, 
+            name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def group_delete(self, name, user_name=None):
@@ -83,7 +83,7 @@ class ProjectService(BossService):
             requests.HTTPError on failure.
         """
         self.service.group_delete(
-            name, user_name, self.url_prefix, self.auth, self.session, 
+            name, user_name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def group_add_user(self, name, user):
@@ -100,7 +100,7 @@ class ProjectService(BossService):
             requests.HTTPError on failure.
         """
         return self.service.group_add_user(
-            name, user, self.url_prefix, self.auth, self.session, 
+            name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def permissions_get(self, grp_name, resource):
@@ -108,7 +108,7 @@ class ProjectService(BossService):
 
         Args:
             grp_name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
             version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Returns:
@@ -127,7 +127,7 @@ class ProjectService(BossService):
 
         Args:
             grp_name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
             permissions (list): List of permissions to add to the given resource.
 
         Raises:
@@ -143,7 +143,7 @@ class ProjectService(BossService):
 
         Args:
             grp_name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
             permissions (list): List of permissions to remove from the given resource.
             version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
@@ -261,7 +261,7 @@ class ProjectService(BossService):
         """List all resources of the same type as the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): List resources of the same type as this resource.
+            resource (intern.resource.boss.BossResource): List resources of the same type as this resource.
 
         Returns:
             (list): List of resources.
@@ -277,10 +277,10 @@ class ProjectService(BossService):
         """Create the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Create a data model object with attributes matching those of the resource.
+            resource (intern.resource.boss.BossResource): Create a data model object with attributes matching those of the resource.
 
         Returns:
-            (ndio.ndresource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
         """
         return self.service.create(
             resource, self.url_prefix, self.auth, self.session,
@@ -290,10 +290,10 @@ class ProjectService(BossService):
         """Get attributes of the data model object named by the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): resource.name as well as any parents must be identified to succeed.
+            resource (intern.resource.boss.BossResource): resource.name as well as any parents must be identified to succeed.
 
         Returns:
-            (ndio.resource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
         """
         return self.service.get(
             resource, self.url_prefix, self.auth, self.session,
@@ -304,20 +304,20 @@ class ProjectService(BossService):
 
         Args:
             resource_name (string): Current name of the resource (in case the resource is getting its name changed).
-            resource (ndio.resource.boss.Resource): New attributes for the resource.
+            resource (intern.resource.boss.BossResource): New attributes for the resource.
 
         Returns:
-            (ndio.resource.boss.Resource): Returns updated resource of given type on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns updated resource of given type on success.  Returns None on failure.
         """
         return self.service.update(
-            resource_name, resource, self.url_prefix, self.auth, 
+            resource_name, resource, self.url_prefix, self.auth,
             self.session, self.session_send_opts)
 
     def delete(self, resource):
         """Deletes the entity described by the given resource.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (intern.resource.boss.BossResource)
         """
         self.service.delete(
             resource, self.url_prefix, self.auth, self.session,

@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.remote.boss import BossRemote
+from intern.remote.boss import BossRemote
 import tempfile
 import os
 
 
-from ndio.remote.boss.remote import (
+from intern.remote.boss.remote import (
     CONFIG_PROJECT_SECTION, CONFIG_PROTOCOL, CONFIG_HOST, CONFIG_TOKEN,
     CONFIG_METADATA_SECTION, CONFIG_VOLUME_SECTION)
 import unittest

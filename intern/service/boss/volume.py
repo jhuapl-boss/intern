@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss import BossService
-from ndio.service.boss.v0_7.volume import VolumeService_0_7
+from intern.service.boss import BossService
+from intern.service.boss.v0_7.volume import VolumeService_0_7
 
 class VolumeService(BossService):
     """VolumeService routes calls to the appropriate API version.
@@ -40,7 +40,7 @@ class VolumeService(BossService):
         """Upload a cutout to the volume service.
 
         Args:
-            resource (ndio.ndresource.resource.Resource): Resource compatible with cutout operations.
+            resource (intern.resource.Resource): Resource compatible with cutout operations.
             resolution (int): 0 indicates native resolution.
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
@@ -57,7 +57,7 @@ class VolumeService(BossService):
         """Get a cutout from the volume service.
 
         Args:
-            resource (ndio.ndresource.boss.resource.ChannelLayerBaseResource): Channel or layer resource.
+            resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
             resolution (int): 0 indicates native resolution.
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.

@@ -16,7 +16,7 @@ from abc import ABCMeta
 from six.moves import configparser
 import os
 
-CONFIG_FILE ='~/.ndio/ndio.cfg'
+CONFIG_FILE ='~/.intern/intern.cfg'
 
 
 @six.add_metaclass(ABCMeta)
@@ -24,10 +24,10 @@ class Remote(object):
     """Base class for communicating with remote data stores.
 
     Attributes:
-        _volume (ndio.service.Service): Class that communicates with the volume service.
-        _metadata (ndio.service.Service): Class that communicates with the metadata service.
-        _project (ndio.service.Service): Class that communicates with the project service.
-        _object (ndio.service.Service): Class that communicates with the object service.
+        _volume (intern.service.Service): Class that communicates with the volume service.
+        _metadata (intern.service.Service): Class that communicates with the metadata service.
+        _project (intern.service.Service): Class that communicates with the project service.
+        _object (intern.service.Service): Class that communicates with the object service.
     """
 
     def __init__(self, cfg_file_or_dict=None):
@@ -118,7 +118,7 @@ class Remote(object):
         """Get a cutout from the volume service.
 
         Args:
-            resource (ndio.ndresource.resource.Resource): Resource compatible with cutout operations.
+            resource (intern.resource.Resource): Resource compatible with cutout operations.
             resolution (int): 0 indicates native resolution.
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
@@ -142,7 +142,7 @@ class Remote(object):
         """Upload a cutout to the volume service.
 
         Args:
-            resource (ndio.ndresource.resource.Resource): Resource compatible with cutout operations.
+            resource (intern.resource.Resource): Resource compatible with cutout operations.
             resolution (int): 0 indicates native resolution.
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import unittest
-from ndio.resource.boss.resource import CollectionResource
+from intern.resource.boss.resource import CollectionResource
 
 class TestCollectionResource(unittest.TestCase):
     def setUp(self):

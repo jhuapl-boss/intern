@@ -13,9 +13,9 @@
 # limitations under the License.
 
 import unittest
-from ndio.service.boss.baseversion import BaseVersion
-from ndio.resource.boss.resource import CollectionResource
-from ndio.resource.boss.resource import ChannelResource
+from intern.service.boss.baseversion import BaseVersion
+from intern.resource.boss.resource import CollectionResource
+from intern.resource.boss.resource import ChannelResource
 import numpy
 
 VER = 'v0.7'

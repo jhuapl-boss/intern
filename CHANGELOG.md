@@ -1,6 +1,23 @@
 # Change Log
 ____________
 
+## Sprint 7
+
+**Rebranded as intern.**
+
+## General changes:
+* Made Python 2 compatible.
+* Version no longer controlled by resources.  Now passed into BossRemote constructor.
+* Imports simplified.
+* Older Boss API support removed.
+* Config dictionary can be used instead of a config file.
+* Cutout range args now passed as a list of ints instead of a string.
+* Separate list methods for each resource type provided for convenience.
+* JHU ndio dependencies removed from requirements.txt.
+
+## v0.7 changes:
+* User management now done through entirely through SSO (Keycloak) server.
+
 ## Sprint 4
 ___________
 
@@ -26,10 +43,10 @@ ___________
 * `ndio.remote.boss.remote.Remote` method changes:
  * Exceptions are raised when any non-2xx response received from the Boss.
  * Methods that previously returned True to indicate success no longer return a value.  Instead, an exception indicates failure (see above).
- * `project_create()` returns an `ndio.ndresource.boss.resource.Resource` instead of a dictionary.
- * `project_get()` returns an `ndio.ndresource.boss.resource.Resource` instead of a dictionary.
- * `project_update()` returns an `ndio.ndresource.boss.resource.Resource` instead of a bool.
-* `ndio.ndresource.boss.resource.ChannelResource` no longer allows the uint64 data type.
+ * `project_create()` returns an `ndio.resource.boss.resource.Resource` instead of a dictionary.
+ * `project_get()` returns an `ndio.resource.boss.resource.Resource` instead of a dictionary.
+ * `project_update()` returns an `ndio.resource.boss.resource.Resource` instead of a bool.
+* `ndio.resource.boss.resource.ChannelResource` no longer allows the uint64 data type.
 
 ___________
 

@@ -13,7 +13,7 @@
 # limitations under the License.
 import six
 from abc import ABCMeta, abstractmethod
-from ndio.resource.boss.resource import CoordinateFrameResource
+from intern.resource.boss.resource import CoordinateFrameResource
 from requests import Request
 
 
@@ -51,7 +51,7 @@ class BaseVersion(object):
 
         if int_list[0] > int_list[1]:
             raise RuntimeError('Invalid range: int_list[0] > int_list[1].')
-        
+
         return '{}:{}'.format(int_list[0], int_list[1])
 
     def get_headers(self, content_type, token):
@@ -166,7 +166,7 @@ class BaseVersion(object):
         Use for the project service or listing keys via the metadata service.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
             method (string): HTTP verb such as 'GET'.
             content (string): HTTP Content-Type such as 'application/json'.
             url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
@@ -207,7 +207,7 @@ class BaseVersion(object):
         get_request() method.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
             method (string): HTTP verb such as 'GET'.
             content (string): HTTP Content-Type such as 'application/json'.
             url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
@@ -226,13 +226,13 @@ class BaseVersion(object):
         return Request(method, url, headers = headers)
 
     def get_cutout_request(
-        self, resource, method, content, url_prefix, token, 
+        self, resource, method, content, url_prefix, token,
         resolution, x_range, y_range, z_range, time_range, numpyVolume=None):
 
         """Create a request for working with cutouts (part of the Boss' volume service).
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
             method (string): HTTP verb such as 'GET'.
             content (string): HTTP Content-Type such as 'application/json'.
             url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
@@ -258,7 +258,7 @@ class BaseVersion(object):
     def get_group_request(self, method, content, url_prefix, token, name, user_name):
         """Get a request for getting group information.
 
-        If a user name is supplied, will generate a request to /group-member/ 
+        If a user name is supplied, will generate a request to /group-member/
         instead of /group/.
 
         Args:
@@ -299,7 +299,7 @@ class BaseVersion(object):
             url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
             token (string): Django Rest Framework token for auth.
             name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Resource to perform operation on.
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
             data (dict): POST body data.  Defaults to None.
 
         Returns:
@@ -370,7 +370,7 @@ class BaseVersion(object):
         return Request(method, url, headers=headers)
 
     def get_user_request(
-        self, method, content, url_prefix, token, user, first_name=None, 
+        self, method, content, url_prefix, token, user, first_name=None,
         last_name=None, email=None, password=None):
         """Generate a request for working with the /sso endpoint.
 

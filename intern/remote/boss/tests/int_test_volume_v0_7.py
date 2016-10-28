@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.remote.boss import BossRemote
-from ndio.resource.boss.resource import *
-from ndio.service.boss.httperrorlist import HTTPErrorList
+from intern.remote.boss import BossRemote
+from intern.resource.boss.resource import *
+from intern.service.boss.httperrorlist import HTTPErrorList
 import numpy
 
 import random

@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.resource.resource import Resource
+from intern.resource.resource import Resource

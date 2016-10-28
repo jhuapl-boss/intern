@@ -17,5 +17,5 @@
 Author:
     Tim Gion
 """
-from ndio.service.boss.service import BossService
-from ndio.service.boss.baseversion import BaseVersion
+from intern.service.boss.service import BossService
+from intern.service.boss.baseversion import BaseVersion

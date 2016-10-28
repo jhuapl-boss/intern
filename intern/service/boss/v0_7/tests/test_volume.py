@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss.v0_7.volume import VolumeService_0_7
-from ndio.resource.boss.resource import ChannelResource
+from intern.service.boss.v0_7.volume import VolumeService_0_7
+from intern.resource.boss.resource import ChannelResource
 import blosc
 import numpy
 from requests import HTTPError, PreparedRequest, Response, Session
@@ -81,7 +81,7 @@ class TestVolume_v0_7(unittest.TestCase):
 
         fake_prepped_req = PreparedRequest()
         fake_prepped_req.headers = {}
-        mock_session.prepare_request.return_value = fake_prepped_req 
+        mock_session.prepare_request.return_value = fake_prepped_req
 
         data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
         compressed_data = blosc.compress(data, typesize=16)
@@ -109,7 +109,7 @@ class TestVolume_v0_7(unittest.TestCase):
 
         fake_prepped_req = PreparedRequest()
         fake_prepped_req.headers = {}
-        mock_session.prepare_request.return_value = fake_prepped_req 
+        mock_session.prepare_request.return_value = fake_prepped_req
         fake_response = Response()
         fake_response.status_code = 403
         mock_session.send.return_value = fake_response

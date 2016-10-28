@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from ndio.service.boss import BaseVersion
-from ndio.service.boss.v0_7 import BOSS_API_VERSION
-from ndio.resource.boss.resource import *
+from intern.service.boss import BaseVersion
+from intern.service.boss.v0_7 import BOSS_API_VERSION
+from intern.resource.boss.resource import *
 from requests import HTTPError
 import blosc
 import numpy as np
@@ -46,7 +46,7 @@ class VolumeService_0_7(BaseVersion):
         """Upload a cutout to the Boss data store.
 
         Args:
-            resource (ndio.ndresource.resource.Resource): Resource compatible with cutout operations.
+            resource (intern.resource.resource.Resource): Resource compatible with cutout operations.
             resolution (int): 0 indicates native resolution.
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
@@ -81,7 +81,7 @@ class VolumeService_0_7(BaseVersion):
             resolution, x_range, y_range, z_range, time_range, compressed)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
-        
+
         if resp.status_code == 201:
             return
 
@@ -95,7 +95,7 @@ class VolumeService_0_7(BaseVersion):
         """Upload a cutout to the Boss data store.
 
         Args:
-            resource (ndio.ndresource.resource.Resource): Resource compatible with cutout operations.
+            resource (intern.resource.resource.Resource): Resource compatible with cutout operations.
             resolution (int): 0 indicates native resolution.
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
@@ -120,7 +120,7 @@ class VolumeService_0_7(BaseVersion):
         # Hack in Accept header for now.
         prep.headers['Accept'] = 'application/blosc'
         resp = session.send(prep, **send_opts)
-        
+
         if resp.status_code == 200:
             raw_data = blosc.decompress(resp.content)
             data_mat = np.fromstring(raw_data, dtype=resource.datatype)

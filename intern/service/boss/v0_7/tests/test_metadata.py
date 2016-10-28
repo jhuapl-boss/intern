@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.boss.v0_7.metadata import MetadataService_0_7
-from ndio.resource.boss.resource import ChannelResource
-from ndio.service.boss.httperrorlist import HTTPErrorList
+from intern.service.boss.v0_7.metadata import MetadataService_0_7
+from intern.resource.boss.resource import ChannelResource
+from intern.service.boss.httperrorlist import HTTPErrorList
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
 from mock import patch

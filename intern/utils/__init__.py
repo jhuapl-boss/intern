@@ -1,3 +1,3 @@
 """
-Utility functions common to all ndio submodules.
+Utility functions common to all intern submodules.
 """

@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import six
-from ndio.remote.boss import BossRemote
-from ndio.resource.boss.resource import *
+from intern.remote.boss import BossRemote
+from intern.resource.boss.resource import *
 
 import random
 import requests

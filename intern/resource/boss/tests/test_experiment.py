@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import unittest
-from ndio.resource.boss.resource import ExperimentResource
+from intern.resource.boss.resource import ExperimentResource
 
 class TestExperimentResource(unittest.TestCase):
     def setUp(self):
@@ -28,7 +28,7 @@ class TestExperimentResource(unittest.TestCase):
 
     def test_get_list_route(self):
         self.assertEqual(
-            '{}/experiment/'.format(self.er.coll_name), 
+            '{}/experiment/'.format(self.er.coll_name),
             self.er.get_list_route())
 
     def test_hierarchy_method_setter(self):

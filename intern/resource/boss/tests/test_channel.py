@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import unittest
-from ndio.resource.boss.resource import ChannelResource
+from intern.resource.boss.resource import ChannelResource
 
 class TestChannelResource(unittest.TestCase):
     def setUp(self):
@@ -46,12 +46,12 @@ class TestChannelResource(unittest.TestCase):
 
     def test_get_route(self):
         self.assertEqual('{}/experiment/{}/channel/{}'.format(
-            self.chan.coll_name, self.chan.exp_name, self.chan.name), 
+            self.chan.coll_name, self.chan.exp_name, self.chan.name),
             self.chan.get_route())
 
     def test_get_list_route(self):
         self.assertEqual(
-            '{}/experiment/{}/channel/'.format(self.chan.coll_name, self.chan.exp_name), 
+            '{}/experiment/{}/channel/'.format(self.chan.coll_name, self.chan.exp_name),
             self.chan.get_list_route())
 
     def test_validate_datatype_uint8(self):

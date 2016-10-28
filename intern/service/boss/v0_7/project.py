@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from ndio.service.boss import BaseVersion
-from ndio.service.boss.v0_7 import BOSS_API_VERSION
-from ndio.resource.boss.resource import *
+from intern.service.boss import BaseVersion
+from intern.service.boss.v0_7 import BOSS_API_VERSION
+from intern.resource.boss.resource import *
 from requests import HTTPError
 import copy
 
@@ -148,7 +148,7 @@ class ProjectService_0_7(BaseVersion):
         """
         Args:
             grp_name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -180,7 +180,7 @@ class ProjectService_0_7(BaseVersion):
         """
         Args:
             grp_name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
             permissions (list): List of permissions to add to the given resource.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
@@ -206,7 +206,7 @@ class ProjectService_0_7(BaseVersion):
         """
         Args:
             grp_name (string): Name of group.
-            resource (ndio.ndresource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
             permissions (list): List of permissions to remove from the given resource.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
@@ -442,7 +442,7 @@ class ProjectService_0_7(BaseVersion):
         """List all resources of the same type as the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): List resources of the same type as this..
+            resource (intern.resource.boss.BossResource): List resources of the same type as this..
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -473,14 +473,14 @@ class ProjectService_0_7(BaseVersion):
         """Create the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Create a data model object with attributes matching those of the resource.
+            resource (intern.resource.boss.BossResource): Create a data model object with attributes matching those of the resource.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (ndio.ndresource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
 
         Raises:
             requests.HTTPError on failure.
@@ -506,14 +506,14 @@ class ProjectService_0_7(BaseVersion):
         """Get attributes of the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Create a data model object with attributes matching those of the resource.
+            resource (intern.resource.boss.BossResource): Create a data model object with attributes matching those of the resource.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (ndio.resource.boss.Resource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
 
         Raises:
             requests.HTTPError on failure.
@@ -534,14 +534,14 @@ class ProjectService_0_7(BaseVersion):
 
         Args:
             resource_name (string): Current name of the resource (in case the resource is getting its name changed).
-            resource (ndio.resource.boss.Resource): New attributes for the resource.
+            resource (intern.resource.boss.BossResource): New attributes for the resource.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (ndio.resource.boss.Resource): Returns updated resource of given type on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns updated resource of given type on success.  Returns None on failure.
 
         Raises:
             requests.HTTPError on failure.
@@ -575,7 +575,7 @@ class ProjectService_0_7(BaseVersion):
         """Deletes the entity described by the given resource.
 
         Args:
-            resource (ndio.resource.boss.Resource)
+            resource (intern.resource.boss.BossResource)
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -603,7 +603,7 @@ class ProjectService_0_7(BaseVersion):
         be updated.
 
         Args:
-            resource (ndio.ndresource.boss.resource.Resource): A sub-class
+            resource (intern.resource.boss.resource.BossResource): A sub-class
                 whose parameters will be extracted into a dictionary.
             for_update (bool): True if params will be used for an update.
 
@@ -697,11 +697,11 @@ class ProjectService_0_7(BaseVersion):
     def _create_resource_from_dict(self, resource, dict):
         """
         Args:
-            resource (ndio.resource.boss.Resource): Used to determine type of resource to create.
+            resource (intern.resource.boss.BossResource): Used to determine type of resource to create.
             dict (dictionary): JSON data returned by the Boss API.
 
         Returns:
-            (ndio.resource.boss.Resource): Instance populated with values from dict.
+            (intern.resource.boss.BossResource): Instance populated with values from dict.
 
         Raises:
             KeyError if dict missing required key.

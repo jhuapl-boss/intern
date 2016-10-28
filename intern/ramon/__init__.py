@@ -10,14 +10,14 @@ To convert from an integer to an actual RAMON type (say, if you want to create
 a new RAMON object dynamically), use:
 
 >>> AnnotationType.get_class(1)
-ndio.ramon.RAMONGeneric.RAMONGeneric
+intern.ramon.RAMONGeneric.RAMONGeneric
 
 So you can create a new RAMON object of dynamic type like this:
 
 >>> anno_type = 5
 >>> r = AnnotationType.get_class(anno_type)()
 >>> type(r)
-ndio.ramon.RAMONNeuron.RAMONNeuron
+intern.ramon.RAMONNeuron.RAMONNeuron
 
 NOTE! If you already have an HDF5 file that contains a RAMON object, it is far
 easier to use the prebuilt `from_hdf5()` function (below).
@@ -38,13 +38,13 @@ except:
 import copy
 import six
 
-from ndio.ramon.RAMONBase import *
-from ndio.ramon.RAMONGeneric import *
-from ndio.ramon.RAMONNeuron import *
-from ndio.ramon.RAMONOrganelle import *
-from ndio.ramon.RAMONSegment import *
-from ndio.ramon.RAMONSynapse import *
-from ndio.ramon.RAMONVolume import *
+from intern.ramon.RAMONBase import *
+from intern.ramon.RAMONGeneric import *
+from intern.ramon.RAMONNeuron import *
+from intern.ramon.RAMONOrganelle import *
+from intern.ramon.RAMONSegment import *
+from intern.ramon.RAMONSynapse import *
+from intern.ramon.RAMONVolume import *
 
 from .errors import *
 
@@ -110,7 +110,7 @@ class AnnotationType:
     @staticmethod
     def get_class(typ):
         """
-        From an integer, gets the ndio class of a RAMON type.
+        From an integer, gets the intern class of a RAMON type.
 
         Arguments:
             typ (int): The type as an integer
@@ -307,7 +307,7 @@ def from_hdf5(hdf5, anno_id=None):
             defaults to the first one (sorted) if none is specified.
 
     Returns:
-        ndio.RAMON object
+        intern.RAMON object
     """
     if anno_id is None:
         # The user just wants the first item we find, so... Yeah.

@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from ndio.resource.boss.resource import *
-from ndio.service.boss.httperrorlist import HTTPErrorList
+from intern.resource.boss.resource import *
+from intern.service.boss.httperrorlist import HTTPErrorList
 from requests import HTTPError
-from ndio.service.boss import BaseVersion
-from ndio.service.boss.v0_7 import BOSS_API_VERSION
+from intern.service.boss import BaseVersion
+from intern.service.boss.v0_7 import BOSS_API_VERSION
 
 
 class MetadataService_0_7(BaseVersion):
@@ -32,7 +32,7 @@ class MetadataService_0_7(BaseVersion):
         """List metadata keys associated with the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): List keys associated with this resource.
+            resource (intern.resource.boss.BossResource): List keys associated with this resource.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -64,7 +64,7 @@ class MetadataService_0_7(BaseVersion):
         Will attempt to create all key-value pairs even if a failure is encountered.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): List keys associated with this resource.
+            resource (intern.resource.boss.BossResource): List keys associated with this resource.
             keys_vals (dictionary): The metadata to associate with the resource.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
@@ -81,7 +81,7 @@ class MetadataService_0_7(BaseVersion):
             key = pair[0]
             value = pair[1]
             req = self.get_metadata_request(
-                resource, 'POST', 'application/json', url_prefix, auth, 
+                resource, 'POST', 'application/json', url_prefix, auth,
                 key, value)
             prep = session.prepare_request(req)
             resp = session.send(prep, **send_opts)
@@ -101,7 +101,7 @@ class MetadataService_0_7(BaseVersion):
         """Get metadata key-value pairs associated with the given resource.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Get key-value pairs associated with this resource.
+            resource (intern.resource.boss.BossResource): Get key-value pairs associated with this resource.
             keys (list): Keys to retrieve.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
@@ -139,11 +139,11 @@ class MetadataService_0_7(BaseVersion):
     def update(self, resource, keys_vals, url_prefix, auth, session, send_opts):
         """Update the given key-value pairs for the given resource.
 
-        Keys must already exist before they may be updated.  Will attempt to 
-        update all key-value pairs even if a failure is encountered.  
+        Keys must already exist before they may be updated.  Will attempt to
+        update all key-value pairs even if a failure is encountered.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Update values associated with this resource.
+            resource (intern.resource.boss.BossResource): Update values associated with this resource.
             keys_vals (dictionary): The metadata to update for the resource.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
@@ -160,7 +160,7 @@ class MetadataService_0_7(BaseVersion):
             key = pair[0]
             value = pair[1]
             req = self.get_metadata_request(
-                resource, 'PUT', 'application/json', url_prefix, auth, 
+                resource, 'PUT', 'application/json', url_prefix, auth,
                 key, value)
             prep = session.prepare_request(req)
             resp = session.send(prep, **send_opts)
@@ -184,7 +184,7 @@ class MetadataService_0_7(BaseVersion):
         occurs.
 
         Args:
-            resource (ndio.ndresource.boss.Resource): Delete key-value pairs associated with this resource.
+            resource (intern.resource.boss.BossResource): Delete key-value pairs associated with this resource.
             keys (list): Keys to delete.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.

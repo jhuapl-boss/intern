@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ndio.service.service import Service
+from intern.service.service import Service
 from requests import Session
 
 
 class BossService(Service):
-    """Partial implementation of ndio.service.service.Service for the Boss' services.
+    """Partial implementation of intern.service.service.Service for the Boss' services.
 
     Attributes:
         _versions (dictionary): Stores supported versions of the Boss API.
@@ -62,7 +62,7 @@ class BossService(Service):
             version (string): Requested version such as '0.4'.
 
         Returns:
-            (ndio.service.boss.Service): A service object that implements the
+            (intern.service.boss.Service): A service object that implements the
             requested version of the API.
 
         Raises:

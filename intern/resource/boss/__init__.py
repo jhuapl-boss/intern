@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""The Boss specific resource objects that are passed to ndio.service.Service methods.
+"""The Boss specific resource objects that are passed to intern.service.Service methods.
 
 Author:
     Tim Gion

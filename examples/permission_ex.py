@@ -24,8 +24,8 @@ members of the Orange University group, it might only give read permissions to
 the Blue Mouse experiment.
 """
 
-from ndio.remote.boss import BossRemote, LATEST_VERSION
-from ndio.resource.boss.resource import *
+from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.resource.boss.resource import *
 
 API_VER = LATEST_VERSION
 rmt = BossRemote(cfg_file='example.cfg', API_VER)

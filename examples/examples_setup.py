@@ -14,8 +14,8 @@
 
 # This script sets up the data model used by the example scripts.
 
-from ndio.remote.boss import BossRemote, LATEST_VERSION
-from ndio.resource.boss.resource import *
+from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.resource.boss.resource import *
 from requests import HTTPError
 import sys
 
