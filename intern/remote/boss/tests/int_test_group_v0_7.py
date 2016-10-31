@@ -53,7 +53,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         # This user will be created during at least one test.
         cls.create_user = 'group_test_johndoeski{}'.format(random.randint(0, 9999))
 
-        cls.rmt.group_create(cls.existing_grp_name)
+        cls.rmt.create_group(cls.existing_grp_name)
 
 
     @classmethod
@@ -61,15 +61,15 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().  Don't do
-        anything if an exception occurs during group_delete().  The group
+        anything if an exception occurs during delete_group().  The group
         may not have existed for a particular test.
         """
         try:
-            cls.rmt.group_delete(cls.create_grp_name)
+            cls.rmt.delete_group(cls.create_grp_name)
         except HTTPError:
             pass
         try:
-            cls.rmt.group_delete(cls.existing_grp_name)
+            cls.rmt.delete_group(cls.existing_grp_name)
         except HTTPError:
             pass
         try:
@@ -79,63 +79,63 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
 
     def tearDown(self):
         #try:
-        #    self.rmt.group_delete(self.create_grp_name)
+        #    self.rmt.delete_group(self.create_grp_name)
         #except HTTPError:
         #    pass
         pass
 
     def test_create_group(self):
-        self.rmt.group_create(self.create_grp_name)
+        self.rmt.create_group(self.create_grp_name)
 
     def test_get_group(self):
-        actual = self.rmt.group_get(self.existing_grp_name)
+        actual = self.rmt.get_group(self.existing_grp_name)
         self.assertTrue(actual)
 
     def test_get_group_doesnt_exist(self):
-        actual = self.rmt.group_get('foo')
+        actual = self.rmt.get_group('foo')
         self.assertFalse(actual)
 
     def test_delete_group(self):
-        actual = self.rmt.group_get(self.existing_grp_name)
+        actual = self.rmt.get_group(self.existing_grp_name)
         self.assertTrue(actual)
 
-        self.rmt.group_delete(self.existing_grp_name)
-        actual = self.rmt.group_get(self.existing_grp_name)
+        self.rmt.delete_group(self.existing_grp_name)
+        actual = self.rmt.get_group(self.existing_grp_name)
         self.assertFalse(actual)
 
-        self.rmt.group_create(self.existing_grp_name)
-        actual = self.rmt.group_get(self.existing_grp_name)
+        self.rmt.create_group(self.existing_grp_name)
+        actual = self.rmt.get_group(self.existing_grp_name)
         self.assertTrue(actual)
 
     def test_delete_group_doesnt_exist(self):
         with self.assertRaises(HTTPError):
-            self.rmt.group_delete('foo')
+            self.rmt.delete_group('foo')
 
-    def test_group_add_user(self):
-        self.rmt.group_add_user(self.existing_grp_name, self.user_name)
+    def test_add_user_to_group(self):
+        self.rmt.add_user_to_group(self.existing_grp_name, self.user_name)
 
-    def test_group_add_user_group_doesnt_exist(self):
+    def test_add_user_to_group_group_doesnt_exist(self):
         with self.assertRaises(HTTPError):
-            self.rmt.group_add_user('foo', self.user_name)
+            self.rmt.add_user_to_group('foo', self.user_name)
 
     def test_group_membership(self):
         # Test not in the group
-        self.assertFalse(self.rmt.group_get(self.existing_grp_name, self.user_name))
+        self.assertFalse(self.rmt.get_group(self.existing_grp_name, self.user_name))
 
         # Add to group
-        self.rmt.group_add_user(self.existing_grp_name, self.user_name)
-        self.assertTrue(self.rmt.group_get(self.existing_grp_name, self.user_name))
+        self.rmt.add_user_to_group(self.existing_grp_name, self.user_name)
+        self.assertTrue(self.rmt.get_group(self.existing_grp_name, self.user_name))
 
-    def test_group_get_user_doesnt_exist(self):
+    def test_get_group_user_doesnt_exist(self):
         with self.assertRaises(HTTPError):
-            self.rmt.group_get(self.existing_grp_name, 'foo')
+            self.rmt.get_group(self.existing_grp_name, 'foo')
 
-    def test_group_delete_user(self):
-        self.rmt.group_delete(self.existing_grp_name, self.user_name)
+    def test_delete_group_user(self):
+        self.rmt.delete_group(self.existing_grp_name, self.user_name)
 
-    def test_group_delete_user_doesnt_exist(self):
+    def test_delete_group_user_doesnt_exist(self):
         with self.assertRaises(HTTPError):
-            self.rmt.group_delete(self.existing_grp_name, 'foo')
+            self.rmt.delete_group(self.existing_grp_name, 'foo')
 
     def test_get_groups(self):
         password = 'myPassW0rd'
@@ -144,7 +144,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         token = self.get_access_token(self.create_user, password)
         self.login_user(token)
 
-        self.rmt.group_add_user(self.existing_grp_name, self.create_user)
+        self.rmt.add_user_to_group(self.existing_grp_name, self.create_user)
 
         # Name of auto-created group for user.
         users_group = self.create_user + '-primary'

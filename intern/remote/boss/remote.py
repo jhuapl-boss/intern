@@ -177,7 +177,7 @@ class BossRemote(Remote):
         self._token_volume = value
         self.volume_service.set_auth(self._token_volume)
 
-    def group_get(self, name, user_name=None):
+    def get_group(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
         Args:
@@ -188,9 +188,9 @@ class BossRemote(Remote):
             (mixed): Dictionary if getting group information or bool if a user name is supplied.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_get(name, user_name)
+        return self.project_service.get_group(name, user_name)
 
-    def group_create(self, name):
+    def create_group(self, name):
         """Create a new group.
 
         Args:
@@ -200,9 +200,9 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_create(name)
+        return self.project_service.create_group(name)
 
-    def group_delete(self, name, user_name=None):
+    def delete_group(self, name, user_name=None):
         """Delete given group or delete user from given group.
 
         If user_name is provided, the user will be removed from the group.
@@ -216,9 +216,9 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_delete(name, user_name)
+        return self.project_service.delete_group(name, user_name)
 
-    def group_add_user(self, grp_name, user):
+    def add_user_to_group(self, grp_name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -231,7 +231,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.group_add_user(grp_name, user)
+        return self.project_service.add_user_to_group(grp_name, user)
 
     def permissions_get(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.

@@ -31,7 +31,7 @@ class ProjectService_0_7(BaseVersion):
         """
         return BOSS_API_VERSION
 
-    def group_get(self, name, user_name, url_prefix, auth, session, send_opts):
+    def get_group(self, name, user_name, url_prefix, auth, session, send_opts):
         """Get information on the given group or whether or not a user is a member of the group.
 
         Args:
@@ -61,7 +61,7 @@ class ProjectService_0_7(BaseVersion):
 
         raise HTTPError(msg, request = req, response = resp)
 
-    def group_create(self, name, url_prefix, auth, session, send_opts):
+    def create_group(self, name, url_prefix, auth, session, send_opts):
         """Create a new group.
 
         Args:
@@ -86,7 +86,7 @@ class ProjectService_0_7(BaseVersion):
             name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def group_delete(self, name, user_name, url_prefix, auth, session, send_opts):
+    def delete_group(self, name, user_name, url_prefix, auth, session, send_opts):
         """Delete given group or delete user from given group.
 
         If user_name is provided, the user will be removed from the group.
@@ -115,7 +115,7 @@ class ProjectService_0_7(BaseVersion):
             name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def group_add_user(self, grp_name, user, url_prefix, auth, session, send_opts):
+    def add_user_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.

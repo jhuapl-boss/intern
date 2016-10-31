@@ -82,7 +82,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         This method is used by both tearDown() and setUpClass().
         """
         try:
-            cls.rmt.group_delete(cls.grp_name)
+            cls.rmt.delete_group(cls.grp_name)
         except HTTPError:
             pass
         try:
@@ -107,7 +107,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         self.rmt.create_project(self.coord)
         self.rmt.create_project(self.exp)
         self.rmt.create_project(self.chan)
-        self.rmt.group_create(self.grp_name)
+        self.rmt.create_group(self.grp_name)
 
     def tearDown(self):
         self.cleanup_db()

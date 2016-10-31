@@ -69,7 +69,7 @@ except HTTPError:
     rmt.create_project(rho_layer)
 
 grp_name = 'example_group'
-if not rmt.group_get(grp_name):
-    rmt.group_create(grp_name)
+if not rmt.get_group(grp_name):
+    rmt.create_group(grp_name)
 
 print('Data model for examples setup.')

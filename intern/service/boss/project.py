@@ -39,7 +39,7 @@ class ProjectService(BossService):
         }
         self.service = self.get_api_impl(version)
 
-    def group_get(self, name, user_name=None):
+    def get_group(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
         Args:
@@ -52,11 +52,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.group_get(
+        return self.service.get_group(
             name, user_name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def group_create(self, name):
+    def create_group(self, name):
         """Create a new group.
 
         Args:
@@ -65,11 +65,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        self.service.group_create(
+        self.service.create_group(
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def group_delete(self, name, user_name=None):
+    def delete_group(self, name, user_name=None):
         """Delete given group or delete user from given group.
 
         If user_name is provided, the user will be removed from the group.
@@ -82,11 +82,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        self.service.group_delete(
+        self.service.delete_group(
             name, user_name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def group_add_user(self, name, user):
+    def add_user_to_group(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -99,7 +99,7 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.group_add_user(
+        return self.service.add_user_to_group(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 

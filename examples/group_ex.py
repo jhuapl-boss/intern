@@ -48,32 +48,32 @@ user_name = 'bossadmin'
 
 print('Creating group . . .')
 try:
-    rmt.group_create(grp_name)
+    rmt.create_group(grp_name)
 except HTTPError as h:
     # Assume group already exists if an exception raised.
     print(h.response.content)
 
 print('Confirm group created . . .')
-if rmt.group_get(grp_name):
+if rmt.get_group(grp_name):
     print('Confirmed')
 
 print('Add user to group . . .')
-rmt.group_add_user(grp_name, user_name)
+rmt.add_user_to_group(grp_name, user_name)
 
 print('Confirm user is member of group . . .')
-if rmt.group_get(grp_name, user_name):
+if rmt.get_group(grp_name, user_name):
     print('Confirmed')
 else:
     print('NOT a member of the group')
 
 print('Remove user from group . . .')
-rmt.group_delete(grp_name, user_name)
+rmt.delete_group(grp_name, user_name)
 
 print('Confirm user is not a member of group . . .')
-if rmt.group_get(grp_name, user_name):
+if rmt.get_group(grp_name, user_name):
     print('Still a member of the group; removal must have failed')
 else:
     print('Confirmed')
 
 print('Deleting group . . .')
-rmt.group_delete(grp_name)
+rmt.delete_group(grp_name)
