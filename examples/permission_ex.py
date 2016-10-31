@@ -51,33 +51,33 @@ lyr = LayerResource('rho', coll.name, exp.name)
 
 print('Add all permissions to the {} collection . . .'.format(coll.name))
 all_perms = ['read', 'add', 'update', 'delete', 'assign_group', 'remove_group']
-rmt.permissions_add(grp_name, coll, all_perms)
+rmt.add_permissions(grp_name, coll, all_perms)
 
 print('Visually confirm permissions added to the {} collection . . .'.format(coll.name))
-print(rmt.permissions_get(grp_name, coll))
+print(rmt.get_permissions(grp_name, coll))
 
 print('Remove the `remove_group` permission from the {} collection . . .'.format(coll.name))
-rmt.permissions_delete(grp_name, coll, ['remove_group'])
+rmt.delete_permissions(grp_name, coll, ['remove_group'])
 
 print('Visually confirm removal of `remove_group` permission . . .')
-print(rmt.permissions_get(grp_name, coll))
+print(rmt.get_permissions(grp_name, coll))
 
 
 # Manipulate permissions at the experiment level.
 
 print('\nAdd permissions to the {} experiment . . .'.format(exp.name))
-rmt.permissions_add(grp_name, exp, ['add', 'read'])
+rmt.add_permissions(grp_name, exp, ['add', 'read'])
 
 print('Visually confirm permissions added to the {} experiment . . .'.format(exp.name))
-print(rmt.permissions_get(grp_name, exp))
+print(rmt.get_permissions(grp_name, exp))
 
 # Note that adding a new permission adds to the existing permissions assigned
 # to the group.
 print('Add `update` permission to the {} experiment . . .'.format(exp.name))
-rmt.permissions_add(grp_name, exp, ['update'])
+rmt.add_permissions(grp_name, exp, ['update'])
 
 print('Visually confirm permission added to the {} experiment . . .'.format(exp.name))
-print(rmt.permissions_get(grp_name, exp))
+print(rmt.get_permissions(grp_name, exp))
 
 
 # Channels and layers have three additional permissions:
@@ -89,13 +89,13 @@ all_vol_perms = [
     'add_volumetric_data', 'read_volumetric_data', 'delete_volumetric_data']
 
 print('\nAdd all permissions to the {} channel . . .'.format(chan.name))
-rmt.permissions_add(grp_name, chan, all_perms + all_vol_perms)
+rmt.add_permissions(grp_name, chan, all_perms + all_vol_perms)
 
 print('Visually confirm permissions added to the {} channel . . .'.format(chan.name))
-print(rmt.permissions_get(grp_name, chan))
+print(rmt.get_permissions(grp_name, chan))
 
 print('Remove all delete permissions from the channel . . .')
-rmt.permissions_delete(grp_name, chan, ['delete', 'delete_volumetric_data'])
+rmt.delete_permissions(grp_name, chan, ['delete', 'delete_volumetric_data'])
 
 print('Visually confirm permissions removed from the {} channel . . .'.format(chan.name))
-print(rmt.permissions_get(grp_name, chan))
+print(rmt.get_permissions(grp_name, chan))

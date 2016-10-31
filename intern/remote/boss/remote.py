@@ -233,7 +233,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.add_user_to_group(grp_name, user)
 
-    def permissions_get(self, grp_name, resource):
+    def get_permissions(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
 
         Args:
@@ -247,9 +247,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.permissions_get(grp_name, resource)
+        return self.project_service.get_permissions(grp_name, resource)
 
-    def permissions_add(self, grp_name, resource, permissions):
+    def add_permissions(self, grp_name, resource, permissions):
         """Add additional permissions for the group associated with the given resource.
 
         Args:
@@ -261,9 +261,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.permissions_add(grp_name, resource, permissions)
+        self.project_service.add_permissions(grp_name, resource, permissions)
 
-    def permissions_delete(self, grp_name, resource, permissions):
+    def delete_permissions(self, grp_name, resource, permissions):
         """Removes permissions from the group for the given resource.
 
         Args:
@@ -275,7 +275,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.permissions_delete(
+        self.project_service.delete_permissions(
             grp_name, resource, permissions)
 
     def get_user_roles(self, user):

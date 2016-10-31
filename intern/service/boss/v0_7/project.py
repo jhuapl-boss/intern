@@ -143,7 +143,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def permissions_get(
+    def get_permissions(
         self, grp_name, resource, url_prefix, auth, session, send_opts):
         """
         Args:
@@ -174,7 +174,7 @@ class ProjectService_0_7(BaseVersion):
         raise HTTPError(err, request = req, response = resp)
 
 
-    def permissions_add(
+    def add_permissions(
         self, grp_name, resource, permissions, url_prefix, auth, session,
         send_opts):
         """
@@ -200,7 +200,7 @@ class ProjectService_0_7(BaseVersion):
             grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def permissions_delete(
+    def delete_permissions(
         self, grp_name, resource, permissions, url_prefix, auth, session,
         send_opts):
         """

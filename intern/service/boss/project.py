@@ -103,7 +103,7 @@ class ProjectService(BossService):
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def permissions_get(self, grp_name, resource):
+    def get_permissions(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
 
         Args:
@@ -117,11 +117,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.permissions_get(
+        return self.service.get_permissions(
             grp_name, resource,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def permissions_add(
+    def add_permissions(
         self, grp_name, resource, permissions):
         """ Add additional permissions for the group associated with the given resource.
 
@@ -133,11 +133,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        self.service.permissions_add(
+        self.service.add_permissions(
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def permissions_delete(
+    def delete_permissions(
         self, grp_name, resource, permissions):
         """Removes permissions from the group for the given resource.
 
@@ -150,7 +150,7 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        self.service.permissions_delete(
+        self.service.delete_permissions(
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
