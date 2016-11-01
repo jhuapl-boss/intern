@@ -114,109 +114,109 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
         pass
 
     def test_collection(self):
-        actual_list = self.rmt.metadata_list(self.coll)
+        actual_list = self.rmt.list_metadata(self.coll)
         self.assertEqual([], actual_list)
 
         keys_vals = {'red': 'green', 'two': 'four', 'inside': 'out'}
-        self.rmt.metadata_create(self.coll, keys_vals)
+        self.rmt.create_metadata(self.coll, keys_vals)
 
-        actual = self.rmt.metadata_get(self.coll, list(keys_vals.keys()))
+        actual = self.rmt.get_metadata(self.coll, list(keys_vals.keys()))
         six.assertCountEqual(self,keys_vals, actual)
 
         with self.assertRaises(HTTPErrorList):
             # Should fail when trying create keys that already exist.
-            self.rmt.metadata_create(self.coll, keys_vals)
+            self.rmt.create_metadata(self.coll, keys_vals)
 
         update = {'two': 'six', 'inside': 'upside-down'}
-        self.rmt.metadata_update(self.coll, update)
+        self.rmt.update_metadata(self.coll, update)
 
-        actual_upd = self.rmt.metadata_get(self.coll, list(update.keys()))
+        actual_upd = self.rmt.get_metadata(self.coll, list(update.keys()))
         six.assertCountEqual(self, update, actual_upd)
 
-        actual_list_upd = self.rmt.metadata_list(self.coll)
+        actual_list_upd = self.rmt.list_metadata(self.coll)
         six.assertCountEqual(self, list(keys_vals.keys()), actual_list_upd)
 
         with self.assertRaises(HTTPErrorList):
             # Try updating a non-existent key.
-            self.rmt.metadata_update(self.coll, {'foo': 'bar'})
+            self.rmt.update_metadata(self.coll, {'foo': 'bar'})
 
-        self.rmt.metadata_delete(self.coll, list(keys_vals.keys()))
+        self.rmt.delete_metadata(self.coll, list(keys_vals.keys()))
 
         with self.assertRaises(HTTPErrorList):
             # Try getting keys that don't exist.
-            self.rmt.metadata_get(self.coll, ['foo', 'bar'])
+            self.rmt.get_metadata(self.coll, ['foo', 'bar'])
 
-        actual_list_end = self.rmt.metadata_list(self.coll)
+        actual_list_end = self.rmt.list_metadata(self.coll)
         self.assertEqual([], actual_list_end)
 
     def test_experiment(self):
-        actual_list = self.rmt.metadata_list(self.exp)
+        actual_list = self.rmt.list_metadata(self.exp)
         self.assertEqual([], actual_list)
 
         keys_vals = {'red': 'green', 'two': 'four', 'inside': 'out'}
-        self.rmt.metadata_create(self.exp, keys_vals)
-        actual = self.rmt.metadata_get(self.exp, list(keys_vals.keys()))
+        self.rmt.create_metadata(self.exp, keys_vals)
+        actual = self.rmt.get_metadata(self.exp, list(keys_vals.keys()))
         six.assertCountEqual(self, keys_vals, actual)
 
         with self.assertRaises(HTTPErrorList):
             # Should fail when trying create keys that already exist.
-            self.rmt.metadata_create(self.exp, keys_vals)
+            self.rmt.create_metadata(self.exp, keys_vals)
 
         update = { 'two': 'six', 'inside': 'upside-down' }
-        self.rmt.metadata_update(self.exp, update)
+        self.rmt.update_metadata(self.exp, update)
 
-        actual_upd = self.rmt.metadata_get(self.exp, list(update.keys()))
+        actual_upd = self.rmt.get_metadata(self.exp, list(update.keys()))
         six.assertCountEqual(self, update, actual_upd)
 
-        actual_list_upd = self.rmt.metadata_list(self.exp)
+        actual_list_upd = self.rmt.list_metadata(self.exp)
         six.assertCountEqual(self, list(keys_vals.keys()), actual_list_upd)
 
         with self.assertRaises(HTTPErrorList):
             # Try updating a non-existent key.
-            self.rmt.metadata_update(self.exp, {'foo': 'bar'})
+            self.rmt.update_metadata(self.exp, {'foo': 'bar'})
 
-        self.rmt.metadata_delete(self.exp, list(keys_vals.keys()))
+        self.rmt.delete_metadata(self.exp, list(keys_vals.keys()))
 
         with self.assertRaises(HTTPErrorList):
             # Try getting keys that don't exist.
-            self.rmt.metadata_get(self.exp, ['foo', 'bar'])
+            self.rmt.get_metadata(self.exp, ['foo', 'bar'])
 
-        actual_list_end = self.rmt.metadata_list(self.exp)
+        actual_list_end = self.rmt.list_metadata(self.exp)
         self.assertEqual([], actual_list_end)
 
     def test_channel(self):
-        actual_list = self.rmt.metadata_list(self.chan)
+        actual_list = self.rmt.list_metadata(self.chan)
         self.assertEqual([], actual_list)
 
         keys_vals = { 'red': 'green', 'two': 'four', 'inside': 'out'}
-        self.rmt.metadata_create(self.chan, keys_vals)
-        actual = self.rmt.metadata_get(self.chan, list(keys_vals.keys()))
+        self.rmt.create_metadata(self.chan, keys_vals)
+        actual = self.rmt.get_metadata(self.chan, list(keys_vals.keys()))
         six.assertCountEqual(self, keys_vals, actual)
 
         with self.assertRaises(HTTPErrorList):
             # Should fail when trying create keys that already exist.
-            self.rmt.metadata_create(self.chan, keys_vals)
+            self.rmt.create_metadata(self.chan, keys_vals)
 
         update = { 'two': 'six', 'inside': 'upside-down' }
-        self.rmt.metadata_update(self.chan, update)
+        self.rmt.update_metadata(self.chan, update)
 
-        actual_upd = self.rmt.metadata_get(self.chan, list(update.keys()))
+        actual_upd = self.rmt.get_metadata(self.chan, list(update.keys()))
         six.assertCountEqual(self,update, actual_upd)
 
-        actual_list_upd = self.rmt.metadata_list(self.chan)
+        actual_list_upd = self.rmt.list_metadata(self.chan)
         six.assertCountEqual(self,keys_vals, actual_list_upd)
 
         with self.assertRaises(HTTPErrorList):
             # Try updating a non-existent key.
-            self.rmt.metadata_update(self.chan, {'foo': 'bar'})
+            self.rmt.update_metadata(self.chan, {'foo': 'bar'})
 
-        self.rmt.metadata_delete(self.chan, list(keys_vals.keys()))
+        self.rmt.delete_metadata(self.chan, list(keys_vals.keys()))
 
         with self.assertRaises(HTTPErrorList):
             # Try getting keys that don't exist.
-            self.rmt.metadata_get(self.chan, ['foo', 'bar'])
+            self.rmt.get_metadata(self.chan, ['foo', 'bar'])
 
-        actual_list_end = self.rmt.metadata_list(self.chan)
+        actual_list_end = self.rmt.list_metadata(self.chan)
         self.assertEqual([], actual_list_end)
 
 

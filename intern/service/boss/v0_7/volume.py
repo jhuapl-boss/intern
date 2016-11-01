@@ -100,7 +100,7 @@ class VolumeService_0_7(BaseVersion):
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            time_range ([list[int]]|None): time range such as [30, 40] which means t>=30 and t<40.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
