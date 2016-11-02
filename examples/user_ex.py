@@ -22,8 +22,8 @@ from intern.resource.boss.resource import *
 from requests import HTTPError
 
 API_VER = LATEST_VERSION
-rmt = BossRemote(cfg_file='example.cfg', API_VER)
-#rmt = BossRemote(cfg_file='test.cfg', API_VER)
+#rmt = BossRemote('example.cfg', API_VER)
+rmt = BossRemote('test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -37,11 +37,15 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 user = 'example_user'
 
 print('Creating user . . .')
-rmt.add_user(user, 'John', 'Doe', 'jd@me.com', 'secure_password')
+rmt.add_user(user, 'John', 'Doe', 'jd@example.com', 'secure_password')
 
 print('\nGet the user just created . . .')
 user_data = rmt.get_user(user)
 print(user_data)
+
+#############################################################################
+# The user needs to login before role and group operations can be performed.
+#############################################################################
 
 print('\nMake the user a resource manager . . .')
 rmt.add_user_role(user, 'resource-manager')

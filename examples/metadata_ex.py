@@ -32,8 +32,8 @@ from intern.resource.boss.resource import *
 
 API_VER = LATEST_VERSION
 
-rmt = BossRemote(cfg_file='example.cfg', API_VER)
-#rmt = BossRemote(cfg_file='test.cfg', API_VER)
+#rmt = BossRemote('example.cfg', API_VER)
+rmt = BossRemote('test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -49,7 +49,7 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 # the objects of interest is given to the resources' constructors.
 coll = CollectionResource('gray')
 alpha_exp = ExperimentResource('alpha', 'gray', 'StdFrame')
-omega_chan = ChannelResource('omega', 'gray', 'alpha')
+omega_chan = ChannelResource('omega', 'gray', 'alpha', 'image')
 
 # Add new metadata using create_metadata().
 rmt.create_metadata(coll, { 'mark': 'two', 'ten': 'four'})
