@@ -143,7 +143,6 @@ class ExperimentResource(BossResource):
             num_hierarchy_levels (optional[int]): Defaults to 1.
             hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
             max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.
-            id (optional[int]): ID used internally by the Boss.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
@@ -243,7 +242,6 @@ class CoordinateFrameResource(BossResource):
             voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
             time_step (optional[int]): Defaults to 0.
             time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
-            id (optional[int]): ID used internally by the Boss.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
