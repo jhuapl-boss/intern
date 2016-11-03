@@ -343,22 +343,6 @@ class ProjectService(BossService):
         """
         return self.service.get_user(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
-
-    # def get_user_groups(self, user):
-    #     """Get user's group memberships.
-    #
-    #     Args:
-    #         user (string): User name.
-    #
-    #     Returns:
-    #         (dictionary): User's data encoded in a dictionary.
-    #
-    #     Raises:
-    #         requests.HTTPError on failure.
-    #     """
-    #     return self.service.get_user_groups(
-    #         user, self.url_prefix, self.auth, self.session, self.session_send_opts)
-
     def delete_user(self, user):
         """Delete the given user.
 
