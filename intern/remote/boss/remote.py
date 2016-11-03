@@ -189,9 +189,7 @@ class BossRemote(Remote):
             (list[string]): List of group names.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.list_groups(
-            filtr, self.url_prefix, self.auth, self.session,
-            self.session_send_opts)
+        return self.project_service.list_groups(filtr)
 
     def get_group(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.

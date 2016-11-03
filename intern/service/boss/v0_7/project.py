@@ -46,15 +46,19 @@ class ProjectService_0_7(BaseVersion):
         Returns:
             (list[string]): List of group names.
         """
-        raise NotImplemented
-
         req = self.get_group_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name, user_name)
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth)
+        if filtr is not None:
+            if not filtr == 'member' and not filtr == 'maintainer':
+                raise RuntimeError(
+                    'filtr must be either "member", "maintainer", or None.')
+            req.params = {'filter': filtr}
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
-            return resp.json()
+            resp_json = resp.json()
+            return resp_json['groups']
 
         msg = ('Get failed for group {}, got HTTP response: ({}) - {}'.format(
             name, resp.status_code, resp.text))

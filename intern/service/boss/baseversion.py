@@ -255,7 +255,7 @@ class BaseVersion(object):
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = numpyVolume)
 
-    def get_group_request(self, method, content, url_prefix, token, name):
+    def get_group_request(self, method, content, url_prefix, token, name=None):
         """Get a request for getting group information.
 
         Args:
@@ -263,7 +263,7 @@ class BaseVersion(object):
             content (string): HTTP Content-Type such as 'application/json'.
             url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
             token (string): Django Rest Framework token for auth.
-            name (string): Name of group.
+            name (optional[string|None]): Name of group.  Defaults to None.
 
         Returns:
             (requests.Request): A newly constructed Request object.
@@ -274,7 +274,9 @@ class BaseVersion(object):
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        url = url_prefix + '/' + self.version + '/groups/' + name + '/'
+        url = url_prefix + '/' + self.version + '/groups/'
+        if name is not None:
+            url += name + '/'
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers)
 
