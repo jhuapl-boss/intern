@@ -56,7 +56,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
         cls.coord = CoordinateFrameResource(
-            cf_name, 'Test coordinate frame.', 0, 100, 0, 50, 0, 20,
+            cf_name, 'Test coordinate frame.', 0, 1000, 0, 1000, 0, 100,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         # cls.exp.coord_frame must be set with valid id before creating.
@@ -192,7 +192,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_x_edge_of_channel(self):
-        x_rng = [10, 101]
+        x_rng = [10, 1001]
         y_rng = [5, 10]
         z_rng = [10, 19]
 
@@ -204,7 +204,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
     def test_upload_past_y_edge_of_channel(self):
         x_rng = [10, 20]
-        y_rng = [5, 51]
+        y_rng = [5, 1001]
         z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 46, 10))
@@ -216,7 +216,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
     def test_upload_past_z_edge_of_channel(self):
         x_rng = [10, 20]
         y_rng = [5, 10]
-        z_rng = [10, 21]
+        z_rng = [10, 101]
 
         data = numpy.random.randint(0, 3000, (11, 5, 10))
         data = data.astype(numpy.uint16)
@@ -283,7 +283,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_x_edge_of_channel_16bit(self):
-        x_rng = [10, 101]
+        x_rng = [10, 1001]
         y_rng = [5, 10]
         z_rng = [10, 19]
 
@@ -295,7 +295,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
     def test_upload_past_y_edge_of_channel_16bit(self):
         x_rng = [10, 20]
-        y_rng = [5, 51]
+        y_rng = [5, 1001]
         z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 46, 10))
@@ -307,7 +307,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
     def test_upload_past_z_edge_of_channel_16bit(self):
         x_rng = [10, 20]
         y_rng = [5, 10]
-        z_rng = [10, 21]
+        z_rng = [10, 101]
 
         data = numpy.random.randint(0, 3000, (11, 5, 10))
         data = data.astype(numpy.uint16)
@@ -374,7 +374,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_x_edge_of_layer(self):
-        x_rng = [10, 101]
+        x_rng = [10, 1001]
         y_rng = [5, 10]
         z_rng = [10, 19]
 
@@ -386,7 +386,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
     def test_upload_past_y_edge_of_layer(self):
         x_rng = [10, 20]
-        y_rng = [5, 51]
+        y_rng = [5, 1001]
         z_rng = [10, 19]
 
         data = numpy.random.randint(0, 3000, (9, 46, 10))
@@ -398,13 +398,26 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
     def test_upload_past_z_edge_of_layer(self):
         x_rng = [10, 20]
         y_rng = [5, 10]
-        z_rng = [10, 21]
+        z_rng = [10, 101]
 
         data = numpy.random.randint(0, 3000, (11, 5, 10))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
             self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
+
+    def test_upload_and_download_to_channel_4D(self):
+        x_rng = [600, 680]
+        y_rng = [600, 640]
+        z_rng = [50, 55]
+        t_rng = [0, 1]
+
+        data = numpy.random.randint(1, 254, (1, 5, 40, 80))
+        data = data.astype(numpy.uint8)
+
+        self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data, time_range=t_rng)
+        actual = self.rmt.get_cutout(self.chan, 0, x_rng, y_rng, z_rng, time_range=t_rng)
+        numpy.testing.assert_array_equal(data, actual)
 
 if __name__ == '__main__':
     unittest.main()
