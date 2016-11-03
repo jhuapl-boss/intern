@@ -33,8 +33,8 @@ from intern.resource.boss.resource import *
 
 API_VER = LATEST_VERSION
 
-rmt = BossRemote(cfg_file='example.cfg', API_VER)
-#rmt = BossRemote(cfg_file='test.cfg', API_VER)
+#rmt = BossRemote('example.cfg', API_VER)
+rmt = BossRemote('test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -53,30 +53,29 @@ coll_list = rmt.list_collections()
 # and alpha experiment:
 chan_list = rmt.list_channels('gray', 'alpha')
 for chan in chan_list:
-    print(chan['name'])
+    print(chan)
 
 # When creating a new resource, the corresponding resource object will need
 # the required attributes populated.
 # For example, to add a channel named beta to the alpha experiment referenced
 # in the previous example:
-betaChan = ChannelResource('beta', 'gray', 'alpha', 'test channel')
+betaChan = ChannelResource('beta', 'gray', 'alpha', 'image', 'test channel')
 newBetaChan = rmt.create_project(betaChan)
 
 # Note that the create method returns a new instance of the ChannelResource.
-# This new instance is populated with additional information, such as the id
-# used by the Boss API.  The new instance also has its `raw` attribute populated
-# with all the JSON data returned by the Boss API.
+# The new instance has its `raw` attribute populated with all the JSON data 
+# returned by the Boss API.
 
 # Display raw channel data from the Boss API:
 print(newBetaChan.raw)
 
-# We forgot, to set the channel's data type to uint16.  Let's fix that by
-# updating the channel.
-betaChan.datatype = 'uint16'
-betaChanUpdated = rmt.update_project(betaChan.name, betaChan)
+# We forgot, to indicate that this channel is related to the omega channel.
+# Let's fix that by updating the channel.
+newBetaChan.related = ['omega']
+betaChanUpdated = rmt.update_project(newBetaChan.name, newBetaChan)
 
 # Let's verify the data type was updated.
-print('beta channel data type: {}'.format(betaChanUpdated.datatype))
+print(betaChanUpdated.related)
 
 # To demonstrate the final method available for project operations, we will
 # delete the beta channel.

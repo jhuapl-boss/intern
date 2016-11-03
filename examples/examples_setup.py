@@ -20,9 +20,8 @@ from requests import HTTPError
 import sys
 
 API_VER = LATEST_VERSION
-rmt = BossRemote(cfg_file='example.cfg')
-#rmt = BossRemote(cfg_file='test.cfg')
-rmt.group_perm_api_version = API_VER
+#rmt = BossRemote('example.cfg', API_VER)
+rmt = BossRemote('test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -47,22 +46,22 @@ except HTTPError:
     coord_actual = rmt.create_project(coord)
 
 alpha_exp = ExperimentResource(
-    'alpha', 'gray', coord_actual.name, 'Alpha example experiment.',
+    'alpha', 'gray', coord_actual.name, 'Alpha example experiment.')
 try:
     rmt.get_project(alpha_exp)
 except HTTPError:
     rmt.create_project(alpha_exp)
 
 omega_chan = ChannelResource(
-    'omega', 'gray', 'alpha', 'Example channel.', datatype='uint16')
+    'omega', 'gray', 'alpha', 'image', 'Example channel.', datatype='uint16')
 try:
     omega_actual = rmt.get_project(omega_chan)
 except HTTPError:
     omega_actual = rmt.create_project(omega_chan)
 
-rho_layer = LayerResource(
-    'rho', 'gray', 'alpha', 'Example layer.', datatype='uint64',
-    channels=omega_actual.id)
+rho_layer = ChannelResource(
+    'rho', 'gray', 'alpha', 'annotation', 'Example layer.', datatype='uint64',
+    sources=[omega_actual.name])
 try:
     rmt.get_project(rho_layer)
 except HTTPError:

@@ -16,11 +16,11 @@
 This example shows how to manage metadata with the Boss API.  The Remote
 class methods that being with 'metadata_' manipulate metadata.  These
 methods are:
-    metadata_list()
-    metadata_create()
-    metadata_get()
-    metadata_update()
-    metadata_delete()
+    list_metadata()
+    create_metadata()
+    get_metadata()
+    update_metadata()
+    delete_metadata()
 
 All of these methods take a intern.resource.boss.resource.Resource object, as
 a minimum.  The resource object identifies which data model object's metadata
@@ -32,8 +32,8 @@ from intern.resource.boss.resource import *
 
 API_VER = LATEST_VERSION
 
-rmt = BossRemote(cfg_file='example.cfg', API_VER)
-#rmt = BossRemote(cfg_file='test.cfg', API_VER)
+#rmt = BossRemote('example.cfg', API_VER)
+rmt = BossRemote('test.cfg', API_VER)
 
 # Turn off SSL cert verification.  This is necessary for interacting with
 # developer instances of the Boss.
@@ -49,43 +49,43 @@ rmt.volume_service.session_send_opts = { 'verify': False }
 # the objects of interest is given to the resources' constructors.
 coll = CollectionResource('gray')
 alpha_exp = ExperimentResource('alpha', 'gray', 'StdFrame')
-omega_chan = ChannelResource('omega', 'gray', 'alpha')
+omega_chan = ChannelResource('omega', 'gray', 'alpha', 'image')
 
-# Add new metadata using metadata_create().
-rmt.metadata_create(coll, { 'mark': 'two', 'ten': 'four'})
-rmt.metadata_create(alpha_exp, { 'date': '04May2016', 'time': '13:00' })
-rmt.metadata_create(
+# Add new metadata using create_metadata().
+rmt.create_metadata(coll, { 'mark': 'two', 'ten': 'four'})
+rmt.create_metadata(alpha_exp, { 'date': '04May2016', 'time': '13:00' })
+rmt.create_metadata(
     omega_chan, { 'channel_prep': '342', 'microscope': 'sem4' })
 
-# Retrieve metadata with metadata_get().
+# Retrieve metadata with get_metadata().
 # Use a list with a single string if you only want a single value.
-mark = rmt.metadata_get(coll, ['mark'])
+mark = rmt.get_metadata(coll, ['mark'])
 print(mark['mark'])
-omega_metadata = rmt.metadata_get(omega_chan, ['channel_prep', 'microscope'])
+omega_metadata = rmt.get_metadata(omega_chan, ['channel_prep', 'microscope'])
 print('omega\'s key-values:')
 for pair in omega_metadata.items():
     print('\t{}: {}'.format(pair[0], pair[1]))
 
-# List existing metadata keys using metadata_list().
-alpha_list = rmt.metadata_list(alpha_exp)
+# List existing metadata keys using list_metadata().
+alpha_list = rmt.list_metadata(alpha_exp)
 print('alpha\'s keys:')
 for ka in alpha_list:
     print('\t{}'.format(ka))
-omega_list = rmt.metadata_list(omega_chan)
+omega_list = rmt.list_metadata(omega_chan)
 print('omega\'s keys:')
 for ko in omega_list:
     print('\t{}'.format(ko))
 
-# Update metadata using metadata_update().
-rmt.metadata_update(omega_chan, {'channel_prep': '345', 'microscope': 'sem5'})
+# Update metadata using update_metadata().
+rmt.update_metadata(omega_chan, {'channel_prep': '345', 'microscope': 'sem5'})
 
 # Confirm updated values.
-omega_metadata = rmt.metadata_get(omega_chan, ['channel_prep', 'microscope'])
+omega_metadata = rmt.get_metadata(omega_chan, ['channel_prep', 'microscope'])
 print(omega_metadata['channel_prep'])
 print(omega_metadata['microscope'])
 
-# Use metadata_delete() to remove keys and values.
-rmt.metadata_delete(alpha_exp, ['date', 'time'])
-rmt.metadata_delete(coll, ['mark', 'ten'])
-rmt.metadata_delete(
+# Use delete_metadata() to remove keys and values.
+rmt.delete_metadata(alpha_exp, ['date', 'time'])
+rmt.delete_metadata(coll, ['mark', 'ten'])
+rmt.delete_metadata(
     omega_chan, ['channel_prep', 'microscope'])
