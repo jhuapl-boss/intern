@@ -33,6 +33,8 @@ class Remote(object):
     def __init__(self, cfg_file_or_dict=None):
         """Constructor.
 
+        Loads credentials in order from user provided dictionary > user provided file > default file > environment vars
+
         Args:
             cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.
         """
@@ -70,7 +72,16 @@ class Remote(object):
                 with open(cfg_file_or_dict, 'r') as cfg_file_handle:
                     self._config = self.load_config_file(cfg_file_handle)
             else:
-                raise IOError("Configuration file not found: {}".format(cfg_file_or_dict))
+                # Provided file or default file do not exist.  Try loading from env variables
+                if "INTERN_PROTOCOL" in os.environ and "INTERN_HOST" in os.environ and "INTERN_TOKEN" in os.environ:
+                    cfg_str = "[Default]\n"
+                    cfg_str = "{}{} = {}\n".format(cfg_str, "protocol", os.environ['INTERN_PROTOCOL'])
+                    cfg_str = "{}{} = {}\n".format(cfg_str, "host", os.environ['INTERN_HOST'])
+                    cfg_str = "{}{} = {}\n".format(cfg_str, "token", os.environ['INTERN_TOKEN'])
+
+                    self._config = self.load_config_file(six.StringIO(cfg_str))
+                else:
+                    raise IOError("Configuration file not found: {}. Please provide credential file or set environment variables".format(cfg_file_or_dict))
 
     def load_config_file(self, config_handle):
         """Load config data for the Remote.

@@ -143,9 +143,8 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def get_permissions(
-        self, grp_name, resource, url_prefix, auth, session, send_opts):
-        """
+    def get_permissions(self, grp_name, resource, url_prefix, auth, session, send_opts):
+        """Method to
         Args:
             grp_name (string): Name of group.
             resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
@@ -172,7 +171,6 @@ class ProjectService_0_7(BaseVersion):
         err = ('Failed getting permissions for group {}, got HTTP response: ({}) - {}'.format(
             grp_name, resp.status_code, resp.text))
         raise HTTPError(err, request = req, response = resp)
-
 
     def add_permissions(
         self, grp_name, resource, permissions, url_prefix, auth, session,
