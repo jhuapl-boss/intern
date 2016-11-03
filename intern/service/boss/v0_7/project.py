@@ -61,47 +61,6 @@ class ProjectService_0_7(BaseVersion):
 
         raise HTTPError(msg, request = req, response = resp)
 
-    def list_group_members(self, name, url_prefix, auth, session, send_opts):
-        """Get the members of a group (does not include maintainers).
-
-        Args:
-            name (string): Name of group to query.
-            url_prefix (string): Protocol + host such as https://api.theboss.io
-            auth (string): Token to send in the request header.
-            session (requests.Session): HTTP session to use for request.
-            send_opts (dictionary): Additional arguments to pass to session.send().
-
-        Returns:
-            (list[string]): List of member names.
-        """
-        req = self.get_group_members_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name)
-
-        prep = session.prepare_request(req)
-        resp = session.send(prep, **send_opts)
-        if resp.status_code == 200:
-            resp_json = resp.json()
-            return resp_json['members']
-
-        msg = ('Failed getting members of group {}, got HTTP response: ({}) - {}'.format(
-            grp_name, resp.status_code, resp.text))
-        raise HTTPError(msg, request = req, response = resp)
-
-    def list_group_maintainers(self, name, url_prefix, auth, session, send_opts):
-        """Get the maintainers of a group.
-
-        Args:
-            name (string): Name of group to query.
-            url_prefix (string): Protocol + host such as https://api.theboss.io
-            auth (string): Token to send in the request header.
-            session (requests.Session): HTTP session to use for request.
-            send_opts (dictionary): Additional arguments to pass to session.send().
-
-        Returns:
-            (list[string]): List of member names.
-        """
-        raise NotImplemented
-
     def get_group(self, name, user_name, url_prefix, auth, session, send_opts):
         """Get information on the given group or whether or not a user is a member of the group.
 
@@ -183,6 +142,32 @@ class ProjectService_0_7(BaseVersion):
             return
 
         msg = ('Delete failed for group {}, got HTTP response: ({}) - {}'.format(
+            name, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def list_group_members(self, name, url_prefix, auth, session, send_opts):
+        """Get the members of a group (does not include maintainers).
+
+        Args:
+            name (string): Name of group to query.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        req = self.get_group_members_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            resp_json = resp.json()
+            return resp_json['members']
+
+        msg = ('Failed getting members of group {}, got HTTP response: ({}) - {}'.format(
             name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
@@ -270,6 +255,33 @@ class ProjectService_0_7(BaseVersion):
         msg = ('Failed deleting maintainer {} from group {}, got HTTP response: ({}) - {}'.format(
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
+
+    def list_group_maintainers(self, name, url_prefix, auth, session, send_opts):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list[string]): List of maintainer names.
+        """
+        req = self.get_group_maintainers_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            resp_json = resp.json()
+            return resp_json['maintainers']
+
+        msg = ('Failed getting maintainers of group {}, got HTTP response: ({}) - {}'.format(
+            name, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
 
     def get_is_group_maintainer(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Check if the given user is a maintainer of the named group.

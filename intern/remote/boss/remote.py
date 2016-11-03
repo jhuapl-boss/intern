@@ -206,30 +206,6 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.get_group(name, user_name)
 
-    def list_group_members(self, name):
-        """Get the members of a group.
-
-        Args:
-            name (string): Name of group to query.
-
-        Returns:
-            (list[string]): List of member names.
-        """
-        self.project_service.set_auth(self._token_project)
-        return self.project_service.list_group_members(name)
-
-    def list_group_maintainers(self, name):
-        """Get the maintainers of a group.
-
-        Args:
-            name (string): Name of group to query.
-
-        Returns:
-            (list[string]): List of maintainer names.
-        """
-        self.project_service.set_auth(self._token_project)
-        return self.project_service.list_group_maintainers(name)
-
     def create_group(self, name):
         """Create a new group.
 
@@ -257,6 +233,18 @@ class BossRemote(Remote):
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.delete_group(name, user_name)
+
+    def list_group_members(self, name):
+        """Get the members of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_group_members(name)
 
     def add_member_to_group(self, grp_name, user):
         """Add the given user to the named group.
@@ -303,6 +291,18 @@ class BossRemote(Remote):
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get_is_group_member(grp_name, user)
+
+    def list_group_maintainers(self, name):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of maintainer names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_group_maintainers(name)
 
     def add_maintainer_to_group(self, name, user):
         """Add the given user to the named group.

@@ -54,32 +54,6 @@ class ProjectService(BossService):
             filtr, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def list_group_members(self, name):
-        """Get the members of a group (does not include maintainers).
-
-        Args:
-            name (string): Name of group to query.
-
-        Returns:
-            (list[string]): List of member names.
-        """
-        return self.service.list_group_members(
-            name, self.url_prefix, self.auth, self.session,
-            self.session_send_opts)
-
-    def list_group_maintainers(self, name):
-        """Get the maintainers of a group.
-
-        Args:
-            name (string): Name of group to query.
-
-        Returns:
-            (list[string]): List of maintainer names.
-        """
-        return self.service.list_group_maintainers(
-            name, self.url_prefix, self.auth, self.session,
-            self.session_send_opts)
-
     def get_group(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
@@ -127,6 +101,19 @@ class ProjectService(BossService):
             name, user_name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
+    def list_group_members(self, name):
+        """Get the members of a group (does not include maintainers).
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        return self.service.list_group_members(
+            name, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
     def add_member_to_group(self, name, user):
         """Add the given user to the named group.
 
@@ -172,6 +159,19 @@ class ProjectService(BossService):
         """
         return self.service.get_is_group_member(
             grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def list_group_maintainers(self, name):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of maintainer names.
+        """
+        return self.service.list_group_maintainers(
+            name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def add_maintainer_to_group(self, name, user):
