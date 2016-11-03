@@ -39,6 +39,47 @@ class ProjectService(BossService):
         }
         self.service = self.get_api_impl(version)
 
+    def list_groups(self, filtr=None):
+        """Get the groups the logged in user is a member of.
+
+        Optionally filter by 'member' or 'maintainer'.
+
+        Args:
+            filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
+
+        Returns:
+            (list[string]): List of group names.
+        """
+        return self.service.list_groups(
+            filtr, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def list_group_members(self, name):
+        """Get the members of a group (does not include maintainers).
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        return self.service.list_group_members(
+            name, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def list_group_maintainers(self, name):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of maintainer names.
+        """
+        return self.service.list_group_maintainers(
+            name, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
     def get_group(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
@@ -86,21 +127,98 @@ class ProjectService(BossService):
             name, user_name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def add_user_to_group(self, name, user):
+    def add_member_to_group(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
 
         Args:
             name (string): Name of group.
-            user_name (string): User to add to group.
+            user (string): User to add to group.
             version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_user_to_group(
+        return self.service.add_member_to_group(
             name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def delete_member_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        return self.service.delete_member_from_group(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def get_is_group_member(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        return self.service.get_is_group_member(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def add_maintainer_to_group(self, name, user):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        return self.service.add_maintainer_to_group(
+            name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def delete_maintainer_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        return self.service.delete_maintainer_from_group(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def get_is_group_maintainer(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        return self.service.get_is_group_maintainer(
+            grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def get_permissions(self, grp_name, resource):
@@ -230,20 +348,20 @@ class ProjectService(BossService):
         return self.service.get_user(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def get_user_groups(self, user):
-        """Get user's group memberships.
-
-        Args:
-            user (string): User name.
-
-        Returns:
-            (dictionary): User's data encoded in a dictionary.
-
-        Raises:
-            requests.HTTPError on failure.
-        """
-        return self.service.get_user_groups(
-            user, self.url_prefix, self.auth, self.session, self.session_send_opts)
+    # def get_user_groups(self, user):
+    #     """Get user's group memberships.
+    #
+    #     Args:
+    #         user (string): User name.
+    #
+    #     Returns:
+    #         (dictionary): User's data encoded in a dictionary.
+    #
+    #     Raises:
+    #         requests.HTTPError on failure.
+    #     """
+    #     return self.service.get_user_groups(
+    #         user, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def delete_user(self, user):
         """Delete the given user.

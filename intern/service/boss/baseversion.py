@@ -255,11 +255,8 @@ class BaseVersion(object):
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = numpyVolume)
 
-    def get_group_request(self, method, content, url_prefix, token, name, user_name):
+    def get_group_request(self, method, content, url_prefix, token, name):
         """Get a request for getting group information.
-
-        If a user name is supplied, will generate a request to /group-member/
-        instead of /group/.
 
         Args:
             method (string): HTTP verb such as 'GET'.
@@ -267,7 +264,6 @@ class BaseVersion(object):
             url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
             token (string): Django Rest Framework token for auth.
             name (string): Name of group.
-            user_name (optional[string]): Defaults to None.  If given, will generate a group membership request.
 
         Returns:
             (requests.Request): A newly constructed Request object.
@@ -278,11 +274,61 @@ class BaseVersion(object):
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        if user_name is None:
-            url = url_prefix + '/' + self.version + '/group/' + name + '/'
-        else:
-            url = (url_prefix + '/' + self.version + '/group-member/' + name + '/' +
-                   user_name + '/')
+        url = url_prefix + '/' + self.version + '/groups/' + name + '/'
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
+
+    def get_group_members_request(
+        self, method, content, url_prefix, token, group_name, user_name=None):
+        """Get a request object for working with group membership.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            group_name (string): Name of group.
+            user_name (optional[string]): Provide a user name if not doing a list operation.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = url_prefix + '/' + self.version + '/groups/' + group_name + '/members/'
+        if user_name is not None:
+            url += user_name
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
+
+    def get_group_maintainers_request(
+        self, method, content, url_prefix, token, group_name, user_name=None):
+        """Get a request object for working with group maintainers.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            group_name (string): Name of group.
+            user_name (optional[string]): Provide a user name if not doing a list operation.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = url_prefix + '/' + self.version + '/groups/' + group_name + '/maintainers/'
+        if user_name is not None:
+            url += user_name
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers)
 
