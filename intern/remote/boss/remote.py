@@ -258,7 +258,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.delete_group(name, user_name)
 
-    def add_user_to_group(self, grp_name, user):
+    def add_member_to_group(self, grp_name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -271,7 +271,89 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_user_to_group(grp_name, user)
+        return self.project_service.add_member_to_group(grp_name, user)
+
+    def delete_member_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user_name (string): User to delete from the group.
+
+        Returns:
+            (bool): True on success.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.delete_member_from_group(grp_name, user)
+
+    def get_is_group_member(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Note that a group maintainer is not considered a member unless the
+        user is also explicitly added as a member.
+
+        Args:
+            name (string): Name of group.
+            user_name (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.get_is_group_member(grp_name, user)
+
+    def add_maintainer_to_group(self, name, user):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.add_maintainer_to_group(
+            name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def delete_maintainer_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.delete_maintainer_from_group(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def get_is_group_maintainer(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        self.project_service.set_auth(self._token_project)
+        self.project_service.set_auth(self._token_project)
+        return self.service.get_is_group_maintainer(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
 
     def get_permissions(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.

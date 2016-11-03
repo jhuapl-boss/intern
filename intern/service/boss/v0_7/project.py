@@ -74,7 +74,18 @@ class ProjectService_0_7(BaseVersion):
         Returns:
             (list[string]): List of member names.
         """
-        raise NotImplemented
+        req = self.get_group_members_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            resp_json = resp.json()
+            return resp_json['members']
+
+        msg = ('Failed getting members of group {}, got HTTP response: ({}) - {}'.format(
+            grp_name, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
 
     def list_group_maintainers(self, name, url_prefix, auth, session, send_opts):
         """Get the maintainers of a group.
@@ -135,7 +146,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, name, None)
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, name)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -175,7 +186,36 @@ class ProjectService_0_7(BaseVersion):
             name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def add_user_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+    def get_is_group_member(self, grp_name, user, url_prefix, auth, session, send_opts):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (bool): False if user not a member.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        req = self.get_group_members_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            return resp.json()
+
+        msg = ('Failed determining if user {} is member of group {}, got HTTP response: ({}) - {}'.format(
+            user, grp_name, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def add_member_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -191,15 +231,128 @@ class ProjectService_0_7(BaseVersion):
         Raises:
             requests.HTTPError on failure.
         """
-        req = self.get_group_request(
+        req = self.get_group_members_request(
             'POST', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
-        if resp.status_code == 201:
+        if resp.status_code == 204:
             return
 
         msg = ('Failed adding user {} to group {}, got HTTP response: ({}) - {}'.format(
+            user, grp_name, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def delete_member_from_group(
+        self, grp_name, user, url_prefix, auth, session, send_opts):
+        """Delete the given user from the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        req = self.get_group_members_request(
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth,
+            grp_name, user)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 204:
+            return
+
+        msg = ('Failed deleting maintainer {} from group {}, got HTTP response: ({}) - {}'.format(
+            user, grp_name, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def get_is_group_maintainer(self, grp_name, user, url_prefix, auth, session, send_opts):
+        """Check if the given user is a maintainer of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (bool): False if user not a maintainer.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        req = self.get_group_maintainers_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            return resp.json()
+
+        msg = ('Failed determining if user {} is maintainer of group {}, got HTTP response: ({}) - {}'.format(
+            user, grp_name, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def add_maintainer_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        req = self.get_group_maintainers_request(
+            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 204:
+            return
+
+        msg = ('Failed adding maintainer {} to group {}, got HTTP response: ({}) - {}'.format(
+            user, grp_name, resp.status_code, resp.text))
+        raise HTTPError(msg, request = req, response = resp)
+
+    def delete_maintainer_from_group(
+        self, grp_name, user, url_prefix, auth, session, send_opts):
+        """Delete the given user from the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        req = self.get_group_maintainers_request(
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth,
+            grp_name, user)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 204:
+            return
+
+        msg = ('Failed deleting maintainer {} from group {}, got HTTP response: ({}) - {}'.format(
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
@@ -405,38 +558,38 @@ class ProjectService_0_7(BaseVersion):
             .format(user, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def get_user_groups(self, user, url_prefix, auth, session, send_opts):
-        """Get user's group memberships.
+    #def get_user_groups(self, user, url_prefix, auth, session, send_opts):
+    #    """Get user's group memberships.
 
-        Args:
-            user (string): User name.
-            url_prefix (string): Protocol + host such as https://api.theboss.io
-            auth (string): Token to send in the request header.
-            session (requests.Session): HTTP session to use for request.
-            send_opts (dictionary): Additional arguments to pass to session.send().
+    #    Args:
+    #        user (string): User name.
+    #        url_prefix (string): Protocol + host such as https://api.theboss.io
+    #        auth (string): Token to send in the request header.
+    #        session (requests.Session): HTTP session to use for request.
+    #        send_opts (dictionary): Additional arguments to pass to session.send().
 
-        Returns:
-            (dictionary): User's data encoded in a dictionary.
+    #    Returns:
+    #        (dictionary): User's data encoded in a dictionary.
 
-        Raises:
-            requests.HTTPError on failure.
-        """
-        req = self.get_user_groups_request(
-            'application/x-www-form-urlencoded', url_prefix, auth, user)
+    #    Raises:
+    #        requests.HTTPError on failure.
+    #    """
+    #    req = self.get_user_groups_request(
+    #        'application/x-www-form-urlencoded', url_prefix, auth, user)
 
-        prep = session.prepare_request(req)
-        resp = session.send(prep, **send_opts)
-        if resp.status_code == 200:
-            groups = []
-            dict = resp.json()
-            if 'groups' in dict:
-                groups = dict['groups']
-            return groups
+    #    prep = session.prepare_request(req)
+    #    resp = session.send(prep, **send_opts)
+    #    if resp.status_code == 200:
+    #        groups = []
+    #        dict = resp.json()
+    #        if 'groups' in dict:
+    #            groups = dict['groups']
+    #        return groups
 
-        msg = (
-            'Failed getting user: {}, got HTTP response: ({}) - {}'
-            .format(user, resp.status_code, resp.text))
-        raise HTTPError(msg, request = req, response = resp)
+    #    msg = (
+    #        'Failed getting user: {}, got HTTP response: ({}) - {}'
+    #        .format(user, resp.status_code, resp.text))
+    #    raise HTTPError(msg, request = req, response = resp)
 
     def add_user(
         self, user, first_name, last_name, email, password,
