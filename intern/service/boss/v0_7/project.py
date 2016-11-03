@@ -31,6 +31,66 @@ class ProjectService_0_7(BaseVersion):
         """
         return BOSS_API_VERSION
 
+    def list_groups(self, filtr, url_prefix, auth, session, send_opts):
+        """Get the groups the logged in user is a member of.
+
+        Optionally filter by 'member' or 'maintainer'.
+
+        Args:
+            filtr (string|None): ['member'|'maintainer'] or defaults to None.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list[string]): List of group names.
+        """
+        raise NotImplemented
+
+        req = self.get_group_request(
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name, user_name)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+        if resp.status_code == 200:
+            return resp.json()
+
+        msg = ('Get failed for group {}, got HTTP response: ({}) - {}'.format(
+            name, resp.status_code, resp.text))
+
+        raise HTTPError(msg, request = req, response = resp)
+
+    def list_group_members(self, name, url_prefix, auth, session, send_opts):
+        """Get the members of a group (does not include maintainers).
+
+        Args:
+            name (string): Name of group to query.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        raise NotImplemented
+
+    def list_group_maintainers(self, name, url_prefix, auth, session, send_opts):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        raise NotImplemented
+
     def get_group(self, name, user_name, url_prefix, auth, session, send_opts):
         """Get information on the given group or whether or not a user is a member of the group.
 

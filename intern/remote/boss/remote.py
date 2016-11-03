@@ -177,6 +177,22 @@ class BossRemote(Remote):
         self._token_volume = value
         self.volume_service.set_auth(self._token_volume)
 
+    def list_groups(self, filtr=None):
+        """Get the groups the logged in user is a member of.
+
+        Optionally filter by 'member' or 'maintainer'.
+
+        Args:
+            filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
+
+        Returns:
+            (list[string]): List of group names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_groups(
+            filtr, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
     def get_group(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
@@ -189,6 +205,30 @@ class BossRemote(Remote):
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get_group(name, user_name)
+
+    def list_group_members(self, name):
+        """Get the members of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_group_members(name)
+
+    def list_group_maintainers(self, name):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of maintainer names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_group_maintainers(name)
 
     def create_group(self, name):
         """Create a new group.
