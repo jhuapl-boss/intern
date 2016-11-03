@@ -60,8 +60,8 @@ class ProjectService_0_7(BaseVersion):
             resp_json = resp.json()
             return resp_json['groups']
 
-        msg = ('Get failed for group {}, got HTTP response: ({}) - {}'.format(
-            name, resp.status_code, resp.text))
+        msg = ('List groups failed, got HTTP response: ({}) - {}'.format(
+            resp.status_code, resp.text))
 
         raise HTTPError(msg, request = req, response = resp)
 
