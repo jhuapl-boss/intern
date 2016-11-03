@@ -84,21 +84,17 @@ class ProjectService(BossService):
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def delete_group(self, name, user_name=None):
-        """Delete given group or delete user from given group.
-
-        If user_name is provided, the user will be removed from the group.
-        Otherwise, the group, itself, is deleted.
+    def delete_group(self, name):
+        """Delete given group.
 
         Args:
             name (string): Name of group.
-            user_name (optional[string]): Defaults to None.  User to remove from group.
 
         Raises:
             requests.HTTPError on failure.
         """
         self.service.delete_group(
-            name, user_name, self.url_prefix, self.auth, self.session,
+            name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
     def list_group_members(self, name):

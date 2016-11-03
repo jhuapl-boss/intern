@@ -55,39 +55,6 @@ class TestUser(unittest.TestCase):
             self.prj.get_user(
                 'johndoe', url_prefix, auth, mock_session, send_opts)
 
-    @patch('requests.Response', autospec=True)
-    @patch('requests.Session', autospec=True)
-    def test_get_groups_success(self, mock_session, mock_resp):
-        expected = ['default', 'proofreader']
-        data = { 'groups': ['default', 'proofreader'] }
-        mock_resp.status_code = 200
-        mock_resp.json.return_value = data
-        mock_session.prepare_request.return_value = PreparedRequest()
-        mock_session.send.return_value = mock_resp
-
-        url_prefix = 'https://api.theboss.io'
-        auth = 'mytoken'
-        send_opts = {}
-
-        actual = self.prj.get_user_groups(
-            'johndoe', url_prefix, auth, mock_session, send_opts)
-        six.assertCountEqual(self, expected, actual)
-
-    @patch('requests.Session', autospec=True)
-    def test_get_groups_failure(self, mock_session):
-        mock_session.prepare_request.return_value = PreparedRequest()
-        fake_resp = Response()
-        fake_resp.status_code = 403
-        mock_session.send.return_value = fake_resp
-
-        url_prefix = 'https://api.theboss.io'
-        auth = 'mytoken'
-        send_opts = {}
-
-        with self.assertRaises(HTTPError):
-            self.prj.get_user_groups(
-                'johndoe', url_prefix, auth, mock_session, send_opts)
-
     @patch('requests.Session', autospec=True)
     def test_add_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()

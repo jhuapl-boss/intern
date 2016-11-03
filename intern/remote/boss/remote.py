@@ -216,21 +216,17 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.create_group(name)
 
-    def delete_group(self, name, user_name=None):
-        """Delete given group or delete user from given group.
-
-        If user_name is provided, the user will be removed from the group.
-        Otherwise, the group, itself, is deleted.
+    def delete_group(self, name):
+        """Delete given group.
 
         Args:
             name (string): Name of group.
-            user_name (optional[string]): Defaults to None.  User to remove from group.
 
         Returns:
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_group(name, user_name)
+        return self.project_service.delete_group(name)
 
     def list_group_members(self, name):
         """Get the members of a group.
