@@ -78,13 +78,27 @@ class BossResource(Resource):
         assert NotImplemented
 
     @abstractmethod
-    def get_meta_or_permission_route(self):
-        """Get the route for metadata or permission operations.
+    def get_meta_route(self):
+        """Get the route for metadata operations.
 
         Not all resources will support this operation.
 
         Returns:
             (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_dict_route(self):
+        """Get the route in dictionary form.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (dict): A dictionary containing the names of the resource components
 
         Raises:
             (RuntimeError): if operation not supported by the resource.
@@ -116,8 +130,11 @@ class CollectionResource(BossResource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for collections.')
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         return self.name
+
+    def get_dict_route(self):
+        return {"collection": self.name}
 
 
 class ExperimentResource(BossResource):
@@ -186,7 +203,7 @@ class ExperimentResource(BossResource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for experiments.')
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         return self.coll_name + '/' + self.name
 
     def validate_hierarchy_method(self, value):
@@ -194,6 +211,9 @@ class ExperimentResource(BossResource):
         if lowered in self._valid_hierarchy_methods:
             return lowered
         raise ValueError('{} is not a valid hierarchy method.'.format(value))
+
+    def get_dict_route(self):
+        return {"collection": self.coll_name, "experiment": self.name}
 
 
 class CoordinateFrameResource(BossResource):
@@ -276,7 +296,7 @@ class CoordinateFrameResource(BossResource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
     @property
@@ -318,6 +338,9 @@ class CoordinateFrameResource(BossResource):
         if lowered in self._valid_time_units:
             return lowered
         raise ValueError('{} is not a valid time unit.'.format(value))
+
+    def get_dict_route(self):
+        return {"coord": self.name}
 
 
 class ChannelResource(BossResource):
@@ -382,7 +405,7 @@ class ChannelResource(BossResource):
     def get_cutout_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
     def valid_volume(self):
@@ -461,3 +484,6 @@ class ChannelResource(BossResource):
         if lowered in ChannelResource._valid_datatypes:
             return lowered
         raise ValueError('{} is not a valid data type.'.format(value))
+
+    def get_dict_route(self):
+        return {"collection": self.coll_name, "experiment": self.exp_name, "channel": self.name}

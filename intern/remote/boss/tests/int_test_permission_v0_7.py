@@ -52,28 +52,28 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        cls.rmt.project_service.session_send_opts = { 'verify': False }
-        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
-        cls.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = {'verify': False}
+        cls.rmt.metadata_service.session_send_opts = {'verify': False}
+        cls.rmt.volume_service.session_send_opts = {'verify': False}
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
+        coll_name = 'collection_perm_test-{}'.format(random.randint(0, 9999))
         cls.coll = CollectionResource(coll_name, 'bar')
 
-        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        cf_name = 'PermissionTestFrame{}'.format(random.randint(0, 9999))
         cls.coord = CoordinateFrameResource(
             cf_name, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         cls.exp = ExperimentResource(
-            'exp2309-2', cls.coll.name, cls.coord.name, 'my experiment', 1,
+            'perm_test_exp', cls.coll.name, cls.coord.name, 'my experiment', 1,
             'iso', 0)
 
         cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
+            'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',
             0, 'uint8', 0)
 
-        cls.grp_name = 'int_test_exists'
+        cls.grp_name = 'int_perm_test_group'
 
     @classmethod
     def cleanup_db(cls):
@@ -112,52 +112,51 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
     def tearDown(self):
         self.cleanup_db()
 
-    def test_add_permissions_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
-
-    def test_add_permissions_invalid_collection_perm(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.add_permissions(
-            self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
-
-    def test_add_permissions_invalid_experiment_perm(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.add_permissions(
-            self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
-
-    def test_add_volumetric_permission_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['read', 'read_volumetric_data'])
-
-    def test_add_permissions_append_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
-
-        self.rmt.add_permissions( self.grp_name, self.chan, ['read'])
-
-        expected = ['update', 'add_volumetric_data', 'read']
-        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-        six.assertCountEqual(self, expected, actual)
-
     def test_get_permissions_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'read'])
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'read'])
 
         expected = ['update', 'read']
         actual = self.rmt.get_permissions(self.grp_name, self.chan)
         six.assertCountEqual(self, expected, actual)
 
-    def test_delete_permissions_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
-
-        self.rmt.delete_permissions(
-            self.grp_name, self.chan, ['add_volumetric_data'])
-
-        expected = ['update']
-        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-        six.assertCountEqual(self, expected, actual)
+#    def test_add_permissions_success(self):
+#        self.rmt.add_permissions(
+#            self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
+#
+#    def test_add_permissions_invalid_collection_perm(self):
+#        with self.assertRaises(HTTPError):
+#            self.rmt.add_permissions(
+#            self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
+#
+#    def test_add_permissions_invalid_experiment_perm(self):
+#        with self.assertRaises(HTTPError):
+#            self.rmt.add_permissions(
+#            self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
+#
+#    def test_add_volumetric_permission_success(self):
+#        self.rmt.add_permissions(
+#            self.grp_name, self.chan, ['read', 'read_volumetric_data'])
+#
+#    def test_add_permissions_append_success(self):
+#        self.rmt.add_permissions(
+#            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
+#
+#        self.rmt.add_permissions( self.grp_name, self.chan, ['read'])
+#
+#        expected = ['update', 'add_volumetric_data', 'read']
+#        actual = self.rmt.get_permissions(self.grp_name, self.chan)
+#        six.assertCountEqual(self, expected, actual)
+#
+#    def test_delete_permissions_success(self):
+#        self.rmt.add_permissions(
+#            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
+#
+#        self.rmt.delete_permissions(
+#            self.grp_name, self.chan, ['add_volumetric_data'])
+#
+#        expected = ['update']
+#        actual = self.rmt.get_permissions(self.grp_name, self.chan)
+#        six.assertCountEqual(self, expected, actual)
 
 
 if __name__ == '__main__':

@@ -116,7 +116,7 @@ class BaseVersion(object):
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        suffix = resource.get_meta_or_permission_route()
+        suffix = resource.get_meta_route()
         urlNoParams = (url_prefix + '/' + self.version + '/meta/' + suffix)
         if key is None:
             return urlNoParams
@@ -334,8 +334,7 @@ class BaseVersion(object):
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers)
 
-    def get_permission_request(
-        self, method, content, url_prefix, token, name, resource, data=None):
+    def get_permission_request(self, method, content, url_prefix, token, query_params=None, post_data=None):
         """Generate a request for manipulating permissions of a data model object.
 
         Manipulate what members of the named group can do with the given data
@@ -346,9 +345,8 @@ class BaseVersion(object):
             content (string): HTTP Content-Type such as 'application/json'.
             url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
             token (string): Django Rest Framework token for auth.
-            name (string): Name of group.
-            resource (intern.resource.boss.BossResource): Resource to perform operation on.
-            data (dict): POST body data.  Defaults to None.
+            query_params (dict): Query params for GET requests.  Defaults to None.
+            post_data (dict): POST body data.  Defaults to None.
 
         Returns:
             (requests.Request): A newly constructed Request object.
@@ -356,15 +354,17 @@ class BaseVersion(object):
         Raises:
             RuntimeError if url_prefix is None or an empty string.
         """
-
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        suffix = resource.get_meta_or_permission_route()
-        url = (url_prefix + '/' + self.version + '/permission/' + name + '/' +
-               suffix)
+        url = (url_prefix + '/' + self.version + '/permissions/')
         headers = self.get_headers(content, token)
-        return Request(method, url, headers = headers, data = data)
+
+        if method == "GET" or method == "DELETE":
+            return Request(method, url, headers=headers, params=query_params)
+        else:
+            # Assuming POST or PATCH
+            return Request(method, url, headers=headers, json=post_data)
 
     def get_user_role_request(
         self, method, content, url_prefix, token, user, role=None):

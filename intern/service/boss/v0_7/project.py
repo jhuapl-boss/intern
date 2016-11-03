@@ -372,42 +372,52 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def get_permissions(
-        self, grp_name, resource, url_prefix, auth, session, send_opts):
-        """
+    def get_permissions(self, group_name=None, resource=None,
+                         url_prefix=None, auth=None, session=None, send_opts=None):
+        """List the permission sets for the logged in user
+
+        Optionally filter by resource or group.
+
         Args:
-            grp_name (string): Name of group.
-            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
+            group_name (string): Name of group to filter on
+            resource (intern.resource.boss.BossResource): Identifies which data model object to filter on
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (list): List of permissions.
-
-        Raises:
-            requests.HTTPError on failure.
+            (list[dict]): List of dictionaries of permission sets
         """
-        req = self.get_permission_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth,
-            grp_name, resource)
+        filter_params = {}
+        if group_name:
+            filter_params["group"] = group_name
+
+        if resource:
+            filter_params.update(resource.get_dict_route())
+
+        req = self.get_permission_request('GET', 'application/x-www-form-urlencoded',
+                                          url_prefix, auth, query_params=filter_params)
+
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
-        if resp.status_code == 201:
-            json = resp.json()
-            return json.get('permissions', [])
+        if resp.status_code != 200:
+            msg = "Failed to get permission sets. "
+            if group_name:
+                msg = "{} Group: {}".format(msg, group_name)
+            if resource:
+                msg = "{} Resource: {}".format(msg, resource.name)
 
-        err = ('Failed getting permissions for group {}, got HTTP response: ({}) - {}'.format(
-            grp_name, resp.status_code, resp.text))
-        raise HTTPError(err, request = req, response = resp)
+            msg = '{}, got HTTP response: ({}) - {}'.format(msg, resp.status_code, resp.text)
 
-    def add_permissions(
-        self, grp_name, resource, permissions, url_prefix, auth, session,
-        send_opts):
+            raise HTTPError(msg, request=req, response=resp)
+        else:
+            return resp.json()
+
+    def add_permissions(self, group_name, resource, permissions, url_prefix, auth, session, send_opts):
         """
         Args:
-            grp_name (string): Name of group.
+            group_name (string): Name of group.
             resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
             permissions (list): List of permissions to add to the given resource.
             url_prefix (string): Protocol + host such as https://api.theboss.io
@@ -415,18 +425,20 @@ class ProjectService_0_7(BaseVersion):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
         """
-        json = { 'permissions': permissions }
-        req = self.get_permission_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth,
-            grp_name, resource, json)
+        post_data = {"group": group_name,
+                     "permissions": permissions,
+                     }
+        post_data.update(resource.get_dict_route())
+        req = self.get_permission_request('POST', 'application/x-www-form-urlencoded',
+                                          url_prefix, auth, post_data=post_data)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
-        if resp.status_code == 201:
-            return
 
-        msg = ('Failed adding permissions to group {}, got HTTP response: ({}) - {}'.format(
-            grp_name, resp.status_code, resp.text))
-        raise HTTPError(msg, request = req, response = resp)
+        if resp.status_code != 201:
+            msg = ('Failed adding permissions to group {}, got HTTP response: ({}) - {}'.format(group_name,
+                                                                                                resp.status_code,
+                                                                                                resp.text))
+            raise HTTPError(msg, request=req, response=resp)
 
     def delete_permissions(
         self, grp_name, resource, permissions, url_prefix, auth, session,
