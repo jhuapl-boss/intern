@@ -1,0 +1,3822 @@
+<!doctype html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+
+    <title>intern.resource.boss.resource API documentation</title>
+    <meta name="description" content="" />
+
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
+  
+  <style type="text/css">
+  
+* {
+  box-sizing: border-box;
+}
+/*! normalize.css v1.1.1 | MIT License | git.io/normalize */
+
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+/**
+ * Correct `block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/**
+ * Correct `inline-block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+audio,
+canvas,
+video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Firefox 3, and Safari 4.
+ * Known issue: no IE 6 support.
+ */
+
+[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/**
+ * 1. Prevent system color scheme's background color being used in Firefox, IE,
+ *    and Opera.
+ * 2. Prevent system color scheme's text color being used in Firefox, IE, and
+ *    Opera.
+ * 3. Correct text resizing oddly in IE 6/7 when body `font-size` is set using
+ *    `em` units.
+ * 4. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+html {
+    background: #fff; /* 1 */
+    color: #000; /* 2 */
+    font-size: 100%; /* 3 */
+    -webkit-text-size-adjust: 100%; /* 4 */
+    -ms-text-size-adjust: 100%; /* 4 */
+}
+
+/**
+ * Address `font-family` inconsistency between `textarea` and other form
+ * elements.
+ */
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: sans-serif;
+}
+
+/**
+ * Address margins handled incorrectly in IE 6/7.
+ */
+
+body {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+
+a:focus {
+    outline: thin dotted;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+/**
+ * Address font sizes and margins set differently in IE 6/7.
+ * Address font sizes within `section` and `article` in Firefox 4+, Safari 5,
+ * and Chrome.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 0.83em 0;
+}
+
+h3 {
+    font-size: 1.17em;
+    margin: 1em 0;
+}
+
+h4 {
+    font-size: 1em;
+    margin: 1.33em 0;
+}
+
+h5 {
+    font-size: 0.83em;
+    margin: 1.67em 0;
+}
+
+h6 {
+    font-size: 0.67em;
+    margin: 2.33em 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Safari 5, and Chrome.
+ */
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 3+, Safari 4/5, and Chrome.
+ */
+
+b,
+strong {
+    font-weight: bold;
+}
+
+blockquote {
+    margin: 1em 40px;
+}
+
+/**
+ * Address styling not present in Safari 5 and Chrome.
+ */
+
+dfn {
+    font-style: italic;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ * Known issue: no IE 6/7 normalization.
+ */
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 6/7/8/9.
+ */
+
+mark {
+    background: #ff0;
+    color: #000;
+}
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+p,
+pre {
+    margin: 1em 0;
+}
+
+/**
+ * Correct font family set oddly in IE 6, Safari 4/5, and Chrome.
+ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, serif;
+    _font-family: 'courier new', monospace;
+    font-size: 1em;
+}
+
+/**
+ * Improve readability of pre-formatted text in all browsers.
+ */
+
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/**
+ * Address CSS quotes not supported in IE 6/7.
+ */
+
+q {
+    quotes: none;
+}
+
+/**
+ * Address `quotes` property not supported in Safari 4.
+ */
+
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+dl,
+menu,
+ol,
+ul {
+    margin: 1em 0;
+}
+
+dd {
+    margin: 0 0 0 40px;
+}
+
+/**
+ * Address paddings set differently in IE 6/7.
+ */
+
+menu,
+ol,
+ul {
+    padding: 0 0 0 40px;
+}
+
+/**
+ * Correct list images handled incorrectly in IE 7.
+ */
+
+nav ul,
+nav ol {
+    list-style: none;
+    list-style-image: none;
+}
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+
+/**
+ * 1. Remove border when inside `a` element in IE 6/7/8/9 and Firefox 3.
+ * 2. Improve image quality when scaled in IE 7.
+ */
+
+img {
+    border: 0; /* 1 */
+    -ms-interpolation-mode: bicubic; /* 2 */
+}
+
+/**
+ * Correct overflow displayed oddly in IE 9.
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+
+/**
+ * Address margin not present in IE 6/7/8/9, Safari 5, and Opera 11.
+ */
+
+figure {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/**
+ * Correct margin displayed oddly in IE 6/7.
+ */
+
+form {
+    margin: 0;
+}
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct color not being inherited in IE 6/7/8/9.
+ * 2. Correct text not wrapping in Firefox 3.
+ * 3. Correct alignment displayed oddly in IE 6/7.
+ */
+
+legend {
+    border: 0; /* 1 */
+    padding: 0;
+    white-space: normal; /* 2 */
+    *margin-left: -7px; /* 3 */
+}
+
+/**
+ * 1. Correct font size not being inherited in all browsers.
+ * 2. Address margins set differently in IE 6/7, Firefox 3+, Safari 5,
+ *    and Chrome.
+ * 3. Improve appearance and consistency in all browsers.
+ */
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%; /* 1 */
+    margin: 0; /* 2 */
+    vertical-align: baseline; /* 3 */
+    *vertical-align: middle; /* 3 */
+}
+
+/**
+ * Address Firefox 3+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 6+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+
+button,
+select {
+    text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ * 4. Remove inner spacing in IE 7 without affecting normal text inputs.
+ *    Known issue: inner spacing remains in IE 6.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button; /* 2 */
+    cursor: pointer; /* 3 */
+    *overflow: visible;  /* 4 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+/**
+ * 1. Address box sizing set to content-box in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ * 3. Remove excess padding in IE 7.
+ *    Known issue: excess padding remains in IE 6.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+    *height: 13px; /* 3 */
+    *width: 13px; /* 3 */
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box; /* 2 */
+    box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * Remove inner padding and border in Firefox 3+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/**
+ * 1. Remove default vertical scrollbar in IE 6/7/8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+
+textarea {
+    overflow: auto; /* 1 */
+    vertical-align: top; /* 2 */
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+/**
+ * Remove most spacing between table cells.
+ */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+  </style>
+
+  <style type="text/css">
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+  body {
+    background: #fff;
+    font-family: "Source Sans Pro", "Helvetica Neueue", Helvetica, sans;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6em;
+  }
+  #content {
+    width: 70%;
+    max-width: 850px;
+    float: left;
+    padding: 30px 60px;
+    border-left: 1px solid #ddd;
+  }
+  #sidebar {
+    width: 25%;
+    float: left;
+    padding: 30px;
+    overflow: hidden;
+  }
+  #nav {
+    font-size: 130%;
+    margin: 0 0 15px 0;
+  }
+
+  #top {
+    display: block;
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    font-size: .85em;
+    text-transform: uppercase;
+  }
+
+  #footer {
+    font-size: .75em;
+    padding: 5px 30px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+  }
+    #footer p {
+      margin: 0 0 0 30px;
+      display: inline-block;
+    }
+
+  h1, h2, h3, h4, h5 {
+    font-weight: 300;
+  }
+  h1 {
+    font-size: 2.5em;
+    line-height: 1.1em;
+    margin: 0 0 .50em 0;
+  }
+
+  h2 {
+    font-size: 1.75em;
+    margin: 1em 0 .50em 0;
+  }
+
+  h3 {
+    margin: 25px 0 10px 0;
+  }
+
+  h4 {
+    margin: 0;
+    font-size: 105%;
+  }
+
+  a {
+    color: #058;
+    text-decoration: none;
+    transition: color .3s ease-in-out;
+  }
+
+  a:hover {
+    color: #e08524;
+    transition: color .3s ease-in-out;
+  }
+
+  pre, code, .mono, .name {
+    font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
+  }
+
+  .title .name {
+    font-weight: bold;
+  }
+  .section-title {
+    margin-top: 2em;
+  }
+  .ident {
+    color: #900;
+  }
+
+  code {
+    background: #f9f9f9;
+  } 
+
+  pre {
+    background: #fefefe;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 0 #f3f3f3;
+    margin: 0 30px;
+    padding: 15px 30px;
+  }
+
+  .codehilite {
+    margin: 0 30px 10px 30px;
+  }
+
+    .codehilite pre {
+      margin: 0;
+    }
+    .codehilite .err { background: #ff3300; color: #fff !important; } 
+
+  table#module-list {
+    font-size: 110%;
+  }
+
+    table#module-list tr td:first-child {
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+
+    table#module-list td {
+      vertical-align: top;
+      padding-bottom: 8px;
+    }
+
+      table#module-list td p {
+        margin: 0 0 7px 0;
+      }
+
+  .def {
+    display: table;
+  }
+
+    .def p {
+      display: table-cell;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .def p:first-child {
+      white-space: nowrap;
+    }
+
+    .def p:last-child {
+      width: 100%;
+    }
+
+
+  #index {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+    ul#index .class_name {
+      /* font-size: 110%; */
+      font-weight: bold;
+    }
+    #index ul {
+      margin: 0;
+    }
+
+  .item {
+    margin: 0 0 15px 0;
+  }
+
+    .item .class {
+      margin: 0 0 25px 30px;
+    }
+
+      .item .class ul.class_list {
+        margin: 0 0 20px 0;
+      }
+
+    .item .name {
+      background: #fafafa;
+      margin: 0;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 3px;
+      display: inline-block;
+      min-width: 40%;
+    }
+      .item .name:hover {
+        background: #f6f6f6;
+      }
+
+    .item .empty_desc {
+      margin: 0 0 5px 0;
+      padding: 0;
+    }
+
+    .item .inheritance {
+      margin: 3px 0 0 30px;
+    }
+
+    .item .inherited {
+      color: #666;
+    }
+
+    .item .desc {
+      padding: 0 8px;
+      margin: 0;
+    }
+
+      .item .desc p {
+        margin: 0 0 10px 0;
+      }
+
+    .source_cont {
+      margin: 0;
+      padding: 0;
+    }
+
+    .source_link a {
+      background: #ffc300;
+      font-weight: 400;
+      font-size: .75em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 1px 1px 0 #f4b700;
+      
+      padding: 3px 8px;
+      border-radius: 2px;
+      transition: background .3s ease-in-out;
+    }
+      .source_link a:hover {
+        background: #FF7200;
+        text-shadow: none;
+        transition: background .3s ease-in-out;
+      }
+
+    .source {
+      display: none;
+      max-height: 600px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+    }
+
+      .source .codehilite {
+        margin: 0;
+      }
+
+  .desc h1, .desc h2, .desc h3 {
+    font-size: 100% !important;
+  }
+  .clear {
+    clear: both;
+  }
+
+  @media all and (max-width: 950px) {
+    #sidebar {
+      width: 35%;
+    }
+    #content {
+      width: 65%;
+    }
+  }
+  @media all and (max-width: 650px) {
+    #top {
+      display: none;
+    }
+    #sidebar {
+      float: none;
+      width: auto;
+    }
+    #content {
+      float: none;
+      width: auto;
+      padding: 30px;
+    }
+
+    #index ul {
+      padding: 0;
+      margin-bottom: 15px;
+    }
+    #index ul li {
+      display: inline-block;
+      margin-right: 30px;
+    }
+    #footer {
+      text-align: left;
+    }
+    #footer p {
+      display: block;
+      margin: inherit;
+    }
+  }
+
+  /*****************************/
+
+  </style>
+
+
+  <style type="text/css">
+  
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+  </style>
+
+  <script type="text/javascript">
+  function toggle(id, $link) {
+    $node = document.getElementById(id);
+    if (!$node)
+    return;
+    if (!$node.style.display || $node.style.display == 'none') {
+    $node.style.display = 'block';
+    $link.innerHTML = 'Hide source &nequiv;';
+    } else {
+    $node.style.display = 'none';
+    $link.innerHTML = 'Show source &equiv;';
+    }
+  }
+  </script>
+</head>
+<body>
+<a href="#" id="top">Top</a>
+
+<div id="container">
+    
+  
+  <div id="sidebar">
+    <h1>Index</h1>
+    <ul id="index">
+
+
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
+      <ul>
+        <li class="mono">
+        <span class="class_name"><a href="#intern.resource.boss.resource.BossResource">BossResource</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.__init__">__init__</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_list_route">get_list_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_route">get_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.valid_volume">valid_volume</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#intern.resource.boss.resource.ChannelResource">ChannelResource</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.__init__">__init__</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_list_route">get_list_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_route">get_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.valid_volume">valid_volume</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.validate_datatype">validate_datatype</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.validate_type">validate_type</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#intern.resource.boss.resource.CollectionResource">CollectionResource</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.__init__">__init__</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_list_route">get_list_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_route">get_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.valid_volume">valid_volume</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#intern.resource.boss.resource.CoordinateFrameResource">CoordinateFrameResource</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.__init__">__init__</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_list_route">get_list_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_route">get_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.valid_volume">valid_volume</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.validate_time_units">validate_time_units</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.validate_voxel_units">validate_voxel_units</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#intern.resource.boss.resource.ExperimentResource">ExperimentResource</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.__init__">__init__</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_list_route">get_list_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_route">get_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.valid_volume">valid_volume</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.validate_hierarchy_method">validate_hierarchy_method</a></li>
+  </ul>
+
+        </li>
+      </ul>
+    </li>
+
+    </ul>
+  </div>
+
+    <article id="content">
+      
+  
+
+  
+
+
+  <header id="section-intro">
+  <h1 class="title"><span class="name">intern.resource.boss.resource</span> module</h1>
+  
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource" class="source">
+    <pre><code>﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+from intern.resource import Resource
+from abc import abstractmethod
+
+
+class BossResource(Resource):
+    """Base class for Boss resources.
+
+    Attributes:
+        name (string): Name of resource.  Used as identifier when talking to
+        the Boss API.
+        description (string): Text description of resource.
+        creator (string): Resource creator.
+        raw (dictionary): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+    """
+    def __init__(self, name, description, creator='', raw={}):
+        """Constructor.
+
+        Args:
+            name (string): Name of resource.
+            description (string): Description of resource.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+
+        self.name = name
+        self.description = description
+        self.creator = creator
+        self.raw = raw
+
+    def valid_volume(self):
+        return False
+
+    @abstractmethod
+    def get_route(self):
+        """Get the route for resource.
+
+        Returns:
+            (string): A string that can be appended to the location of an
+            endpoint such as 'mycollection/experiment/exp1/channel/chan2'
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_list_route(self):
+        """Get the route for listing resources.
+
+        Returns:
+            (string): A string that can be appended to the location of an
+            endpoint such as 'mycollection/experiment'
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_cutout_route(self):
+        """Get the route for cutout operations.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_meta_or_permission_route(self):
+        """Get the route for metadata or permission operations.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+
+
+class CollectionResource(BossResource):
+    """Top level container for Boss projects.
+    """
+    def __init__(
+        self, name, description='', creator='', raw={}):
+        """Constructor.
+
+        Args:
+            name (string): Collection name.
+            description (optional[string]): Collection description.  Defaults to empty.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+        BossResource.__init__(self, name, description, creator, raw)
+
+    def get_route(self):
+        return self.name
+
+    def get_list_route(self):
+        return ''
+
+    def get_cutout_route(self):
+        raise RuntimeError('Not supported for collections.')
+
+    def get_meta_or_permission_route(self):
+        return self.name
+
+
+class ExperimentResource(BossResource):
+    """Experiments reside inside a collection and contain channels and
+    layers.
+
+    Attributes:
+        _coord_frame (string):
+        num_hierarchy_levels (int):
+        hierarchy_method (string):
+        max_time_sample (int):
+    """
+    def __init__(self, name, collection_name, coord_frame, description='',
+        num_hierarchy_levels=1, hierarchy_method='near_iso',
+        max_time_sample=0, creator='', raw={}):
+        """Constructor.
+
+        Args:
+            name (string): Experiment name.
+            collection_name (string): Collection name.
+            coord_frame (string): Name of coordinate frame used by experiment.
+            description (optional[string]): Experiment description.  Defaults to empty.
+            num_hierarchy_levels (optional[int]): Defaults to 1.
+            hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
+            max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+
+        BossResource.__init__(self, name, description, creator, raw)
+        self.coll_name = collection_name
+
+        self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
+
+        #ToDo: validate data types.
+        self._coord_frame = coord_frame
+        self.num_hierarchy_levels = num_hierarchy_levels
+        self._hierarchy_method = self.validate_hierarchy_method(
+            hierarchy_method)
+        self.max_time_sample = max_time_sample
+
+    @property
+    def coord_frame(self):
+        return self._coord_frame
+
+    @property
+    def hierarchy_method(self):
+        return self._hierarchy_method
+
+    @hierarchy_method.setter
+    def hierarchy_method(self, value):
+        """
+        Args:
+            value (string): Valid values: 'near_iso', 'iso', 'slice'
+        Raises:
+            ValueError
+        """
+        self._hierarchy_method = self.validate_hierarchy_method(value)
+
+    def get_route(self):
+        return self.coll_name + '/experiment/' + self.name
+
+    def get_list_route(self):
+        return self.coll_name + '/experiment/'
+
+    def get_cutout_route(self):
+        raise RuntimeError('Not supported for experiments.')
+
+    def get_meta_or_permission_route(self):
+        return self.coll_name + '/' + self.name
+
+    def validate_hierarchy_method(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_hierarchy_methods:
+            return lowered
+        raise ValueError('{} is not a valid hierarchy method.'.format(value))
+
+
+class CoordinateFrameResource(BossResource):
+    """
+    Coordinate frame used by experiment(s).
+
+    For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
+
+    Attributes:
+        name (string): Coordinate frame name.
+        description (string): Coordinate frame description.  Defaults to empty.
+        x_start (int): Minimum x coordinate (defaults to 0).
+        x_stop (int): Maximum x coordinate - exclusive (defaults to 1).
+        y_start (int): Minimum y coordinate (defaults to 0).
+        y_stop (int): Maximum y coordinate - exclusive (defaults to 1).
+        z_start (int): Minimum z coordinate (defaults to 0).
+        z_stop (int): Maximum z coordinate - exclusive (defaults to 1).
+        x_voxel_size (int): Defaults to 1.
+        y_voxel_size (int): Defaults to 1.
+        z_voxel_size (int): Defaults to 1.
+        voxel_unit (string): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
+        time_step (int): Defaults to 0.
+        time_step_unit (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
+    """
+    def __init__(
+        self, name, description='',
+        x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
+        x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
+        time_step=0, time_step_unit='seconds', creator='', raw={}):
+        """Constructor.
+
+        For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
+
+        Args:
+            name (string): Coordinate frame name.
+            description (optional[string]): Coordinate frame description.  Defaults to empty.
+            x_start (optional[int]): Minimum x coordinate (defaults to 0).
+            x_stop (optional[int]): Maximum x coordinate - exclusive (defaults to 1).
+            y_start (optional[int]): Minimum y coordinate (defaults to 0).
+            y_stop (optional[int]): Maximum y coordinate - exclusive (defaults to 1).
+            z_start (optional[int]): Minimum z coordinate (defaults to 0).
+            z_stop (optional[int]): Maximum z coordinate - exclusive (defaults to 1).
+            x_voxel_size (optional[int]): Defaults to 1.
+            y_voxel_size (optional[int]): Defaults to 1.
+            z_voxel_size (optional[int]): Defaults to 1.
+            voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
+            time_step (optional[int]): Defaults to 0.
+            time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+
+        BossResource.__init__(self, name, description, raw=raw)
+
+        self._valid_voxel_units = [
+            'nanometers', 'micrometers', 'millimeters', 'centimeters']
+
+        self._valid_time_units = [
+            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+
+        self.x_start = x_start
+        self.x_stop = x_stop
+        self.y_start = y_start
+        self.y_stop = y_stop
+        self.z_start = z_start
+        self.z_stop = z_stop
+        self.x_voxel_size = x_voxel_size
+        self.y_voxel_size = y_voxel_size
+        self.z_voxel_size = z_voxel_size
+        self._voxel_unit = self.validate_voxel_units(voxel_unit)
+        self.time_step = time_step
+        self._time_step_unit = self.validate_time_units(time_step_unit)
+
+    def get_route(self):
+        return self.name
+
+    def get_list_route(self):
+        return ''
+
+    def get_cutout_route(self):
+        raise RuntimeError('Not supported for coordinate frames.')
+
+    def get_meta_or_permission_route(self):
+        raise RuntimeError('Not supported for coordinate frames.')
+
+    @property
+    def voxel_unit(self):
+        return self._voxel_unit
+
+    @voxel_unit.setter
+    def voxel_unit(self, value):
+        """
+        Args:
+            value (string): Valid values: 'nanometers', 'micrometers', 'millimeters', 'centimeters'
+        Raises:
+            ValueError
+        """
+        self._voxel_unit = self.validate_voxel_units(value)
+
+    @property
+    def time_step_unit(self):
+        return self._time_step_unit
+
+    @time_step_unit.setter
+    def time_step_unit(self, value):
+        """
+        Args:
+            value (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'
+        Raises:
+            ValueError
+        """
+        self._time_step_unit = self.validate_time_units(value)
+
+    def validate_voxel_units(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_voxel_units:
+            return lowered
+        raise ValueError('{} is not a valid voxel unit.'.format(value))
+
+    def validate_time_units(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_time_units:
+            return lowered
+        raise ValueError('{} is not a valid time unit.'.format(value))
+
+
+class ChannelResource(BossResource):
+    """
+    Holds channel data.
+
+    Attributes:
+        coll_name (string): Name of collection containing this resource.
+        exp_name (string): Name of experiment containing this resource.
+        description (string): Description of channel or layer.
+        default_time_step (int):
+        base_resolution (int):
+        _type (string): 'image' or 'annotation'
+        _valid_datatypes (list[string]): Allowed data type values (static variable).
+        _datatype (string):
+    """
+
+    _valid_datatypes = ['uint8', 'uint16', 'uint64']
+    _valid_types = ['annotation', 'image']
+
+    def __init__(self, name, collection_name, experiment_name, type,
+        description='', default_time_step=0, datatype='uint8',
+        base_resolution=0, sources=[], related=[], creator='', raw={}):
+        """Constructor.
+
+        Args:
+            name (string): Channel name.
+            collection_name (string): Parent collection name.
+            experiment_name (string): Parent experiment name.
+            type (string): 'image' or 'annotation'
+            description (optional[string]): Layer description.  Defaults to empty.
+            default_time_step (optional[int]): Defaults to 0.
+            datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
+            base_resolution (optional[int]): Defaults to 0 (native).
+            sources (optional[list[string]]): Channels this channel was derived from.
+            related (optiona[list[string]]): Channels related to this channel.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+
+        BossResource.__init__(self, name, description, creator, raw)
+        self.coll_name = collection_name
+        self.exp_name = experiment_name
+
+        self._type = self.validate_type(type)
+        self._datatype = self.validate_datatype(datatype)
+
+        self.sources = sources
+
+        self.related = related
+
+        #ToDo: validate data types.
+        self.default_time_step = default_time_step
+        self.base_resolution = base_resolution
+
+    def get_route(self):
+        return self.coll_name + '/experiment/' + self.exp_name + '/channel/' + self.name
+
+    def get_list_route(self):
+        return self.coll_name + '/experiment/' + self.exp_name + '/channel/'
+
+    def get_cutout_route(self):
+        return self.coll_name + '/' + self.exp_name + '/' + self.name
+
+    def get_meta_or_permission_route(self):
+        return self.coll_name + '/' + self.exp_name + '/' + self.name
+
+    def valid_volume(self):
+        """Channels and layers are valid resources for interacting with the volume service.
+        """
+        return True
+
+    @property
+    def sources(self):
+        return self._sources
+
+    @sources.setter
+    def sources(self, value):
+        if isinstance(value, str):
+            self._sources = [value]
+        else:
+            self._sources = value
+
+    @property
+    def related(self):
+        return self._related
+
+    @related.setter
+    def related(self, value):
+        if isinstance(value, str):
+            self._related = [value]
+        else:
+            self._related = value
+
+    @property
+    def type(self):
+        """Channel type.
+
+        Returns:
+            (string)
+        """
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        """
+        Args:
+            value (string): 'image', 'annotation'
+        Raises:
+            ValueError
+        """
+        self._type = self.validate_type(value)
+
+    @property
+    def datatype(self):
+        """Channel bit depth.
+
+        Returns:
+            (string)
+        """
+        return self._datatype
+
+    @datatype.setter
+    def datatype(self, value):
+        """
+        Args:
+            value (string): 'uint8', 'uint16', 'uint64'
+        Raises:
+            ValueError
+        """
+        self._datatype = self.validate_datatype(value)
+
+    def validate_type(self, value):
+        lowered = value.lower()
+        if lowered in ChannelResource._valid_types:
+            return lowered
+        raise ValueError('{} is not a valid type.'.format(value))
+
+    def validate_datatype(self, value):
+        lowered = value.lower()
+        if lowered in ChannelResource._valid_datatypes:
+            return lowered
+        raise ValueError('{} is not a valid data type.'.format(value))
+</code></pre>
+  </div>
+
+  </header>
+
+  <section id="section-items">
+
+
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="intern.resource.boss.resource.BossResource" class="name">class <span class="ident">BossResource</span></p>
+      
+  
+    <div class="desc"><p>Base class for Boss resources.</p>
+<p>Attributes:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of resource.  Used as identifier when talking to<br />
+    the Boss API.<br />
+&emsp;&emsp;&emsp;&emsp;<b>description (string)</b>: Text description of resource.<br />
+&emsp;&emsp;&emsp;&emsp;<b>creator (string)</b>: Resource creator.<br />
+&emsp;&emsp;&emsp;&emsp;<b>raw (dictionary)</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource" class="source">
+    <pre><code>class BossResource(Resource):
+    """Base class for Boss resources.
+
+    Attributes:
+        name (string): Name of resource.  Used as identifier when talking to
+        the Boss API.
+        description (string): Text description of resource.
+        creator (string): Resource creator.
+        raw (dictionary): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+    """
+    def __init__(self, name, description, creator='', raw={}):
+        """Constructor.
+
+        Args:
+            name (string): Name of resource.
+            description (string): Description of resource.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+
+        self.name = name
+        self.description = description
+        self.creator = creator
+        self.raw = raw
+
+    def valid_volume(self):
+        return False
+
+    @abstractmethod
+    def get_route(self):
+        """Get the route for resource.
+
+        Returns:
+            (string): A string that can be appended to the location of an
+            endpoint such as 'mycollection/experiment/exp1/channel/chan2'
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_list_route(self):
+        """Get the route for listing resources.
+
+        Returns:
+            (string): A string that can be appended to the location of an
+            endpoint such as 'mycollection/experiment'
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_cutout_route(self):
+        """Get the route for cutout operations.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_meta_or_permission_route(self):
+        """Get the route for metadata or permission operations.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#intern.resource.boss.resource.BossResource">BossResource</a></li>
+          <li>intern.resource.resource.Resource</li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="intern.resource.boss.resource.BossResource.creator" class="name">var <span class="ident">creator</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.BossResource.description" class="name">var <span class="ident">description</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.BossResource.name" class="name">var <span class="ident">name</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.BossResource.raw" class="name">var <span class="ident">raw</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.BossResource.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, description, creator=&#39;&#39;, raw={})</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Constructor.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of resource.<br />
+&emsp;&emsp;&emsp;&emsp;<b>description (string)</b>: Description of resource.<br />
+&emsp;&emsp;&emsp;&emsp;<b>creator (optional[string])</b>: Resource creator.<br />
+&emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource.__init__" class="source">
+    <pre><code>def __init__(self, name, description, creator='', raw={}):
+    """Constructor.
+    Args:
+        name (string): Name of resource.
+        description (string): Description of resource.
+        creator (optional[string]): Resource creator.
+        raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+    """
+    self.name = name
+    self.description = description
+    self.creator = creator
+    self.raw = raw
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.BossResource.get_cutout_route">
+    <p>def <span class="ident">get_cutout_route</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the route for cutout operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.get_cutout_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource.get_cutout_route" class="source">
+    <pre><code>@abstractmethod
+def get_cutout_route(self):
+    """Get the route for cutout operations.
+    Not all resources will support this operation.
+    Returns:
+        (string): A string that can be used as part of a URL.
+    Raises:
+        (RuntimeError): if operation not supported by the resource.
+    """
+    assert NotImplemented
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.BossResource.get_list_route">
+    <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the route for listing resources.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.get_list_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource.get_list_route" class="source">
+    <pre><code>@abstractmethod
+def get_list_route(self):
+    """Get the route for listing resources.
+    Returns:
+        (string): A string that can be appended to the location of an
+        endpoint such as 'mycollection/experiment'
+    """
+    assert NotImplemented
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.BossResource.get_meta_or_permission_route">
+    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the route for metadata or permission operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource.get_meta_or_permission_route" class="source">
+    <pre><code>@abstractmethod
+def get_meta_or_permission_route(self):
+    """Get the route for metadata or permission operations.
+    Not all resources will support this operation.
+    Returns:
+        (string): A string that can be used as part of a URL.
+    Raises:
+        (RuntimeError): if operation not supported by the resource.
+    """
+    assert NotImplemented
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.BossResource.get_route">
+    <p>def <span class="ident">get_route</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the route for resource.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment/exp1/channel/chan2'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.get_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource.get_route" class="source">
+    <pre><code>@abstractmethod
+def get_route(self):
+    """Get the route for resource.
+    Returns:
+        (string): A string that can be appended to the location of an
+        endpoint such as 'mycollection/experiment/exp1/channel/chan2'
+    """
+    assert NotImplemented
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.BossResource.valid_volume">
+    <p>def <span class="ident">valid_volume</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.valid_volume', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource.valid_volume" class="source">
+    <pre><code>def valid_volume(self):
+    return False
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="intern.resource.boss.resource.ChannelResource" class="name">class <span class="ident">ChannelResource</span></p>
+      
+  
+    <div class="desc"><p>Holds channel data.</p>
+<p>Attributes:<br />
+&emsp;&emsp;&emsp;&emsp;<b>coll_name (string)</b>: Name of collection containing this resource.<br />
+&emsp;&emsp;&emsp;&emsp;<b>exp_name (string)</b>: Name of experiment containing this resource.<br />
+&emsp;&emsp;&emsp;&emsp;<b>description (string)</b>: Description of channel or layer.<br />
+    default_time_step (int):<br />
+    base_resolution (int):<br />
+&emsp;&emsp;&emsp;&emsp;<b>_type (string)</b>: 'image' or 'annotation'<br />
+&emsp;&emsp;&emsp;&emsp;<b>_valid_datatypes (list[string])</b>: Allowed data type values (static variable).<br />
+    _datatype (string):</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource" class="source">
+    <pre><code>class ChannelResource(BossResource):
+    """
+    Holds channel data.
+
+    Attributes:
+        coll_name (string): Name of collection containing this resource.
+        exp_name (string): Name of experiment containing this resource.
+        description (string): Description of channel or layer.
+        default_time_step (int):
+        base_resolution (int):
+        _type (string): 'image' or 'annotation'
+        _valid_datatypes (list[string]): Allowed data type values (static variable).
+        _datatype (string):
+    """
+
+    _valid_datatypes = ['uint8', 'uint16', 'uint64']
+    _valid_types = ['annotation', 'image']
+
+    def __init__(self, name, collection_name, experiment_name, type,
+        description='', default_time_step=0, datatype='uint8',
+        base_resolution=0, sources=[], related=[], creator='', raw={}):
+        """Constructor.
+
+        Args:
+            name (string): Channel name.
+            collection_name (string): Parent collection name.
+            experiment_name (string): Parent experiment name.
+            type (string): 'image' or 'annotation'
+            description (optional[string]): Layer description.  Defaults to empty.
+            default_time_step (optional[int]): Defaults to 0.
+            datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
+            base_resolution (optional[int]): Defaults to 0 (native).
+            sources (optional[list[string]]): Channels this channel was derived from.
+            related (optiona[list[string]]): Channels related to this channel.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+
+        BossResource.__init__(self, name, description, creator, raw)
+        self.coll_name = collection_name
+        self.exp_name = experiment_name
+
+        self._type = self.validate_type(type)
+        self._datatype = self.validate_datatype(datatype)
+
+        self.sources = sources
+
+        self.related = related
+
+        #ToDo: validate data types.
+        self.default_time_step = default_time_step
+        self.base_resolution = base_resolution
+
+    def get_route(self):
+        return self.coll_name + '/experiment/' + self.exp_name + '/channel/' + self.name
+
+    def get_list_route(self):
+        return self.coll_name + '/experiment/' + self.exp_name + '/channel/'
+
+    def get_cutout_route(self):
+        return self.coll_name + '/' + self.exp_name + '/' + self.name
+
+    def get_meta_or_permission_route(self):
+        return self.coll_name + '/' + self.exp_name + '/' + self.name
+
+    def valid_volume(self):
+        """Channels and layers are valid resources for interacting with the volume service.
+        """
+        return True
+
+    @property
+    def sources(self):
+        return self._sources
+
+    @sources.setter
+    def sources(self, value):
+        if isinstance(value, str):
+            self._sources = [value]
+        else:
+            self._sources = value
+
+    @property
+    def related(self):
+        return self._related
+
+    @related.setter
+    def related(self, value):
+        if isinstance(value, str):
+            self._related = [value]
+        else:
+            self._related = value
+
+    @property
+    def type(self):
+        """Channel type.
+
+        Returns:
+            (string)
+        """
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        """
+        Args:
+            value (string): 'image', 'annotation'
+        Raises:
+            ValueError
+        """
+        self._type = self.validate_type(value)
+
+    @property
+    def datatype(self):
+        """Channel bit depth.
+
+        Returns:
+            (string)
+        """
+        return self._datatype
+
+    @datatype.setter
+    def datatype(self, value):
+        """
+        Args:
+            value (string): 'uint8', 'uint16', 'uint64'
+        Raises:
+            ValueError
+        """
+        self._datatype = self.validate_datatype(value)
+
+    def validate_type(self, value):
+        lowered = value.lower()
+        if lowered in ChannelResource._valid_types:
+            return lowered
+        raise ValueError('{} is not a valid type.'.format(value))
+
+    def validate_datatype(self, value):
+        lowered = value.lower()
+        if lowered in ChannelResource._valid_datatypes:
+            return lowered
+        raise ValueError('{} is not a valid data type.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#intern.resource.boss.resource.ChannelResource">ChannelResource</a></li>
+          <li><a href="#intern.resource.boss.resource.BossResource">BossResource</a></li>
+          <li>intern.resource.resource.Resource</li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.base_resolution" class="name">var <span class="ident">base_resolution</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.coll_name" class="name">var <span class="ident">coll_name</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.creator" class="name">var <span class="ident">creator</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.creator">creator</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.datatype" class="name">var <span class="ident">datatype</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Channel bit depth.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<pre><code>(string)
+</code></pre></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.default_time_step" class="name">var <span class="ident">default_time_step</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.description" class="name">var <span class="ident">description</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.description">description</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.exp_name" class="name">var <span class="ident">exp_name</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.name" class="name">var <span class="ident">name</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.name">name</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.raw" class="name">var <span class="ident">raw</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.raw">raw</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.related" class="name">var <span class="ident">related</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.sources" class="name">var <span class="ident">sources</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.type" class="name">var <span class="ident">type</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Channel type.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<pre><code>(string)
+</code></pre></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, experiment_name, type, description=&#39;&#39;, default_time_step=0, datatype=&#39;uint8&#39;, base_resolution=0, sources=[], related=[], creator=&#39;&#39;, raw={})</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.__init__">__init__</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p>Constructor.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Channel name.<br />
+&emsp;&emsp;&emsp;&emsp;<b>collection_name (string)</b>: Parent collection name.<br />
+&emsp;&emsp;&emsp;&emsp;<b>experiment_name (string)</b>: Parent experiment name.<br />
+&emsp;&emsp;&emsp;&emsp;<b>type (string)</b>: 'image' or 'annotation'<br />
+&emsp;&emsp;&emsp;&emsp;<b>description (optional[string])</b>: Layer description.  Defaults to empty.<br />
+&emsp;&emsp;&emsp;&emsp;<b>default_time_step (optional[int])</b>: Defaults to 0.<br />
+&emsp;&emsp;&emsp;&emsp;<b>datatype (optional[string])</b>: 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>base_resolution (optional[int])</b>: Defaults to 0 (native).<br />
+&emsp;&emsp;&emsp;&emsp;<b>sources (optional[list[string]])</b>: Channels this channel was derived from.<br />
+&emsp;&emsp;&emsp;&emsp;<b>related (optiona[list[string]])</b>: Channels related to this channel.<br />
+&emsp;&emsp;&emsp;&emsp;<b>creator (optional[string])</b>: Resource creator.<br />
+&emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.__init__" class="source">
+    <pre><code>def __init__(self, name, collection_name, experiment_name, type,
+    description='', default_time_step=0, datatype='uint8',
+    base_resolution=0, sources=[], related=[], creator='', raw={}):
+    """Constructor.
+    Args:
+        name (string): Channel name.
+        collection_name (string): Parent collection name.
+        experiment_name (string): Parent experiment name.
+        type (string): 'image' or 'annotation'
+        description (optional[string]): Layer description.  Defaults to empty.
+        default_time_step (optional[int]): Defaults to 0.
+        datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
+        base_resolution (optional[int]): Defaults to 0 (native).
+        sources (optional[list[string]]): Channels this channel was derived from.
+        related (optiona[list[string]]): Channels related to this channel.
+        creator (optional[string]): Resource creator.
+        raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+    """
+    BossResource.__init__(self, name, description, creator, raw)
+    self.coll_name = collection_name
+    self.exp_name = experiment_name
+    self._type = self.validate_type(type)
+    self._datatype = self.validate_datatype(datatype)
+    self.sources = sources
+    self.related = related
+    #ToDo: validate data types.
+    self.default_time_step = default_time_step
+    self.base_resolution = base_resolution
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_cutout_route">
+    <p>def <span class="ident">get_cutout_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_cutout_route">get_cutout_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for cutout operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.get_cutout_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.get_cutout_route" class="source">
+    <pre><code>def get_cutout_route(self):
+    return self.coll_name + '/' + self.exp_name + '/' + self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_list_route">
+    <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_list_route">get_list_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for listing resources.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.get_list_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.get_list_route" class="source">
+    <pre><code>def get_list_route(self):
+    return self.coll_name + '/experiment/' + self.exp_name + '/channel/'
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_meta_or_permission_route">
+    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for metadata or permission operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.get_meta_or_permission_route" class="source">
+    <pre><code>def get_meta_or_permission_route(self):
+    return self.coll_name + '/' + self.exp_name + '/' + self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_route">
+    <p>def <span class="ident">get_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_route">get_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for resource.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment/exp1/channel/chan2'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.get_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.get_route" class="source">
+    <pre><code>def get_route(self):
+    return self.coll_name + '/experiment/' + self.exp_name + '/channel/' + self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.valid_volume">
+    <p>def <span class="ident">valid_volume</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.valid_volume">valid_volume</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p>Channels and layers are valid resources for interacting with the volume service.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.valid_volume', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.valid_volume" class="source">
+    <pre><code>def valid_volume(self):
+    """Channels and layers are valid resources for interacting with the volume service.
+    """
+    return True
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.validate_datatype">
+    <p>def <span class="ident">validate_datatype</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.validate_datatype', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.validate_datatype" class="source">
+    <pre><code>def validate_datatype(self, value):
+    lowered = value.lower()
+    if lowered in ChannelResource._valid_datatypes:
+        return lowered
+    raise ValueError('{} is not a valid data type.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.validate_type">
+    <p>def <span class="ident">validate_type</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.validate_type', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.validate_type" class="source">
+    <pre><code>def validate_type(self, value):
+    lowered = value.lower()
+    if lowered in ChannelResource._valid_types:
+        return lowered
+    raise ValueError('{} is not a valid type.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="intern.resource.boss.resource.CollectionResource" class="name">class <span class="ident">CollectionResource</span></p>
+      
+  
+    <div class="desc"><p>Top level container for Boss projects.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource" class="source">
+    <pre><code>class CollectionResource(BossResource):
+    """Top level container for Boss projects.
+    """
+    def __init__(
+        self, name, description='', creator='', raw={}):
+        """Constructor.
+
+        Args:
+            name (string): Collection name.
+            description (optional[string]): Collection description.  Defaults to empty.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+        BossResource.__init__(self, name, description, creator, raw)
+
+    def get_route(self):
+        return self.name
+
+    def get_list_route(self):
+        return ''
+
+    def get_cutout_route(self):
+        raise RuntimeError('Not supported for collections.')
+
+    def get_meta_or_permission_route(self):
+        return self.name
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#intern.resource.boss.resource.CollectionResource">CollectionResource</a></li>
+          <li><a href="#intern.resource.boss.resource.BossResource">BossResource</a></li>
+          <li>intern.resource.resource.Resource</li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CollectionResource.creator" class="name">var <span class="ident">creator</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.creator">creator</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CollectionResource.description" class="name">var <span class="ident">description</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.description">description</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CollectionResource.name" class="name">var <span class="ident">name</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.name">name</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CollectionResource.raw" class="name">var <span class="ident">raw</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.raw">raw</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CollectionResource.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, description=&#39;&#39;, creator=&#39;&#39;, raw={})</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.__init__">__init__</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p>Constructor.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Collection name.<br />
+&emsp;&emsp;&emsp;&emsp;<b>description (optional[string])</b>: Collection description.  Defaults to empty.<br />
+&emsp;&emsp;&emsp;&emsp;<b>creator (optional[string])</b>: Resource creator.<br />
+&emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource.__init__" class="source">
+    <pre><code>def __init__(
+    self, name, description='', creator='', raw={}):
+    """Constructor.
+    Args:
+        name (string): Collection name.
+        description (optional[string]): Collection description.  Defaults to empty.
+        creator (optional[string]): Resource creator.
+        raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+    """
+    BossResource.__init__(self, name, description, creator, raw)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_cutout_route">
+    <p>def <span class="ident">get_cutout_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_cutout_route">get_cutout_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for cutout operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.get_cutout_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource.get_cutout_route" class="source">
+    <pre><code>def get_cutout_route(self):
+    raise RuntimeError('Not supported for collections.')
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_list_route">
+    <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_list_route">get_list_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for listing resources.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.get_list_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource.get_list_route" class="source">
+    <pre><code>def get_list_route(self):
+    return ''
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_meta_or_permission_route">
+    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for metadata or permission operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource.get_meta_or_permission_route" class="source">
+    <pre><code>def get_meta_or_permission_route(self):
+    return self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_route">
+    <p>def <span class="ident">get_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_route">get_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for resource.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment/exp1/channel/chan2'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.get_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource.get_route" class="source">
+    <pre><code>def get_route(self):
+    return self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CollectionResource.valid_volume">
+    <p>def <span class="ident">valid_volume</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.valid_volume">valid_volume</a></code>
+    </p>
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.valid_volume', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource.valid_volume" class="source">
+    <pre><code>def valid_volume(self):
+    return False
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="intern.resource.boss.resource.CoordinateFrameResource" class="name">class <span class="ident">CoordinateFrameResource</span></p>
+      
+  
+    <div class="desc"><p>Coordinate frame used by experiment(s).</p>
+<p>For all ranges, the <em>stop value is exclusive.  This means valid values will be _less than</em> the stop value.</p>
+<p>Attributes:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Coordinate frame name.<br />
+&emsp;&emsp;&emsp;&emsp;<b>description (string)</b>: Coordinate frame description.  Defaults to empty.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_start (int)</b>: Minimum x coordinate (defaults to 0).<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_stop (int)</b>: Maximum x coordinate - exclusive (defaults to 1).<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_start (int)</b>: Minimum y coordinate (defaults to 0).<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_stop (int)</b>: Maximum y coordinate - exclusive (defaults to 1).<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_start (int)</b>: Minimum z coordinate (defaults to 0).<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_stop (int)</b>: Maximum z coordinate - exclusive (defaults to 1).<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_voxel_size (int)</b>: Defaults to 1.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_voxel_size (int)</b>: Defaults to 1.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_voxel_size (int)</b>: Defaults to 1.<br />
+&emsp;&emsp;&emsp;&emsp;<b>voxel_unit (string)</b>: 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_step (int)</b>: Defaults to 0.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_step_unit (string)</b>: 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource" class="source">
+    <pre><code>class CoordinateFrameResource(BossResource):
+    """
+    Coordinate frame used by experiment(s).
+
+    For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
+
+    Attributes:
+        name (string): Coordinate frame name.
+        description (string): Coordinate frame description.  Defaults to empty.
+        x_start (int): Minimum x coordinate (defaults to 0).
+        x_stop (int): Maximum x coordinate - exclusive (defaults to 1).
+        y_start (int): Minimum y coordinate (defaults to 0).
+        y_stop (int): Maximum y coordinate - exclusive (defaults to 1).
+        z_start (int): Minimum z coordinate (defaults to 0).
+        z_stop (int): Maximum z coordinate - exclusive (defaults to 1).
+        x_voxel_size (int): Defaults to 1.
+        y_voxel_size (int): Defaults to 1.
+        z_voxel_size (int): Defaults to 1.
+        voxel_unit (string): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
+        time_step (int): Defaults to 0.
+        time_step_unit (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
+    """
+    def __init__(
+        self, name, description='',
+        x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
+        x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
+        time_step=0, time_step_unit='seconds', creator='', raw={}):
+        """Constructor.
+
+        For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
+
+        Args:
+            name (string): Coordinate frame name.
+            description (optional[string]): Coordinate frame description.  Defaults to empty.
+            x_start (optional[int]): Minimum x coordinate (defaults to 0).
+            x_stop (optional[int]): Maximum x coordinate - exclusive (defaults to 1).
+            y_start (optional[int]): Minimum y coordinate (defaults to 0).
+            y_stop (optional[int]): Maximum y coordinate - exclusive (defaults to 1).
+            z_start (optional[int]): Minimum z coordinate (defaults to 0).
+            z_stop (optional[int]): Maximum z coordinate - exclusive (defaults to 1).
+            x_voxel_size (optional[int]): Defaults to 1.
+            y_voxel_size (optional[int]): Defaults to 1.
+            z_voxel_size (optional[int]): Defaults to 1.
+            voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
+            time_step (optional[int]): Defaults to 0.
+            time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+
+        BossResource.__init__(self, name, description, raw=raw)
+
+        self._valid_voxel_units = [
+            'nanometers', 'micrometers', 'millimeters', 'centimeters']
+
+        self._valid_time_units = [
+            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+
+        self.x_start = x_start
+        self.x_stop = x_stop
+        self.y_start = y_start
+        self.y_stop = y_stop
+        self.z_start = z_start
+        self.z_stop = z_stop
+        self.x_voxel_size = x_voxel_size
+        self.y_voxel_size = y_voxel_size
+        self.z_voxel_size = z_voxel_size
+        self._voxel_unit = self.validate_voxel_units(voxel_unit)
+        self.time_step = time_step
+        self._time_step_unit = self.validate_time_units(time_step_unit)
+
+    def get_route(self):
+        return self.name
+
+    def get_list_route(self):
+        return ''
+
+    def get_cutout_route(self):
+        raise RuntimeError('Not supported for coordinate frames.')
+
+    def get_meta_or_permission_route(self):
+        raise RuntimeError('Not supported for coordinate frames.')
+
+    @property
+    def voxel_unit(self):
+        return self._voxel_unit
+
+    @voxel_unit.setter
+    def voxel_unit(self, value):
+        """
+        Args:
+            value (string): Valid values: 'nanometers', 'micrometers', 'millimeters', 'centimeters'
+        Raises:
+            ValueError
+        """
+        self._voxel_unit = self.validate_voxel_units(value)
+
+    @property
+    def time_step_unit(self):
+        return self._time_step_unit
+
+    @time_step_unit.setter
+    def time_step_unit(self, value):
+        """
+        Args:
+            value (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'
+        Raises:
+            ValueError
+        """
+        self._time_step_unit = self.validate_time_units(value)
+
+    def validate_voxel_units(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_voxel_units:
+            return lowered
+        raise ValueError('{} is not a valid voxel unit.'.format(value))
+
+    def validate_time_units(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_time_units:
+            return lowered
+        raise ValueError('{} is not a valid time unit.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#intern.resource.boss.resource.CoordinateFrameResource">CoordinateFrameResource</a></li>
+          <li><a href="#intern.resource.boss.resource.BossResource">BossResource</a></li>
+          <li>intern.resource.resource.Resource</li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.creator" class="name">var <span class="ident">creator</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.creator">creator</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.description" class="name">var <span class="ident">description</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.description">description</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.name" class="name">var <span class="ident">name</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.name">name</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.raw" class="name">var <span class="ident">raw</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.raw">raw</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.time_step" class="name">var <span class="ident">time_step</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.time_step_unit" class="name">var <span class="ident">time_step_unit</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.voxel_unit" class="name">var <span class="ident">voxel_unit</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.x_start" class="name">var <span class="ident">x_start</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.x_stop" class="name">var <span class="ident">x_stop</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.x_voxel_size" class="name">var <span class="ident">x_voxel_size</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.y_start" class="name">var <span class="ident">y_start</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.y_stop" class="name">var <span class="ident">y_stop</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.y_voxel_size" class="name">var <span class="ident">y_voxel_size</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.z_start" class="name">var <span class="ident">z_start</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.z_stop" class="name">var <span class="ident">z_stop</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.CoordinateFrameResource.z_voxel_size" class="name">var <span class="ident">z_voxel_size</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, description=&#39;&#39;, x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1, x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit=&#39;nanometers&#39;, time_step=0, time_step_unit=&#39;seconds&#39;, creator=&#39;&#39;, raw={})</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.__init__">__init__</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p>Constructor.</p>
+<p>For all ranges, the <em>stop value is exclusive.  This means valid values will be _less than</em> the stop value.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Coordinate frame name.<br />
+&emsp;&emsp;&emsp;&emsp;<b>description (optional[string])</b>: Coordinate frame description.  Defaults to empty.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_start (optional[int])</b>: Minimum x coordinate (defaults to 0).<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_stop (optional[int])</b>: Maximum x coordinate - exclusive (defaults to 1).<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_start (optional[int])</b>: Minimum y coordinate (defaults to 0).<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_stop (optional[int])</b>: Maximum y coordinate - exclusive (defaults to 1).<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_start (optional[int])</b>: Minimum z coordinate (defaults to 0).<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_stop (optional[int])</b>: Maximum z coordinate - exclusive (defaults to 1).<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_voxel_size (optional[int])</b>: Defaults to 1.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_voxel_size (optional[int])</b>: Defaults to 1.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_voxel_size (optional[int])</b>: Defaults to 1.<br />
+&emsp;&emsp;&emsp;&emsp;<b>voxel_unit (optional[string])</b>: 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_step (optional[int])</b>: Defaults to 0.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_step_unit (optional[string])</b>: 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>creator (optional[string])</b>: Resource creator.<br />
+&emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.__init__" class="source">
+    <pre><code>def __init__(
+    self, name, description='',
+    x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
+    x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
+    time_step=0, time_step_unit='seconds', creator='', raw={}):
+    """Constructor.
+    For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
+    Args:
+        name (string): Coordinate frame name.
+        description (optional[string]): Coordinate frame description.  Defaults to empty.
+        x_start (optional[int]): Minimum x coordinate (defaults to 0).
+        x_stop (optional[int]): Maximum x coordinate - exclusive (defaults to 1).
+        y_start (optional[int]): Minimum y coordinate (defaults to 0).
+        y_stop (optional[int]): Maximum y coordinate - exclusive (defaults to 1).
+        z_start (optional[int]): Minimum z coordinate (defaults to 0).
+        z_stop (optional[int]): Maximum z coordinate - exclusive (defaults to 1).
+        x_voxel_size (optional[int]): Defaults to 1.
+        y_voxel_size (optional[int]): Defaults to 1.
+        z_voxel_size (optional[int]): Defaults to 1.
+        voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
+        time_step (optional[int]): Defaults to 0.
+        time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
+        creator (optional[string]): Resource creator.
+        raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+    """
+    BossResource.__init__(self, name, description, raw=raw)
+    self._valid_voxel_units = [
+        'nanometers', 'micrometers', 'millimeters', 'centimeters']
+    self._valid_time_units = [
+        'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+    self.x_start = x_start
+    self.x_stop = x_stop
+    self.y_start = y_start
+    self.y_stop = y_stop
+    self.z_start = z_start
+    self.z_stop = z_stop
+    self.x_voxel_size = x_voxel_size
+    self.y_voxel_size = y_voxel_size
+    self.z_voxel_size = z_voxel_size
+    self._voxel_unit = self.validate_voxel_units(voxel_unit)
+    self.time_step = time_step
+    self._time_step_unit = self.validate_time_units(time_step_unit)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_cutout_route">
+    <p>def <span class="ident">get_cutout_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_cutout_route">get_cutout_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for cutout operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.get_cutout_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.get_cutout_route" class="source">
+    <pre><code>def get_cutout_route(self):
+    raise RuntimeError('Not supported for coordinate frames.')
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_list_route">
+    <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_list_route">get_list_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for listing resources.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.get_list_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.get_list_route" class="source">
+    <pre><code>def get_list_route(self):
+    return ''
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_meta_or_permission_route">
+    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for metadata or permission operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.get_meta_or_permission_route" class="source">
+    <pre><code>def get_meta_or_permission_route(self):
+    raise RuntimeError('Not supported for coordinate frames.')
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_route">
+    <p>def <span class="ident">get_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_route">get_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for resource.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment/exp1/channel/chan2'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.get_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.get_route" class="source">
+    <pre><code>def get_route(self):
+    return self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.valid_volume">
+    <p>def <span class="ident">valid_volume</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.valid_volume">valid_volume</a></code>
+    </p>
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.valid_volume', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.valid_volume" class="source">
+    <pre><code>def valid_volume(self):
+    return False
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.validate_time_units">
+    <p>def <span class="ident">validate_time_units</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.validate_time_units', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.validate_time_units" class="source">
+    <pre><code>def validate_time_units(self, value):
+    lowered = value.lower()
+    if lowered in self._valid_time_units:
+        return lowered
+    raise ValueError('{} is not a valid time unit.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.validate_voxel_units">
+    <p>def <span class="ident">validate_voxel_units</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.validate_voxel_units', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.validate_voxel_units" class="source">
+    <pre><code>def validate_voxel_units(self, value):
+    lowered = value.lower()
+    if lowered in self._valid_voxel_units:
+        return lowered
+    raise ValueError('{} is not a valid voxel unit.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="intern.resource.boss.resource.ExperimentResource" class="name">class <span class="ident">ExperimentResource</span></p>
+      
+  
+    <div class="desc"><p>Experiments reside inside a collection and contain channels and<br />
+layers.</p>
+<p>Attributes:<br />
+    _coord_frame (string):<br />
+    num_hierarchy_levels (int):<br />
+    hierarchy_method (string):<br />
+    max_time_sample (int):</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource" class="source">
+    <pre><code>class ExperimentResource(BossResource):
+    """Experiments reside inside a collection and contain channels and
+    layers.
+
+    Attributes:
+        _coord_frame (string):
+        num_hierarchy_levels (int):
+        hierarchy_method (string):
+        max_time_sample (int):
+    """
+    def __init__(self, name, collection_name, coord_frame, description='',
+        num_hierarchy_levels=1, hierarchy_method='near_iso',
+        max_time_sample=0, creator='', raw={}):
+        """Constructor.
+
+        Args:
+            name (string): Experiment name.
+            collection_name (string): Collection name.
+            coord_frame (string): Name of coordinate frame used by experiment.
+            description (optional[string]): Experiment description.  Defaults to empty.
+            num_hierarchy_levels (optional[int]): Defaults to 1.
+            hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
+            max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.
+            creator (optional[string]): Resource creator.
+            raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        """
+
+        BossResource.__init__(self, name, description, creator, raw)
+        self.coll_name = collection_name
+
+        self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
+
+        #ToDo: validate data types.
+        self._coord_frame = coord_frame
+        self.num_hierarchy_levels = num_hierarchy_levels
+        self._hierarchy_method = self.validate_hierarchy_method(
+            hierarchy_method)
+        self.max_time_sample = max_time_sample
+
+    @property
+    def coord_frame(self):
+        return self._coord_frame
+
+    @property
+    def hierarchy_method(self):
+        return self._hierarchy_method
+
+    @hierarchy_method.setter
+    def hierarchy_method(self, value):
+        """
+        Args:
+            value (string): Valid values: 'near_iso', 'iso', 'slice'
+        Raises:
+            ValueError
+        """
+        self._hierarchy_method = self.validate_hierarchy_method(value)
+
+    def get_route(self):
+        return self.coll_name + '/experiment/' + self.name
+
+    def get_list_route(self):
+        return self.coll_name + '/experiment/'
+
+    def get_cutout_route(self):
+        raise RuntimeError('Not supported for experiments.')
+
+    def get_meta_or_permission_route(self):
+        return self.coll_name + '/' + self.name
+
+    def validate_hierarchy_method(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_hierarchy_methods:
+            return lowered
+        raise ValueError('{} is not a valid hierarchy method.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#intern.resource.boss.resource.ExperimentResource">ExperimentResource</a></li>
+          <li><a href="#intern.resource.boss.resource.BossResource">BossResource</a></li>
+          <li>intern.resource.resource.Resource</li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.coll_name" class="name">var <span class="ident">coll_name</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.coord_frame" class="name">var <span class="ident">coord_frame</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.creator" class="name">var <span class="ident">creator</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.creator">creator</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.description" class="name">var <span class="ident">description</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.description">description</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.hierarchy_method" class="name">var <span class="ident">hierarchy_method</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.max_time_sample" class="name">var <span class="ident">max_time_sample</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.name" class="name">var <span class="ident">name</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.name">name</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.num_hierarchy_levels" class="name">var <span class="ident">num_hierarchy_levels</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.raw" class="name">var <span class="ident">raw</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.raw">raw</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, coord_frame, description=&#39;&#39;, num_hierarchy_levels=1, hierarchy_method=&#39;near_iso&#39;, max_time_sample=0, creator=&#39;&#39;, raw={})</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.__init__">__init__</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p>Constructor.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Experiment name.<br />
+&emsp;&emsp;&emsp;&emsp;<b>collection_name (string)</b>: Collection name.<br />
+&emsp;&emsp;&emsp;&emsp;<b>coord_frame (string)</b>: Name of coordinate frame used by experiment.<br />
+&emsp;&emsp;&emsp;&emsp;<b>description (optional[string])</b>: Experiment description.  Defaults to empty.<br />
+&emsp;&emsp;&emsp;&emsp;<b>num_hierarchy_levels (optional[int])</b>: Defaults to 1.<br />
+&emsp;&emsp;&emsp;&emsp;<b>hierarchy_method (optional[string])</b>: 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>max_time_sample (optional[int])</b>: Maximum number of time samples for any time series data captured by this experiment.<br />
+&emsp;&emsp;&emsp;&emsp;<b>creator (optional[string])</b>: Resource creator.<br />
+&emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.__init__" class="source">
+    <pre><code>def __init__(self, name, collection_name, coord_frame, description='',
+    num_hierarchy_levels=1, hierarchy_method='near_iso',
+    max_time_sample=0, creator='', raw={}):
+    """Constructor.
+    Args:
+        name (string): Experiment name.
+        collection_name (string): Collection name.
+        coord_frame (string): Name of coordinate frame used by experiment.
+        description (optional[string]): Experiment description.  Defaults to empty.
+        num_hierarchy_levels (optional[int]): Defaults to 1.
+        hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
+        max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.
+        creator (optional[string]): Resource creator.
+        raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+    """
+    BossResource.__init__(self, name, description, creator, raw)
+    self.coll_name = collection_name
+    self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
+    #ToDo: validate data types.
+    self._coord_frame = coord_frame
+    self.num_hierarchy_levels = num_hierarchy_levels
+    self._hierarchy_method = self.validate_hierarchy_method(
+        hierarchy_method)
+    self.max_time_sample = max_time_sample
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.get_cutout_route">
+    <p>def <span class="ident">get_cutout_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_cutout_route">get_cutout_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for cutout operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.get_cutout_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.get_cutout_route" class="source">
+    <pre><code>def get_cutout_route(self):
+    raise RuntimeError('Not supported for experiments.')
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.get_list_route">
+    <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_list_route">get_list_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for listing resources.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.get_list_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.get_list_route" class="source">
+    <pre><code>def get_list_route(self):
+    return self.coll_name + '/experiment/'
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.get_meta_or_permission_route">
+    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for metadata or permission operations.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.get_meta_or_permission_route" class="source">
+    <pre><code>def get_meta_or_permission_route(self):
+    return self.coll_name + '/' + self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.get_route">
+    <p>def <span class="ident">get_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_route">get_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for resource.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be appended to the location of an<br />
+    endpoint such as 'mycollection/experiment/exp1/channel/chan2'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.get_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.get_route" class="source">
+    <pre><code>def get_route(self):
+    return self.coll_name + '/experiment/' + self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.valid_volume">
+    <p>def <span class="ident">valid_volume</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.valid_volume">valid_volume</a></code>
+    </p>
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.valid_volume', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.valid_volume" class="source">
+    <pre><code>def valid_volume(self):
+    return False
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.validate_hierarchy_method">
+    <p>def <span class="ident">validate_hierarchy_method</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.validate_hierarchy_method', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.validate_hierarchy_method" class="source">
+    <pre><code>def validate_hierarchy_method(self, value):
+    lowered = value.lower()
+    if lowered in self._valid_hierarchy_methods:
+        return lowered
+    raise ValueError('{} is not a valid hierarchy method.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+
+  </section>
+
+    </article>
+  <div class="clear"> </div>
+  <footer id="footer">
+    <p>
+      Documentation generated by
+      <a href="https://github.com/BurntSushi/pdoc">pdoc 0.3.2</a>
+    </p>
+
+    <p>pdoc is in the public domain with the
+      <a href="http://unlicense.org">UNLICENSE</a></p>
+
+    <p>Design by <a href="http://nadh.in">Kailash Nadh</a></p>
+  </footer>
+</div>
+</body>
+</html>

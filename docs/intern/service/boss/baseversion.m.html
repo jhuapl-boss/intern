@@ -1,0 +1,2623 @@
+<!doctype html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+
+    <title>intern.service.boss.baseversion API documentation</title>
+    <meta name="description" content="" />
+
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
+  
+  <style type="text/css">
+  
+* {
+  box-sizing: border-box;
+}
+/*! normalize.css v1.1.1 | MIT License | git.io/normalize */
+
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+/**
+ * Correct `block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/**
+ * Correct `inline-block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+audio,
+canvas,
+video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Firefox 3, and Safari 4.
+ * Known issue: no IE 6 support.
+ */
+
+[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/**
+ * 1. Prevent system color scheme's background color being used in Firefox, IE,
+ *    and Opera.
+ * 2. Prevent system color scheme's text color being used in Firefox, IE, and
+ *    Opera.
+ * 3. Correct text resizing oddly in IE 6/7 when body `font-size` is set using
+ *    `em` units.
+ * 4. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+html {
+    background: #fff; /* 1 */
+    color: #000; /* 2 */
+    font-size: 100%; /* 3 */
+    -webkit-text-size-adjust: 100%; /* 4 */
+    -ms-text-size-adjust: 100%; /* 4 */
+}
+
+/**
+ * Address `font-family` inconsistency between `textarea` and other form
+ * elements.
+ */
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: sans-serif;
+}
+
+/**
+ * Address margins handled incorrectly in IE 6/7.
+ */
+
+body {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+
+a:focus {
+    outline: thin dotted;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+/**
+ * Address font sizes and margins set differently in IE 6/7.
+ * Address font sizes within `section` and `article` in Firefox 4+, Safari 5,
+ * and Chrome.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 0.83em 0;
+}
+
+h3 {
+    font-size: 1.17em;
+    margin: 1em 0;
+}
+
+h4 {
+    font-size: 1em;
+    margin: 1.33em 0;
+}
+
+h5 {
+    font-size: 0.83em;
+    margin: 1.67em 0;
+}
+
+h6 {
+    font-size: 0.67em;
+    margin: 2.33em 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Safari 5, and Chrome.
+ */
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 3+, Safari 4/5, and Chrome.
+ */
+
+b,
+strong {
+    font-weight: bold;
+}
+
+blockquote {
+    margin: 1em 40px;
+}
+
+/**
+ * Address styling not present in Safari 5 and Chrome.
+ */
+
+dfn {
+    font-style: italic;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ * Known issue: no IE 6/7 normalization.
+ */
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 6/7/8/9.
+ */
+
+mark {
+    background: #ff0;
+    color: #000;
+}
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+p,
+pre {
+    margin: 1em 0;
+}
+
+/**
+ * Correct font family set oddly in IE 6, Safari 4/5, and Chrome.
+ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, serif;
+    _font-family: 'courier new', monospace;
+    font-size: 1em;
+}
+
+/**
+ * Improve readability of pre-formatted text in all browsers.
+ */
+
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/**
+ * Address CSS quotes not supported in IE 6/7.
+ */
+
+q {
+    quotes: none;
+}
+
+/**
+ * Address `quotes` property not supported in Safari 4.
+ */
+
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+dl,
+menu,
+ol,
+ul {
+    margin: 1em 0;
+}
+
+dd {
+    margin: 0 0 0 40px;
+}
+
+/**
+ * Address paddings set differently in IE 6/7.
+ */
+
+menu,
+ol,
+ul {
+    padding: 0 0 0 40px;
+}
+
+/**
+ * Correct list images handled incorrectly in IE 7.
+ */
+
+nav ul,
+nav ol {
+    list-style: none;
+    list-style-image: none;
+}
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+
+/**
+ * 1. Remove border when inside `a` element in IE 6/7/8/9 and Firefox 3.
+ * 2. Improve image quality when scaled in IE 7.
+ */
+
+img {
+    border: 0; /* 1 */
+    -ms-interpolation-mode: bicubic; /* 2 */
+}
+
+/**
+ * Correct overflow displayed oddly in IE 9.
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+
+/**
+ * Address margin not present in IE 6/7/8/9, Safari 5, and Opera 11.
+ */
+
+figure {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/**
+ * Correct margin displayed oddly in IE 6/7.
+ */
+
+form {
+    margin: 0;
+}
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct color not being inherited in IE 6/7/8/9.
+ * 2. Correct text not wrapping in Firefox 3.
+ * 3. Correct alignment displayed oddly in IE 6/7.
+ */
+
+legend {
+    border: 0; /* 1 */
+    padding: 0;
+    white-space: normal; /* 2 */
+    *margin-left: -7px; /* 3 */
+}
+
+/**
+ * 1. Correct font size not being inherited in all browsers.
+ * 2. Address margins set differently in IE 6/7, Firefox 3+, Safari 5,
+ *    and Chrome.
+ * 3. Improve appearance and consistency in all browsers.
+ */
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%; /* 1 */
+    margin: 0; /* 2 */
+    vertical-align: baseline; /* 3 */
+    *vertical-align: middle; /* 3 */
+}
+
+/**
+ * Address Firefox 3+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 6+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+
+button,
+select {
+    text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ * 4. Remove inner spacing in IE 7 without affecting normal text inputs.
+ *    Known issue: inner spacing remains in IE 6.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button; /* 2 */
+    cursor: pointer; /* 3 */
+    *overflow: visible;  /* 4 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+/**
+ * 1. Address box sizing set to content-box in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ * 3. Remove excess padding in IE 7.
+ *    Known issue: excess padding remains in IE 6.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+    *height: 13px; /* 3 */
+    *width: 13px; /* 3 */
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box; /* 2 */
+    box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * Remove inner padding and border in Firefox 3+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/**
+ * 1. Remove default vertical scrollbar in IE 6/7/8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+
+textarea {
+    overflow: auto; /* 1 */
+    vertical-align: top; /* 2 */
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+/**
+ * Remove most spacing between table cells.
+ */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+  </style>
+
+  <style type="text/css">
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+  body {
+    background: #fff;
+    font-family: "Source Sans Pro", "Helvetica Neueue", Helvetica, sans;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6em;
+  }
+  #content {
+    width: 70%;
+    max-width: 850px;
+    float: left;
+    padding: 30px 60px;
+    border-left: 1px solid #ddd;
+  }
+  #sidebar {
+    width: 25%;
+    float: left;
+    padding: 30px;
+    overflow: hidden;
+  }
+  #nav {
+    font-size: 130%;
+    margin: 0 0 15px 0;
+  }
+
+  #top {
+    display: block;
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    font-size: .85em;
+    text-transform: uppercase;
+  }
+
+  #footer {
+    font-size: .75em;
+    padding: 5px 30px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+  }
+    #footer p {
+      margin: 0 0 0 30px;
+      display: inline-block;
+    }
+
+  h1, h2, h3, h4, h5 {
+    font-weight: 300;
+  }
+  h1 {
+    font-size: 2.5em;
+    line-height: 1.1em;
+    margin: 0 0 .50em 0;
+  }
+
+  h2 {
+    font-size: 1.75em;
+    margin: 1em 0 .50em 0;
+  }
+
+  h3 {
+    margin: 25px 0 10px 0;
+  }
+
+  h4 {
+    margin: 0;
+    font-size: 105%;
+  }
+
+  a {
+    color: #058;
+    text-decoration: none;
+    transition: color .3s ease-in-out;
+  }
+
+  a:hover {
+    color: #e08524;
+    transition: color .3s ease-in-out;
+  }
+
+  pre, code, .mono, .name {
+    font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
+  }
+
+  .title .name {
+    font-weight: bold;
+  }
+  .section-title {
+    margin-top: 2em;
+  }
+  .ident {
+    color: #900;
+  }
+
+  code {
+    background: #f9f9f9;
+  } 
+
+  pre {
+    background: #fefefe;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 0 #f3f3f3;
+    margin: 0 30px;
+    padding: 15px 30px;
+  }
+
+  .codehilite {
+    margin: 0 30px 10px 30px;
+  }
+
+    .codehilite pre {
+      margin: 0;
+    }
+    .codehilite .err { background: #ff3300; color: #fff !important; } 
+
+  table#module-list {
+    font-size: 110%;
+  }
+
+    table#module-list tr td:first-child {
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+
+    table#module-list td {
+      vertical-align: top;
+      padding-bottom: 8px;
+    }
+
+      table#module-list td p {
+        margin: 0 0 7px 0;
+      }
+
+  .def {
+    display: table;
+  }
+
+    .def p {
+      display: table-cell;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .def p:first-child {
+      white-space: nowrap;
+    }
+
+    .def p:last-child {
+      width: 100%;
+    }
+
+
+  #index {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+    ul#index .class_name {
+      /* font-size: 110%; */
+      font-weight: bold;
+    }
+    #index ul {
+      margin: 0;
+    }
+
+  .item {
+    margin: 0 0 15px 0;
+  }
+
+    .item .class {
+      margin: 0 0 25px 30px;
+    }
+
+      .item .class ul.class_list {
+        margin: 0 0 20px 0;
+      }
+
+    .item .name {
+      background: #fafafa;
+      margin: 0;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 3px;
+      display: inline-block;
+      min-width: 40%;
+    }
+      .item .name:hover {
+        background: #f6f6f6;
+      }
+
+    .item .empty_desc {
+      margin: 0 0 5px 0;
+      padding: 0;
+    }
+
+    .item .inheritance {
+      margin: 3px 0 0 30px;
+    }
+
+    .item .inherited {
+      color: #666;
+    }
+
+    .item .desc {
+      padding: 0 8px;
+      margin: 0;
+    }
+
+      .item .desc p {
+        margin: 0 0 10px 0;
+      }
+
+    .source_cont {
+      margin: 0;
+      padding: 0;
+    }
+
+    .source_link a {
+      background: #ffc300;
+      font-weight: 400;
+      font-size: .75em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 1px 1px 0 #f4b700;
+      
+      padding: 3px 8px;
+      border-radius: 2px;
+      transition: background .3s ease-in-out;
+    }
+      .source_link a:hover {
+        background: #FF7200;
+        text-shadow: none;
+        transition: background .3s ease-in-out;
+      }
+
+    .source {
+      display: none;
+      max-height: 600px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+    }
+
+      .source .codehilite {
+        margin: 0;
+      }
+
+  .desc h1, .desc h2, .desc h3 {
+    font-size: 100% !important;
+  }
+  .clear {
+    clear: both;
+  }
+
+  @media all and (max-width: 950px) {
+    #sidebar {
+      width: 35%;
+    }
+    #content {
+      width: 65%;
+    }
+  }
+  @media all and (max-width: 650px) {
+    #top {
+      display: none;
+    }
+    #sidebar {
+      float: none;
+      width: auto;
+    }
+    #content {
+      float: none;
+      width: auto;
+      padding: 30px;
+    }
+
+    #index ul {
+      padding: 0;
+      margin-bottom: 15px;
+    }
+    #index ul li {
+      display: inline-block;
+      margin-right: 30px;
+    }
+    #footer {
+      text-align: left;
+    }
+    #footer p {
+      display: block;
+      margin: inherit;
+    }
+  }
+
+  /*****************************/
+
+  </style>
+
+
+  <style type="text/css">
+  
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+  </style>
+
+  <script type="text/javascript">
+  function toggle(id, $link) {
+    $node = document.getElementById(id);
+    if (!$node)
+    return;
+    if (!$node.style.display || $node.style.display == 'none') {
+    $node.style.display = 'block';
+    $link.innerHTML = 'Hide source &nequiv;';
+    } else {
+    $node.style.display = 'none';
+    $link.innerHTML = 'Show source &equiv;';
+    }
+  }
+  </script>
+</head>
+<body>
+<a href="#" id="top">Top</a>
+
+<div id="container">
+    
+  
+  <div id="sidebar">
+    <h1>Index</h1>
+    <ul id="index">
+
+
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
+      <ul>
+        <li class="mono">
+        <span class="class_name"><a href="#intern.service.boss.baseversion.BaseVersion">BaseVersion</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.__init__">__init__</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.build_cutout_url">build_cutout_url</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.build_metadata_url">build_metadata_url</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.build_url">build_url</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.convert_int_list_range_to_str">convert_int_list_range_to_str</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.get_cutout_request">get_cutout_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.get_group_request">get_group_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.get_headers">get_headers</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.get_metadata_request">get_metadata_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.get_permission_request">get_permission_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.get_request">get_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.get_user_groups_request">get_user_groups_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.get_user_request">get_user_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.baseversion.BaseVersion.get_user_role_request">get_user_role_request</a></li>
+  </ul>
+
+        </li>
+      </ul>
+    </li>
+
+    </ul>
+  </div>
+
+    <article id="content">
+      
+  
+
+  
+
+
+  <header id="section-intro">
+  <h1 class="title"><span class="name">intern.service.boss.baseversion</span> module</h1>
+  
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion" class="source">
+    <pre><code>﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import six
+from abc import ABCMeta, abstractmethod
+from intern.resource.boss.resource import CoordinateFrameResource
+from requests import Request
+
+
+@six.add_metaclass(ABCMeta)
+class BaseVersion(object):
+    """BaseVersion is the base class for all versioned interfaces to the
+    Boss API.
+    """
+    def __init__(self):
+        self._token = None
+
+    @property
+    @abstractmethod
+    def version(self):
+        """Implementers define the version of the Boss API the service uses.
+        """
+        raise NotImplemented
+
+    def convert_int_list_range_to_str(self, int_list):
+        """Convert range in list of two ints to string representation.
+
+        Returned string can then be placed in URL as a query parameter.
+
+        Args:
+            int_list (list[int]): range such as [10, 20] which means x>=10 and x<20.
+
+        Returns:
+            (string): [10, 20] => '10:20'
+
+        Raises:
+            (RuntimeError): if given invalid range.
+        """
+        if len(int_list) != 2:
+            raise RuntimeError('int_list must contain exactly two values.')
+
+        if int_list[0] > int_list[1]:
+            raise RuntimeError('Invalid range: int_list[0] > int_list[1].')
+
+        return '{}:{}'.format(int_list[0], int_list[1])
+
+    def get_headers(self, content_type, token):
+        """Get headers to place in Request object.
+
+        The auth token is added to the header for authenthication and
+        authorization.
+
+        Args:
+            content_type (string):  HTTP content type of request.
+            token (string):  Django Rest Framework token.
+
+        Returns:
+            (dictionary): Use as headers argument to the Request object.
+        """
+        return {
+            'Authorization': 'Token ' + token,
+            'Content-Type': content_type
+        }
+
+    def build_url(self, resource, url_prefix, service, req_type='normal'):
+        """Build the url to access the Boss' project service.
+
+        Args:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            service (string): Name of service to access, such as collection, meta, coord, etc.
+            req_type (optional[string]): Valid values ['normal', 'list', 'cutout'].  Defaults to 'normal'.
+
+        Returns:
+            (string): Full URL to access API.
+
+        Raises:
+            (RuntimeError): if invalid req_type given or url_prefix not given.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        if req_type == 'normal':
+            suffix = resource.get_route()
+        elif req_type == 'list':
+            # No suffix required for a list request.
+            suffix = resource.get_list_route()
+        elif req_type == 'cutout':
+            suffix = resource.get_cutout_route()
+        else:
+            raise RuntimeError('Invalid request type: {}'.format(req_type))
+
+        url = (url_prefix + '/' + self.version + '/' + service + '/' + suffix)
+        return url
+
+    def build_metadata_url(self, resource, url_prefix, key, value=None):
+        """Build the url to access the Boss' metadata service.
+
+        Args:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            key (string): Key to get/create/update/delete.
+            value (string): Value to assign to key or None.
+
+        Returns:
+            (string): Full URL to access API.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        suffix = resource.get_meta_or_permission_route()
+        urlNoParams = (url_prefix + '/' + self.version + '/meta/' + suffix)
+        if key is None:
+            return urlNoParams
+
+        urlWithKey = urlNoParams + '/?key=' + key
+        if value is None:
+            return urlWithKey
+
+        return urlWithKey + '&value=' + str(value)
+
+    def build_cutout_url(
+        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range):
+        """Build the url to access the cutout function of the Boss' volume service.
+
+        Args:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+
+        Returns:
+            (string): Full URL to access API.
+
+        Raises:
+            (RuntimeError): if *_range invalid.
+        """
+        baseUrl = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
+        x_rng_lst = self.convert_int_list_range_to_str(x_range)
+        y_rng_lst = self.convert_int_list_range_to_str(y_range)
+        z_rng_lst = self.convert_int_list_range_to_str(z_range)
+
+        urlWithParams = (
+            baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+            '/' + z_rng_lst + '/')
+        if time_range is None:
+            return urlWithParams
+
+        t_rng_lst = self.convert_int_list_range_to_str(time_range)
+        urlWithTime = urlWithParams + t_rng_lst + '/'
+        return urlWithTime
+
+    def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
+        """Create a request for accessing the Boss' data model services.
+
+        Use for the project service or listing keys via the metadata service.
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            proj_list_req (bool): Set to True if performing a list operation on the project service.  Defaults to False.
+            json (dict): POST body data.  Defaults to None.
+            data (): Raw data.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if isinstance(resource, CoordinateFrameResource):
+            service = 'coord'
+        else:
+            service = 'collection'
+
+        if proj_list_req:
+            req_type = 'list'
+        else:
+            req_type = 'normal'
+
+        url = self.build_url(resource, url_prefix, service, req_type)
+        headers = self.get_headers(content, token)
+        req = Request(method, url, headers = headers, json = json, data = data)
+
+        return req
+
+    def get_metadata_request(
+        self, resource, method, content, url_prefix, token,
+        key=None, value=None):
+
+        """Create a request for accessing the Boss' metadata service.
+
+        Do not use this method for list operations.  Instead, use the
+        get_request() method.
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            key (string): Name of key to operate on.  Defaults to None.
+            value (string): Value to assign to key  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        url = self.build_metadata_url(resource, url_prefix, key, value)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
+
+    def get_cutout_request(
+        self, resource, method, content, url_prefix, token,
+        resolution, x_range, y_range, z_range, time_range, numpyVolume=None):
+
+        """Create a request for working with cutouts (part of the Boss' volume service).
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            numpyVolume (numpy array): The data volume encoded in a numpy array.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        url = self.build_cutout_url(
+            resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers, data = numpyVolume)
+
+    def get_group_request(self, method, content, url_prefix, token, name, user_name):
+        """Get a request for getting group information.
+
+        If a user name is supplied, will generate a request to /group-member/
+        instead of /group/.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            name (string): Name of group.
+            user_name (optional[string]): Defaults to None.  If given, will generate a group membership request.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        if user_name is None:
+            url = url_prefix + '/' + self.version + '/group/' + name + '/'
+        else:
+            url = (url_prefix + '/' + self.version + '/group-member/' + name + '/' +
+                   user_name + '/')
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
+
+    def get_permission_request(
+        self, method, content, url_prefix, token, name, resource, data=None):
+        """Generate a request for manipulating permissions of a data model object.
+
+        Manipulate what members of the named group can do with the given data
+        model object.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            name (string): Name of group.
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            data (dict): POST body data.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        suffix = resource.get_meta_or_permission_route()
+        url = (url_prefix + '/' + self.version + '/permission/' + name + '/' +
+               suffix)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers, data = data)
+
+    def get_user_role_request(
+        self, method, content, url_prefix, token, user, role=None):
+        """Generate a request for manipulating roles for a user.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            user (string): Name of user.
+            role (optional[string]): Name of role.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = url_prefix + '/' + self.version + '/sso/user-role/' + user
+        if role is not None:
+            url = url + '/' + role
+
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
+
+    def get_user_groups_request(self, content, url_prefix, token, user):
+        """Get the groups a user belongs to.
+
+        Args:
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            user (string): Name of user.
+
+        Returns:
+            (list): List of dictionaries where the 'name' key of each dictionary is the group name.
+        """
+        method = 'GET'
+
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = url_prefix + '/' + self.version + '/group-member/?username=' + user
+
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers=headers)
+
+    def get_user_request(
+        self, method, content, url_prefix, token, user, first_name=None,
+        last_name=None, email=None, password=None):
+        """Generate a request for working with the /sso endpoint.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            user (string): Name of user.
+            first_name (optional[string]): User's first name.  Defaults to None.
+            last_name (optional[string]): User's last name.  Defaults to None.
+            email: (optional[string]): User's email address.  Defaults to None.
+            password: (optional[string]): User's password.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        data = {}
+
+        url = url_prefix + '/' + self.version + '/sso/user/' + user
+
+        if first_name is not None:
+            data['first_name'] = first_name
+
+        if last_name is not None:
+            data['last_name'] = last_name
+
+        if email is not None:
+            data['email'] = email
+
+        if password is not None:
+            data['password'] = password
+
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers=headers, data=data)
+</code></pre>
+  </div>
+
+  </header>
+
+  <section id="section-items">
+
+
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="intern.service.boss.baseversion.BaseVersion" class="name">class <span class="ident">BaseVersion</span></p>
+      
+  
+    <div class="desc"><p>BaseVersion is the base class for all versioned interfaces to the<br />
+Boss API.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion" class="source">
+    <pre><code>class BaseVersion(object):
+    """BaseVersion is the base class for all versioned interfaces to the
+    Boss API.
+    """
+    def __init__(self):
+        self._token = None
+
+    @property
+    @abstractmethod
+    def version(self):
+        """Implementers define the version of the Boss API the service uses.
+        """
+        raise NotImplemented
+
+    def convert_int_list_range_to_str(self, int_list):
+        """Convert range in list of two ints to string representation.
+
+        Returned string can then be placed in URL as a query parameter.
+
+        Args:
+            int_list (list[int]): range such as [10, 20] which means x>=10 and x<20.
+
+        Returns:
+            (string): [10, 20] => '10:20'
+
+        Raises:
+            (RuntimeError): if given invalid range.
+        """
+        if len(int_list) != 2:
+            raise RuntimeError('int_list must contain exactly two values.')
+
+        if int_list[0] > int_list[1]:
+            raise RuntimeError('Invalid range: int_list[0] > int_list[1].')
+
+        return '{}:{}'.format(int_list[0], int_list[1])
+
+    def get_headers(self, content_type, token):
+        """Get headers to place in Request object.
+
+        The auth token is added to the header for authenthication and
+        authorization.
+
+        Args:
+            content_type (string):  HTTP content type of request.
+            token (string):  Django Rest Framework token.
+
+        Returns:
+            (dictionary): Use as headers argument to the Request object.
+        """
+        return {
+            'Authorization': 'Token ' + token,
+            'Content-Type': content_type
+        }
+
+    def build_url(self, resource, url_prefix, service, req_type='normal'):
+        """Build the url to access the Boss' project service.
+
+        Args:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            service (string): Name of service to access, such as collection, meta, coord, etc.
+            req_type (optional[string]): Valid values ['normal', 'list', 'cutout'].  Defaults to 'normal'.
+
+        Returns:
+            (string): Full URL to access API.
+
+        Raises:
+            (RuntimeError): if invalid req_type given or url_prefix not given.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        if req_type == 'normal':
+            suffix = resource.get_route()
+        elif req_type == 'list':
+            # No suffix required for a list request.
+            suffix = resource.get_list_route()
+        elif req_type == 'cutout':
+            suffix = resource.get_cutout_route()
+        else:
+            raise RuntimeError('Invalid request type: {}'.format(req_type))
+
+        url = (url_prefix + '/' + self.version + '/' + service + '/' + suffix)
+        return url
+
+    def build_metadata_url(self, resource, url_prefix, key, value=None):
+        """Build the url to access the Boss' metadata service.
+
+        Args:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            key (string): Key to get/create/update/delete.
+            value (string): Value to assign to key or None.
+
+        Returns:
+            (string): Full URL to access API.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        suffix = resource.get_meta_or_permission_route()
+        urlNoParams = (url_prefix + '/' + self.version + '/meta/' + suffix)
+        if key is None:
+            return urlNoParams
+
+        urlWithKey = urlNoParams + '/?key=' + key
+        if value is None:
+            return urlWithKey
+
+        return urlWithKey + '&value=' + str(value)
+
+    def build_cutout_url(
+        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range):
+        """Build the url to access the cutout function of the Boss' volume service.
+
+        Args:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+
+        Returns:
+            (string): Full URL to access API.
+
+        Raises:
+            (RuntimeError): if *_range invalid.
+        """
+        baseUrl = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
+        x_rng_lst = self.convert_int_list_range_to_str(x_range)
+        y_rng_lst = self.convert_int_list_range_to_str(y_range)
+        z_rng_lst = self.convert_int_list_range_to_str(z_range)
+
+        urlWithParams = (
+            baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+            '/' + z_rng_lst + '/')
+        if time_range is None:
+            return urlWithParams
+
+        t_rng_lst = self.convert_int_list_range_to_str(time_range)
+        urlWithTime = urlWithParams + t_rng_lst + '/'
+        return urlWithTime
+
+    def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
+        """Create a request for accessing the Boss' data model services.
+
+        Use for the project service or listing keys via the metadata service.
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            proj_list_req (bool): Set to True if performing a list operation on the project service.  Defaults to False.
+            json (dict): POST body data.  Defaults to None.
+            data (): Raw data.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if isinstance(resource, CoordinateFrameResource):
+            service = 'coord'
+        else:
+            service = 'collection'
+
+        if proj_list_req:
+            req_type = 'list'
+        else:
+            req_type = 'normal'
+
+        url = self.build_url(resource, url_prefix, service, req_type)
+        headers = self.get_headers(content, token)
+        req = Request(method, url, headers = headers, json = json, data = data)
+
+        return req
+
+    def get_metadata_request(
+        self, resource, method, content, url_prefix, token,
+        key=None, value=None):
+
+        """Create a request for accessing the Boss' metadata service.
+
+        Do not use this method for list operations.  Instead, use the
+        get_request() method.
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            key (string): Name of key to operate on.  Defaults to None.
+            value (string): Value to assign to key  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        url = self.build_metadata_url(resource, url_prefix, key, value)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
+
+    def get_cutout_request(
+        self, resource, method, content, url_prefix, token,
+        resolution, x_range, y_range, z_range, time_range, numpyVolume=None):
+
+        """Create a request for working with cutouts (part of the Boss' volume service).
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            numpyVolume (numpy array): The data volume encoded in a numpy array.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        url = self.build_cutout_url(
+            resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers, data = numpyVolume)
+
+    def get_group_request(self, method, content, url_prefix, token, name, user_name):
+        """Get a request for getting group information.
+
+        If a user name is supplied, will generate a request to /group-member/
+        instead of /group/.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            name (string): Name of group.
+            user_name (optional[string]): Defaults to None.  If given, will generate a group membership request.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        if user_name is None:
+            url = url_prefix + '/' + self.version + '/group/' + name + '/'
+        else:
+            url = (url_prefix + '/' + self.version + '/group-member/' + name + '/' +
+                   user_name + '/')
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
+
+    def get_permission_request(
+        self, method, content, url_prefix, token, name, resource, data=None):
+        """Generate a request for manipulating permissions of a data model object.
+
+        Manipulate what members of the named group can do with the given data
+        model object.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            name (string): Name of group.
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            data (dict): POST body data.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        suffix = resource.get_meta_or_permission_route()
+        url = (url_prefix + '/' + self.version + '/permission/' + name + '/' +
+               suffix)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers, data = data)
+
+    def get_user_role_request(
+        self, method, content, url_prefix, token, user, role=None):
+        """Generate a request for manipulating roles for a user.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            user (string): Name of user.
+            role (optional[string]): Name of role.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = url_prefix + '/' + self.version + '/sso/user-role/' + user
+        if role is not None:
+            url = url + '/' + role
+
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
+
+    def get_user_groups_request(self, content, url_prefix, token, user):
+        """Get the groups a user belongs to.
+
+        Args:
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            user (string): Name of user.
+
+        Returns:
+            (list): List of dictionaries where the 'name' key of each dictionary is the group name.
+        """
+        method = 'GET'
+
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = url_prefix + '/' + self.version + '/group-member/?username=' + user
+
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers=headers)
+
+    def get_user_request(
+        self, method, content, url_prefix, token, user, first_name=None,
+        last_name=None, email=None, password=None):
+        """Generate a request for working with the /sso endpoint.
+
+        Args:
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            user (string): Name of user.
+            first_name (optional[string]): User's first name.  Defaults to None.
+            last_name (optional[string]): User's last name.  Defaults to None.
+            email: (optional[string]): User's email address.  Defaults to None.
+            password: (optional[string]): User's password.  Defaults to None.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        data = {}
+
+        url = url_prefix + '/' + self.version + '/sso/user/' + user
+
+        if first_name is not None:
+            data['first_name'] = first_name
+
+        if last_name is not None:
+            data['last_name'] = last_name
+
+        if email is not None:
+            data['email'] = email
+
+        if password is not None:
+            data['password'] = password
+
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers=headers, data=data)
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#intern.service.boss.baseversion.BaseVersion">BaseVersion</a></li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="intern.service.boss.baseversion.BaseVersion.version" class="name">var <span class="ident">version</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Implementers define the version of the Boss API the service uses.</p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.__init__" class="source">
+    <pre><code>def __init__(self):
+    self._token = None
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.build_cutout_url">
+    <p>def <span class="ident">build_cutout_url</span>(</p><p>self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Build the url to access the cutout function of the Boss' volume service.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string): Do not end with a slash.  Example of expected value</b>: https://api.theboss.io<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: Full URL to access API.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if *_range invalid.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.build_cutout_url', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.build_cutout_url" class="source">
+    <pre><code>def build_cutout_url(
+    self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range):
+    """Build the url to access the cutout function of the Boss' volume service.
+    Args:
+        url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+        resolution (int): 0 indicates native resolution.
+        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+    Returns:
+        (string): Full URL to access API.
+    Raises:
+        (RuntimeError): if *_range invalid.
+    """
+    baseUrl = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
+    x_rng_lst = self.convert_int_list_range_to_str(x_range)
+    y_rng_lst = self.convert_int_list_range_to_str(y_range)
+    z_rng_lst = self.convert_int_list_range_to_str(z_range)
+    urlWithParams = (
+        baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+        '/' + z_rng_lst + '/')
+    if time_range is None:
+        return urlWithParams
+    t_rng_lst = self.convert_int_list_range_to_str(time_range)
+    urlWithTime = urlWithParams + t_rng_lst + '/'
+    return urlWithTime
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.build_metadata_url">
+    <p>def <span class="ident">build_metadata_url</span>(</p><p>self, resource, url_prefix, key, value=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Build the url to access the Boss' metadata service.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string): Do not end with a slash.  Example of expected value</b>: https://api.theboss.io<br />
+&emsp;&emsp;&emsp;&emsp;<b>key (string)</b>: Key to get/create/update/delete.<br />
+&emsp;&emsp;&emsp;&emsp;<b>value (string)</b>: Value to assign to key or None.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: Full URL to access API.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.build_metadata_url', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.build_metadata_url" class="source">
+    <pre><code>def build_metadata_url(self, resource, url_prefix, key, value=None):
+    """Build the url to access the Boss' metadata service.
+    Args:
+        url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+        key (string): Key to get/create/update/delete.
+        value (string): Value to assign to key or None.
+    Returns:
+        (string): Full URL to access API.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    suffix = resource.get_meta_or_permission_route()
+    urlNoParams = (url_prefix + '/' + self.version + '/meta/' + suffix)
+    if key is None:
+        return urlNoParams
+    urlWithKey = urlNoParams + '/?key=' + key
+    if value is None:
+        return urlWithKey
+    return urlWithKey + '&value=' + str(value)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.build_url">
+    <p>def <span class="ident">build_url</span>(</p><p>self, resource, url_prefix, service, req_type=&#39;normal&#39;)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Build the url to access the Boss' project service.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string): Do not end with a slash.  Example of expected value</b>: https://api.theboss.io<br />
+&emsp;&emsp;&emsp;&emsp;<b>service (string)</b>: Name of service to access, such as collection, meta, coord, etc.<br />
+&emsp;&emsp;&emsp;&emsp;<b>req_type (optional[string])</b>: Valid values ['normal', 'list', 'cutout'].  Defaults to 'normal'.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: Full URL to access API.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if invalid req_type given or url_prefix not given.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.build_url', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.build_url" class="source">
+    <pre><code>def build_url(self, resource, url_prefix, service, req_type='normal'):
+    """Build the url to access the Boss' project service.
+    Args:
+        url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+        service (string): Name of service to access, such as collection, meta, coord, etc.
+        req_type (optional[string]): Valid values ['normal', 'list', 'cutout'].  Defaults to 'normal'.
+    Returns:
+        (string): Full URL to access API.
+    Raises:
+        (RuntimeError): if invalid req_type given or url_prefix not given.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    if req_type == 'normal':
+        suffix = resource.get_route()
+    elif req_type == 'list':
+        # No suffix required for a list request.
+        suffix = resource.get_list_route()
+    elif req_type == 'cutout':
+        suffix = resource.get_cutout_route()
+    else:
+        raise RuntimeError('Invalid request type: {}'.format(req_type))
+    url = (url_prefix + '/' + self.version + '/' + service + '/' + suffix)
+    return url
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.convert_int_list_range_to_str">
+    <p>def <span class="ident">convert_int_list_range_to_str</span>(</p><p>self, int_list)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Convert range in list of two ints to string representation.</p>
+<p>Returned string can then be placed in URL as a query parameter.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>int_list (list[int])</b>: range such as [10, 20] which means x&gt;=10 and x&lt;20.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: [10, 20] =&gt; '10:20'</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if given invalid range.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.convert_int_list_range_to_str', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.convert_int_list_range_to_str" class="source">
+    <pre><code>def convert_int_list_range_to_str(self, int_list):
+    """Convert range in list of two ints to string representation.
+    Returned string can then be placed in URL as a query parameter.
+    Args:
+        int_list (list[int]): range such as [10, 20] which means x>=10 and x<20.
+    Returns:
+        (string): [10, 20] => '10:20'
+    Raises:
+        (RuntimeError): if given invalid range.
+    """
+    if len(int_list) != 2:
+        raise RuntimeError('int_list must contain exactly two values.')
+    if int_list[0] > int_list[1]:
+        raise RuntimeError('Invalid range: int_list[0] > int_list[1].')
+    return '{}:{}'.format(int_list[0], int_list[1])
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.get_cutout_request">
+    <p>def <span class="ident">get_cutout_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, x_range, y_range, z_range, time_range, numpyVolume=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create a request for working with cutouts (part of the Boss' volume service).</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
+&emsp;&emsp;&emsp;&emsp;<b>numpyVolume (numpy array)</b>: The data volume encoded in a numpy array.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.get_cutout_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.get_cutout_request" class="source">
+    <pre><code>def get_cutout_request(
+    self, resource, method, content, url_prefix, token,
+    resolution, x_range, y_range, z_range, time_range, numpyVolume=None):
+    """Create a request for working with cutouts (part of the Boss' volume service).
+    Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        resolution (int): 0 indicates native resolution.
+        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+        numpyVolume (numpy array): The data volume encoded in a numpy array.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    url = self.build_cutout_url(
+        resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers = headers, data = numpyVolume)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.get_group_request">
+    <p>def <span class="ident">get_group_request</span>(</p><p>self, method, content, url_prefix, token, name, user_name)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get a request for getting group information.</p>
+<p>If a user name is supplied, will generate a request to /group-member/<br />
+instead of /group/.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user_name (optional[string])</b>: Defaults to None.  If given, will generate a group membership request.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.get_group_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.get_group_request" class="source">
+    <pre><code>def get_group_request(self, method, content, url_prefix, token, name, user_name):
+    """Get a request for getting group information.
+    If a user name is supplied, will generate a request to /group-member/
+    instead of /group/.
+    Args:
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        name (string): Name of group.
+        user_name (optional[string]): Defaults to None.  If given, will generate a group membership request.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    if user_name is None:
+        url = url_prefix + '/' + self.version + '/group/' + name + '/'
+    else:
+        url = (url_prefix + '/' + self.version + '/group-member/' + name + '/' +
+               user_name + '/')
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers = headers)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.get_headers">
+    <p>def <span class="ident">get_headers</span>(</p><p>self, content_type, token)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get headers to place in Request object.</p>
+<p>The auth token is added to the header for authenthication and<br />
+authorization.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>content_type (string)</b>:  HTTP content type of request.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>:  Django Rest Framework token.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(dictionary)</b>: Use as headers argument to the Request object.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.get_headers', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.get_headers" class="source">
+    <pre><code>def get_headers(self, content_type, token):
+    """Get headers to place in Request object.
+    The auth token is added to the header for authenthication and
+    authorization.
+    Args:
+        content_type (string):  HTTP content type of request.
+        token (string):  Django Rest Framework token.
+    Returns:
+        (dictionary): Use as headers argument to the Request object.
+    """
+    return {
+        'Authorization': 'Token ' + token,
+        'Content-Type': content_type
+    }
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.get_metadata_request">
+    <p>def <span class="ident">get_metadata_request</span>(</p><p>self, resource, method, content, url_prefix, token, key=None, value=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create a request for accessing the Boss' metadata service.</p>
+<p>Do not use this method for list operations.  Instead, use the<br />
+get_request() method.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>key (string)</b>: Name of key to operate on.  Defaults to None.<br />
+&emsp;&emsp;&emsp;&emsp;<b>value (string)</b>: Value to assign to key  Defaults to None.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.get_metadata_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.get_metadata_request" class="source">
+    <pre><code>def get_metadata_request(
+    self, resource, method, content, url_prefix, token,
+    key=None, value=None):
+    """Create a request for accessing the Boss' metadata service.
+    Do not use this method for list operations.  Instead, use the
+    get_request() method.
+    Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        key (string): Name of key to operate on.  Defaults to None.
+        value (string): Value to assign to key  Defaults to None.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    url = self.build_metadata_url(resource, url_prefix, key, value)
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers = headers)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.get_permission_request">
+    <p>def <span class="ident">get_permission_request</span>(</p><p>self, method, content, url_prefix, token, name, resource, data=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Generate a request for manipulating permissions of a data model object.</p>
+<p>Manipulate what members of the named group can do with the given data<br />
+model object.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>data (dict)</b>: POST body data.  Defaults to None.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.get_permission_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.get_permission_request" class="source">
+    <pre><code>def get_permission_request(
+    self, method, content, url_prefix, token, name, resource, data=None):
+    """Generate a request for manipulating permissions of a data model object.
+    Manipulate what members of the named group can do with the given data
+    model object.
+    Args:
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        name (string): Name of group.
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        data (dict): POST body data.  Defaults to None.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    suffix = resource.get_meta_or_permission_route()
+    url = (url_prefix + '/' + self.version + '/permission/' + name + '/' +
+           suffix)
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers = headers, data = data)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.get_request">
+    <p>def <span class="ident">get_request</span>(</p><p>self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create a request for accessing the Boss' data model services.</p>
+<p>Use for the project service or listing keys via the metadata service.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>proj_list_req (bool)</b>: Set to True if performing a list operation on the project service.  Defaults to False.<br />
+&emsp;&emsp;&emsp;&emsp;<b>json (dict)</b>: POST body data.  Defaults to None.<br />
+&emsp;&emsp;&emsp;&emsp;<b>data ()</b>: Raw data.  Defaults to None.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.get_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.get_request" class="source">
+    <pre><code>def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
+    """Create a request for accessing the Boss' data model services.
+    Use for the project service or listing keys via the metadata service.
+    Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        proj_list_req (bool): Set to True if performing a list operation on the project service.  Defaults to False.
+        json (dict): POST body data.  Defaults to None.
+        data (): Raw data.  Defaults to None.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    if isinstance(resource, CoordinateFrameResource):
+        service = 'coord'
+    else:
+        service = 'collection'
+    if proj_list_req:
+        req_type = 'list'
+    else:
+        req_type = 'normal'
+    url = self.build_url(resource, url_prefix, service, req_type)
+    headers = self.get_headers(content, token)
+    req = Request(method, url, headers = headers, json = json, data = data)
+    return req
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.get_user_groups_request">
+    <p>def <span class="ident">get_user_groups_request</span>(</p><p>self, content, url_prefix, token, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the groups a user belongs to.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: Name of user.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list)</b>: List of dictionaries where the 'name' key of each dictionary is the group name.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.get_user_groups_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.get_user_groups_request" class="source">
+    <pre><code>def get_user_groups_request(self, content, url_prefix, token, user):
+    """Get the groups a user belongs to.
+    Args:
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        user (string): Name of user.
+    Returns:
+        (list): List of dictionaries where the 'name' key of each dictionary is the group name.
+    """
+    method = 'GET'
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    url = url_prefix + '/' + self.version + '/group-member/?username=' + user
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers=headers)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.get_user_request">
+    <p>def <span class="ident">get_user_request</span>(</p><p>self, method, content, url_prefix, token, user, first_name=None, last_name=None, email=None, password=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Generate a request for working with the /sso endpoint.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: Name of user.<br />
+&emsp;&emsp;&emsp;&emsp;<b>first_name (optional[string])</b>: User's first name.  Defaults to None.<br />
+&emsp;&emsp;&emsp;&emsp;<b>last_name (optional[string])</b>: User's last name.  Defaults to None.<br />
+&emsp;&emsp;&emsp;&emsp;<b>email: (optional[string])</b>: User's email address.  Defaults to None.<br />
+&emsp;&emsp;&emsp;&emsp;<b>password: (optional[string])</b>: User's password.  Defaults to None.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.get_user_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.get_user_request" class="source">
+    <pre><code>def get_user_request(
+    self, method, content, url_prefix, token, user, first_name=None,
+    last_name=None, email=None, password=None):
+    """Generate a request for working with the /sso endpoint.
+    Args:
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        user (string): Name of user.
+        first_name (optional[string]): User's first name.  Defaults to None.
+        last_name (optional[string]): User's last name.  Defaults to None.
+        email: (optional[string]): User's email address.  Defaults to None.
+        password: (optional[string]): User's password.  Defaults to None.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    data = {}
+    url = url_prefix + '/' + self.version + '/sso/user/' + user
+    if first_name is not None:
+        data['first_name'] = first_name
+    if last_name is not None:
+        data['last_name'] = last_name
+    if email is not None:
+        data['email'] = email
+    if password is not None:
+        data['password'] = password
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers=headers, data=data)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.baseversion.BaseVersion.get_user_role_request">
+    <p>def <span class="ident">get_user_role_request</span>(</p><p>self, method, content, url_prefix, token, user, role=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Generate a request for manipulating roles for a user.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: Name of user.<br />
+&emsp;&emsp;&emsp;&emsp;<b>role (optional[string])</b>: Name of role.  Defaults to None.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.baseversion.BaseVersion.get_user_role_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.baseversion.BaseVersion.get_user_role_request" class="source">
+    <pre><code>def get_user_role_request(
+    self, method, content, url_prefix, token, user, role=None):
+    """Generate a request for manipulating roles for a user.
+    Args:
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        user (string): Name of user.
+        role (optional[string]): Name of role.  Defaults to None.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    url = url_prefix + '/' + self.version + '/sso/user-role/' + user
+    if role is not None:
+        url = url + '/' + role
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers = headers)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+
+  </section>
+
+    </article>
+  <div class="clear"> </div>
+  <footer id="footer">
+    <p>
+      Documentation generated by
+      <a href="https://github.com/BurntSushi/pdoc">pdoc 0.3.2</a>
+    </p>
+
+    <p>pdoc is in the public domain with the
+      <a href="http://unlicense.org">UNLICENSE</a></p>
+
+    <p>Design by <a href="http://nadh.in">Kailash Nadh</a></p>
+  </footer>
+</div>
+</body>
+</html>
