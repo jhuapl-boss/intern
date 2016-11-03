@@ -131,25 +131,11 @@ class BaseVersionTest(unittest.TestCase):
         token = 'foobar'
         grp_name = 'fire'
 
-        expected = '{}/{}/group/{}/'.format(
+        expected = '{}/{}/groups/{}/'.format(
             url_prefix, self.test_project.version, grp_name)
 
         actual = self.test_project.get_group_request(
-            'GET', 'application/json', url_prefix, token, grp_name, None)
-
-        self.assertEqual(expected, actual.url)
-
-    def test_get_group_request_user(self):
-        url_prefix = 'https://api.theboss.io'
-        token = 'foobar'
-        grp_name = 'fire'
-        user_name = 'fox'
-
-        expected = '{}/{}/group-member/{}/{}/'.format(
-            url_prefix, self.test_project.version, grp_name, user_name)
-
-        actual = self.test_project.get_group_request(
-            'GET', 'application/json', url_prefix, token, grp_name, user_name)
+            'GET', 'application/json', url_prefix, token, grp_name)
 
         self.assertEqual(expected, actual.url)
 

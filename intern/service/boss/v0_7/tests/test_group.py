@@ -101,13 +101,13 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         self.prj.delete_group(
-            'mygroup', user, url_prefix, auth, mock_session, send_opts)
+            'mygroup', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
     def test_delete_group_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
-        fake_resp.status_code = 404
+        fake_resp.status_code = 403
         mock_session.send.return_value = fake_resp
 
         user = None
@@ -117,13 +117,13 @@ class TestGroup(unittest.TestCase):
 
         with self.assertRaises(HTTPError):
             self.prj.delete_group(
-            'mygroup', user, url_prefix, auth, mock_session, send_opts)
+            'mygroup', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_user_to_group_success(self, mock_session):
+    def test_add_member_to_group_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
-        fake_resp.status_code = 201
+        fake_resp.status_code = 204
         mock_session.send.return_value = fake_resp
 
         user = 'you'
@@ -131,11 +131,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.add_user_to_group(
+        self.prj.add_member_to_group(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_user_to_group_failure(self, mock_session):
+    def test_add_member_to_group_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -147,15 +147,15 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.add_user_to_group(
+            self.prj.add_member_to_group(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
-    def test_get_group_user_success(self, mock_session, mock_resp):
+    def test_get_is_group_member_success(self, mock_session, mock_resp):
         mock_session.prepare_request.return_value = PreparedRequest()
         mock_resp.status_code = 200
-        mock_resp.json.return_value = True
+        mock_resp.json.return_value = { 'result': True }
         mock_session.send.return_value = mock_resp
 
         user = 'you'
@@ -163,11 +163,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.assertTrue(self.prj.get_group(
+        self.assertTrue(self.prj.get_is_group_member(
             'mygroup', user, url_prefix, auth, mock_session, send_opts))
 
     @patch('requests.Session', autospec=True)
-    def test_get_group_user_failure(self, mock_session):
+    def test_get_is_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 404
@@ -183,7 +183,7 @@ class TestGroup(unittest.TestCase):
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_group_user_success(self, mock_session):
+    def test_delete_member_from_group_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -194,11 +194,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.delete_group(
+        self.prj.delete_member_from_group(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_group_user_failure(self, mock_session):
+    def test_delete_member_from_group_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -210,7 +210,7 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.delete_group(
+            self.prj.delete_member_from_group(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
 if __name__ == '__main__':

@@ -83,7 +83,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name, user_name)
+            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -120,15 +120,11 @@ class ProjectService_0_7(BaseVersion):
             name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def delete_group(self, name, user_name, url_prefix, auth, session, send_opts):
-        """Delete given group or delete user from given group.
-
-        If user_name is provided, the user will be removed from the group.
-        Otherwise, the group, itself, is deleted.
+    def delete_group(self, name, url_prefix, auth, session, send_opts):
+        """Delete given group.
 
         Args:
             name (string): Name of group.
-            user_name (optional[string]): Defaults to None.  User to remove from group.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -138,7 +134,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, name, user_name)
+            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, name)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -198,7 +194,8 @@ class ProjectService_0_7(BaseVersion):
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
-            return resp.json()
+            resp_json = resp.json()
+            return resp_json['result']
 
         msg = ('Failed determining if user {} is member of group {}, got HTTP response: ({}) - {}'.format(
             user, grp_name, resp.status_code, resp.text))
@@ -310,7 +307,8 @@ class ProjectService_0_7(BaseVersion):
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
-            return resp.json()
+            resp_json = resp.json()
+            return resp_json['result']
 
         msg = ('Failed determining if user {} is maintainer of group {}, got HTTP response: ({}) - {}'.format(
             user, grp_name, resp.status_code, resp.text))
