@@ -1,6 +1,5 @@
 # intern
 
-
 **intern** (Integrated Toolkit for Extensible and Reproducible Neuroscience) is
 a Python 2/3 module that enables big-data neuroscience.  Currently, it provides
 an interface to the Boss API, and in the future may provide interfaces to other
