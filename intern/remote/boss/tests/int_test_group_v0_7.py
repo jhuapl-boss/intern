@@ -235,6 +235,40 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         with self.assertRaises(HTTPError):
             self.rmt.delete_member_from_group(self.existing_grp_name, 'foo')
 
+    def test_add_maintainer_to_group(self):
+        self.rmt.create_group(self.create_grp_name)
+        self.rmt.add_maintainer_to_group(self.create_grp_name, self.created_user)
+        self.assertTrue(self.rmt.get_is_group_maintainer(
+            self.create_grp_name, self.created_user))
+
+    def test_add_maintainer_to_group_group_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.add_maintainer_to_group('foo', self.created_user)
+
+    def test_list_group_maintainers(self):
+        self.rmt.create_group(self.create_grp_name)
+        self.rmt.add_maintainer_to_group(self.create_grp_name, self.created_user)
+        actual = self.rmt.list_group_maintainers(self.create_grp_name)
+        self.assertIn(self.created_user, actual)
+
+    def test_list_group_maintainers_group_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.list_group_maintainers('foo')
+
+    def test_delete_maintainer_from_group(self):
+        self.rmt.create_group(self.create_grp_name)
+        self.rmt.add_maintainer_to_group(self.create_grp_name, self.created_user)
+        self.assertTrue(self.rmt.get_is_group_maintainer(
+            self.create_grp_name, self.created_user))
+
+        self.rmt.delete_maintainer_from_group(self.create_grp_name, self.created_user)
+
+        self.assertFalse(self.rmt.get_is_group_maintainer(
+            self.create_grp_name, self.created_user))
+
+    def test_delete_maintainer_from_group_user_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.delete_maintainer_from_group(self.existing_grp_name, 'foo')
 
 if __name__ == '__main__':
     unittest.main()
