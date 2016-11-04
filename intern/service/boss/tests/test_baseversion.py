@@ -139,22 +139,21 @@ class BaseVersionTest(unittest.TestCase):
 
         self.assertEqual(expected, actual.url)
 
-    def test_get_meta_or_permission_request(self):
+    def test_get_permission_request(self):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         grp_name = 'fire'
-        resrc_path = self.chanResource.get_meta_route()
-        data = { 'permissions': ['update', 'add', 'delete'] }
+        post_data = {"group": grp_name,
+                     "permissions": ['update', 'add', 'delete'],
+                     }
+        post_data.update(self.chanResource.get_dict_route())
 
-        expected = '{}/{}/permission/{}/{}'.format(
-            url_prefix, self.test_volume.version, grp_name, resrc_path)
+        expected = '{}/{}/permissions/'.format(url_prefix, self.test_volume.version)
 
         actual = self.test_project.get_permission_request(
-            'GET', 'application/json', url_prefix, token, grp_name,
-            self.chanResource, data)
+            'GET', 'application/json', url_prefix, token, post_data=post_data)
 
         self.assertEqual(expected, actual.url)
-        self.assertEqual(data, actual.data)
 
     def test_get_user_role_request(self):
         url_prefix = 'https://api.theboss.io'
@@ -211,7 +210,7 @@ class BaseVersionTest(unittest.TestCase):
             'POST', 'application/json', url_prefix, token, user, first)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     def test_get_user_request_with_lastname(self):
         url_prefix = 'https://api.theboss.io'
@@ -228,7 +227,7 @@ class BaseVersionTest(unittest.TestCase):
             'POST', 'application/json', url_prefix, token, user, last_name=last)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     def test_get_user_request_with_email(self):
         url_prefix = 'https://api.theboss.io'
@@ -259,7 +258,7 @@ class BaseVersionTest(unittest.TestCase):
             'POST', 'application/json', url_prefix, token, user, password=password)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     def test_get_user_request_with_password(self):
         url_prefix = 'https://api.theboss.io'
@@ -282,7 +281,7 @@ class BaseVersionTest(unittest.TestCase):
             email, password)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     ##
     ## Methods used for the metadata service.
