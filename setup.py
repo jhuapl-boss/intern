@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-__version__ = '0.0.1'
+__version__ = '0.9.0'
 
 here = path.abspath(path.dirname(__file__))
 
@@ -20,21 +20,23 @@ dependency_links = [x.strip().replace('git+', '') for x in all_reqs if x.startsw
 setup(
     name='intern',
     version=__version__,
-    description='Python wrapper of the Boss API - neuroscience data.',
+    description='Python SDK for the Boss API - neuroscience data.',
     long_description=long_description,
-    url='https://github.com/movestill/intern',
-    download_url='https://github.com/movestill/intern/tarball/' + __version__,
-    license='BSD',
+    url='https://github.com/jhuapl-boss/intern',
+    download_url='https://github.com/jhuapl-boss/intern/tarball/' + __version__,
+    license='Apache 2.0',
     classifiers=[
-      'Development Status :: 3 - Alpha',
+      'Development Status :: 4 - Beta',
       'Intended Audience :: Developers',
-      'Programming Language :: Python :: 3',
+      'Programming Language :: Python :: 3.4',
+      'Programming Language :: Python :: 3.5',
+      'Programming Language :: Python :: 2.7',
     ],
-    keywords='',
+    keywords='neuroscience database sdk microns boss',
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
-    author='Tim Gion',
+    author='Johns Hopkins University Applied Physics Laboratory',
     install_requires=install_requires,
     dependency_links=dependency_links,
-    author_email='movestill@gmail.com'
+    author_email='iarpamicrons@jhuapl.edu'
 )

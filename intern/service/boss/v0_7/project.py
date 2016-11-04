@@ -686,7 +686,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_user_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth,
+            'DELETE', 'application/json', url_prefix, auth,
             user)
 
         prep = session.prepare_request(req)
@@ -716,11 +716,9 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_request(
-            resource, 'GET', 'application/x-www-form-urlencoded', url_prefix, auth,
-            proj_list_req = True)
-            # json content-type currently broken.
-            #resource, 'GET', 'application/json', url_prefix, auth,
-            #proj_list_req = True)
+            resource, 'GET', 'application/json', url_prefix, auth,
+            proj_list_req=True)
+
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
         if resp.status_code == 200:
@@ -747,12 +745,8 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         json = self._get_resource_params(resource)
-        req = self.get_request(
-            resource, 'POST', 'application/x-www-form-urlencoded', url_prefix, auth,
-            data = json)
-            # json content-type currently broken.
-            #resource, 'POST', 'application/json', url_prefix, auth,
-            #json = json)
+        req = self.get_request(resource, 'POST', 'application/json', url_prefix, auth, json=json)
+
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
 
@@ -815,12 +809,8 @@ class ProjectService_0_7(BaseVersion):
 
         json = self._get_resource_params(resource, for_update=True)
 
-        req = self.get_request(
-            old_resource, 'PUT', 'application/x-www-form-urlencoded',
-            url_prefix, auth, data = json)
-            # json content-type currently broken.
-            #old_resource, 'PUT', 'application/json', url_prefix, auth,
-            #json = json)
+        req = self.get_request(old_resource, 'PUT', 'application/json', url_prefix, auth, json=json)
+
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
 
