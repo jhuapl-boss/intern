@@ -47,7 +47,7 @@ class ProjectService_0_7(BaseVersion):
             (list[string]): List of group names.
         """
         req = self.get_group_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth)
+            'GET', 'application/json', url_prefix, auth)
         if filtr is not None:
             if not filtr == 'member' and not filtr == 'maintainer':
                 raise RuntimeError(
@@ -82,7 +82,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name)
+            'GET', 'application/json', url_prefix, auth, name)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -108,7 +108,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, name)
+            'POST', 'application/json', url_prefix, auth, name)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -133,7 +133,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth, name)
+            'DELETE', 'application/json', url_prefix, auth, name)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -158,7 +158,7 @@ class ProjectService_0_7(BaseVersion):
             (list[string]): List of member names.
         """
         req = self.get_group_members_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name)
+            'GET', 'application/json', url_prefix, auth, name)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -188,7 +188,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_members_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
+            'GET', 'application/json', url_prefix, auth, grp_name, user)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -217,7 +217,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_members_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
+            'POST', 'application/json', url_prefix, auth, grp_name, user)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -244,7 +244,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_members_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth,
+            'DELETE', 'application/json', url_prefix, auth,
             grp_name, user)
 
         prep = session.prepare_request(req)
@@ -270,7 +270,7 @@ class ProjectService_0_7(BaseVersion):
             (list[string]): List of maintainer names.
         """
         req = self.get_group_maintainers_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, name)
+            'GET', 'application/json', url_prefix, auth, name)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -301,7 +301,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_maintainers_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
+            'GET', 'application/json', url_prefix, auth, grp_name, user)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -330,7 +330,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_maintainers_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth, grp_name, user)
+            'POST', 'application/json', url_prefix, auth, grp_name, user)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
@@ -357,7 +357,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_group_maintainers_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth,
+            'DELETE', 'application/json', url_prefix, auth,
             grp_name, user)
 
         prep = session.prepare_request(req)
@@ -540,7 +540,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_user_role_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth,
+            'GET', 'application/json', url_prefix, auth,
             user)
 
         prep = session.prepare_request(req)
@@ -568,7 +568,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_user_role_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth,
+            'POST', 'application/json', url_prefix, auth,
             user, role)
 
         prep = session.prepare_request(req)
@@ -596,7 +596,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_user_role_request(
-            'DELETE', 'application/x-www-form-urlencoded', url_prefix, auth,
+            'DELETE', 'application/json', url_prefix, auth,
             user, role)
 
         prep = session.prepare_request(req)
@@ -626,7 +626,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_user_request(
-            'GET', 'application/x-www-form-urlencoded', url_prefix, auth,
+            'GET', 'application/json', url_prefix, auth,
             user)
 
         prep = session.prepare_request(req)
@@ -637,7 +637,7 @@ class ProjectService_0_7(BaseVersion):
         msg = (
             'Failed getting user: {}, got HTTP response: ({}) - {}'
             .format(user, resp.status_code, resp.text))
-        raise HTTPError(msg, request = req, response = resp)
+        raise HTTPError(msg, request=req, response=resp)
 
     def add_user(
         self, user, first_name, last_name, email, password,
@@ -659,7 +659,7 @@ class ProjectService_0_7(BaseVersion):
             requests.HTTPError on failure.
         """
         req = self.get_user_request(
-            'POST', 'application/x-www-form-urlencoded', url_prefix, auth,
+            'POST', 'application/json', url_prefix, auth,
             user, first_name, last_name, email, password)
 
         prep = session.prepare_request(req)

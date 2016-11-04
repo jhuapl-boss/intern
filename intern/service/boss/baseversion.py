@@ -393,7 +393,7 @@ class BaseVersion(object):
             url = url + '/' + role
 
         headers = self.get_headers(content, token)
-        return Request(method, url, headers = headers)
+        return Request(method, url, headers=headers)
 
     def get_user_request(
         self, method, content, url_prefix, token, user, first_name=None,
@@ -437,4 +437,4 @@ class BaseVersion(object):
             data['password'] = password
 
         headers = self.get_headers(content, token)
-        return Request(method, url, headers=headers, data=data)
+        return Request(method, url, headers=headers, json=data)

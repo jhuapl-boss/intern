@@ -59,11 +59,10 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         cls.created_user = 'group_test_johndoeski{}'.format(random.randint(0, 9999))
 
         password = 'myPassW0rd'
-        cls.rmt.add_user(
-            cls.created_user, 'John', 'Doeski', 'jdoe@rime.com', password)
+        cls.rmt.add_user(cls.created_user, 'John', 'Doeski', 'jdoe{}@rime.com'.format(random.randint(0, 9999)),
+                         password)
         token = cls.get_access_token(cls.created_user, password)
         cls.login_user(token)
-
 
     @classmethod
     def tearDownClass(cls):
@@ -119,7 +118,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         response = session.send(prep, verify=False)
 
     @classmethod
-    def get_access_token(self, user_name, password):
+    def get_access_token(cls, user_name, password):
         """Get the bearer token for the test user for login.
 
         Will assert or raise on a failure.
@@ -127,12 +126,12 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         Returns:
             (string): Bearer token.
         """
-        if "Project Service" in self.rmt._config.sections():
-            (api_host, domain) = self.rmt._config.get("Project Service", "host").split('.', 1)
-            protocol = self.rmt._config.get("Project Service", "protocol")
+        if "Project Service" in cls.rmt._config.sections():
+            (api_host, domain) = cls.rmt._config.get("Project Service", "host").split('.', 1)
+            protocol = cls.rmt._config.get("Project Service", "protocol")
         else:
-            (api_host, domain) = self.rmt._config.get("Default", "host").split('.', 1)
-            protocol = self.rmt._config.get("Default", "protocol")
+            (api_host, domain) = cls.rmt._config.get("Default", "host").split('.', 1)
+            protocol = cls.rmt._config.get("Default", "protocol")
 
         host = api_host.replace('api', 'auth', 1) + '.' + domain
         url = protocol + '://' + host + '/auth/realms/BOSS/protocol/openid-connect/token'
@@ -150,7 +149,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         prep = session.prepare_request(request)
         response = session.send(prep, verify=False)
         jresp = response.json()
-        self.assertIn(self, 'access_token', jresp)
+        assert 'access_token' in jresp
         return jresp['access_token']
 
     def test_list_groups(self):
