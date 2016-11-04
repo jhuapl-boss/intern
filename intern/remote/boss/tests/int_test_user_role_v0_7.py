@@ -84,14 +84,13 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         self.cleanup_db()
 
     def test_add_role(self):
-        self.rmt.add_user_role(self.user, self.admin)
+        self.rmt.add_user_role(self.user, self.rsrc_mgr)
 
     def test_add_multiple_roles(self):
-        self.rmt.add_user_role(self.user, self.admin)
         self.rmt.add_user_role(self.user, self.user_mgr)
         self.rmt.add_user_role(self.user, self.rsrc_mgr)
 
-        expected = [self.admin, self.user_mgr, self.rsrc_mgr]
+        expected = [self.user_mgr, self.rsrc_mgr]
         actual = self.rmt.get_user_roles(self.user)
 
         six.assertCountEqual(self, expected, actual)
@@ -104,9 +103,13 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         with self.assertRaises(HTTPError):
             self.rmt.add_user_role(self.user, 'foo')
 
+    def test_add_invalid_admin_role(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.add_user_role(self.user, self.admin)
+
     def test_delete_role(self):
-        self.rmt.add_user_role(self.user, self.admin)
-        self.rmt.delete_user_role(self.user, self.admin)
+        self.rmt.add_user_role(self.user, self.rsrc_mgr)
+        self.rmt.delete_user_role(self.user, self.rsrc_mgr)
 
         actual = self.rmt.get_user_roles(self.user)
         self.assertEqual([], actual)

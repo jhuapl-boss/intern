@@ -992,15 +992,18 @@ table {
           
   <ul>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.__init__">__init__</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_maintainer_to_group">add_maintainer_to_group</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_member_to_group">add_member_to_group</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_permissions">add_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_user">add_user</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_user_role">add_user_role</a></li>
-    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_user_to_group">add_user_to_group</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.create_cutout">create_cutout</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.create_group">create_group</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.create_metadata">create_metadata</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.create_project">create_project</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_group">delete_group</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_maintainer_from_group">delete_maintainer_from_group</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_member_from_group">delete_member_from_group</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_metadata">delete_metadata</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_permissions">delete_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_project">delete_project</a></li>
@@ -1008,6 +1011,8 @@ table {
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_user_role">delete_user_role</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_cutout">get_cutout</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_group">get_group</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_is_group_maintainer">get_is_group_maintainer</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_is_group_member">get_is_group_member</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_metadata">get_metadata</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_permissions">get_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_project">get_project</a></li>
@@ -1018,10 +1023,15 @@ table {
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_collections">list_collections</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_coordinate_frames">list_coordinate_frames</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_experiments">list_experiments</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_group_maintainers">list_group_maintainers</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_group_members">list_group_members</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_groups">list_groups</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_metadata">list_metadata</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_permissions">list_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_project">list_project</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.load_config_file">load_config_file</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.update_metadata">update_metadata</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.update_permissions">update_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.update_project">update_project</a></li>
   </ul>
 
@@ -1224,6 +1234,20 @@ class BossRemote(Remote):
         self._token_volume = value
         self.volume_service.set_auth(self._token_volume)
 
+    def list_groups(self, filtr=None):
+        """Get the groups the logged in user is a member of.
+
+        Optionally filter by 'member' or 'maintainer'.
+
+        Args:
+            filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
+
+        Returns:
+            (list[string]): List of group names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_groups(filtr)
+
     def get_group(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
@@ -1249,23 +1273,31 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.create_group(name)
 
-    def delete_group(self, name, user_name=None):
-        """Delete given group or delete user from given group.
-
-        If user_name is provided, the user will be removed from the group.
-        Otherwise, the group, itself, is deleted.
+    def delete_group(self, name):
+        """Delete given group.
 
         Args:
             name (string): Name of group.
-            user_name (optional[string]): Defaults to None.  User to remove from group.
 
         Returns:
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_group(name, user_name)
+        return self.project_service.delete_group(name)
 
-    def add_user_to_group(self, grp_name, user):
+    def list_group_members(self, name):
+        """Get the members of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_group_members(name)
+
+    def add_member_to_group(self, grp_name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1278,7 +1310,109 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_user_to_group(grp_name, user)
+        return self.project_service.add_member_to_group(grp_name, user)
+
+    def delete_member_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user_name (string): User to delete from the group.
+
+        Returns:
+            (bool): True on success.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.delete_member_from_group(grp_name, user)
+
+    def get_is_group_member(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Note that a group maintainer is not considered a member unless the
+        user is also explicitly added as a member.
+
+        Args:
+            name (string): Name of group.
+            user_name (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.get_is_group_member(grp_name, user)
+
+    def list_group_maintainers(self, name):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of maintainer names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_group_maintainers(name)
+
+    def add_maintainer_to_group(self, name, user):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.add_maintainer_to_group(name, user)
+
+    def delete_maintainer_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.delete_maintainer_from_group(grp_name, user)
+
+    def get_is_group_maintainer(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.get_is_group_maintainer(grp_name, user)
+
+    def list_permissions(self, group_name=None, resource=None):
+        """List permission sets associated filtering by group and/or resource.
+
+        Args:
+            group_name (string): Name of group.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+
+        Returns:
+            (list): List of permissions.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_permissions(group_name, resource)
 
     def get_permissions(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
@@ -1310,20 +1444,32 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         self.project_service.add_permissions(grp_name, resource, permissions)
 
-    def delete_permissions(self, grp_name, resource, permissions):
-        """Removes permissions from the group for the given resource.
+    def update_permissions(self, grp_name, resource, permissions):
+        """Update permissions for the group associated with the given resource.
 
         Args:
             grp_name (string): Name of group.
             resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
-            permissions (list): List of permissions to remove from the given resource.
+            permissions (list): List of permissions to add to the given resource.
 
         Raises:
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.delete_permissions(
-            grp_name, resource, permissions)
+        self.project_service.update_permissions(grp_name, resource, permissions)
+
+    def delete_permissions(self, grp_name, resource):
+        """Removes permissions from the group for the given resource.
+
+        Args:
+            grp_name (string): Name of group.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        self.project_service.delete_permissions(grp_name, resource)
 
     def get_user_roles(self, user):
         """Get roles associated with the given user.
@@ -1844,6 +1990,20 @@ class BossRemote(Remote):
         self._token_volume = value
         self.volume_service.set_auth(self._token_volume)
 
+    def list_groups(self, filtr=None):
+        """Get the groups the logged in user is a member of.
+
+        Optionally filter by 'member' or 'maintainer'.
+
+        Args:
+            filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
+
+        Returns:
+            (list[string]): List of group names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_groups(filtr)
+
     def get_group(self, name, user_name=None):
         """Get information on the given group or whether or not a user is a member of the group.
 
@@ -1869,23 +2029,31 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.create_group(name)
 
-    def delete_group(self, name, user_name=None):
-        """Delete given group or delete user from given group.
-
-        If user_name is provided, the user will be removed from the group.
-        Otherwise, the group, itself, is deleted.
+    def delete_group(self, name):
+        """Delete given group.
 
         Args:
             name (string): Name of group.
-            user_name (optional[string]): Defaults to None.  User to remove from group.
 
         Returns:
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_group(name, user_name)
+        return self.project_service.delete_group(name)
 
-    def add_user_to_group(self, grp_name, user):
+    def list_group_members(self, name):
+        """Get the members of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_group_members(name)
+
+    def add_member_to_group(self, grp_name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1898,7 +2066,109 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_user_to_group(grp_name, user)
+        return self.project_service.add_member_to_group(grp_name, user)
+
+    def delete_member_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user_name (string): User to delete from the group.
+
+        Returns:
+            (bool): True on success.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.delete_member_from_group(grp_name, user)
+
+    def get_is_group_member(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Note that a group maintainer is not considered a member unless the
+        user is also explicitly added as a member.
+
+        Args:
+            name (string): Name of group.
+            user_name (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.get_is_group_member(grp_name, user)
+
+    def list_group_maintainers(self, name):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of maintainer names.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_group_maintainers(name)
+
+    def add_maintainer_to_group(self, name, user):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.add_maintainer_to_group(name, user)
+
+    def delete_maintainer_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.delete_maintainer_from_group(grp_name, user)
+
+    def get_is_group_maintainer(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.get_is_group_maintainer(grp_name, user)
+
+    def list_permissions(self, group_name=None, resource=None):
+        """List permission sets associated filtering by group and/or resource.
+
+        Args:
+            group_name (string): Name of group.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+
+        Returns:
+            (list): List of permissions.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_permissions(group_name, resource)
 
     def get_permissions(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
@@ -1930,20 +2200,32 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         self.project_service.add_permissions(grp_name, resource, permissions)
 
-    def delete_permissions(self, grp_name, resource, permissions):
-        """Removes permissions from the group for the given resource.
+    def update_permissions(self, grp_name, resource, permissions):
+        """Update permissions for the group associated with the given resource.
 
         Args:
             grp_name (string): Name of group.
             resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
-            permissions (list): List of permissions to remove from the given resource.
+            permissions (list): List of permissions to add to the given resource.
 
         Raises:
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.delete_permissions(
-            grp_name, resource, permissions)
+        self.project_service.update_permissions(grp_name, resource, permissions)
+
+    def delete_permissions(self, grp_name, resource):
+        """Removes permissions from the group for the given resource.
+
+        Args:
+            grp_name (string): Name of group.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        self.project_service.delete_permissions(grp_name, resource)
 
     def get_user_roles(self, user):
         """Get roles associated with the given user.
@@ -2371,6 +2653,81 @@ are passed in, the value in cfg_str is used.</p>
   
             
   <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.add_maintainer_to_group">
+    <p>def <span class="ident">add_maintainer_to_group</span>(</p><p>self, name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Add the given user to the named group.</p>
+<p>Both group and user must already exist for this to succeed.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User to add to group.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.add_maintainer_to_group', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.add_maintainer_to_group" class="source">
+    <pre><code>def add_maintainer_to_group(self, name, user):
+    """Add the given user to the named group.
+    Both group and user must already exist for this to succeed.
+    Args:
+        name (string): Name of group.
+        user (string): User to add to group.
+    Raises:
+        requests.HTTPError on failure.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.add_maintainer_to_group(name, user)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.add_member_to_group">
+    <p>def <span class="ident">add_member_to_group</span>(</p><p>self, grp_name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Add the given user to the named group.</p>
+<p>Both group and user must already exist for this to succeed.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user_name (string)</b>: User to add to group.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.add_member_to_group', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.add_member_to_group" class="source">
+    <pre><code>def add_member_to_group(self, grp_name, user):
+    """Add the given user to the named group.
+    Both group and user must already exist for this to succeed.
+    Args:
+        name (string): Name of group.
+        user_name (string): User to add to group.
+    Returns:
+        (bool): True on success.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.add_member_to_group(grp_name, user)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.remote.boss.remote.BossRemote.add_permissions">
     <p>def <span class="ident">add_permissions</span>(</p><p>self, grp_name, resource, permissions)</p>
     </div>
@@ -2481,43 +2838,6 @@ are passed in, the value in cfg_str is used.</p>
     """
     self.project_service.set_auth(self._token_project)
     self.project_service.add_user_role(user, role)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.remote.boss.remote.BossRemote.add_user_to_group">
-    <p>def <span class="ident">add_user_to_group</span>(</p><p>self, grp_name, user)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Add the given user to the named group.</p>
-<p>Both group and user must already exist for this to succeed.</p>
-<p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
-&emsp;&emsp;&emsp;&emsp;<b>user_name (string)</b>: User to add to group.</p>
-<h2 style='font-size:125% !important'>Returns</h2>
-
-<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.add_user_to_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.remote.BossRemote.add_user_to_group" class="source">
-    <pre><code>def add_user_to_group(self, grp_name, user):
-    """Add the given user to the named group.
-    Both group and user must already exist for this to succeed.
-    Args:
-        name (string): Name of group.
-        user_name (string): User to add to group.
-    Returns:
-        (bool): True on success.
-    """
-    self.project_service.set_auth(self._token_project)
-    return self.project_service.add_user_to_group(grp_name, user)
 </code></pre>
   </div>
 </div>
@@ -2686,36 +3006,104 @@ Other exceptions may be raised depending on the volume service's implementation.
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.remote.BossRemote.delete_group">
-    <p>def <span class="ident">delete_group</span>(</p><p>self, name, user_name=None)</p>
+    <p>def <span class="ident">delete_group</span>(</p><p>self, name)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Delete given group or delete user from given group.</p>
-<p>If user_name is provided, the user will be removed from the group.<br />
-Otherwise, the group, itself, is deleted.</p>
+    <div class="desc"><p>Delete given group.</p>
 <p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
-&emsp;&emsp;&emsp;&emsp;<b>user_name (optional[string])</b>: Defaults to None.  User to remove from group.</p>
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_group', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.delete_group" class="source">
-    <pre><code>def delete_group(self, name, user_name=None):
-    """Delete given group or delete user from given group.
-    If user_name is provided, the user will be removed from the group.
-    Otherwise, the group, itself, is deleted.
+    <pre><code>def delete_group(self, name):
+    """Delete given group.
     Args:
         name (string): Name of group.
-        user_name (optional[string]): Defaults to None.  User to remove from group.
     Returns:
         (bool): True on success.
     """
     self.project_service.set_auth(self._token_project)
-    return self.project_service.delete_group(name, user_name)
+    return self.project_service.delete_group(name)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.delete_maintainer_from_group">
+    <p>def <span class="ident">delete_maintainer_from_group</span>(</p><p>self, grp_name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Delete the given user to the named group.</p>
+<p>Both group and user must already exist for this to succeed.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User to add to group.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_maintainer_from_group', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.delete_maintainer_from_group" class="source">
+    <pre><code>def delete_maintainer_from_group(self, grp_name, user):
+    """Delete the given user to the named group.
+    Both group and user must already exist for this to succeed.
+    Args:
+        name (string): Name of group.
+        user (string): User to add to group.
+    Returns:
+        (bool): True on success.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.delete_maintainer_from_group(grp_name, user)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.delete_member_from_group">
+    <p>def <span class="ident">delete_member_from_group</span>(</p><p>self, grp_name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Delete the given user to the named group.</p>
+<p>Both group and user must already exist for this to succeed.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user_name (string)</b>: User to delete from the group.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_member_from_group', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.delete_member_from_group" class="source">
+    <pre><code>def delete_member_from_group(self, grp_name, user):
+    """Delete the given user to the named group.
+    Both group and user must already exist for this to succeed.
+    Args:
+        name (string): Name of group.
+        user_name (string): User to delete from the group.
+    Returns:
+        (bool): True on success.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.delete_member_from_group(grp_name, user)
 </code></pre>
   </div>
 </div>
@@ -2763,7 +3151,7 @@ Otherwise, the group, itself, is deleted.</p>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.remote.BossRemote.delete_permissions">
-    <p>def <span class="ident">delete_permissions</span>(</p><p>self, grp_name, resource, permissions)</p>
+    <p>def <span class="ident">delete_permissions</span>(</p><p>self, grp_name, resource)</p>
     </div>
     
 
@@ -2772,8 +3160,7 @@ Otherwise, the group, itself, is deleted.</p>
     <div class="desc"><p>Removes permissions from the group for the given resource.</p>
 <p>Args:<br />
 &emsp;&emsp;&emsp;&emsp;<b>grp_name (string)</b>: Name of group.<br />
-&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.Resource)</b>: Identifies which data model object to operate on.<br />
-&emsp;&emsp;&emsp;&emsp;<b>permissions (list)</b>: List of permissions to remove from the given resource.</p>
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.Resource)</b>: Identifies which data model object to operate on.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
 <pre><code>requests.HTTPError on failure.
@@ -2781,18 +3168,16 @@ Otherwise, the group, itself, is deleted.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_permissions', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.delete_permissions" class="source">
-    <pre><code>def delete_permissions(self, grp_name, resource, permissions):
+    <pre><code>def delete_permissions(self, grp_name, resource):
     """Removes permissions from the group for the given resource.
     Args:
         grp_name (string): Name of group.
         resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
-        permissions (list): List of permissions to remove from the given resource.
     Raises:
         requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
-    self.project_service.delete_permissions(
-        grp_name, resource, permissions)
+    self.project_service.delete_permissions(grp_name, resource)
 </code></pre>
   </div>
 </div>
@@ -2985,6 +3370,80 @@ Other exceptions may be raised depending on the volume service's implementation.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.get_group(name, user_name)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.get_is_group_maintainer">
+    <p>def <span class="ident">get_is_group_maintainer</span>(</p><p>self, grp_name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Check if the given user is a member of the named group.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User of interest.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: False if user not a member.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_is_group_maintainer', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.get_is_group_maintainer" class="source">
+    <pre><code>def get_is_group_maintainer(self, grp_name, user):
+    """Check if the given user is a member of the named group.
+    Args:
+        name (string): Name of group.
+        user (string): User of interest.
+    Returns:
+        (bool): False if user not a member.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.get_is_group_maintainer(grp_name, user)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.get_is_group_member">
+    <p>def <span class="ident">get_is_group_member</span>(</p><p>self, grp_name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Check if the given user is a member of the named group.</p>
+<p>Note that a group maintainer is not considered a member unless the<br />
+user is also explicitly added as a member.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user_name (string)</b>: User of interest.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: False if user not a member.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_is_group_member', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.get_is_group_member" class="source">
+    <pre><code>def get_is_group_member(self, grp_name, user):
+    """Check if the given user is a member of the named group.
+    Note that a group maintainer is not considered a member unless the
+    user is also explicitly added as a member.
+    Args:
+        name (string): Name of group.
+        user_name (string): User of interest.
+    Returns:
+        (bool): False if user not a member.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.get_is_group_member(grp_name, user)
 </code></pre>
   </div>
 </div>
@@ -3362,6 +3821,107 @@ of the named collection.</p>
   
             
   <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.list_group_maintainers">
+    <p>def <span class="ident">list_group_maintainers</span>(</p><p>self, name)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the maintainers of a group.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group to query.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of maintainer names.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_group_maintainers', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.list_group_maintainers" class="source">
+    <pre><code>def list_group_maintainers(self, name):
+    """Get the maintainers of a group.
+    Args:
+        name (string): Name of group to query.
+    Returns:
+        (list[string]): List of maintainer names.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.list_group_maintainers(name)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.list_group_members">
+    <p>def <span class="ident">list_group_members</span>(</p><p>self, name)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the members of a group.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group to query.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of member names.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_group_members', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.list_group_members" class="source">
+    <pre><code>def list_group_members(self, name):
+    """Get the members of a group.
+    Args:
+        name (string): Name of group to query.
+    Returns:
+        (list[string]): List of member names.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.list_group_members(name)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.list_groups">
+    <p>def <span class="ident">list_groups</span>(</p><p>self, filtr=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the groups the logged in user is a member of.</p>
+<p>Optionally filter by 'member' or 'maintainer'.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>filtr (optional[string|None])</b>: ['member'|'maintainer'] or defaults to None.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of group names.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_groups', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.list_groups" class="source">
+    <pre><code>def list_groups(self, filtr=None):
+    """Get the groups the logged in user is a member of.
+    Optionally filter by 'member' or 'maintainer'.
+    Args:
+        filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
+    Returns:
+        (list[string]): List of group names.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.list_groups(filtr)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.remote.boss.remote.BossRemote.list_metadata">
     <p>def <span class="ident">list_metadata</span>(</p><p>self, resource)</p>
     </div>
@@ -3394,6 +3954,47 @@ of the named collection.</p>
     """
     self.metadata_service.set_auth(self._token_metadata)
     return self.metadata_service.list(resource)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.list_permissions">
+    <p>def <span class="ident">list_permissions</span>(</p><p>self, group_name=None, resource=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>List permission sets associated filtering by group and/or resource.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>group_name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.Resource)</b>: Identifies which data model object to operate on.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list)</b>: List of permissions.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_permissions', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.list_permissions" class="source">
+    <pre><code>def list_permissions(self, group_name=None, resource=None):
+    """List permission sets associated filtering by group and/or resource.
+    Args:
+        group_name (string): Name of group.
+        resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+    Returns:
+        (list): List of permissions.
+    Raises:
+        requests.HTTPError on failure.
+    """
+    self.project_service.set_auth(self._token_project)
+    return self.project_service.list_permissions(group_name, resource)
 </code></pre>
   </div>
 </div>
@@ -3504,6 +4105,44 @@ Keys must already exist.</p>
     """
     self.metadata_service.set_auth(self._token_metadata)
     return self.metadata_service.update(resource, keys_vals)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.update_permissions">
+    <p>def <span class="ident">update_permissions</span>(</p><p>self, grp_name, resource, permissions)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Update permissions for the group associated with the given resource.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>grp_name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.Resource)</b>: Identifies which data model object to operate on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>permissions (list)</b>: List of permissions to add to the given resource.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.update_permissions', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.update_permissions" class="source">
+    <pre><code>def update_permissions(self, grp_name, resource, permissions):
+    """Update permissions for the group associated with the given resource.
+    Args:
+        grp_name (string): Name of group.
+        resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+        permissions (list): List of permissions to add to the given resource.
+    Raises:
+        requests.HTTPError on failure.
+    """
+    self.project_service.set_auth(self._token_project)
+    self.project_service.update_permissions(grp_name, resource, permissions)
 </code></pre>
   </div>
 </div>

@@ -979,27 +979,36 @@ table {
           
   <ul>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.__init__">__init__</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_maintainer_to_group">add_maintainer_to_group</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_member_to_group">add_member_to_group</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_permissions">add_permissions</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_user">add_user</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_user_role">add_user_role</a></li>
-    <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_user_to_group">add_user_to_group</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.create">create</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.create_group">create_group</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete">delete</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_group">delete_group</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_maintainer_from_group">delete_maintainer_from_group</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_member_from_group">delete_member_from_group</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_permissions">delete_permissions</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_user">delete_user</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_user_role">delete_user_role</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.get">get</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.get_api_impl">get_api_impl</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.get_group">get_group</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.get_is_group_maintainer">get_is_group_maintainer</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.get_is_group_member">get_is_group_member</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.get_permissions">get_permissions</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.get_user">get_user</a></li>
-    <li class="mono"><a href="#intern.service.boss.project.ProjectService.get_user_groups">get_user_groups</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.get_user_roles">get_user_roles</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.list">list</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.list_group_maintainers">list_group_maintainers</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.list_group_members">list_group_members</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.list_groups">list_groups</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.list_permissions">list_permissions</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.set_auth">set_auth</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.update">update</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.update_permissions">update_permissions</a></li>
   </ul>
 
         </li>
@@ -1063,15 +1072,30 @@ class ProjectService(BossService):
         }
         self.service = self.get_api_impl(version)
 
+    def list_groups(self, filtr=None):
+        """Get the groups the logged in user is a member of.
+
+        Optionally filter by 'member' or 'maintainer'.
+
+        Args:
+            filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
+
+        Returns:
+            (list[string]): List of group names.
+        """
+        return self.service.list_groups(
+            filtr, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
     def get_group(self, name, user_name=None):
-        """Get information on the given group or whether or not a user is a member of the group.
+        """Get owner of group and the resources it's attached to.
 
         Args:
             name (string): Name of group to query.
             user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
 
         Returns:
-            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+            (dict): Keys include 'owner', 'name', 'resources'.
 
         Raises:
             requests.HTTPError on failure.
@@ -1093,39 +1117,154 @@ class ProjectService(BossService):
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def delete_group(self, name, user_name=None):
-        """Delete given group or delete user from given group.
-
-        If user_name is provided, the user will be removed from the group.
-        Otherwise, the group, itself, is deleted.
+    def delete_group(self, name):
+        """Delete given group.
 
         Args:
             name (string): Name of group.
-            user_name (optional[string]): Defaults to None.  User to remove from group.
 
         Raises:
             requests.HTTPError on failure.
         """
         self.service.delete_group(
-            name, user_name, self.url_prefix, self.auth, self.session,
+            name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def add_user_to_group(self, name, user):
+    def list_group_members(self, name):
+        """Get the members of a group (does not include maintainers).
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        return self.service.list_group_members(
+            name, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def add_member_to_group(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
 
         Args:
             name (string): Name of group.
-            user_name (string): User to add to group.
+            user (string): User to add to group.
             version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_user_to_group(
+        return self.service.add_member_to_group(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
+
+    def delete_member_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        return self.service.delete_member_from_group(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def get_is_group_member(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        return self.service.get_is_group_member(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def list_group_maintainers(self, name):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of maintainer names.
+        """
+        return self.service.list_group_maintainers(
+            name, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def add_maintainer_to_group(self, name, user):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        return self.service.add_maintainer_to_group(
+            name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def delete_maintainer_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        return self.service.delete_maintainer_from_group(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def get_is_group_maintainer(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        return self.service.get_is_group_maintainer(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def list_permissions(self, group_name=None, resource=None):
+        """List permission sets associated filtering by group and/or resource.
+
+        Args:
+            group_name (string): Name of group.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+
+        Returns:
+            (list): List of permissions.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        return self.service.list_permissions(group_name, resource,
+                                             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def get_permissions(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
@@ -1145,8 +1284,7 @@ class ProjectService(BossService):
             grp_name, resource,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def add_permissions(
-        self, grp_name, resource, permissions):
+    def add_permissions(self, grp_name, resource, permissions):
         """ Add additional permissions for the group associated with the given resource.
 
         Args:
@@ -1161,22 +1299,33 @@ class ProjectService(BossService):
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def delete_permissions(
-        self, grp_name, resource, permissions):
+    def update_permissions(self, grp_name, resource, permissions):
+        """ Update permissions for the group associated with the given resource.
+
+        Args:
+            grp_name (string): Name of group.
+            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
+            permissions (list): List of permissions to add to the given resource.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.service.update_permissions(
+            grp_name, resource, permissions,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def delete_permissions(self, grp_name, resource):
         """Removes permissions from the group for the given resource.
 
         Args:
             grp_name (string): Name of group.
             resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
-            permissions (list): List of permissions to remove from the given resource.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
         self.service.delete_permissions(
-            grp_name, resource, permissions,
-            self.url_prefix, self.auth, self.session, self.session_send_opts)
+            grp_name, resource, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def add_user_role(self, user, role):
         """Add role to given user.
@@ -1253,22 +1402,6 @@ class ProjectService(BossService):
         """
         return self.service.get_user(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
-
-    def get_user_groups(self, user):
-        """Get user's group memberships.
-
-        Args:
-            user (string): User name.
-
-        Returns:
-            (dictionary): User's data encoded in a dictionary.
-
-        Raises:
-            requests.HTTPError on failure.
-        """
-        return self.service.get_user_groups(
-            user, self.url_prefix, self.auth, self.session, self.session_send_opts)
-
     def delete_user(self, user):
         """Delete the given user.
 
@@ -1385,15 +1518,30 @@ class ProjectService(BossService):
         }
         self.service = self.get_api_impl(version)
 
+    def list_groups(self, filtr=None):
+        """Get the groups the logged in user is a member of.
+
+        Optionally filter by 'member' or 'maintainer'.
+
+        Args:
+            filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
+
+        Returns:
+            (list[string]): List of group names.
+        """
+        return self.service.list_groups(
+            filtr, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
     def get_group(self, name, user_name=None):
-        """Get information on the given group or whether or not a user is a member of the group.
+        """Get owner of group and the resources it's attached to.
 
         Args:
             name (string): Name of group to query.
             user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
 
         Returns:
-            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+            (dict): Keys include 'owner', 'name', 'resources'.
 
         Raises:
             requests.HTTPError on failure.
@@ -1415,39 +1563,154 @@ class ProjectService(BossService):
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def delete_group(self, name, user_name=None):
-        """Delete given group or delete user from given group.
-
-        If user_name is provided, the user will be removed from the group.
-        Otherwise, the group, itself, is deleted.
+    def delete_group(self, name):
+        """Delete given group.
 
         Args:
             name (string): Name of group.
-            user_name (optional[string]): Defaults to None.  User to remove from group.
 
         Raises:
             requests.HTTPError on failure.
         """
         self.service.delete_group(
-            name, user_name, self.url_prefix, self.auth, self.session,
+            name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def add_user_to_group(self, name, user):
+    def list_group_members(self, name):
+        """Get the members of a group (does not include maintainers).
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of member names.
+        """
+        return self.service.list_group_members(
+            name, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def add_member_to_group(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
 
         Args:
             name (string): Name of group.
-            user_name (string): User to add to group.
+            user (string): User to add to group.
             version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_user_to_group(
+        return self.service.add_member_to_group(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
+
+    def delete_member_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        return self.service.delete_member_from_group(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def get_is_group_member(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        return self.service.get_is_group_member(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def list_group_maintainers(self, name):
+        """Get the maintainers of a group.
+
+        Args:
+            name (string): Name of group to query.
+
+        Returns:
+            (list[string]): List of maintainer names.
+        """
+        return self.service.list_group_maintainers(
+            name, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def add_maintainer_to_group(self, name, user):
+        """Add the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        return self.service.add_maintainer_to_group(
+            name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def delete_maintainer_from_group(self, grp_name, user):
+        """Delete the given user to the named group.
+
+        Both group and user must already exist for this to succeed.
+
+        Args:
+            name (string): Name of group.
+            user (string): User to add to group.
+
+        Returns:
+            (bool): True on success.
+        """
+        return self.service.delete_maintainer_from_group(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def get_is_group_maintainer(self, grp_name, user):
+        """Check if the given user is a member of the named group.
+
+        Args:
+            name (string): Name of group.
+            user (string): User of interest.
+
+        Returns:
+            (bool): False if user not a member.
+        """
+        return self.service.get_is_group_maintainer(
+            grp_name, user, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
+
+    def list_permissions(self, group_name=None, resource=None):
+        """List permission sets associated filtering by group and/or resource.
+
+        Args:
+            group_name (string): Name of group.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+
+        Returns:
+            (list): List of permissions.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        return self.service.list_permissions(group_name, resource,
+                                             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def get_permissions(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
@@ -1467,8 +1730,7 @@ class ProjectService(BossService):
             grp_name, resource,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def add_permissions(
-        self, grp_name, resource, permissions):
+    def add_permissions(self, grp_name, resource, permissions):
         """ Add additional permissions for the group associated with the given resource.
 
         Args:
@@ -1483,22 +1745,33 @@ class ProjectService(BossService):
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def delete_permissions(
-        self, grp_name, resource, permissions):
+    def update_permissions(self, grp_name, resource, permissions):
+        """ Update permissions for the group associated with the given resource.
+
+        Args:
+            grp_name (string): Name of group.
+            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
+            permissions (list): List of permissions to add to the given resource.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.service.update_permissions(
+            grp_name, resource, permissions,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def delete_permissions(self, grp_name, resource):
         """Removes permissions from the group for the given resource.
 
         Args:
             grp_name (string): Name of group.
             resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
-            permissions (list): List of permissions to remove from the given resource.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
         self.service.delete_permissions(
-            grp_name, resource, permissions,
-            self.url_prefix, self.auth, self.session, self.session_send_opts)
+            grp_name, resource, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def add_user_role(self, user, role):
         """Add role to given user.
@@ -1575,22 +1848,6 @@ class ProjectService(BossService):
         """
         return self.service.get_user(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
-
-    def get_user_groups(self, user):
-        """Get user's group memberships.
-
-        Args:
-            user (string): User name.
-
-        Returns:
-            (dictionary): User's data encoded in a dictionary.
-
-        Raises:
-            requests.HTTPError on failure.
-        """
-        return self.service.get_user_groups(
-            user, self.url_prefix, self.auth, self.session, self.session_send_opts)
-
     def delete_user(self, user):
         """Delete the given user.
 
@@ -1794,6 +2051,88 @@ class ProjectService(BossService):
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.add_maintainer_to_group">
+    <p>def <span class="ident">add_maintainer_to_group</span>(</p><p>self, name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Add the given user to the named group.</p>
+<p>Both group and user must already exist for this to succeed.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User to add to group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>version (optional[string])</b>: Version of the Boss API to use.  Defaults to the latest supported version.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.add_maintainer_to_group', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.add_maintainer_to_group" class="source">
+    <pre><code>def add_maintainer_to_group(self, name, user):
+    """Add the given user to the named group.
+    Both group and user must already exist for this to succeed.
+    Args:
+        name (string): Name of group.
+        user (string): User to add to group.
+        version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+    Raises:
+        requests.HTTPError on failure.
+    """
+    return self.service.add_maintainer_to_group(
+        name, user, self.url_prefix, self.auth, self.session,
+        self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.add_member_to_group">
+    <p>def <span class="ident">add_member_to_group</span>(</p><p>self, name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Add the given user to the named group.</p>
+<p>Both group and user must already exist for this to succeed.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User to add to group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>version (optional[string])</b>: Version of the Boss API to use.  Defaults to the latest supported version.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.add_member_to_group', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.add_member_to_group" class="source">
+    <pre><code>def add_member_to_group(self, name, user):
+    """Add the given user to the named group.
+    Both group and user must already exist for this to succeed.
+    Args:
+        name (string): Name of group.
+        user (string): User to add to group.
+        version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
+    Raises:
+        requests.HTTPError on failure.
+    """
+    return self.service.add_member_to_group(
+        name, user, self.url_prefix, self.auth, self.session,
+        self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.project.ProjectService.add_permissions">
     <p>def <span class="ident">add_permissions</span>(</p><p>self, grp_name, resource, permissions)</p>
     </div>
@@ -1813,8 +2152,7 @@ class ProjectService(BossService):
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.add_permissions', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.project.ProjectService.add_permissions" class="source">
-    <pre><code>def add_permissions(
-    self, grp_name, resource, permissions):
+    <pre><code>def add_permissions(self, grp_name, resource, permissions):
     """ Add additional permissions for the group associated with the given resource.
     Args:
         grp_name (string): Name of group.
@@ -1907,47 +2245,6 @@ class ProjectService(BossService):
     self.service.add_user_role(
         user, role,
         self.url_prefix, self.auth, self.session, self.session_send_opts)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.service.boss.project.ProjectService.add_user_to_group">
-    <p>def <span class="ident">add_user_to_group</span>(</p><p>self, name, user)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Add the given user to the named group.</p>
-<p>Both group and user must already exist for this to succeed.</p>
-<p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
-&emsp;&emsp;&emsp;&emsp;<b>user_name (string)</b>: User to add to group.<br />
-&emsp;&emsp;&emsp;&emsp;<b>version (optional[string])</b>: Version of the Boss API to use.  Defaults to the latest supported version.</p>
-<h2 style='font-size:125% !important'>Raises</h2>
-
-<pre><code>requests.HTTPError on failure.
-</code></pre></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.add_user_to_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.project.ProjectService.add_user_to_group" class="source">
-    <pre><code>def add_user_to_group(self, name, user):
-    """Add the given user to the named group.
-    Both group and user must already exist for this to succeed.
-    Args:
-        name (string): Name of group.
-        user_name (string): User to add to group.
-        version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
-    Raises:
-        requests.HTTPError on failure.
-    """
-    return self.service.add_user_to_group(
-        name, user, self.url_prefix, self.auth, self.session,
-        self.session_send_opts)
 </code></pre>
   </div>
 </div>
@@ -2055,18 +2352,15 @@ class ProjectService(BossService):
             
   <div class="item">
     <div class="name def" id="intern.service.boss.project.ProjectService.delete_group">
-    <p>def <span class="ident">delete_group</span>(</p><p>self, name, user_name=None)</p>
+    <p>def <span class="ident">delete_group</span>(</p><p>self, name)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Delete given group or delete user from given group.</p>
-<p>If user_name is provided, the user will be removed from the group.<br />
-Otherwise, the group, itself, is deleted.</p>
+    <div class="desc"><p>Delete given group.</p>
 <p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
-&emsp;&emsp;&emsp;&emsp;<b>user_name (optional[string])</b>: Defaults to None.  User to remove from group.</p>
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
 <pre><code>requests.HTTPError on failure.
@@ -2074,18 +2368,91 @@ Otherwise, the group, itself, is deleted.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.delete_group', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.project.ProjectService.delete_group" class="source">
-    <pre><code>def delete_group(self, name, user_name=None):
-    """Delete given group or delete user from given group.
-    If user_name is provided, the user will be removed from the group.
-    Otherwise, the group, itself, is deleted.
+    <pre><code>def delete_group(self, name):
+    """Delete given group.
     Args:
         name (string): Name of group.
-        user_name (optional[string]): Defaults to None.  User to remove from group.
     Raises:
         requests.HTTPError on failure.
     """
     self.service.delete_group(
-        name, user_name, self.url_prefix, self.auth, self.session,
+        name, self.url_prefix, self.auth, self.session,
+        self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.delete_maintainer_from_group">
+    <p>def <span class="ident">delete_maintainer_from_group</span>(</p><p>self, grp_name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Delete the given user to the named group.</p>
+<p>Both group and user must already exist for this to succeed.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User to add to group.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.delete_maintainer_from_group', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.delete_maintainer_from_group" class="source">
+    <pre><code>def delete_maintainer_from_group(self, grp_name, user):
+    """Delete the given user to the named group.
+    Both group and user must already exist for this to succeed.
+    Args:
+        name (string): Name of group.
+        user (string): User to add to group.
+    Returns:
+        (bool): True on success.
+    """
+    return self.service.delete_maintainer_from_group(
+        grp_name, user, self.url_prefix, self.auth, self.session,
+        self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.delete_member_from_group">
+    <p>def <span class="ident">delete_member_from_group</span>(</p><p>self, grp_name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Delete the given user to the named group.</p>
+<p>Both group and user must already exist for this to succeed.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User to add to group.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.delete_member_from_group', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.delete_member_from_group" class="source">
+    <pre><code>def delete_member_from_group(self, grp_name, user):
+    """Delete the given user to the named group.
+    Both group and user must already exist for this to succeed.
+    Args:
+        name (string): Name of group.
+        user (string): User to add to group.
+    Returns:
+        (bool): True on success.
+    """
+    return self.service.delete_member_from_group(
+        grp_name, user, self.url_prefix, self.auth, self.session,
         self.session_send_opts)
 </code></pre>
   </div>
@@ -2096,7 +2463,7 @@ Otherwise, the group, itself, is deleted.</p>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.project.ProjectService.delete_permissions">
-    <p>def <span class="ident">delete_permissions</span>(</p><p>self, grp_name, resource, permissions)</p>
+    <p>def <span class="ident">delete_permissions</span>(</p><p>self, grp_name, resource)</p>
     </div>
     
 
@@ -2105,9 +2472,7 @@ Otherwise, the group, itself, is deleted.</p>
     <div class="desc"><p>Removes permissions from the group for the given resource.</p>
 <p>Args:<br />
 &emsp;&emsp;&emsp;&emsp;<b>grp_name (string)</b>: Name of group.<br />
-&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Identifies which data model object to operate on.<br />
-&emsp;&emsp;&emsp;&emsp;<b>permissions (list)</b>: List of permissions to remove from the given resource.<br />
-&emsp;&emsp;&emsp;&emsp;<b>version (optional[string])</b>: Version of the Boss API to use.  Defaults to the latest supported version.</p>
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Identifies which data model object to operate on.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
 <pre><code>requests.HTTPError on failure.
@@ -2115,20 +2480,16 @@ Otherwise, the group, itself, is deleted.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.delete_permissions', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.project.ProjectService.delete_permissions" class="source">
-    <pre><code>def delete_permissions(
-    self, grp_name, resource, permissions):
+    <pre><code>def delete_permissions(self, grp_name, resource):
     """Removes permissions from the group for the given resource.
     Args:
         grp_name (string): Name of group.
         resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
-        permissions (list): List of permissions to remove from the given resource.
-        version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
     Raises:
         requests.HTTPError on failure.
     """
     self.service.delete_permissions(
-        grp_name, resource, permissions,
-        self.url_prefix, self.auth, self.session, self.session_send_opts)
+        grp_name, resource, self.url_prefix, self.auth, self.session, self.session_send_opts)
 </code></pre>
   </div>
 </div>
@@ -2289,13 +2650,13 @@ Otherwise, the group, itself, is deleted.</p>
 
     
   
-    <div class="desc"><p>Get information on the given group or whether or not a user is a member of the group.</p>
+    <div class="desc"><p>Get owner of group and the resources it's attached to.</p>
 <p>Args:<br />
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group to query.<br />
 &emsp;&emsp;&emsp;&emsp;<b>user_name (optional[string])</b>: Supply None if not interested in determining if user is a member of the given group.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(mixed)</b>: Dictionary if getting group information or bool if a user name is supplied.</p>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(dict)</b>: Keys include 'owner', 'name', 'resources'.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
 <pre><code>requests.HTTPError on failure.
@@ -2304,17 +2665,89 @@ Otherwise, the group, itself, is deleted.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.get_group', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.project.ProjectService.get_group" class="source">
     <pre><code>def get_group(self, name, user_name=None):
-    """Get information on the given group or whether or not a user is a member of the group.
+    """Get owner of group and the resources it's attached to.
     Args:
         name (string): Name of group to query.
         user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
     Returns:
-        (mixed): Dictionary if getting group information or bool if a user name is supplied.
+        (dict): Keys include 'owner', 'name', 'resources'.
     Raises:
         requests.HTTPError on failure.
     """
     return self.service.get_group(
         name, user_name, self.url_prefix, self.auth, self.session,
+        self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.get_is_group_maintainer">
+    <p>def <span class="ident">get_is_group_maintainer</span>(</p><p>self, grp_name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Check if the given user is a member of the named group.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User of interest.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: False if user not a member.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.get_is_group_maintainer', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.get_is_group_maintainer" class="source">
+    <pre><code>def get_is_group_maintainer(self, grp_name, user):
+    """Check if the given user is a member of the named group.
+    Args:
+        name (string): Name of group.
+        user (string): User of interest.
+    Returns:
+        (bool): False if user not a member.
+    """
+    return self.service.get_is_group_maintainer(
+        grp_name, user, self.url_prefix, self.auth, self.session,
+        self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.get_is_group_member">
+    <p>def <span class="ident">get_is_group_member</span>(</p><p>self, grp_name, user)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Check if the given user is a member of the named group.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User of interest.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: False if user not a member.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.get_is_group_member', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.get_is_group_member" class="source">
+    <pre><code>def get_is_group_member(self, grp_name, user):
+    """Check if the given user is a member of the named group.
+    Args:
+        name (string): Name of group.
+        user (string): User of interest.
+    Returns:
+        (bool): False if user not a member.
+    """
+    return self.service.get_is_group_member(
+        grp_name, user, self.url_prefix, self.auth, self.session,
         self.session_send_opts)
 </code></pre>
   </div>
@@ -2407,45 +2840,6 @@ Otherwise, the group, itself, is deleted.</p>
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.project.ProjectService.get_user_groups">
-    <p>def <span class="ident">get_user_groups</span>(</p><p>self, user)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Get user's group memberships.</p>
-<p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User name.</p>
-<h2 style='font-size:125% !important'>Returns</h2>
-
-<p>&emsp;&emsp;&emsp;&emsp;<b>(dictionary)</b>: User's data encoded in a dictionary.</p>
-<h2 style='font-size:125% !important'>Raises</h2>
-
-<pre><code>requests.HTTPError on failure.
-</code></pre></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.get_user_groups', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.project.ProjectService.get_user_groups" class="source">
-    <pre><code>def get_user_groups(self, user):
-    """Get user's group memberships.
-    Args:
-        user (string): User name.
-    Returns:
-        (dictionary): User's data encoded in a dictionary.
-    Raises:
-        requests.HTTPError on failure.
-    """
-    return self.service.get_user_groups(
-        user, self.url_prefix, self.auth, self.session, self.session_send_opts)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
     <div class="name def" id="intern.service.boss.project.ProjectService.get_user_roles">
     <p>def <span class="ident">get_user_roles</span>(</p><p>self, user)</p>
     </div>
@@ -2525,6 +2919,151 @@ Otherwise, the group, itself, is deleted.</p>
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.list_group_maintainers">
+    <p>def <span class="ident">list_group_maintainers</span>(</p><p>self, name)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the maintainers of a group.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group to query.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of maintainer names.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.list_group_maintainers', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.list_group_maintainers" class="source">
+    <pre><code>def list_group_maintainers(self, name):
+    """Get the maintainers of a group.
+    Args:
+        name (string): Name of group to query.
+    Returns:
+        (list[string]): List of maintainer names.
+    """
+    return self.service.list_group_maintainers(
+        name, self.url_prefix, self.auth, self.session,
+        self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.list_group_members">
+    <p>def <span class="ident">list_group_members</span>(</p><p>self, name)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the members of a group (does not include maintainers).</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group to query.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of member names.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.list_group_members', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.list_group_members" class="source">
+    <pre><code>def list_group_members(self, name):
+    """Get the members of a group (does not include maintainers).
+    Args:
+        name (string): Name of group to query.
+    Returns:
+        (list[string]): List of member names.
+    """
+    return self.service.list_group_members(
+        name, self.url_prefix, self.auth, self.session,
+        self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.list_groups">
+    <p>def <span class="ident">list_groups</span>(</p><p>self, filtr=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the groups the logged in user is a member of.</p>
+<p>Optionally filter by 'member' or 'maintainer'.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>filtr (optional[string|None])</b>: ['member'|'maintainer'] or defaults to None.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of group names.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.list_groups', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.list_groups" class="source">
+    <pre><code>def list_groups(self, filtr=None):
+    """Get the groups the logged in user is a member of.
+    Optionally filter by 'member' or 'maintainer'.
+    Args:
+        filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
+    Returns:
+        (list[string]): List of group names.
+    """
+    return self.service.list_groups(
+        filtr, self.url_prefix, self.auth, self.session,
+        self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.list_permissions">
+    <p>def <span class="ident">list_permissions</span>(</p><p>self, group_name=None, resource=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>List permission sets associated filtering by group and/or resource.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>group_name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.Resource)</b>: Identifies which data model object to operate on.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list)</b>: List of permissions.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.list_permissions', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.list_permissions" class="source">
+    <pre><code>def list_permissions(self, group_name=None, resource=None):
+    """List permission sets associated filtering by group and/or resource.
+    Args:
+        group_name (string): Name of group.
+        resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+    Returns:
+        (list): List of permissions.
+    Raises:
+        requests.HTTPError on failure.
+    """
+    return self.service.list_permissions(group_name, resource,
+                                         self.url_prefix, self.auth, self.session, self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.project.ProjectService.set_auth">
     <p>def <span class="ident">set_auth</span>(</p><p>self, token, **kwargs)</p>
     </div>
@@ -2580,6 +3119,45 @@ Otherwise, the group, itself, is deleted.</p>
     return self.service.update(
         resource_name, resource, self.url_prefix, self.auth,
         self.session, self.session_send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.project.ProjectService.update_permissions">
+    <p>def <span class="ident">update_permissions</span>(</p><p>self, grp_name, resource, permissions)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Update permissions for the group associated with the given resource.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>grp_name (string)</b>: Name of group.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Identifies which data model object to operate on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>permissions (list)</b>: List of permissions to add to the given resource.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.update_permissions', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.update_permissions" class="source">
+    <pre><code>def update_permissions(self, grp_name, resource, permissions):
+    """ Update permissions for the group associated with the given resource.
+    Args:
+        grp_name (string): Name of group.
+        resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
+        permissions (list): List of permissions to add to the given resource.
+    Raises:
+        requests.HTTPError on failure.
+    """
+    self.service.update_permissions(
+        grp_name, resource, permissions,
+        self.url_prefix, self.auth, self.session, self.session_send_opts)
 </code></pre>
   </div>
 </div>

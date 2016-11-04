@@ -1045,6 +1045,8 @@ table {
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.skipTest">skipTest</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.tearDown">tearDown</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.tearDownClass">tearDownClass</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_annotation_channel">test_create_annotation_channel</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_annotation_channel_without_source_fails">test_create_annotation_channel_without_source_fails</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_channel">test_create_channel</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_collection">test_create_collection</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_coord_frame">test_create_coord_frame</a></li>
@@ -1054,7 +1056,6 @@ table {
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_get_collection">test_get_collection</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_get_coord_frame">test_get_coord_frame</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_get_experiment">test_get_experiment</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_list_channels">test_list_channels</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_list_collections">test_list_collections</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_list_coord_frames">test_list_coord_frames</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_list_experiments">test_list_experiments</a></li>
@@ -1160,12 +1161,18 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
             'exp2309-2a', cls.coll.name, cls.coord.name,
             'my first experiment', 2, 'slice', 3)
 
-        cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
+        cls.source_chan = ChannelResource(
+            'sourceChan', cls.coll.name, cls.exp.name, 'image', 'test source channel',
             0, 'uint8', 0)
+        cls.related_chan = ChannelResource(
+            'relatedChan', cls.coll.name, cls.exp.name, 'image', 'test related channel',
+            0, 'uint8', 0)
+        cls.chan = ChannelResource(
+            'myChan', cls.coll.name, cls.exp.name, 'annotation', 'test annotation channel',
+            0, 'uint8', 0, sources=['sourceChan'], related=['relatedChan'])
         cls.chan_upd = ChannelResource(
-            'yourChan', cls.coll.name, cls.exp.name, 'image', 'your test channel',
-            1, 'uint8', 1)
+            'yourChan', cls.coll.name, cls.exp.name, 'annotation', 'your test annotation channel',
+            1, 'uint8', 1, sources=['sourceChan'], related=['relatedChan'])
 
     @classmethod
     def cleanup_db(cls):
@@ -1175,6 +1182,14 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
             pass
         try:
             cls.rmt.delete_project(cls.chan)
+        except HTTPError:
+            pass
+        try:
+            cls.rmt.delete_project(cls.related_chan)
+        except HTTPError:
+            pass
+        try:
+            cls.rmt.delete_project(cls.source_chan)
         except HTTPError:
             pass
         try:
@@ -1256,14 +1271,63 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        ch = self.rmt.create_project(self.chan)
-        self.assertEqual(self.chan.name, ch.name)
+        ch = self.rmt.create_project(self.source_chan)
+        self.assertEqual(self.source_chan.name, ch.name)
         self.assertEqual(self.exp.name, ch.exp_name)
-        self.assertEqual(self.chan.description, ch.description)
+        self.assertEqual(self.source_chan.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
-        self.assertEqual(self.chan.datatype, ch.datatype)
-        self.assertEqual(self.chan.default_time_step, ch.default_time_step)
-        self.assertEqual(self.chan.base_resolution, ch.base_resolution)
+        self.assertEqual(self.source_chan.datatype, ch.datatype)
+        self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+        self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
+
+    def test_create_annotation_channel_without_source_fails(self):
+        c = self.rmt.create_project(self.coll)
+        self.assertIsNotNone(c)
+
+        cf = self.rmt.create_project(self.coord)
+        self.assertIsNotNone(cf)
+
+        e = self.rmt.create_project(self.exp)
+        self.assertIsNotNone(e)
+
+        rel_ch = self.rmt.create_project(self.related_chan)
+        self.assertIsNotNone(rel_ch)
+
+        chan = ChannelResource(
+            'myChan', self.coll.name, self.exp.name, 'annotation', 'test annotation channel',
+            0, 'uint8', 0, related=['relatedChan'])
+
+        with self.assertRaises(HTTPError):
+            self.rmt.create_project(chan)
+
+    def test_create_annotation_channel(self):
+        """Annotation channels require a source channel."""
+        c = self.rmt.create_project(self.coll)
+        self.assertIsNotNone(c)
+
+        cf = self.rmt.create_project(self.coord)
+        self.assertIsNotNone(cf)
+
+        e = self.rmt.create_project(self.exp)
+        self.assertIsNotNone(e)
+
+        ch = self.rmt.create_project(self.source_chan)
+        self.assertIsNotNone(ch)
+
+        rel_ch = self.rmt.create_project(self.related_chan)
+        self.assertIsNotNone(rel_ch)
+
+        ann_ch = self.rmt.create_project(self.chan)
+
+        self.assertEqual(self.chan.name, ann_ch.name)
+        self.assertEqual(self.exp.name, ann_ch.exp_name)
+        self.assertEqual(self.chan.description, ann_ch.description)
+        self.assertEqual(self.coll.name, ann_ch.coll_name)
+        self.assertEqual(self.chan.datatype, ann_ch.datatype)
+        self.assertEqual(self.chan.default_time_step, ann_ch.default_time_step)
+        self.assertEqual(self.chan.base_resolution, ann_ch.base_resolution)
+        self.assertEqual(self.chan.sources, ann_ch.sources)
+        self.assertEqual(self.chan.related, ann_ch.related)
 
     def test_get_collection(self):
         coll = self.rmt.create_project(self.coll)
@@ -1322,17 +1386,17 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        chan = self.rmt.create_project(self.chan)
+        chan = self.rmt.create_project(self.source_chan)
         self.assertIsNotNone(chan)
 
-        ch = self.rmt.get_project(self.chan)
-        self.assertEqual(self.chan.name, ch.name)
+        ch = self.rmt.get_project(self.source_chan)
+        self.assertEqual(self.source_chan.name, ch.name)
         self.assertEqual(self.exp.name, ch.exp_name)
-        self.assertEqual(self.chan.description, ch.description)
+        self.assertEqual(self.source_chan.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
-        self.assertEqual(self.chan.datatype, ch.datatype)
-        self.assertEqual(self.chan.default_time_step, ch.default_time_step)
-        self.assertEqual(self.chan.base_resolution, ch.base_resolution)
+        self.assertEqual(self.source_chan.datatype, ch.datatype)
+        self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+        self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
 
     def test_update_collection(self):
         coll = self.rmt.create_project(self.coll)
@@ -1382,6 +1446,12 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
+        source_ch = self.rmt.create_project(self.source_chan)
+        self.assertIsNotNone(source_ch)
+
+        rel_ch = self.rmt.create_project(self.related_chan)
+        self.assertIsNotNone(rel_ch)
+
         chan = self.rmt.create_project(self.chan)
         self.assertIsNotNone(chan)
 
@@ -1393,6 +1463,8 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.chan_upd.datatype, ch.datatype)
         self.assertEqual(self.chan_upd.default_time_step, ch.default_time_step)
         self.assertEqual(self.chan_upd.base_resolution, ch.base_resolution)
+        self.assertEqual(self.chan_upd.sources, ch.sources)
+        self.assertEqual(self.chan_upd.related, ch.related)
 
     def test_list_collections(self):
         coll = self.rmt.create_project(self.coll)
@@ -1427,23 +1499,23 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(1, len(e))
         self.assertEqual(self.exp.name, e[0])
 
-    def test_list_channels(self):
-        c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
+    #def test_list_channels(self):
+    #    c = self.rmt.create_project(self.coll)
+    #    self.assertIsNotNone(c)
 
-        cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
+    #    cf = self.rmt.create_project(self.coord)
+    #    self.assertIsNotNone(cf)
 
-        e = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(e)
+    #    e = self.rmt.create_project(self.exp)
+    #    self.assertIsNotNone(e)
 
-        chan = self.rmt.create_project(self.chan)
-        self.assertIsNotNone(chan)
+    #    chan = self.rmt.create_project(self.chan)
+    #    self.assertIsNotNone(chan)
 
-        chan_list = self.rmt.list_channels(self.coll.name, self.exp.name)
-        ch = [name for name in chan_list if name == self.chan.name]
-        self.assertEqual(1, len(ch))
-        self.assertEqual(self.chan.name, ch[0])
+    #    chan_list = self.rmt.list_channels(self.coll.name, self.exp.name)
+    #    ch = [name for name in chan_list if name == self.chan.name]
+    #    self.assertEqual(1, len(ch))
+    #    self.assertEqual(self.chan.name, ch[0])
 
     def test_delete_all(self):
         """Formally test delete at all levels of the data model.
@@ -1460,10 +1532,10 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        ch = self.rmt.create_project(self.chan)
+        ch = self.rmt.create_project(self.source_chan)
         self.assertIsNotNone(ch)
 
-        self.rmt.delete_project(self.chan)
+        self.rmt.delete_project(self.source_chan)
         self.rmt.delete_project(self.exp)
         self.rmt.delete_project(self.coord)
         self.rmt.delete_project(self.coll)
@@ -1546,12 +1618,18 @@ if __name__ == '__main__':
             'exp2309-2a', cls.coll.name, cls.coord.name,
             'my first experiment', 2, 'slice', 3)
 
-        cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
+        cls.source_chan = ChannelResource(
+            'sourceChan', cls.coll.name, cls.exp.name, 'image', 'test source channel',
             0, 'uint8', 0)
+        cls.related_chan = ChannelResource(
+            'relatedChan', cls.coll.name, cls.exp.name, 'image', 'test related channel',
+            0, 'uint8', 0)
+        cls.chan = ChannelResource(
+            'myChan', cls.coll.name, cls.exp.name, 'annotation', 'test annotation channel',
+            0, 'uint8', 0, sources=['sourceChan'], related=['relatedChan'])
         cls.chan_upd = ChannelResource(
-            'yourChan', cls.coll.name, cls.exp.name, 'image', 'your test channel',
-            1, 'uint8', 1)
+            'yourChan', cls.coll.name, cls.exp.name, 'annotation', 'your test annotation channel',
+            1, 'uint8', 1, sources=['sourceChan'], related=['relatedChan'])
 
     @classmethod
     def cleanup_db(cls):
@@ -1561,6 +1639,14 @@ if __name__ == '__main__':
             pass
         try:
             cls.rmt.delete_project(cls.chan)
+        except HTTPError:
+            pass
+        try:
+            cls.rmt.delete_project(cls.related_chan)
+        except HTTPError:
+            pass
+        try:
+            cls.rmt.delete_project(cls.source_chan)
         except HTTPError:
             pass
         try:
@@ -1642,14 +1728,63 @@ if __name__ == '__main__':
         e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        ch = self.rmt.create_project(self.chan)
-        self.assertEqual(self.chan.name, ch.name)
+        ch = self.rmt.create_project(self.source_chan)
+        self.assertEqual(self.source_chan.name, ch.name)
         self.assertEqual(self.exp.name, ch.exp_name)
-        self.assertEqual(self.chan.description, ch.description)
+        self.assertEqual(self.source_chan.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
-        self.assertEqual(self.chan.datatype, ch.datatype)
-        self.assertEqual(self.chan.default_time_step, ch.default_time_step)
-        self.assertEqual(self.chan.base_resolution, ch.base_resolution)
+        self.assertEqual(self.source_chan.datatype, ch.datatype)
+        self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+        self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
+
+    def test_create_annotation_channel_without_source_fails(self):
+        c = self.rmt.create_project(self.coll)
+        self.assertIsNotNone(c)
+
+        cf = self.rmt.create_project(self.coord)
+        self.assertIsNotNone(cf)
+
+        e = self.rmt.create_project(self.exp)
+        self.assertIsNotNone(e)
+
+        rel_ch = self.rmt.create_project(self.related_chan)
+        self.assertIsNotNone(rel_ch)
+
+        chan = ChannelResource(
+            'myChan', self.coll.name, self.exp.name, 'annotation', 'test annotation channel',
+            0, 'uint8', 0, related=['relatedChan'])
+
+        with self.assertRaises(HTTPError):
+            self.rmt.create_project(chan)
+
+    def test_create_annotation_channel(self):
+        """Annotation channels require a source channel."""
+        c = self.rmt.create_project(self.coll)
+        self.assertIsNotNone(c)
+
+        cf = self.rmt.create_project(self.coord)
+        self.assertIsNotNone(cf)
+
+        e = self.rmt.create_project(self.exp)
+        self.assertIsNotNone(e)
+
+        ch = self.rmt.create_project(self.source_chan)
+        self.assertIsNotNone(ch)
+
+        rel_ch = self.rmt.create_project(self.related_chan)
+        self.assertIsNotNone(rel_ch)
+
+        ann_ch = self.rmt.create_project(self.chan)
+
+        self.assertEqual(self.chan.name, ann_ch.name)
+        self.assertEqual(self.exp.name, ann_ch.exp_name)
+        self.assertEqual(self.chan.description, ann_ch.description)
+        self.assertEqual(self.coll.name, ann_ch.coll_name)
+        self.assertEqual(self.chan.datatype, ann_ch.datatype)
+        self.assertEqual(self.chan.default_time_step, ann_ch.default_time_step)
+        self.assertEqual(self.chan.base_resolution, ann_ch.base_resolution)
+        self.assertEqual(self.chan.sources, ann_ch.sources)
+        self.assertEqual(self.chan.related, ann_ch.related)
 
     def test_get_collection(self):
         coll = self.rmt.create_project(self.coll)
@@ -1708,17 +1843,17 @@ if __name__ == '__main__':
         e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        chan = self.rmt.create_project(self.chan)
+        chan = self.rmt.create_project(self.source_chan)
         self.assertIsNotNone(chan)
 
-        ch = self.rmt.get_project(self.chan)
-        self.assertEqual(self.chan.name, ch.name)
+        ch = self.rmt.get_project(self.source_chan)
+        self.assertEqual(self.source_chan.name, ch.name)
         self.assertEqual(self.exp.name, ch.exp_name)
-        self.assertEqual(self.chan.description, ch.description)
+        self.assertEqual(self.source_chan.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
-        self.assertEqual(self.chan.datatype, ch.datatype)
-        self.assertEqual(self.chan.default_time_step, ch.default_time_step)
-        self.assertEqual(self.chan.base_resolution, ch.base_resolution)
+        self.assertEqual(self.source_chan.datatype, ch.datatype)
+        self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+        self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
 
     def test_update_collection(self):
         coll = self.rmt.create_project(self.coll)
@@ -1768,6 +1903,12 @@ if __name__ == '__main__':
         e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
+        source_ch = self.rmt.create_project(self.source_chan)
+        self.assertIsNotNone(source_ch)
+
+        rel_ch = self.rmt.create_project(self.related_chan)
+        self.assertIsNotNone(rel_ch)
+
         chan = self.rmt.create_project(self.chan)
         self.assertIsNotNone(chan)
 
@@ -1779,6 +1920,8 @@ if __name__ == '__main__':
         self.assertEqual(self.chan_upd.datatype, ch.datatype)
         self.assertEqual(self.chan_upd.default_time_step, ch.default_time_step)
         self.assertEqual(self.chan_upd.base_resolution, ch.base_resolution)
+        self.assertEqual(self.chan_upd.sources, ch.sources)
+        self.assertEqual(self.chan_upd.related, ch.related)
 
     def test_list_collections(self):
         coll = self.rmt.create_project(self.coll)
@@ -1813,23 +1956,23 @@ if __name__ == '__main__':
         self.assertEqual(1, len(e))
         self.assertEqual(self.exp.name, e[0])
 
-    def test_list_channels(self):
-        c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
+    #def test_list_channels(self):
+    #    c = self.rmt.create_project(self.coll)
+    #    self.assertIsNotNone(c)
 
-        cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
+    #    cf = self.rmt.create_project(self.coord)
+    #    self.assertIsNotNone(cf)
 
-        e = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(e)
+    #    e = self.rmt.create_project(self.exp)
+    #    self.assertIsNotNone(e)
 
-        chan = self.rmt.create_project(self.chan)
-        self.assertIsNotNone(chan)
+    #    chan = self.rmt.create_project(self.chan)
+    #    self.assertIsNotNone(chan)
 
-        chan_list = self.rmt.list_channels(self.coll.name, self.exp.name)
-        ch = [name for name in chan_list if name == self.chan.name]
-        self.assertEqual(1, len(ch))
-        self.assertEqual(self.chan.name, ch[0])
+    #    chan_list = self.rmt.list_channels(self.coll.name, self.exp.name)
+    #    ch = [name for name in chan_list if name == self.chan.name]
+    #    self.assertEqual(1, len(ch))
+    #    self.assertEqual(self.chan.name, ch[0])
 
     def test_delete_all(self):
         """Formally test delete at all levels of the data model.
@@ -1846,10 +1989,10 @@ if __name__ == '__main__':
         e = self.rmt.create_project(self.exp)
         self.assertIsNotNone(e)
 
-        ch = self.rmt.create_project(self.chan)
+        ch = self.rmt.create_project(self.source_chan)
         self.assertIsNotNone(ch)
 
-        self.rmt.delete_project(self.chan)
+        self.rmt.delete_project(self.source_chan)
         self.rmt.delete_project(self.exp)
         self.rmt.delete_project(self.coord)
         self.rmt.delete_project(self.coll)
@@ -2896,7 +3039,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x101580398&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2957,7 +3100,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x101580398&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3309,6 +3452,14 @@ def cleanup_db(cls):
         pass
     try:
         cls.rmt.delete_project(cls.chan)
+    except HTTPError:
+        pass
+    try:
+        cls.rmt.delete_project(cls.related_chan)
+    except HTTPError:
+        pass
+    try:
+        cls.rmt.delete_project(cls.source_chan)
     except HTTPError:
         pass
     try:
@@ -3689,12 +3840,18 @@ def initialize(cls):
     cls.exp_upd = ExperimentResource(
         'exp2309-2a', cls.coll.name, cls.coord.name,
         'my first experiment', 2, 'slice', 3)
-    cls.chan = ChannelResource(
-        'myChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
+    cls.source_chan = ChannelResource(
+        'sourceChan', cls.coll.name, cls.exp.name, 'image', 'test source channel',
         0, 'uint8', 0)
+    cls.related_chan = ChannelResource(
+        'relatedChan', cls.coll.name, cls.exp.name, 'image', 'test related channel',
+        0, 'uint8', 0)
+    cls.chan = ChannelResource(
+        'myChan', cls.coll.name, cls.exp.name, 'annotation', 'test annotation channel',
+        0, 'uint8', 0, sources=['sourceChan'], related=['relatedChan'])
     cls.chan_upd = ChannelResource(
-        'yourChan', cls.coll.name, cls.exp.name, 'image', 'your test channel',
-        1, 'uint8', 1)
+        'yourChan', cls.coll.name, cls.exp.name, 'annotation', 'your test annotation channel',
+        1, 'uint8', 1, sources=['sourceChan'], related=['relatedChan'])
 </code></pre>
   </div>
 </div>
@@ -3940,6 +4097,79 @@ def tearDownClass(cls):
   
             
   <div class="item">
+    <div class="name def" id="intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_annotation_channel">
+    <p>def <span class="ident">test_create_annotation_channel</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Annotation channels require a source channel.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_annotation_channel', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_annotation_channel" class="source">
+    <pre><code>def test_create_annotation_channel(self):
+    """Annotation channels require a source channel."""
+    c = self.rmt.create_project(self.coll)
+    self.assertIsNotNone(c)
+    cf = self.rmt.create_project(self.coord)
+    self.assertIsNotNone(cf)
+    e = self.rmt.create_project(self.exp)
+    self.assertIsNotNone(e)
+    ch = self.rmt.create_project(self.source_chan)
+    self.assertIsNotNone(ch)
+    rel_ch = self.rmt.create_project(self.related_chan)
+    self.assertIsNotNone(rel_ch)
+    ann_ch = self.rmt.create_project(self.chan)
+    self.assertEqual(self.chan.name, ann_ch.name)
+    self.assertEqual(self.exp.name, ann_ch.exp_name)
+    self.assertEqual(self.chan.description, ann_ch.description)
+    self.assertEqual(self.coll.name, ann_ch.coll_name)
+    self.assertEqual(self.chan.datatype, ann_ch.datatype)
+    self.assertEqual(self.chan.default_time_step, ann_ch.default_time_step)
+    self.assertEqual(self.chan.base_resolution, ann_ch.base_resolution)
+    self.assertEqual(self.chan.sources, ann_ch.sources)
+    self.assertEqual(self.chan.related, ann_ch.related)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_annotation_channel_without_source_fails">
+    <p>def <span class="ident">test_create_annotation_channel_without_source_fails</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_annotation_channel_without_source_fails', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_annotation_channel_without_source_fails" class="source">
+    <pre><code>def test_create_annotation_channel_without_source_fails(self):
+    c = self.rmt.create_project(self.coll)
+    self.assertIsNotNone(c)
+    cf = self.rmt.create_project(self.coord)
+    self.assertIsNotNone(cf)
+    e = self.rmt.create_project(self.exp)
+    self.assertIsNotNone(e)
+    rel_ch = self.rmt.create_project(self.related_chan)
+    self.assertIsNotNone(rel_ch)
+    chan = ChannelResource(
+        'myChan', self.coll.name, self.exp.name, 'annotation', 'test annotation channel',
+        0, 'uint8', 0, related=['relatedChan'])
+    with self.assertRaises(HTTPError):
+        self.rmt.create_project(chan)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_create_channel">
     <p>def <span class="ident">test_create_channel</span>(</p><p>self)</p>
     </div>
@@ -3957,14 +4187,14 @@ def tearDownClass(cls):
     self.assertIsNotNone(cf)
     e = self.rmt.create_project(self.exp)
     self.assertIsNotNone(e)
-    ch = self.rmt.create_project(self.chan)
-    self.assertEqual(self.chan.name, ch.name)
+    ch = self.rmt.create_project(self.source_chan)
+    self.assertEqual(self.source_chan.name, ch.name)
     self.assertEqual(self.exp.name, ch.exp_name)
-    self.assertEqual(self.chan.description, ch.description)
+    self.assertEqual(self.source_chan.description, ch.description)
     self.assertEqual(self.coll.name, ch.coll_name)
-    self.assertEqual(self.chan.datatype, ch.datatype)
-    self.assertEqual(self.chan.default_time_step, ch.default_time_step)
-    self.assertEqual(self.chan.base_resolution, ch.base_resolution)
+    self.assertEqual(self.source_chan.datatype, ch.datatype)
+    self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+    self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
 </code></pre>
   </div>
 </div>
@@ -4084,9 +4314,9 @@ it here.</p></div>
     self.assertIsNotNone(cf)
     e = self.rmt.create_project(self.exp)
     self.assertIsNotNone(e)
-    ch = self.rmt.create_project(self.chan)
+    ch = self.rmt.create_project(self.source_chan)
     self.assertIsNotNone(ch)
-    self.rmt.delete_project(self.chan)
+    self.rmt.delete_project(self.source_chan)
     self.rmt.delete_project(self.exp)
     self.rmt.delete_project(self.coord)
     self.rmt.delete_project(self.coll)
@@ -4115,16 +4345,16 @@ it here.</p></div>
     self.assertIsNotNone(cf)
     e = self.rmt.create_project(self.exp)
     self.assertIsNotNone(e)
-    chan = self.rmt.create_project(self.chan)
+    chan = self.rmt.create_project(self.source_chan)
     self.assertIsNotNone(chan)
-    ch = self.rmt.get_project(self.chan)
-    self.assertEqual(self.chan.name, ch.name)
+    ch = self.rmt.get_project(self.source_chan)
+    self.assertEqual(self.source_chan.name, ch.name)
     self.assertEqual(self.exp.name, ch.exp_name)
-    self.assertEqual(self.chan.description, ch.description)
+    self.assertEqual(self.source_chan.description, ch.description)
     self.assertEqual(self.coll.name, ch.coll_name)
-    self.assertEqual(self.chan.datatype, ch.datatype)
-    self.assertEqual(self.chan.default_time_step, ch.default_time_step)
-    self.assertEqual(self.chan.base_resolution, ch.base_resolution)
+    self.assertEqual(self.source_chan.datatype, ch.datatype)
+    self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+    self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
 </code></pre>
   </div>
 </div>
@@ -4218,37 +4448,6 @@ it here.</p></div>
     self.assertEqual(self.exp.hierarchy_method, e.hierarchy_method)
     self.assertEqual(self.exp.num_hierarchy_levels, e.num_hierarchy_levels)
     self.assertEqual(self.exp.max_time_sample, e.max_time_sample)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_list_channels">
-    <p>def <span class="ident">test_list_channels</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_list_channels', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_project_v0_7.ProjectServiceTest_v0_7.test_list_channels" class="source">
-    <pre><code>def test_list_channels(self):
-    c = self.rmt.create_project(self.coll)
-    self.assertIsNotNone(c)
-    cf = self.rmt.create_project(self.coord)
-    self.assertIsNotNone(cf)
-    e = self.rmt.create_project(self.exp)
-    self.assertIsNotNone(e)
-    chan = self.rmt.create_project(self.chan)
-    self.assertIsNotNone(chan)
-    chan_list = self.rmt.list_channels(self.coll.name, self.exp.name)
-    ch = [name for name in chan_list if name == self.chan.name]
-    self.assertEqual(1, len(ch))
-    self.assertEqual(self.chan.name, ch[0])
 </code></pre>
   </div>
 </div>
@@ -4353,6 +4552,10 @@ it here.</p></div>
     self.assertIsNotNone(cf)
     e = self.rmt.create_project(self.exp)
     self.assertIsNotNone(e)
+    source_ch = self.rmt.create_project(self.source_chan)
+    self.assertIsNotNone(source_ch)
+    rel_ch = self.rmt.create_project(self.related_chan)
+    self.assertIsNotNone(rel_ch)
     chan = self.rmt.create_project(self.chan)
     self.assertIsNotNone(chan)
     ch = self.rmt.update_project(self.chan.name, self.chan_upd)
@@ -4363,6 +4566,8 @@ it here.</p></div>
     self.assertEqual(self.chan_upd.datatype, ch.datatype)
     self.assertEqual(self.chan_upd.default_time_step, ch.default_time_step)
     self.assertEqual(self.chan_upd.base_resolution, ch.base_resolution)
+    self.assertEqual(self.chan_upd.sources, ch.sources)
+    self.assertEqual(self.chan_upd.related, ch.related)
 </code></pre>
   </div>
 </div>

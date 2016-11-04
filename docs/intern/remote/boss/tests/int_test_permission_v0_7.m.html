@@ -1023,7 +1023,6 @@ table {
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.assertTrue">assertTrue</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.assertTupleEqual">assertTupleEqual</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.assert_">assert_</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.cleanup_db">cleanup_db</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.countTestCases">countTestCases</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.debug">debug</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.defaultTestResult">defaultTestResult</a></li>
@@ -1037,7 +1036,6 @@ table {
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.failUnlessEqual">failUnlessEqual</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.failUnlessRaises">failUnlessRaises</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.id">id</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.initialize">initialize</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.run">run</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.setUp">setUp</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.setUpClass">setUpClass</a></li>
@@ -1045,13 +1043,14 @@ table {
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.skipTest">skipTest</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.tearDown">tearDown</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.tearDownClass">tearDownClass</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_append_success">test_add_permissions_append_success</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_get_delete_permissions">test_add_get_delete_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_invalid_collection_perm">test_add_permissions_invalid_collection_perm</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_invalid_experiment_perm">test_add_permissions_invalid_experiment_perm</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_success">test_add_permissions_success</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_volumetric_permission_success">test_add_volumetric_permission_success</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_delete_permissions_success">test_delete_permissions_success</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_get_permissions_success">test_get_permissions_success</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_get_group_with_permissions">test_get_group_with_permissions</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions">test_list_permissions</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions_filter_group">test_list_permissions_filter_group</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions_filter_resource">test_list_permissions_filter_resource</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_update_permissions">test_update_permissions</a></li>
   </ul>
 
         </li>
@@ -1115,44 +1114,41 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize()
-        cls.cleanup_db()
-
-    @classmethod
-    def initialize(cls):
-        """Initialization for each test.
-
-        Called by both setUp() and setUpClass().
-        """
         cls.rmt = BossRemote('test.cfg', API_VER)
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        cls.rmt.project_service.session_send_opts = { 'verify': False }
-        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
-        cls.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = {'verify': False}
+        cls.rmt.metadata_service.session_send_opts = {'verify': False}
+        cls.rmt.volume_service.session_send_opts = {'verify': False}
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
+        coll_name = 'collection_perm_test-{}'.format(random.randint(0, 9999))
         cls.coll = CollectionResource(coll_name, 'bar')
 
-        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        cf_name = 'PermissionTestFrame{}'.format(random.randint(0, 9999))
         cls.coord = CoordinateFrameResource(
             cf_name, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         cls.exp = ExperimentResource(
-            'exp2309-2', cls.coll.name, cls.coord.name, 'my experiment', 1,
+            'perm_test_exp', cls.coll.name, cls.coord.name, 'my experiment', 1,
             'iso', 0)
 
         cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
+            'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',
             0, 'uint8', 0)
 
-        cls.grp_name = 'int_test_exists'
+        cls.grp_name = 'int_perm_test_group{}'.format(random.randint(0, 9999))
+
+        cls.rmt.create_project(cls.coll)
+        cls.rmt.create_project(cls.coord)
+        cls.rmt.create_project(cls.exp)
+        cls.rmt.create_project(cls.chan)
+        cls.rmt.create_group(cls.grp_name)
 
     @classmethod
-    def cleanup_db(cls):
+    def tearDownClass(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().
@@ -1178,63 +1174,149 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         except HTTPError:
             pass
 
-    def setUp(self):
-        self.rmt.create_project(self.coll)
-        self.rmt.create_project(self.coord)
-        self.rmt.create_project(self.exp)
-        self.rmt.create_project(self.chan)
-        self.rmt.create_group(self.grp_name)
-
     def tearDown(self):
-        self.cleanup_db()
+        """Delete the permission set if is there (from a previous error)"""
+        try:
+            self.rmt.delete_permissions(self.grp_name, self.chan)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_permissions(self.grp_name, self.coll)
+        except HTTPError:
+            pass
 
-    def test_add_permissions_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
+    def test_list_permissions(self):
+
+        query_result = self.rmt.list_permissions()
+
+        self.assertEqual(len(query_result) > 3, True)
+
+        # Make sure the stuff you just created is in there
+        found_channel = False
+        for perm_set in query_result:
+            if perm_set["collection"] == self.coll.name:
+                if "experiment" in perm_set:
+                    if "channel" in perm_set:
+                        if perm_set["experiment"] == self.exp.name and perm_set["channel"] == self.chan.name:
+                            found_channel = True
+                            self.assertEqual(set(perm_set["permissions"]),
+                                             set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+
+        self.assertTrue(found_channel)
+
+    def test_list_permissions_filter_resource(self):
+
+        # Filter on the collection
+        query_result = self.rmt.list_permissions(resource=self.coll)
+
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["collection"], self.coll.name)
+        self.assertTrue("experiment" not in query_result[0])
+        self.assertEqual(set(query_result[0]["permissions"]),
+                         set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+
+        # Filter on the experiment
+        query_result = self.rmt.list_permissions(resource=self.exp)
+
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["experiment"], self.exp.name)
+        self.assertTrue("channel" not in query_result[0])
+        self.assertEqual(set(query_result[0]["permissions"]),
+                         set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+
+        # Filter on the channel
+        query_result = self.rmt.list_permissions(resource=self.chan)
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["channel"], self.chan.name)
+        self.assertEqual(set(query_result[0]["permissions"]),
+                         set(['add', 'assign_group', 'read', 'update', 'add_volumetric_data',
+                             'read_volumetric_data', 'remove_group', 'delete_volumetric_data', 'delete']))
+
+    def test_add_get_delete_permissions(self):
+
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+
+        self.assertEqual(len(result), 0)
+
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
+
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 3)
+        self.assertEqual(set(result), set(['update', 'read', 'add_volumetric_data']))
+
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
+
+    def test_list_permissions_filter_group(self):
+
+        self.rmt.add_permissions(self.grp_name, self.chan, ['read'])
+
+        # Filter on the collection
+        query_result = self.rmt.list_permissions(group_name=self.grp_name)
+
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["channel"], self.chan.name)
+        self.assertEqual(query_result[0]["group"], self.grp_name)
+        self.assertEqual(set(query_result[0]["permissions"]), set(['read']))
+
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
     def test_add_permissions_invalid_collection_perm(self):
         with self.assertRaises(HTTPError):
-            self.rmt.add_permissions(
-            self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
+            self.rmt.add_permissions(self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
 
     def test_add_permissions_invalid_experiment_perm(self):
         with self.assertRaises(HTTPError):
-            self.rmt.add_permissions(
-            self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
+            self.rmt.add_permissions(self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
 
-    def test_add_volumetric_permission_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['read', 'read_volumetric_data'])
+    def test_update_permissions(self):
+        # Check you have no permissions
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
-    def test_add_permissions_append_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'add', 'add_volumetric_data'])
 
-        self.rmt.add_permissions( self.grp_name, self.chan, ['read'])
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 3)
+        self.assertEqual(set(result), set(['update', 'add', 'add_volumetric_data']))
 
-        expected = ['update', 'add_volumetric_data', 'read']
-        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-        six.assertCountEqual(self, expected, actual)
+        # Update
+        self.rmt.update_permissions(self.grp_name, self.chan, ['read'])
 
-    def test_get_permissions_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'read'])
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(set(result), set(['read']))
 
-        expected = ['update', 'read']
-        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-        six.assertCountEqual(self, expected, actual)
+        # Cleanup
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
-    def test_delete_permissions_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
+    def test_get_group_with_permissions(self):
+        # Check you have no permissions
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
-        self.rmt.delete_permissions(
-            self.grp_name, self.chan, ['add_volumetric_data'])
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'add', 'add_volumetric_data'])
+        self.rmt.add_permissions(self.grp_name, self.coll, ['update', 'add'])
 
-        expected = ['update']
-        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-        six.assertCountEqual(self, expected, actual)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 3)
+        self.assertEqual(set(result), set(['update', 'add', 'add_volumetric_data']))
 
+        # Check that the group sees the resource now
+        group = self.rmt.get_group(self.grp_name)
+        self.assertEqual(len(group["resources"][0].keys()), 1)
+        self.assertEqual(len(group["resources"][1].keys()), 3)
+
+        # Cleanup
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        self.rmt.delete_permissions(self.grp_name, self.coll)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
 if __name__ == '__main__':
     unittest.main()
@@ -1281,44 +1363,41 @@ requests are made on all potentially created groups/users during test teardown.<
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize()
-        cls.cleanup_db()
-
-    @classmethod
-    def initialize(cls):
-        """Initialization for each test.
-
-        Called by both setUp() and setUpClass().
-        """
         cls.rmt = BossRemote('test.cfg', API_VER)
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        cls.rmt.project_service.session_send_opts = { 'verify': False }
-        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
-        cls.rmt.volume_service.session_send_opts = { 'verify': False }
+        cls.rmt.project_service.session_send_opts = {'verify': False}
+        cls.rmt.metadata_service.session_send_opts = {'verify': False}
+        cls.rmt.volume_service.session_send_opts = {'verify': False}
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
+        coll_name = 'collection_perm_test-{}'.format(random.randint(0, 9999))
         cls.coll = CollectionResource(coll_name, 'bar')
 
-        cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
+        cf_name = 'PermissionTestFrame{}'.format(random.randint(0, 9999))
         cls.coord = CoordinateFrameResource(
             cf_name, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 0, 'nanoseconds')
 
         cls.exp = ExperimentResource(
-            'exp2309-2', cls.coll.name, cls.coord.name, 'my experiment', 1,
+            'perm_test_exp', cls.coll.name, cls.coord.name, 'my experiment', 1,
             'iso', 0)
 
         cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
+            'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',
             0, 'uint8', 0)
 
-        cls.grp_name = 'int_test_exists'
+        cls.grp_name = 'int_perm_test_group{}'.format(random.randint(0, 9999))
+
+        cls.rmt.create_project(cls.coll)
+        cls.rmt.create_project(cls.coord)
+        cls.rmt.create_project(cls.exp)
+        cls.rmt.create_project(cls.chan)
+        cls.rmt.create_group(cls.grp_name)
 
     @classmethod
-    def cleanup_db(cls):
+    def tearDownClass(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().
@@ -1344,62 +1423,149 @@ requests are made on all potentially created groups/users during test teardown.<
         except HTTPError:
             pass
 
-    def setUp(self):
-        self.rmt.create_project(self.coll)
-        self.rmt.create_project(self.coord)
-        self.rmt.create_project(self.exp)
-        self.rmt.create_project(self.chan)
-        self.rmt.create_group(self.grp_name)
-
     def tearDown(self):
-        self.cleanup_db()
+        """Delete the permission set if is there (from a previous error)"""
+        try:
+            self.rmt.delete_permissions(self.grp_name, self.chan)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_permissions(self.grp_name, self.coll)
+        except HTTPError:
+            pass
 
-    def test_add_permissions_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
+    def test_list_permissions(self):
+
+        query_result = self.rmt.list_permissions()
+
+        self.assertEqual(len(query_result) > 3, True)
+
+        # Make sure the stuff you just created is in there
+        found_channel = False
+        for perm_set in query_result:
+            if perm_set["collection"] == self.coll.name:
+                if "experiment" in perm_set:
+                    if "channel" in perm_set:
+                        if perm_set["experiment"] == self.exp.name and perm_set["channel"] == self.chan.name:
+                            found_channel = True
+                            self.assertEqual(set(perm_set["permissions"]),
+                                             set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+
+        self.assertTrue(found_channel)
+
+    def test_list_permissions_filter_resource(self):
+
+        # Filter on the collection
+        query_result = self.rmt.list_permissions(resource=self.coll)
+
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["collection"], self.coll.name)
+        self.assertTrue("experiment" not in query_result[0])
+        self.assertEqual(set(query_result[0]["permissions"]),
+                         set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+
+        # Filter on the experiment
+        query_result = self.rmt.list_permissions(resource=self.exp)
+
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["experiment"], self.exp.name)
+        self.assertTrue("channel" not in query_result[0])
+        self.assertEqual(set(query_result[0]["permissions"]),
+                         set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+
+        # Filter on the channel
+        query_result = self.rmt.list_permissions(resource=self.chan)
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["channel"], self.chan.name)
+        self.assertEqual(set(query_result[0]["permissions"]),
+                         set(['add', 'assign_group', 'read', 'update', 'add_volumetric_data',
+                             'read_volumetric_data', 'remove_group', 'delete_volumetric_data', 'delete']))
+
+    def test_add_get_delete_permissions(self):
+
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+
+        self.assertEqual(len(result), 0)
+
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
+
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 3)
+        self.assertEqual(set(result), set(['update', 'read', 'add_volumetric_data']))
+
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
+
+    def test_list_permissions_filter_group(self):
+
+        self.rmt.add_permissions(self.grp_name, self.chan, ['read'])
+
+        # Filter on the collection
+        query_result = self.rmt.list_permissions(group_name=self.grp_name)
+
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["channel"], self.chan.name)
+        self.assertEqual(query_result[0]["group"], self.grp_name)
+        self.assertEqual(set(query_result[0]["permissions"]), set(['read']))
+
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
     def test_add_permissions_invalid_collection_perm(self):
         with self.assertRaises(HTTPError):
-            self.rmt.add_permissions(
-            self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
+            self.rmt.add_permissions(self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
 
     def test_add_permissions_invalid_experiment_perm(self):
         with self.assertRaises(HTTPError):
-            self.rmt.add_permissions(
-            self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
+            self.rmt.add_permissions(self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
 
-    def test_add_volumetric_permission_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['read', 'read_volumetric_data'])
+    def test_update_permissions(self):
+        # Check you have no permissions
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
-    def test_add_permissions_append_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'add', 'add_volumetric_data'])
 
-        self.rmt.add_permissions( self.grp_name, self.chan, ['read'])
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 3)
+        self.assertEqual(set(result), set(['update', 'add', 'add_volumetric_data']))
 
-        expected = ['update', 'add_volumetric_data', 'read']
-        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-        six.assertCountEqual(self, expected, actual)
+        # Update
+        self.rmt.update_permissions(self.grp_name, self.chan, ['read'])
 
-    def test_get_permissions_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'read'])
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(set(result), set(['read']))
 
-        expected = ['update', 'read']
-        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-        six.assertCountEqual(self, expected, actual)
+        # Cleanup
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
-    def test_delete_permissions_success(self):
-        self.rmt.add_permissions(
-            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
+    def test_get_group_with_permissions(self):
+        # Check you have no permissions
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
-        self.rmt.delete_permissions(
-            self.grp_name, self.chan, ['add_volumetric_data'])
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'add', 'add_volumetric_data'])
+        self.rmt.add_permissions(self.grp_name, self.coll, ['update', 'add'])
 
-        expected = ['update']
-        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-        six.assertCountEqual(self, expected, actual)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 3)
+        self.assertEqual(set(result), set(['update', 'add', 'add_volumetric_data']))
+
+        # Check that the group sees the resource now
+        group = self.rmt.get_group(self.grp_name)
+        self.assertEqual(len(group["resources"][0].keys()), 1)
+        self.assertEqual(len(group["resources"][1].keys()), 3)
+
+        # Cleanup
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        self.rmt.delete_permissions(self.grp_name, self.coll)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 </code></pre>
   </div>
 </div>
@@ -2443,7 +2609,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x101580398&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2504,7 +2670,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x101580398&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2838,51 +3004,6 @@ difference method).</p></div>
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.cleanup_db">
-    <p>def <span class="ident">cleanup_db</span>(</p><p>cls)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Clean up the data model objects used by this test case.</p>
-<p>This method is used by both tearDown() and setUpClass().</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.cleanup_db', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.cleanup_db" class="source">
-    <pre><code>@classmethod
-def cleanup_db(cls):
-    """Clean up the data model objects used by this test case.
-    This method is used by both tearDown() and setUpClass().
-    """
-    try:
-        cls.rmt.delete_group(cls.grp_name)
-    except HTTPError:
-        pass
-    try:
-        cls.rmt.delete_project(cls.chan)
-    except HTTPError:
-        pass
-    try:
-        cls.rmt.delete_project(cls.exp)
-    except HTTPError:
-        pass
-    try:
-        cls.rmt.delete_project(cls.coord)
-    except HTTPError:
-        pass
-    try:
-        cls.rmt.delete_project(cls.coll)
-    except HTTPError:
-        pass
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.countTestCases">
     <p>def <span class="ident">countTestCases</span>(</p><p>self)</p>
     </div>
@@ -3188,51 +3309,6 @@ tearDown.</p></div>
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.initialize">
-    <p>def <span class="ident">initialize</span>(</p><p>cls)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Initialization for each test.</p>
-<p>Called by both setUp() and setUpClass().</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.initialize', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.initialize" class="source">
-    <pre><code>@classmethod
-def initialize(cls):
-    """Initialization for each test.
-    Called by both setUp() and setUpClass().
-    """
-    cls.rmt = BossRemote('test.cfg', API_VER)
-    # Turn off SSL cert verification.  This is necessary for interacting with
-    # developer instances of the Boss.
-    cls.rmt.project_service.session_send_opts = { 'verify': False }
-    cls.rmt.metadata_service.session_send_opts = { 'verify': False }
-    cls.rmt.volume_service.session_send_opts = { 'verify': False }
-    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-    coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
-    cls.coll = CollectionResource(coll_name, 'bar')
-    cf_name = 'BestFrame{}'.format(random.randint(0, 9999))
-    cls.coord = CoordinateFrameResource(
-        cf_name, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
-        1, 1, 1, 'nanometers', 0, 'nanoseconds')
-    cls.exp = ExperimentResource(
-        'exp2309-2', cls.coll.name, cls.coord.name, 'my experiment', 1,
-        'iso', 0)
-    cls.chan = ChannelResource(
-        'myChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
-        0, 'uint8', 0)
-    cls.grp_name = 'int_test_exists'
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.run">
     <p>def <span class="ident">run</span>(</p><p>self, result=None)</p>
     </div>
@@ -3334,15 +3410,13 @@ def initialize(cls):
 
     
   
+    <div class="desc"><p>Hook method for setting up the test fixture before exercising it.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.setUp', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.setUp" class="source">
     <pre><code>def setUp(self):
-    self.rmt.create_project(self.coll)
-    self.rmt.create_project(self.coord)
-    self.rmt.create_project(self.exp)
-    self.rmt.create_project(self.chan)
-    self.rmt.create_group(self.grp_name)
+    "Hook method for setting up the test fixture before exercising it."
+    pass
 </code></pre>
   </div>
 </div>
@@ -3370,8 +3444,31 @@ def setUpClass(cls):
     If a test failed really badly, the DB might be in a bad state despite
     attempts to clean up during tearDown().
     """
-    cls.initialize()
-    cls.cleanup_db()
+    cls.rmt = BossRemote('test.cfg', API_VER)
+    # Turn off SSL cert verification.  This is necessary for interacting with
+    # developer instances of the Boss.
+    cls.rmt.project_service.session_send_opts = {'verify': False}
+    cls.rmt.metadata_service.session_send_opts = {'verify': False}
+    cls.rmt.volume_service.session_send_opts = {'verify': False}
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    coll_name = 'collection_perm_test-{}'.format(random.randint(0, 9999))
+    cls.coll = CollectionResource(coll_name, 'bar')
+    cf_name = 'PermissionTestFrame{}'.format(random.randint(0, 9999))
+    cls.coord = CoordinateFrameResource(
+        cf_name, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
+        1, 1, 1, 'nanometers', 0, 'nanoseconds')
+    cls.exp = ExperimentResource(
+        'perm_test_exp', cls.coll.name, cls.coord.name, 'my experiment', 1,
+        'iso', 0)
+    cls.chan = ChannelResource(
+        'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',
+        0, 'uint8', 0)
+    cls.grp_name = 'int_perm_test_group{}'.format(random.randint(0, 9999))
+    cls.rmt.create_project(cls.coll)
+    cls.rmt.create_project(cls.coord)
+    cls.rmt.create_project(cls.exp)
+    cls.rmt.create_project(cls.chan)
+    cls.rmt.create_group(cls.grp_name)
 </code></pre>
   </div>
 </div>
@@ -3439,11 +3536,20 @@ the specified test method's docstring.</p></div>
 
     
   
+    <div class="desc"><p>Delete the permission set if is there (from a previous error)</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.tearDown', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.tearDown" class="source">
     <pre><code>def tearDown(self):
-    self.cleanup_db()
+    """Delete the permission set if is there (from a previous error)"""
+    try:
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+    except HTTPError:
+        pass
+    try:
+        self.rmt.delete_permissions(self.grp_name, self.coll)
+    except HTTPError:
+        pass
 </code></pre>
   </div>
 </div>
@@ -3459,13 +3565,36 @@ the specified test method's docstring.</p></div>
 
     
   
-    <div class="desc"><p>Hook method for deconstructing the class fixture after running all tests in the class.</p></div>
+    <div class="desc"><p>Clean up the data model objects used by this test case.</p>
+<p>This method is used by both tearDown() and setUpClass().</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.tearDownClass', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.tearDownClass" class="source">
     <pre><code>@classmethod
 def tearDownClass(cls):
-    "Hook method for deconstructing the class fixture after running all tests in the class."
+    """Clean up the data model objects used by this test case.
+    This method is used by both tearDown() and setUpClass().
+    """
+    try:
+        cls.rmt.delete_group(cls.grp_name)
+    except HTTPError:
+        pass
+    try:
+        cls.rmt.delete_project(cls.chan)
+    except HTTPError:
+        pass
+    try:
+        cls.rmt.delete_project(cls.exp)
+    except HTTPError:
+        pass
+    try:
+        cls.rmt.delete_project(cls.coord)
+    except HTTPError:
+        pass
+    try:
+        cls.rmt.delete_project(cls.coll)
+    except HTTPError:
+        pass
 </code></pre>
   </div>
 </div>
@@ -3474,23 +3603,26 @@ def tearDownClass(cls):
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_append_success">
-    <p>def <span class="ident">test_add_permissions_append_success</span>(</p><p>self)</p>
+    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_get_delete_permissions">
+    <p>def <span class="ident">test_add_get_delete_permissions</span>(</p><p>self)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_append_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_append_success" class="source">
-    <pre><code>def test_add_permissions_append_success(self):
-    self.rmt.add_permissions(
-        self.grp_name, self.chan, ['update', 'add_volumetric_data'])
-    self.rmt.add_permissions( self.grp_name, self.chan, ['read'])
-    expected = ['update', 'add_volumetric_data', 'read']
-    actual = self.rmt.get_permissions(self.grp_name, self.chan)
-    six.assertCountEqual(self, expected, actual)
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_get_delete_permissions', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_get_delete_permissions" class="source">
+    <pre><code>def test_add_get_delete_permissions(self):
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 0)
+    self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 3)
+    self.assertEqual(set(result), set(['update', 'read', 'add_volumetric_data']))
+    self.rmt.delete_permissions(self.grp_name, self.chan)
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 0)
 </code></pre>
   </div>
 </div>
@@ -3511,8 +3643,7 @@ def tearDownClass(cls):
   <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_invalid_collection_perm" class="source">
     <pre><code>def test_add_permissions_invalid_collection_perm(self):
     with self.assertRaises(HTTPError):
-        self.rmt.add_permissions(
-        self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
+        self.rmt.add_permissions(self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
 </code></pre>
   </div>
 </div>
@@ -3533,8 +3664,7 @@ def tearDownClass(cls):
   <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_invalid_experiment_perm" class="source">
     <pre><code>def test_add_permissions_invalid_experiment_perm(self):
     with self.assertRaises(HTTPError):
-        self.rmt.add_permissions(
-        self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
+        self.rmt.add_permissions(self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
 </code></pre>
   </div>
 </div>
@@ -3543,19 +3673,34 @@ def tearDownClass(cls):
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_success">
-    <p>def <span class="ident">test_add_permissions_success</span>(</p><p>self)</p>
+    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_get_group_with_permissions">
+    <p>def <span class="ident">test_get_group_with_permissions</span>(</p><p>self)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_permissions_success" class="source">
-    <pre><code>def test_add_permissions_success(self):
-    self.rmt.add_permissions(
-        self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_get_group_with_permissions', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_get_group_with_permissions" class="source">
+    <pre><code>def test_get_group_with_permissions(self):
+    # Check you have no permissions
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 0)
+    self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'add', 'add_volumetric_data'])
+    self.rmt.add_permissions(self.grp_name, self.coll, ['update', 'add'])
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 3)
+    self.assertEqual(set(result), set(['update', 'add', 'add_volumetric_data']))
+    # Check that the group sees the resource now
+    group = self.rmt.get_group(self.grp_name)
+    self.assertEqual(len(group["resources"][0].keys()), 1)
+    self.assertEqual(len(group["resources"][1].keys()), 3)
+    # Cleanup
+    self.rmt.delete_permissions(self.grp_name, self.chan)
+    self.rmt.delete_permissions(self.grp_name, self.coll)
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 0)
 </code></pre>
   </div>
 </div>
@@ -3564,19 +3709,30 @@ def tearDownClass(cls):
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_volumetric_permission_success">
-    <p>def <span class="ident">test_add_volumetric_permission_success</span>(</p><p>self)</p>
+    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions">
+    <p>def <span class="ident">test_list_permissions</span>(</p><p>self)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_volumetric_permission_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_add_volumetric_permission_success" class="source">
-    <pre><code>def test_add_volumetric_permission_success(self):
-    self.rmt.add_permissions(
-        self.grp_name, self.chan, ['read', 'read_volumetric_data'])
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions" class="source">
+    <pre><code>def test_list_permissions(self):
+    query_result = self.rmt.list_permissions()
+    self.assertEqual(len(query_result) > 3, True)
+    # Make sure the stuff you just created is in there
+    found_channel = False
+    for perm_set in query_result:
+        if perm_set["collection"] == self.coll.name:
+            if "experiment" in perm_set:
+                if "channel" in perm_set:
+                    if perm_set["experiment"] == self.exp.name and perm_set["channel"] == self.chan.name:
+                        found_channel = True
+                        self.assertEqual(set(perm_set["permissions"]),
+                                         set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+    self.assertTrue(found_channel)
 </code></pre>
   </div>
 </div>
@@ -3585,24 +3741,27 @@ def tearDownClass(cls):
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_delete_permissions_success">
-    <p>def <span class="ident">test_delete_permissions_success</span>(</p><p>self)</p>
+    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions_filter_group">
+    <p>def <span class="ident">test_list_permissions_filter_group</span>(</p><p>self)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_delete_permissions_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_delete_permissions_success" class="source">
-    <pre><code>def test_delete_permissions_success(self):
-    self.rmt.add_permissions(
-        self.grp_name, self.chan, ['update', 'add_volumetric_data'])
-    self.rmt.delete_permissions(
-        self.grp_name, self.chan, ['add_volumetric_data'])
-    expected = ['update']
-    actual = self.rmt.get_permissions(self.grp_name, self.chan)
-    six.assertCountEqual(self, expected, actual)
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions_filter_group', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions_filter_group" class="source">
+    <pre><code>def test_list_permissions_filter_group(self):
+    self.rmt.add_permissions(self.grp_name, self.chan, ['read'])
+    # Filter on the collection
+    query_result = self.rmt.list_permissions(group_name=self.grp_name)
+    self.assertEqual(len(query_result), 1)
+    self.assertEqual(query_result[0]["channel"], self.chan.name)
+    self.assertEqual(query_result[0]["group"], self.grp_name)
+    self.assertEqual(set(query_result[0]["permissions"]), set(['read']))
+    self.rmt.delete_permissions(self.grp_name, self.chan)
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 0)
 </code></pre>
   </div>
 </div>
@@ -3611,22 +3770,73 @@ def tearDownClass(cls):
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_get_permissions_success">
-    <p>def <span class="ident">test_get_permissions_success</span>(</p><p>self)</p>
+    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions_filter_resource">
+    <p>def <span class="ident">test_list_permissions_filter_resource</span>(</p><p>self)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_get_permissions_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_get_permissions_success" class="source">
-    <pre><code>def test_get_permissions_success(self):
-    self.rmt.add_permissions(
-        self.grp_name, self.chan, ['update', 'read'])
-    expected = ['update', 'read']
-    actual = self.rmt.get_permissions(self.grp_name, self.chan)
-    six.assertCountEqual(self, expected, actual)
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions_filter_resource', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_list_permissions_filter_resource" class="source">
+    <pre><code>def test_list_permissions_filter_resource(self):
+    # Filter on the collection
+    query_result = self.rmt.list_permissions(resource=self.coll)
+    self.assertEqual(len(query_result), 1)
+    self.assertEqual(query_result[0]["collection"], self.coll.name)
+    self.assertTrue("experiment" not in query_result[0])
+    self.assertEqual(set(query_result[0]["permissions"]),
+                     set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+    # Filter on the experiment
+    query_result = self.rmt.list_permissions(resource=self.exp)
+    self.assertEqual(len(query_result), 1)
+    self.assertEqual(query_result[0]["experiment"], self.exp.name)
+    self.assertTrue("channel" not in query_result[0])
+    self.assertEqual(set(query_result[0]["permissions"]),
+                     set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+    # Filter on the channel
+    query_result = self.rmt.list_permissions(resource=self.chan)
+    self.assertEqual(len(query_result), 1)
+    self.assertEqual(query_result[0]["channel"], self.chan.name)
+    self.assertEqual(set(query_result[0]["permissions"]),
+                     set(['add', 'assign_group', 'read', 'update', 'add_volumetric_data',
+                         'read_volumetric_data', 'remove_group', 'delete_volumetric_data', 'delete']))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_update_permissions">
+    <p>def <span class="ident">test_update_permissions</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_update_permissions', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.test_update_permissions" class="source">
+    <pre><code>def test_update_permissions(self):
+    # Check you have no permissions
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 0)
+    self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'add', 'add_volumetric_data'])
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 3)
+    self.assertEqual(set(result), set(['update', 'add', 'add_volumetric_data']))
+    # Update
+    self.rmt.update_permissions(self.grp_name, self.chan, ['read'])
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 1)
+    self.assertEqual(set(result), set(['read']))
+    # Cleanup
+    self.rmt.delete_permissions(self.grp_name, self.chan)
+    result = self.rmt.get_permissions(self.grp_name, self.chan)
+    self.assertEqual(len(result), 0)
 </code></pre>
   </div>
 </div>

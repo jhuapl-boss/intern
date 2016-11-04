@@ -1040,8 +1040,6 @@ table {
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_user.TestUser.test_add_success">test_add_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_user.TestUser.test_delete_success">test_delete_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_user.TestUser.test_get_failure">test_get_failure</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_user.TestUser.test_get_groups_failure">test_get_groups_failure</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_user.TestUser.test_get_groups_success">test_get_groups_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_user.TestUser.test_get_success">test_get_success</a></li>
   </ul>
 
@@ -1120,39 +1118,6 @@ class TestUser(unittest.TestCase):
 
         with self.assertRaises(HTTPError):
             self.prj.get_user(
-                'johndoe', url_prefix, auth, mock_session, send_opts)
-
-    @patch('requests.Response', autospec=True)
-    @patch('requests.Session', autospec=True)
-    def test_get_groups_success(self, mock_session, mock_resp):
-        expected = ['default', 'proofreader']
-        data = { 'groups': ['default', 'proofreader'] }
-        mock_resp.status_code = 200
-        mock_resp.json.return_value = data
-        mock_session.prepare_request.return_value = PreparedRequest()
-        mock_session.send.return_value = mock_resp
-
-        url_prefix = 'https://api.theboss.io'
-        auth = 'mytoken'
-        send_opts = {}
-
-        actual = self.prj.get_user_groups(
-            'johndoe', url_prefix, auth, mock_session, send_opts)
-        six.assertCountEqual(self, expected, actual)
-
-    @patch('requests.Session', autospec=True)
-    def test_get_groups_failure(self, mock_session):
-        mock_session.prepare_request.return_value = PreparedRequest()
-        fake_resp = Response()
-        fake_resp.status_code = 403
-        mock_session.send.return_value = fake_resp
-
-        url_prefix = 'https://api.theboss.io'
-        auth = 'mytoken'
-        send_opts = {}
-
-        with self.assertRaises(HTTPError):
-            self.prj.get_user_groups(
                 'johndoe', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
@@ -1267,39 +1232,6 @@ if __name__ == '__main__':
 
         with self.assertRaises(HTTPError):
             self.prj.get_user(
-                'johndoe', url_prefix, auth, mock_session, send_opts)
-
-    @patch('requests.Response', autospec=True)
-    @patch('requests.Session', autospec=True)
-    def test_get_groups_success(self, mock_session, mock_resp):
-        expected = ['default', 'proofreader']
-        data = { 'groups': ['default', 'proofreader'] }
-        mock_resp.status_code = 200
-        mock_resp.json.return_value = data
-        mock_session.prepare_request.return_value = PreparedRequest()
-        mock_session.send.return_value = mock_resp
-
-        url_prefix = 'https://api.theboss.io'
-        auth = 'mytoken'
-        send_opts = {}
-
-        actual = self.prj.get_user_groups(
-            'johndoe', url_prefix, auth, mock_session, send_opts)
-        six.assertCountEqual(self, expected, actual)
-
-    @patch('requests.Session', autospec=True)
-    def test_get_groups_failure(self, mock_session):
-        mock_session.prepare_request.return_value = PreparedRequest()
-        fake_resp = Response()
-        fake_resp.status_code = 403
-        mock_session.send.return_value = fake_resp
-
-        url_prefix = 'https://api.theboss.io'
-        auth = 'mytoken'
-        send_opts = {}
-
-        with self.assertRaises(HTTPError):
-            self.prj.get_user_groups(
                 'johndoe', url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
@@ -2401,7 +2333,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_user.TestUser.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x101580398&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2462,7 +2394,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_user.TestUser.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x101580398&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3455,69 +3387,6 @@ def test_get_failure(self, mock_session):
     with self.assertRaises(HTTPError):
         self.prj.get_user(
             'johndoe', url_prefix, auth, mock_session, send_opts)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_user.TestUser.test_get_groups_failure">
-    <p>def <span class="ident">test_get_groups_failure</span>(</p><p>*args, **keywargs)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_user.TestUser.test_get_groups_failure', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_user.TestUser.test_get_groups_failure" class="source">
-    <pre><code>@patch('requests.Session', autospec=True)
-def test_get_groups_failure(self, mock_session):
-    mock_session.prepare_request.return_value = PreparedRequest()
-    fake_resp = Response()
-    fake_resp.status_code = 403
-    mock_session.send.return_value = fake_resp
-    url_prefix = 'https://api.theboss.io'
-    auth = 'mytoken'
-    send_opts = {}
-    with self.assertRaises(HTTPError):
-        self.prj.get_user_groups(
-            'johndoe', url_prefix, auth, mock_session, send_opts)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_user.TestUser.test_get_groups_success">
-    <p>def <span class="ident">test_get_groups_success</span>(</p><p>*args, **keywargs)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_user.TestUser.test_get_groups_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_user.TestUser.test_get_groups_success" class="source">
-    <pre><code>@patch('requests.Response', autospec=True)
-@patch('requests.Session', autospec=True)
-def test_get_groups_success(self, mock_session, mock_resp):
-    expected = ['default', 'proofreader']
-    data = { 'groups': ['default', 'proofreader'] }
-    mock_resp.status_code = 200
-    mock_resp.json.return_value = data
-    mock_session.prepare_request.return_value = PreparedRequest()
-    mock_session.send.return_value = mock_resp
-    url_prefix = 'https://api.theboss.io'
-    auth = 'mytoken'
-    send_opts = {}
-    actual = self.prj.get_user_groups(
-        'johndoe', url_prefix, auth, mock_session, send_opts)
-    six.assertCountEqual(self, expected, actual)
 </code></pre>
   </div>
 </div>

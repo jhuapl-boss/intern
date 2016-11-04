@@ -980,8 +980,9 @@ table {
   <ul>
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.__init__">__init__</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_list_route">get_list_route</a></li>
-    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_meta_route">get_meta_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.valid_volume">valid_volume</a></li>
   </ul>
@@ -994,8 +995,9 @@ table {
   <ul>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.__init__">__init__</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_list_route">get_list_route</a></li>
-    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_meta_route">get_meta_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.valid_volume">valid_volume</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.validate_datatype">validate_datatype</a></li>
@@ -1010,8 +1012,9 @@ table {
   <ul>
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.__init__">__init__</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_list_route">get_list_route</a></li>
-    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_meta_route">get_meta_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.valid_volume">valid_volume</a></li>
   </ul>
@@ -1024,8 +1027,9 @@ table {
   <ul>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.__init__">__init__</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_list_route">get_list_route</a></li>
-    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_meta_route">get_meta_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.valid_volume">valid_volume</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.validate_time_units">validate_time_units</a></li>
@@ -1040,8 +1044,9 @@ table {
   <ul>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.__init__">__init__</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_cutout_route">get_cutout_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_list_route">get_list_route</a></li>
-    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_meta_or_permission_route">get_meta_or_permission_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_meta_route">get_meta_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.valid_volume">valid_volume</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.validate_hierarchy_method">validate_hierarchy_method</a></li>
@@ -1147,13 +1152,27 @@ class BossResource(Resource):
         assert NotImplemented
 
     @abstractmethod
-    def get_meta_or_permission_route(self):
-        """Get the route for metadata or permission operations.
+    def get_meta_route(self):
+        """Get the route for metadata operations.
 
         Not all resources will support this operation.
 
         Returns:
             (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_dict_route(self):
+        """Get the route in dictionary form.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (dict): A dictionary containing the names of the resource components
 
         Raises:
             (RuntimeError): if operation not supported by the resource.
@@ -1185,8 +1204,11 @@ class CollectionResource(BossResource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for collections.')
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         return self.name
+
+    def get_dict_route(self):
+        return {"collection": self.name}
 
 
 class ExperimentResource(BossResource):
@@ -1255,7 +1277,7 @@ class ExperimentResource(BossResource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for experiments.')
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         return self.coll_name + '/' + self.name
 
     def validate_hierarchy_method(self, value):
@@ -1263,6 +1285,9 @@ class ExperimentResource(BossResource):
         if lowered in self._valid_hierarchy_methods:
             return lowered
         raise ValueError('{} is not a valid hierarchy method.'.format(value))
+
+    def get_dict_route(self):
+        return {"collection": self.coll_name, "experiment": self.name}
 
 
 class CoordinateFrameResource(BossResource):
@@ -1345,7 +1370,7 @@ class CoordinateFrameResource(BossResource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
     @property
@@ -1387,6 +1412,9 @@ class CoordinateFrameResource(BossResource):
         if lowered in self._valid_time_units:
             return lowered
         raise ValueError('{} is not a valid time unit.'.format(value))
+
+    def get_dict_route(self):
+        return {"coord": self.name}
 
 
 class ChannelResource(BossResource):
@@ -1451,7 +1479,7 @@ class ChannelResource(BossResource):
     def get_cutout_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
     def valid_volume(self):
@@ -1530,6 +1558,9 @@ class ChannelResource(BossResource):
         if lowered in ChannelResource._valid_datatypes:
             return lowered
         raise ValueError('{} is not a valid data type.'.format(value))
+
+    def get_dict_route(self):
+        return {"collection": self.coll_name, "experiment": self.exp_name, "channel": self.name}
 </code></pre>
   </div>
 
@@ -1617,13 +1648,27 @@ class ChannelResource(BossResource):
         assert NotImplemented
 
     @abstractmethod
-    def get_meta_or_permission_route(self):
-        """Get the route for metadata or permission operations.
+    def get_meta_route(self):
+        """Get the route for metadata operations.
 
         Not all resources will support this operation.
 
         Returns:
             (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_dict_route(self):
+        """Get the route in dictionary form.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (dict): A dictionary containing the names of the resource components
 
         Raises:
             (RuntimeError): if operation not supported by the resource.
@@ -1757,6 +1802,42 @@ def get_cutout_route(self):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.BossResource.get_dict_route">
+    <p>def <span class="ident">get_dict_route</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the route in dictionary form.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(dict)</b>: A dictionary containing the names of the resource components</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.get_dict_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource.get_dict_route" class="source">
+    <pre><code>@abstractmethod
+def get_dict_route(self):
+    """Get the route in dictionary form.
+    Not all resources will support this operation.
+    Returns:
+        (dict): A dictionary containing the names of the resource components
+    Raises:
+        (RuntimeError): if operation not supported by the resource.
+    """
+    assert NotImplemented
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.BossResource.get_list_route">
     <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
     </div>
@@ -1788,14 +1869,14 @@ def get_list_route(self):
   
             
   <div class="item">
-    <div class="name def" id="intern.resource.boss.resource.BossResource.get_meta_or_permission_route">
-    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    <div class="name def" id="intern.resource.boss.resource.BossResource.get_meta_route">
+    <p>def <span class="ident">get_meta_route</span>(</p><p>self)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Get the route for metadata or permission operations.</p>
+    <div class="desc"><p>Get the route for metadata operations.</p>
 <p>Not all resources will support this operation.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
@@ -1804,11 +1885,11 @@ def get_list_route(self):
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.resource.BossResource.get_meta_or_permission_route" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.get_meta_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource.get_meta_route" class="source">
     <pre><code>@abstractmethod
-def get_meta_or_permission_route(self):
-    """Get the route for metadata or permission operations.
+def get_meta_route(self):
+    """Get the route for metadata operations.
     Not all resources will support this operation.
     Returns:
         (string): A string that can be used as part of a URL.
@@ -1955,7 +2036,7 @@ def get_route(self):
     def get_cutout_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
     def valid_volume(self):
@@ -2034,6 +2115,9 @@ def get_route(self):
         if lowered in ChannelResource._valid_datatypes:
             return lowered
         raise ValueError('{} is not a valid data type.'.format(value))
+
+    def get_dict_route(self):
+        return {"collection": self.coll_name, "experiment": self.exp_name, "channel": self.name}
 </code></pre>
   </div>
 </div>
@@ -2293,6 +2377,38 @@ def get_route(self):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_dict_route">
+    <p>def <span class="ident">get_dict_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_dict_route">get_dict_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route in dictionary form.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(dict)</b>: A dictionary containing the names of the resource components</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.get_dict_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.get_dict_route" class="source">
+    <pre><code>def get_dict_route(self):
+    return {"collection": self.coll_name, "experiment": self.exp_name, "channel": self.name}
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_list_route">
     <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
     </div>
@@ -2322,18 +2438,18 @@ def get_route(self):
   
             
   <div class="item">
-    <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_meta_or_permission_route">
-    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_meta_route">
+    <p>def <span class="ident">get_meta_route</span>(</p><p>self)</p>
     </div>
     
     <p class="inheritance">
      <strong>Inheritance:</strong>
-       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></code>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_route">get_meta_route</a></code>
     </p>
 
     
   
-    <div class="desc inherited"><p>Get the route for metadata or permission operations.</p>
+    <div class="desc inherited"><p>Get the route for metadata operations.</p>
 <p>Not all resources will support this operation.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
@@ -2342,9 +2458,9 @@ def get_route(self):
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.resource.ChannelResource.get_meta_or_permission_route" class="source">
-    <pre><code>def get_meta_or_permission_route(self):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.get_meta_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.get_meta_route" class="source">
+    <pre><code>def get_meta_route(self):
     return self.coll_name + '/' + self.exp_name + '/' + self.name
 </code></pre>
   </div>
@@ -2489,8 +2605,11 @@ def get_route(self):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for collections.')
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         return self.name
+
+    def get_dict_route(self):
+        return {"collection": self.name}
 </code></pre>
   </div>
 </div>
@@ -2634,6 +2753,38 @@ def get_route(self):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_dict_route">
+    <p>def <span class="ident">get_dict_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_dict_route">get_dict_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route in dictionary form.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(dict)</b>: A dictionary containing the names of the resource components</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.get_dict_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource.get_dict_route" class="source">
+    <pre><code>def get_dict_route(self):
+    return {"collection": self.name}
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_list_route">
     <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
     </div>
@@ -2663,18 +2814,18 @@ def get_route(self):
   
             
   <div class="item">
-    <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_meta_or_permission_route">
-    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_meta_route">
+    <p>def <span class="ident">get_meta_route</span>(</p><p>self)</p>
     </div>
     
     <p class="inheritance">
      <strong>Inheritance:</strong>
-       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></code>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_route">get_meta_route</a></code>
     </p>
 
     
   
-    <div class="desc inherited"><p>Get the route for metadata or permission operations.</p>
+    <div class="desc inherited"><p>Get the route for metadata operations.</p>
 <p>Not all resources will support this operation.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
@@ -2683,9 +2834,9 @@ def get_route(self):
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.resource.CollectionResource.get_meta_or_permission_route" class="source">
-    <pre><code>def get_meta_or_permission_route(self):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.get_meta_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource.get_meta_route" class="source">
+    <pre><code>def get_meta_route(self):
     return self.name
 </code></pre>
   </div>
@@ -2853,7 +3004,7 @@ def get_route(self):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
     @property
@@ -2895,6 +3046,9 @@ def get_route(self):
         if lowered in self._valid_time_units:
             return lowered
         raise ValueError('{} is not a valid time unit.'.format(value))
+
+    def get_dict_route(self):
+        return {"coord": self.name}
 </code></pre>
   </div>
 </div>
@@ -3203,6 +3357,38 @@ def get_route(self):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_dict_route">
+    <p>def <span class="ident">get_dict_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_dict_route">get_dict_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route in dictionary form.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(dict)</b>: A dictionary containing the names of the resource components</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.get_dict_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.get_dict_route" class="source">
+    <pre><code>def get_dict_route(self):
+    return {"coord": self.name}
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_list_route">
     <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
     </div>
@@ -3232,18 +3418,18 @@ def get_route(self):
   
             
   <div class="item">
-    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_meta_or_permission_route">
-    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_meta_route">
+    <p>def <span class="ident">get_meta_route</span>(</p><p>self)</p>
     </div>
     
     <p class="inheritance">
      <strong>Inheritance:</strong>
-       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></code>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_route">get_meta_route</a></code>
     </p>
 
     
   
-    <div class="desc inherited"><p>Get the route for metadata or permission operations.</p>
+    <div class="desc inherited"><p>Get the route for metadata operations.</p>
 <p>Not all resources will support this operation.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
@@ -3252,9 +3438,9 @@ def get_route(self):
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.get_meta_or_permission_route" class="source">
-    <pre><code>def get_meta_or_permission_route(self):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.get_meta_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.get_meta_route" class="source">
+    <pre><code>def get_meta_route(self):
     raise RuntimeError('Not supported for coordinate frames.')
 </code></pre>
   </div>
@@ -3444,7 +3630,7 @@ layers.</p>
     def get_cutout_route(self):
         raise RuntimeError('Not supported for experiments.')
 
-    def get_meta_or_permission_route(self):
+    def get_meta_route(self):
         return self.coll_name + '/' + self.name
 
     def validate_hierarchy_method(self, value):
@@ -3452,6 +3638,9 @@ layers.</p>
         if lowered in self._valid_hierarchy_methods:
             return lowered
         raise ValueError('{} is not a valid hierarchy method.'.format(value))
+
+    def get_dict_route(self):
+        return {"collection": self.coll_name, "experiment": self.name}
 </code></pre>
   </div>
 </div>
@@ -3664,6 +3853,38 @@ layers.</p>
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.get_dict_route">
+    <p>def <span class="ident">get_dict_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_dict_route">get_dict_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route in dictionary form.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(dict)</b>: A dictionary containing the names of the resource components</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.get_dict_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.get_dict_route" class="source">
+    <pre><code>def get_dict_route(self):
+    return {"collection": self.coll_name, "experiment": self.name}
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.ExperimentResource.get_list_route">
     <p>def <span class="ident">get_list_route</span>(</p><p>self)</p>
     </div>
@@ -3693,18 +3914,18 @@ layers.</p>
   
             
   <div class="item">
-    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.get_meta_or_permission_route">
-    <p>def <span class="ident">get_meta_or_permission_route</span>(</p><p>self)</p>
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.get_meta_route">
+    <p>def <span class="ident">get_meta_route</span>(</p><p>self)</p>
     </div>
     
     <p class="inheritance">
      <strong>Inheritance:</strong>
-       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_or_permission_route">get_meta_or_permission_route</a></code>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_meta_route">get_meta_route</a></code>
     </p>
 
     
   
-    <div class="desc inherited"><p>Get the route for metadata or permission operations.</p>
+    <div class="desc inherited"><p>Get the route for metadata operations.</p>
 <p>Not all resources will support this operation.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
@@ -3713,9 +3934,9 @@ layers.</p>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.get_meta_or_permission_route', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.resource.ExperimentResource.get_meta_or_permission_route" class="source">
-    <pre><code>def get_meta_or_permission_route(self):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.get_meta_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.get_meta_route" class="source">
+    <pre><code>def get_meta_route(self):
     return self.coll_name + '/' + self.name
 </code></pre>
   </div>
