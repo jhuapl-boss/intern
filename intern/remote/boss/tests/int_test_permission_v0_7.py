@@ -209,5 +209,24 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         result = self.rmt.get_permissions(self.grp_name, self.chan)
         self.assertEqual(len(result), 0)
 
+    def test_get_group_with_permissions(self):
+        # Check you have no permissions
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
+
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'add', 'add_volumetric_data'])
+
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 3)
+        self.assertEqual(set(result), set(['update', 'add', 'add_volumetric_data']))
+
+        # Check that the group sees the resource now
+        group = self.rmt.get_group('foo')
+
+        # Cleanup
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
+
 if __name__ == '__main__':
     unittest.main()
