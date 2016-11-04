@@ -99,6 +99,17 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         except HTTPError:
             pass
 
+    def tearDown(self):
+        """Delete the permission set if is there (from a previous error)"""
+        try:
+            self.rmt.delete_permissions(self.grp_name, self.chan)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_permissions(self.grp_name, self.coll)
+        except HTTPError:
+            pass
+
     def test_list_permissions(self):
 
         query_result = self.rmt.list_permissions()
@@ -215,16 +226,20 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         self.assertEqual(len(result), 0)
 
         self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'add', 'add_volumetric_data'])
+        self.rmt.add_permissions(self.grp_name, self.coll, ['update', 'add'])
 
         result = self.rmt.get_permissions(self.grp_name, self.chan)
         self.assertEqual(len(result), 3)
         self.assertEqual(set(result), set(['update', 'add', 'add_volumetric_data']))
 
         # Check that the group sees the resource now
-        group = self.rmt.get_group('foo')
+        group = self.rmt.get_group(self.grp_name)
+        self.assertEqual(len(group["resources"][0].keys()), 1)
+        self.assertEqual(len(group["resources"][1].keys()), 3)
 
         # Cleanup
         self.rmt.delete_permissions(self.grp_name, self.chan)
+        self.rmt.delete_permissions(self.grp_name, self.coll)
         result = self.rmt.get_permissions(self.grp_name, self.chan)
         self.assertEqual(len(result), 0)
 
