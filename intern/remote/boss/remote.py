@@ -240,7 +240,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_members(name)
 
-    def add_member_to_group(self, grp_name, user):
+    def add_group_member(self, grp_name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -253,9 +253,9 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_member_to_group(grp_name, user)
+        return self.project_service.add_group_member(grp_name, user)
 
-    def delete_member_from_group(self, grp_name, user):
+    def delete_group_member(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -268,7 +268,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_member_from_group(grp_name, user)
+        return self.project_service.delete_group_member(grp_name, user)
 
     def get_is_group_member(self, grp_name, user):
         """Check if the given user is a member of the named group.
@@ -298,7 +298,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_maintainers(name)
 
-    def add_maintainer_to_group(self, name, user):
+    def add_group_maintainer(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -311,9 +311,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_maintainer_to_group(name, user)
+        return self.project_service.add_group_maintainer(name, user)
 
-    def delete_maintainer_from_group(self, grp_name, user):
+    def delete_group_maintainer(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -326,7 +326,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_maintainer_from_group(grp_name, user)
+        return self.project_service.delete_group_maintainer(grp_name, user)
 
     def get_is_group_maintainer(self, grp_name, user):
         """Check if the given user is a member of the named group.

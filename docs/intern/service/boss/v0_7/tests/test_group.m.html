@@ -1036,17 +1036,17 @@ table {
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.skipTest">skipTest</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.tearDown">tearDown</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.tearDownClass">tearDownClass</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_maintainer_to_group_failure">test_add_maintainer_to_group_failure</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_maintainer_to_group_success">test_add_maintainer_to_group_success</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_member_to_group_failure">test_add_member_to_group_failure</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_member_to_group_success">test_add_member_to_group_success</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_maintainer_failure">test_add_group_maintainer_failure</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_maintainer_success">test_add_group_maintainer_success</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_member_failure">test_add_group_member_failure</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_member_success">test_add_group_member_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_create_group_failure">test_create_group_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_create_group_success">test_create_group_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_failure">test_delete_group_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_success">test_delete_group_success</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_maintainer_from_group_success">test_delete_maintainer_from_group_success</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_member_from_group_failure">test_delete_member_from_group_failure</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_member_from_group_success">test_delete_member_from_group_success</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_maintainer_success">test_delete_group_maintainer_success</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_failure">test_delete_group_member_failure</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_success">test_delete_group_member_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_get_group_failure">test_get_group_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_get_group_success">test_get_group_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_get_is_group_maintainer_failure">test_get_is_group_maintainer_failure</a></li>
@@ -1270,7 +1270,7 @@ class TestGroup(unittest.TestCase):
                 group, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_member_to_group_success(self, mock_session):
+    def test_add_group_member_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -1281,11 +1281,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.add_member_to_group(
+        self.prj.add_group_member(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_member_to_group_failure(self, mock_session):
+    def test_add_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -1297,7 +1297,7 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.add_member_to_group(
+            self.prj.add_group_member(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -1333,7 +1333,7 @@ class TestGroup(unittest.TestCase):
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_member_from_group_success(self, mock_session):
+    def test_delete_group_member_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -1344,11 +1344,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.delete_member_from_group(
+        self.prj.delete_group_member(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_member_from_group_failure(self, mock_session):
+    def test_delete_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -1360,7 +1360,7 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.delete_member_from_group(
+            self.prj.delete_group_member(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -1399,7 +1399,7 @@ class TestGroup(unittest.TestCase):
                 group, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_maintainer_to_group_success(self, mock_session):
+    def test_add_group_maintainer_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -1410,11 +1410,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.add_maintainer_to_group(
+        self.prj.add_group_maintainer(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_maintainer_to_group_failure(self, mock_session):
+    def test_add_group_maintainer_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -1426,7 +1426,7 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.add_maintainer_to_group(
+            self.prj.add_group_maintainer(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -1462,7 +1462,7 @@ class TestGroup(unittest.TestCase):
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_maintainer_from_group_success(self, mock_session):
+    def test_delete_group_maintainer_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -1473,11 +1473,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.delete_maintainer_from_group(
+        self.prj.delete_group_maintainer(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_member_from_group_failure(self, mock_session):
+    def test_delete_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -1489,7 +1489,7 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.delete_maintainer_from_group(
+            self.prj.delete_group_maintainer(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
 
@@ -1680,7 +1680,7 @@ if __name__ == '__main__':
                 group, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_member_to_group_success(self, mock_session):
+    def test_add_group_member_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -1691,11 +1691,11 @@ if __name__ == '__main__':
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.add_member_to_group(
+        self.prj.add_group_member(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_member_to_group_failure(self, mock_session):
+    def test_add_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -1707,7 +1707,7 @@ if __name__ == '__main__':
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.add_member_to_group(
+            self.prj.add_group_member(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -1743,7 +1743,7 @@ if __name__ == '__main__':
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_member_from_group_success(self, mock_session):
+    def test_delete_group_member_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -1754,11 +1754,11 @@ if __name__ == '__main__':
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.delete_member_from_group(
+        self.prj.delete_group_member(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_member_from_group_failure(self, mock_session):
+    def test_delete_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -1770,7 +1770,7 @@ if __name__ == '__main__':
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.delete_member_from_group(
+            self.prj.delete_group_member(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -1809,7 +1809,7 @@ if __name__ == '__main__':
                 group, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_maintainer_to_group_success(self, mock_session):
+    def test_add_group_maintainer_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -1820,11 +1820,11 @@ if __name__ == '__main__':
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.add_maintainer_to_group(
+        self.prj.add_group_maintainer(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_maintainer_to_group_failure(self, mock_session):
+    def test_add_group_maintainer_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -1836,7 +1836,7 @@ if __name__ == '__main__':
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.add_maintainer_to_group(
+            self.prj.add_group_maintainer(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -1872,7 +1872,7 @@ if __name__ == '__main__':
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_maintainer_from_group_success(self, mock_session):
+    def test_delete_group_maintainer_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -1883,11 +1883,11 @@ if __name__ == '__main__':
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.delete_maintainer_from_group(
+        self.prj.delete_group_maintainer(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_member_from_group_failure(self, mock_session):
+    def test_delete_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -1899,7 +1899,7 @@ if __name__ == '__main__':
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.delete_maintainer_from_group(
+            self.prj.delete_group_maintainer(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -3876,18 +3876,18 @@ def tearDownClass(cls):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_maintainer_to_group_failure">
-    <p>def <span class="ident">test_add_maintainer_to_group_failure</span>(</p><p>*args, **keywargs)</p>
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_maintainer_failure">
+    <p>def <span class="ident">test_add_group_maintainer_failure</span>(</p><p>*args, **keywargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_maintainer_to_group_failure', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_maintainer_to_group_failure" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_maintainer_failure', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_maintainer_failure" class="source">
     <pre><code>@patch('requests.Session', autospec=True)
-def test_add_maintainer_to_group_failure(self, mock_session):
+def test_add_group_maintainer_failure(self, mock_session):
     mock_session.prepare_request.return_value = PreparedRequest()
     fake_resp = Response()
     fake_resp.status_code = 403
@@ -3897,7 +3897,7 @@ def test_add_maintainer_to_group_failure(self, mock_session):
     auth = 'mytoken'
     send_opts = {}
     with self.assertRaises(HTTPError):
-        self.prj.add_maintainer_to_group(
+        self.prj.add_group_maintainer(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -3907,18 +3907,18 @@ def test_add_maintainer_to_group_failure(self, mock_session):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_maintainer_to_group_success">
-    <p>def <span class="ident">test_add_maintainer_to_group_success</span>(</p><p>*args, **keywargs)</p>
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_maintainer_success">
+    <p>def <span class="ident">test_add_group_maintainer_success</span>(</p><p>*args, **keywargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_maintainer_to_group_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_maintainer_to_group_success" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_maintainer_success', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_maintainer_success" class="source">
     <pre><code>@patch('requests.Session', autospec=True)
-def test_add_maintainer_to_group_success(self, mock_session):
+def test_add_group_maintainer_success(self, mock_session):
     mock_session.prepare_request.return_value = PreparedRequest()
     fake_resp = Response()
     fake_resp.status_code = 204
@@ -3927,7 +3927,7 @@ def test_add_maintainer_to_group_success(self, mock_session):
     url_prefix = 'https://api.theboss.io'
     auth = 'mytoken'
     send_opts = {}
-    self.prj.add_maintainer_to_group(
+    self.prj.add_group_maintainer(
         'mygroup', user, url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -3937,18 +3937,18 @@ def test_add_maintainer_to_group_success(self, mock_session):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_member_to_group_failure">
-    <p>def <span class="ident">test_add_member_to_group_failure</span>(</p><p>*args, **keywargs)</p>
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_member_failure">
+    <p>def <span class="ident">test_add_group_member_failure</span>(</p><p>*args, **keywargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_member_to_group_failure', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_member_to_group_failure" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_member_failure', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_member_failure" class="source">
     <pre><code>@patch('requests.Session', autospec=True)
-def test_add_member_to_group_failure(self, mock_session):
+def test_add_group_member_failure(self, mock_session):
     mock_session.prepare_request.return_value = PreparedRequest()
     fake_resp = Response()
     fake_resp.status_code = 403
@@ -3958,7 +3958,7 @@ def test_add_member_to_group_failure(self, mock_session):
     auth = 'mytoken'
     send_opts = {}
     with self.assertRaises(HTTPError):
-        self.prj.add_member_to_group(
+        self.prj.add_group_member(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -3968,18 +3968,18 @@ def test_add_member_to_group_failure(self, mock_session):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_member_to_group_success">
-    <p>def <span class="ident">test_add_member_to_group_success</span>(</p><p>*args, **keywargs)</p>
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_member_success">
+    <p>def <span class="ident">test_add_group_member_success</span>(</p><p>*args, **keywargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_member_to_group_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_member_to_group_success" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_member_success', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_add_group_member_success" class="source">
     <pre><code>@patch('requests.Session', autospec=True)
-def test_add_member_to_group_success(self, mock_session):
+def test_add_group_member_success(self, mock_session):
     mock_session.prepare_request.return_value = PreparedRequest()
     fake_resp = Response()
     fake_resp.status_code = 204
@@ -3988,7 +3988,7 @@ def test_add_member_to_group_success(self, mock_session):
     url_prefix = 'https://api.theboss.io'
     auth = 'mytoken'
     send_opts = {}
-    self.prj.add_member_to_group(
+    self.prj.add_group_member(
         'mygroup', user, url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -4118,18 +4118,18 @@ def test_delete_group_success(self, mock_session):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_maintainer_from_group_success">
-    <p>def <span class="ident">test_delete_maintainer_from_group_success</span>(</p><p>*args, **keywargs)</p>
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_maintainer_success">
+    <p>def <span class="ident">test_delete_group_maintainer_success</span>(</p><p>*args, **keywargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_maintainer_from_group_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_maintainer_from_group_success" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_maintainer_success', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_maintainer_success" class="source">
     <pre><code>@patch('requests.Session', autospec=True)
-def test_delete_maintainer_from_group_success(self, mock_session):
+def test_delete_group_maintainer_success(self, mock_session):
     mock_session.prepare_request.return_value = PreparedRequest()
     fake_resp = Response()
     fake_resp.status_code = 204
@@ -4138,7 +4138,7 @@ def test_delete_maintainer_from_group_success(self, mock_session):
     url_prefix = 'https://api.theboss.io'
     auth = 'mytoken'
     send_opts = {}
-    self.prj.delete_maintainer_from_group(
+    self.prj.delete_group_maintainer(
         'mygroup', user, url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -4148,18 +4148,18 @@ def test_delete_maintainer_from_group_success(self, mock_session):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_member_from_group_failure">
-    <p>def <span class="ident">test_delete_member_from_group_failure</span>(</p><p>*args, **keywargs)</p>
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_failure">
+    <p>def <span class="ident">test_delete_group_member_failure</span>(</p><p>*args, **keywargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_member_from_group_failure', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_member_from_group_failure" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_failure', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_failure" class="source">
     <pre><code>@patch('requests.Session', autospec=True)
-def test_delete_member_from_group_failure(self, mock_session):
+def test_delete_group_member_failure(self, mock_session):
     mock_session.prepare_request.return_value = PreparedRequest()
     fake_resp = Response()
     fake_resp.status_code = 403
@@ -4169,7 +4169,7 @@ def test_delete_member_from_group_failure(self, mock_session):
     auth = 'mytoken'
     send_opts = {}
     with self.assertRaises(HTTPError):
-        self.prj.delete_maintainer_from_group(
+        self.prj.delete_group_maintainer(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -4179,18 +4179,18 @@ def test_delete_member_from_group_failure(self, mock_session):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_member_from_group_success">
-    <p>def <span class="ident">test_delete_member_from_group_success</span>(</p><p>*args, **keywargs)</p>
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_success">
+    <p>def <span class="ident">test_delete_group_member_success</span>(</p><p>*args, **keywargs)</p>
     </div>
     
 
     
   
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_member_from_group_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_member_from_group_success" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_success', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_success" class="source">
     <pre><code>@patch('requests.Session', autospec=True)
-def test_delete_member_from_group_success(self, mock_session):
+def test_delete_group_member_success(self, mock_session):
     mock_session.prepare_request.return_value = PreparedRequest()
     fake_resp = Response()
     fake_resp.status_code = 204
@@ -4199,7 +4199,7 @@ def test_delete_member_from_group_success(self, mock_session):
     url_prefix = 'https://api.theboss.io'
     auth = 'mytoken'
     send_opts = {}
-    self.prj.delete_member_from_group(
+    self.prj.delete_group_member(
         'mygroup', user, url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>

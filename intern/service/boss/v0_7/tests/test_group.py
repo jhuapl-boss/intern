@@ -187,7 +187,7 @@ class TestGroup(unittest.TestCase):
                 group, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_member_to_group_success(self, mock_session):
+    def test_add_group_member_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -198,11 +198,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.add_member_to_group(
+        self.prj.add_group_member(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_member_to_group_failure(self, mock_session):
+    def test_add_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -214,7 +214,7 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.add_member_to_group(
+            self.prj.add_group_member(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -250,7 +250,7 @@ class TestGroup(unittest.TestCase):
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_member_from_group_success(self, mock_session):
+    def test_delete_group_member_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -261,11 +261,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.delete_member_from_group(
+        self.prj.delete_group_member(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_member_from_group_failure(self, mock_session):
+    def test_delete_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -277,7 +277,7 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.delete_member_from_group(
+            self.prj.delete_group_member(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -316,7 +316,7 @@ class TestGroup(unittest.TestCase):
                 group, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_maintainer_to_group_success(self, mock_session):
+    def test_add_group_maintainer_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -327,11 +327,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.add_maintainer_to_group(
+        self.prj.add_group_maintainer(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_add_maintainer_to_group_failure(self, mock_session):
+    def test_add_group_maintainer_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -343,7 +343,7 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.add_maintainer_to_group(
+            self.prj.add_group_maintainer(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -379,7 +379,7 @@ class TestGroup(unittest.TestCase):
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_maintainer_from_group_success(self, mock_session):
+    def test_delete_group_maintainer_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 204
@@ -390,11 +390,11 @@ class TestGroup(unittest.TestCase):
         auth = 'mytoken'
         send_opts = {}
 
-        self.prj.delete_maintainer_from_group(
+        self.prj.delete_group_maintainer(
             'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
-    def test_delete_member_from_group_failure(self, mock_session):
+    def test_delete_group_member_failure(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
         fake_resp.status_code = 403
@@ -406,7 +406,7 @@ class TestGroup(unittest.TestCase):
         send_opts = {}
 
         with self.assertRaises(HTTPError):
-            self.prj.delete_maintainer_from_group(
+            self.prj.delete_group_maintainer(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
 
 
