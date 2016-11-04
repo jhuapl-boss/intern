@@ -39,15 +39,6 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         If a test failed really badly, the DB might be in a bad state despite
         attempts to clean up during tearDown().
         """
-        cls.initialize()
-        cls.cleanup_db()
-
-    @classmethod
-    def initialize(cls):
-        """Initialization for each test.
-
-        Called by both setUp() and setUpClass().
-        """
         cls.rmt = BossRemote('test.cfg', API_VER)
 
         # Turn off SSL cert verification.  This is necessary for interacting with
@@ -73,10 +64,16 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
             'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',
             0, 'uint8', 0)
 
-        cls.grp_name = 'int_perm_test_group'
+        cls.grp_name = 'int_perm_test_group{}'.format(random.randint(0, 9999))
+
+        cls.rmt.create_project(cls.coll)
+        cls.rmt.create_project(cls.coord)
+        cls.rmt.create_project(cls.exp)
+        cls.rmt.create_project(cls.chan)
+        cls.rmt.create_group(cls.grp_name)
 
     @classmethod
-    def cleanup_db(cls):
+    def tearDownClass(cls):
         """Clean up the data model objects used by this test case.
 
         This method is used by both tearDown() and setUpClass().
@@ -102,62 +99,115 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
         except HTTPError:
             pass
 
-    def setUp(self):
-        self.rmt.create_project(self.coll)
-        self.rmt.create_project(self.coord)
-        self.rmt.create_project(self.exp)
-        self.rmt.create_project(self.chan)
-        self.rmt.create_group(self.grp_name)
+    def test_list_permissions(self):
 
-    def tearDown(self):
-        self.cleanup_db()
+        query_result = self.rmt.list_permissions()
 
-    def test_get_permissions_success(self):
-        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'read'])
+        self.assertEqual(len(query_result) > 3, True)
 
-        expected = ['update', 'read']
-        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-        six.assertCountEqual(self, expected, actual)
+        # Make sure the stuff you just created is in there
+        found_channel = False
+        for perm_set in query_result:
+            if perm_set["collection"] == self.coll.name:
+                if "experiment" in perm_set:
+                    if "channel" in perm_set:
+                        if perm_set["experiment"] == self.exp.name and perm_set["channel"] == self.chan.name:
+                            found_channel = True
+                            self.assertEqual(set(perm_set["permissions"]),
+                                             set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
 
-#    def test_add_permissions_success(self):
-#        self.rmt.add_permissions(
-#            self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
-#
-#    def test_add_permissions_invalid_collection_perm(self):
-#        with self.assertRaises(HTTPError):
-#            self.rmt.add_permissions(
-#            self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
-#
-#    def test_add_permissions_invalid_experiment_perm(self):
-#        with self.assertRaises(HTTPError):
-#            self.rmt.add_permissions(
-#            self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
-#
-#    def test_add_volumetric_permission_success(self):
-#        self.rmt.add_permissions(
-#            self.grp_name, self.chan, ['read', 'read_volumetric_data'])
-#
-#    def test_add_permissions_append_success(self):
-#        self.rmt.add_permissions(
-#            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
-#
-#        self.rmt.add_permissions( self.grp_name, self.chan, ['read'])
-#
-#        expected = ['update', 'add_volumetric_data', 'read']
-#        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-#        six.assertCountEqual(self, expected, actual)
-#
-#    def test_delete_permissions_success(self):
-#        self.rmt.add_permissions(
-#            self.grp_name, self.chan, ['update', 'add_volumetric_data'])
-#
-#        self.rmt.delete_permissions(
-#            self.grp_name, self.chan, ['add_volumetric_data'])
-#
-#        expected = ['update']
-#        actual = self.rmt.get_permissions(self.grp_name, self.chan)
-#        six.assertCountEqual(self, expected, actual)
+        self.assertTrue(found_channel)
 
+    def test_list_permissions_filter_resource(self):
+
+        # Filter on the collection
+        query_result = self.rmt.list_permissions(resource=self.coll)
+
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["collection"], self.coll.name)
+        self.assertTrue("experiment" not in query_result[0])
+        self.assertEqual(set(query_result[0]["permissions"]),
+                         set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+
+        # Filter on the experiment
+        query_result = self.rmt.list_permissions(resource=self.exp)
+
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["experiment"], self.exp.name)
+        self.assertTrue("channel" not in query_result[0])
+        self.assertEqual(set(query_result[0]["permissions"]),
+                         set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
+
+        # Filter on the channel
+        query_result = self.rmt.list_permissions(resource=self.chan)
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["channel"], self.chan.name)
+        self.assertEqual(set(query_result[0]["permissions"]),
+                         set(['add', 'assign_group', 'read', 'update', 'add_volumetric_data',
+                             'read_volumetric_data', 'remove_group', 'delete_volumetric_data', 'delete']))
+
+    def test_add_get_delete_permissions(self):
+
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+
+        self.assertEqual(len(result), 0)
+
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'read', 'add_volumetric_data'])
+
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 3)
+        self.assertEqual(set(result), set(['update', 'read', 'add_volumetric_data']))
+
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
+
+    def test_list_permissions_filter_group(self):
+
+        self.rmt.add_permissions(self.grp_name, self.chan, ['read'])
+
+        # Filter on the collection
+        query_result = self.rmt.list_permissions(group_name=self.grp_name)
+
+        self.assertEqual(len(query_result), 1)
+        self.assertEqual(query_result[0]["channel"], self.chan.name)
+        self.assertEqual(query_result[0]["group"], self.grp_name)
+        self.assertEqual(set(query_result[0]["permissions"]), set(['read']))
+
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
+
+    def test_add_permissions_invalid_collection_perm(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.add_permissions(self.grp_name, self.coll, ['update', 'read', 'add_volumetric_data'])
+
+    def test_add_permissions_invalid_experiment_perm(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.add_permissions(self.grp_name, self.exp, ['update', 'read_volumetric_data', 'read'])
+
+    def test_update_permissions(self):
+        # Check you have no permissions
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
+
+        self.rmt.add_permissions(self.grp_name, self.chan, ['update', 'add', 'add_volumetric_data'])
+
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 3)
+        self.assertEqual(set(result), set(['update', 'add', 'add_volumetric_data']))
+
+        # Update
+        self.rmt.update_permissions(self.grp_name, self.chan, ['read'])
+
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(set(result), set(['read']))
+
+        # Cleanup
+        self.rmt.delete_permissions(self.grp_name, self.chan)
+        result = self.rmt.get_permissions(self.grp_name, self.chan)
+        self.assertEqual(len(result), 0)
 
 if __name__ == '__main__':
     unittest.main()

@@ -217,6 +217,22 @@ class ProjectService(BossService):
             grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
+    def list_permissions(self, group_name=None, resource=None):
+        """List permission sets associated filtering by group and/or resource.
+
+        Args:
+            group_name (string): Name of group.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+
+        Returns:
+            (list): List of permissions.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        return self.service.list_permissions(group_name, resource,
+                                             self.url_prefix, self.auth, self.session, self.session_send_opts)
+
     def get_permissions(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
 
@@ -235,8 +251,7 @@ class ProjectService(BossService):
             grp_name, resource,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def add_permissions(
-        self, grp_name, resource, permissions):
+    def add_permissions(self, grp_name, resource, permissions):
         """ Add additional permissions for the group associated with the given resource.
 
         Args:
@@ -251,22 +266,33 @@ class ProjectService(BossService):
             grp_name, resource, permissions,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def delete_permissions(
-        self, grp_name, resource, permissions):
+    def update_permissions(self, grp_name, resource, permissions):
+        """ Update permissions for the group associated with the given resource.
+
+        Args:
+            grp_name (string): Name of group.
+            resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
+            permissions (list): List of permissions to add to the given resource.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.service.update_permissions(
+            grp_name, resource, permissions,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def delete_permissions(self, grp_name, resource):
         """Removes permissions from the group for the given resource.
 
         Args:
             grp_name (string): Name of group.
             resource (intern.resource.boss.BossResource): Identifies which data model object to operate on.
-            permissions (list): List of permissions to remove from the given resource.
-            version (optional[string]): Version of the Boss API to use.  Defaults to the latest supported version.
 
         Raises:
             requests.HTTPError on failure.
         """
         self.service.delete_permissions(
-            grp_name, resource, permissions,
-            self.url_prefix, self.auth, self.session, self.session_send_opts)
+            grp_name, resource, self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def add_user_role(self, user, role):
         """Add role to given user.

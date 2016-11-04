@@ -341,6 +341,22 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.get_is_group_maintainer(grp_name, user)
 
+    def list_permissions(self, group_name=None, resource=None):
+        """List permission sets associated filtering by group and/or resource.
+
+        Args:
+            group_name (string): Name of group.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+
+        Returns:
+            (list): List of permissions.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.list_permissions(group_name, resource)
+
     def get_permissions(self, grp_name, resource):
         """Get permissions associated the group has with the given resource.
 
@@ -371,20 +387,32 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         self.project_service.add_permissions(grp_name, resource, permissions)
 
-    def delete_permissions(self, grp_name, resource, permissions):
-        """Removes permissions from the group for the given resource.
+    def update_permissions(self, grp_name, resource, permissions):
+        """Update permissions for the group associated with the given resource.
 
         Args:
             grp_name (string): Name of group.
             resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
-            permissions (list): List of permissions to remove from the given resource.
+            permissions (list): List of permissions to add to the given resource.
 
         Raises:
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        self.project_service.delete_permissions(
-            grp_name, resource, permissions)
+        self.project_service.update_permissions(grp_name, resource, permissions)
+
+    def delete_permissions(self, grp_name, resource):
+        """Removes permissions from the group for the given resource.
+
+        Args:
+            grp_name (string): Name of group.
+            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        self.project_service.delete_permissions(grp_name, resource)
 
     def get_user_roles(self, user):
         """Get roles associated with the given user.
