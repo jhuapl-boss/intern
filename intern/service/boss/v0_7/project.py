@@ -60,24 +60,23 @@ class ProjectService_0_7(BaseVersion):
             resp_json = resp.json()
             return resp_json['groups']
 
-        msg = ('Get failed for group {}, got HTTP response: ({}) - {}'.format(
-            name, resp.status_code, resp.text))
+        msg = ('List groups failed, got HTTP response: ({}) - {}'.format(
+            resp.status_code, resp.text))
 
         raise HTTPError(msg, request = req, response = resp)
 
     def get_group(self, name, user_name, url_prefix, auth, session, send_opts):
-        """Get information on the given group or whether or not a user is a member of the group.
+        """Get owner of group and the resources it's attached to.
 
         Args:
             name (string): Name of group to query.
-            user_name (string): Supply None if not interested in determining if user is a member of the given group.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+            (dict): Keys include 'owner', 'name', 'resources'.
 
         Raises:
             requests.HTTPError on failure.
@@ -639,39 +638,6 @@ class ProjectService_0_7(BaseVersion):
             'Failed getting user: {}, got HTTP response: ({}) - {}'
             .format(user, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
-
-    #def get_user_groups(self, user, url_prefix, auth, session, send_opts):
-    #    """Get user's group memberships.
-
-    #    Args:
-    #        user (string): User name.
-    #        url_prefix (string): Protocol + host such as https://api.theboss.io
-    #        auth (string): Token to send in the request header.
-    #        session (requests.Session): HTTP session to use for request.
-    #        send_opts (dictionary): Additional arguments to pass to session.send().
-
-    #    Returns:
-    #        (dictionary): User's data encoded in a dictionary.
-
-    #    Raises:
-    #        requests.HTTPError on failure.
-    #    """
-    #    req = self.get_user_groups_request(
-    #        'application/x-www-form-urlencoded', url_prefix, auth, user)
-
-    #    prep = session.prepare_request(req)
-    #    resp = session.send(prep, **send_opts)
-    #    if resp.status_code == 200:
-    #        groups = []
-    #        dict = resp.json()
-    #        if 'groups' in dict:
-    #            groups = dict['groups']
-    #        return groups
-
-    #    msg = (
-    #        'Failed getting user: {}, got HTTP response: ({}) - {}'
-    #        .format(user, resp.status_code, resp.text))
-    #    raise HTTPError(msg, request = req, response = resp)
 
     def add_user(
         self, user, first_name, last_name, email, password,

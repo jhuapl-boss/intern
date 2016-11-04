@@ -23,6 +23,38 @@ class TestGroup(unittest.TestCase):
     def setUp(self):
         self.prj = ProjectService_0_7()
 
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_list_groups_success(self, mock_session, mock_resp):
+        expected =  ['g1', 'g2'] 
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = { 'groups': expected }
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.send.return_value = mock_resp
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        actual = self.prj.list_groups(
+            None, url_prefix, auth, mock_session, send_opts)
+
+        self.assertEqual(expected, actual)
+
+    @patch('requests.Session', autospec=True)
+    def test_list_groups_failure(self, mock_session):
+        fake_resp = Response()
+        fake_resp.status_code = 403
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.send.return_value = fake_resp
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        with self.assertRaises(HTTPError):
+            self.prj.list_groups(None, url_prefix, auth, mock_session, send_opts)
+
     @patch('requests.Session', autospec=True)
     def test_create_group_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
@@ -119,6 +151,41 @@ class TestGroup(unittest.TestCase):
             self.prj.delete_group(
             'mygroup', url_prefix, auth, mock_session, send_opts)
 
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_list_group_members_success(self, mock_session, mock_resp):
+        expected =  ['john', 'mary'] 
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = { 'members': expected }
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.send.return_value = mock_resp
+
+        group = 'fire'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        actual = self.prj.list_group_members(
+            group, url_prefix, auth, mock_session, send_opts)
+
+        self.assertEqual(expected, actual)
+
+    @patch('requests.Session', autospec=True)
+    def test_list_group_members_failure(self, mock_session):
+        fake_resp = Response()
+        fake_resp.status_code = 403
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.send.return_value = fake_resp
+
+        group = 'fire'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        with self.assertRaises(HTTPError):
+            self.prj.list_group_members(
+                group, url_prefix, auth, mock_session, send_opts)
+
     @patch('requests.Session', autospec=True)
     def test_add_member_to_group_success(self, mock_session):
         mock_session.prepare_request.return_value = PreparedRequest()
@@ -212,6 +279,136 @@ class TestGroup(unittest.TestCase):
         with self.assertRaises(HTTPError):
             self.prj.delete_member_from_group(
                 'mygroup', user, url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_list_group_maintainers_success(self, mock_session, mock_resp):
+        expected =  ['john', 'mary'] 
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = { 'maintainers': expected }
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.send.return_value = mock_resp
+
+        group = 'fire'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        actual = self.prj.list_group_maintainers(
+            group, url_prefix, auth, mock_session, send_opts)
+
+        self.assertEqual(expected, actual)
+
+    @patch('requests.Session', autospec=True)
+    def test_list_group_maintainers_failure(self, mock_session):
+        fake_resp = Response()
+        fake_resp.status_code = 403
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.send.return_value = fake_resp
+
+        group = 'fire'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        with self.assertRaises(HTTPError):
+            self.prj.list_group_maintainers(
+                group, url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Session', autospec=True)
+    def test_add_maintainer_to_group_success(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 204
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        self.prj.add_maintainer_to_group(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Session', autospec=True)
+    def test_add_maintainer_to_group_failure(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 403
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        with self.assertRaises(HTTPError):
+            self.prj.add_maintainer_to_group(
+                'mygroup', user, url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_get_is_group_maintainer_success(self, mock_session, mock_resp):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = { 'result': True }
+        mock_session.send.return_value = mock_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        self.assertTrue(self.prj.get_is_group_maintainer(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts))
+
+    @patch('requests.Session', autospec=True)
+    def test_get_is_group_maintainer_failure(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 404
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        with self.assertRaises(HTTPError):
+            self.prj.get_is_group_maintainer(
+                'mygroup', user, url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Session', autospec=True)
+    def test_delete_maintainer_from_group_success(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 204
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        self.prj.delete_maintainer_from_group(
+            'mygroup', user, url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Session', autospec=True)
+    def test_delete_member_from_group_failure(self, mock_session):
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_resp = Response()
+        fake_resp.status_code = 403
+        mock_session.send.return_value = fake_resp
+
+        user = 'you'
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        with self.assertRaises(HTTPError):
+            self.prj.delete_maintainer_from_group(
+                'mygroup', user, url_prefix, auth, mock_session, send_opts)
+
 
 if __name__ == '__main__':
     unittest.main()

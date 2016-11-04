@@ -55,14 +55,14 @@ class ProjectService(BossService):
             self.session_send_opts)
 
     def get_group(self, name, user_name=None):
-        """Get information on the given group or whether or not a user is a member of the group.
+        """Get owner of group and the resources it's attached to.
 
         Args:
             name (string): Name of group to query.
             user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
 
         Returns:
-            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+            (dict): Keys include 'owner', 'name', 'resources'.
 
         Raises:
             requests.HTTPError on failure.
@@ -369,22 +369,6 @@ class ProjectService(BossService):
         """
         return self.service.get_user(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
-
-    # def get_user_groups(self, user):
-    #     """Get user's group memberships.
-    #
-    #     Args:
-    #         user (string): User name.
-    #
-    #     Returns:
-    #         (dictionary): User's data encoded in a dictionary.
-    #
-    #     Raises:
-    #         requests.HTTPError on failure.
-    #     """
-    #     return self.service.get_user_groups(
-    #         user, self.url_prefix, self.auth, self.session, self.session_send_opts)
-
     def delete_user(self, user):
         """Delete the given user.
 

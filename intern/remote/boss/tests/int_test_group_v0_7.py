@@ -48,12 +48,21 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
 
         cls.create_grp_name = 'int_test_group{}'.format(random.randint(0, 9999))
         cls.existing_grp_name = 'int_test_group_exists{}'.format(random.randint(0, 9999))
-        cls.user_name = 'bossadmin'
-
-        # This user will be created during at least one test.
-        cls.create_user = 'group_test_johndoeski{}'.format(random.randint(0, 9999))
 
         cls.rmt.create_group(cls.existing_grp_name)
+
+        cls.user_name = 'bossadmin'
+
+        # Create a new user because the user tests run under, will
+        # automatically be a member and maintainer of any groups created
+        # during testing.
+        cls.created_user = 'group_test_johndoeski{}'.format(random.randint(0, 9999))
+
+        password = 'myPassW0rd'
+        cls.rmt.add_user(
+            cls.created_user, 'John', 'Doeski', 'jdoe@rime.com', password)
+        token = cls.get_access_token(cls.created_user, password)
+        cls.login_user(token)
 
 
     @classmethod
@@ -73,90 +82,17 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         except HTTPError:
             pass
         try:
-            cls.rmt.delete_user(cls.create_user)
+            cls.rmt.delete_user(cls.created_user)
         except HTTPError:
             pass
 
     def tearDown(self):
-        #try:
-        #    self.rmt.delete_group(self.create_grp_name)
-        #except HTTPError:
-        #    pass
-        pass
+        try:
+            self.rmt.delete_group(self.create_grp_name)
+        except HTTPError:
+            pass
 
-    def test_create_group(self):
-        self.rmt.create_group(self.create_grp_name)
-
-    def test_get_group(self):
-        actual = self.rmt.get_group(self.existing_grp_name)
-        self.assertTrue(actual)
-
-    def test_get_group_doesnt_exist(self):
-        actual = self.rmt.get_group('foo')
-        self.assertFalse(actual)
-
-    def test_delete_group(self):
-        actual = self.rmt.get_group(self.existing_grp_name)
-        self.assertTrue(actual)
-
-        self.rmt.delete_group(self.existing_grp_name)
-        actual = self.rmt.get_group(self.existing_grp_name)
-        self.assertFalse(actual)
-
-        self.rmt.create_group(self.existing_grp_name)
-        actual = self.rmt.get_group(self.existing_grp_name)
-        self.assertTrue(actual)
-
-    def test_delete_group_doesnt_exist(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.delete_group('foo')
-
-    def test_add_user_to_group(self):
-        self.rmt.add_user_to_group(self.existing_grp_name, self.user_name)
-
-    def test_add_user_to_group_group_doesnt_exist(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.add_user_to_group('foo', self.user_name)
-
-    def test_group_membership(self):
-        # Test not in the group
-        self.assertFalse(self.rmt.get_group(self.existing_grp_name, self.user_name))
-
-        # Add to group
-        self.rmt.add_user_to_group(self.existing_grp_name, self.user_name)
-        self.assertTrue(self.rmt.get_group(self.existing_grp_name, self.user_name))
-
-    def test_get_group_user_doesnt_exist(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.get_group(self.existing_grp_name, 'foo')
-
-    def test_delete_group_user(self):
-        self.rmt.delete_group(self.existing_grp_name, self.user_name)
-
-    def test_delete_group_user_doesnt_exist(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.delete_group(self.existing_grp_name, 'foo')
-
-    def test_get_groups(self):
-        password = 'myPassW0rd'
-        self.rmt.add_user(
-            self.create_user, 'John', 'Doeski', 'jdoe@me.com', password)
-        token = self.get_access_token(self.create_user, password)
-        self.login_user(token)
-
-        self.rmt.add_user_to_group(self.existing_grp_name, self.create_user)
-
-        # Name of auto-created group for user.
-        users_group = self.create_user + '-primary'
-
-        expected = ['bosspublic', users_group, self.existing_grp_name]
-        actual = self.rmt.get_user_groups(self.create_user)
-        six.assertCountEqual(self, expected, actual)
-
-    def test_get_groups_invalid_user(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.get_user_groups('foo')
-
+    @classmethod
     def login_user(self, token):
         """User must login once before user can be added to a group.
 
@@ -182,6 +118,7 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         prep = session.prepare_request(request)
         response = session.send(prep, verify=False)
 
+    @classmethod
     def get_access_token(self, user_name, password):
         """Get the bearer token for the test user for login.
 
@@ -213,9 +150,125 @@ class ProjectGroupTest_v0_7(unittest.TestCase):
         prep = session.prepare_request(request)
         response = session.send(prep, verify=False)
         jresp = response.json()
-        self.assertIn('access_token', jresp)
+        self.assertIn(self, 'access_token', jresp)
         return jresp['access_token']
 
+    def test_list_groups(self):
+        actual = self.rmt.list_groups()
+        self.assertIn(self.existing_grp_name, actual)
+
+    def test_create_group(self):
+        self.rmt.create_group(self.create_grp_name)
+
+    def test_get_group(self):
+        actual = self.rmt.get_group(self.existing_grp_name)
+
+        # Don't assume who the owner (user tests are running under) is;
+        # only check for presence of owner in dictionary.
+        self.assertIn('owner', actual)
+        self.assertEqual(self.existing_grp_name, actual['name'])
+        self.assertEqual([], actual['resources'])
+
+    def test_get_group_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.get_group('foo')
+
+    def test_delete_group(self):
+        self.rmt.create_group(self.create_grp_name)
+
+        self.rmt.delete_group(self.create_grp_name)
+        with self.assertRaises(HTTPError):
+            self.rmt.get_group(self.create_grp_name)
+
+    def test_delete_group_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.delete_group('foo')
+
+    def test_add_member_to_group(self):
+        self.rmt.create_group(self.create_grp_name)
+        self.rmt.add_member_to_group(self.create_grp_name, self.created_user)
+        self.assertTrue(self.rmt.get_is_group_member(
+            self.create_grp_name, self.created_user))
+
+    def test_add_member_to_group_group_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.add_member_to_group('foo', self.created_user)
+
+    def test_list_group_members(self):
+        self.rmt.create_group(self.create_grp_name)
+        self.rmt.add_member_to_group(self.create_grp_name, self.created_user)
+        actual = self.rmt.list_group_members(self.create_grp_name)
+        self.assertIn(self.created_user, actual)
+
+    def test_list_group_members_group_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.list_group_members('foo')
+
+    def test_group_membership(self):
+        self.rmt.create_group(self.create_grp_name)
+
+        # Test not in the group
+        self.assertFalse(self.rmt.get_is_group_member(
+            self.create_grp_name, self.created_user))
+
+        # Add to group
+        self.rmt.add_member_to_group(self.create_grp_name, self.created_user)
+        self.assertTrue(self.rmt.get_is_group_member(
+            self.create_grp_name, self.created_user))
+
+    def test_get_group_membership_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.get_is_group_member(self.existing_grp_name, 'foo')
+
+    def test_delete_member_from_group(self):
+        self.rmt.create_group(self.create_grp_name)
+        self.rmt.add_member_to_group(self.create_grp_name, self.created_user)
+        self.assertTrue(self.rmt.get_is_group_member(
+            self.create_grp_name, self.created_user))
+
+        self.rmt.delete_member_from_group(self.create_grp_name, self.created_user)
+
+        self.assertFalse(self.rmt.get_is_group_member(
+            self.create_grp_name, self.created_user))
+
+    def test_delete_member_from_group_user_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.delete_member_from_group(self.existing_grp_name, 'foo')
+
+    def test_add_maintainer_to_group(self):
+        self.rmt.create_group(self.create_grp_name)
+        self.rmt.add_maintainer_to_group(self.create_grp_name, self.created_user)
+        self.assertTrue(self.rmt.get_is_group_maintainer(
+            self.create_grp_name, self.created_user))
+
+    def test_add_maintainer_to_group_group_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.add_maintainer_to_group('foo', self.created_user)
+
+    def test_list_group_maintainers(self):
+        self.rmt.create_group(self.create_grp_name)
+        self.rmt.add_maintainer_to_group(self.create_grp_name, self.created_user)
+        actual = self.rmt.list_group_maintainers(self.create_grp_name)
+        self.assertIn(self.created_user, actual)
+
+    def test_list_group_maintainers_group_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.list_group_maintainers('foo')
+
+    def test_delete_maintainer_from_group(self):
+        self.rmt.create_group(self.create_grp_name)
+        self.rmt.add_maintainer_to_group(self.create_grp_name, self.created_user)
+        self.assertTrue(self.rmt.get_is_group_maintainer(
+            self.create_grp_name, self.created_user))
+
+        self.rmt.delete_maintainer_from_group(self.create_grp_name, self.created_user)
+
+        self.assertFalse(self.rmt.get_is_group_maintainer(
+            self.create_grp_name, self.created_user))
+
+    def test_delete_maintainer_from_group_user_doesnt_exist(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.delete_maintainer_from_group(self.existing_grp_name, 'foo')
 
 if __name__ == '__main__':
     unittest.main()
