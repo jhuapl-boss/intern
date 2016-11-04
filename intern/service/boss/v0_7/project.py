@@ -66,18 +66,17 @@ class ProjectService_0_7(BaseVersion):
         raise HTTPError(msg, request = req, response = resp)
 
     def get_group(self, name, user_name, url_prefix, auth, session, send_opts):
-        """Get information on the given group or whether or not a user is a member of the group.
+        """Get owner of group and the resources it's attached to.
 
         Args:
             name (string): Name of group to query.
-            user_name (string): Supply None if not interested in determining if user is a member of the given group.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+            (dict): Keys include 'owner', 'name', 'resources'.
 
         Raises:
             requests.HTTPError on failure.

@@ -55,14 +55,14 @@ class ProjectService(BossService):
             self.session_send_opts)
 
     def get_group(self, name, user_name=None):
-        """Get information on the given group or whether or not a user is a member of the group.
+        """Get owner of group and the resources it's attached to.
 
         Args:
             name (string): Name of group to query.
             user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
 
         Returns:
-            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+            (dict): Keys include 'owner', 'name', 'resources'.
 
         Raises:
             requests.HTTPError on failure.
