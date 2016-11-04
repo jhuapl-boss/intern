@@ -114,12 +114,14 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
         query_result = self.rmt.list_permissions()
 
-        self.assertEqual(len(query_result) > 3, True)
+        self.assertEqual(len(query_result) >= 3, True)
 
         # Make sure the stuff you just created is in there
         found_channel = False
+        fount_count = 0
         for perm_set in query_result:
             if perm_set["collection"] == self.coll.name:
+                fount_count += 1
                 if "experiment" in perm_set:
                     if "channel" in perm_set:
                         if perm_set["experiment"] == self.exp.name and perm_set["channel"] == self.chan.name:
@@ -128,6 +130,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
                                              set(['read', 'update', 'delete', 'add', 'remove_group', 'assign_group']))
 
         self.assertTrue(found_channel)
+        self.assertEqual(fount_count, 3)
 
     def test_list_permissions_filter_resource(self):
 
