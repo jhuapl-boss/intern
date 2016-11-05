@@ -2,6 +2,12 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
+# to update
+# python setup.py sdist
+# python setup.py bdist_wheel
+# twine upload dist/*
+
+
 __version__ = '0.9.0'
 
 here = path.abspath(path.dirname(__file__))
@@ -20,7 +26,7 @@ dependency_links = [x.strip().replace('git+', '') for x in all_reqs if x.startsw
 setup(
     name='intern',
     version=__version__,
-    description='Python SDK for the Boss API - neuroscience data.',
+    description='Python SDK for interacting neuroscience data via the Boss API.',
     long_description=long_description,
     url='https://github.com/jhuapl-boss/intern',
     download_url='https://github.com/jhuapl-boss/intern/tarball/' + __version__,
@@ -32,7 +38,19 @@ setup(
       'Programming Language :: Python :: 3.5',
       'Programming Language :: Python :: 2.7',
     ],
-    keywords='neuroscience database sdk microns boss',
+    keywords=[
+            'brain',
+            'microscopy',
+            'neuroscience',
+            'connectome',
+            'connectomics',
+            'spatial',
+            'EM',
+            'calcium',
+            'database',
+            'boss',
+            'microns'
+        ],
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
     author='Johns Hopkins University Applied Physics Laboratory',

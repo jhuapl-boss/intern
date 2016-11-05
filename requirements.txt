@@ -1,5 +1,4 @@
 numpy
-h5py
 requests
 blosc==1.4.1
 six

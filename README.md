@@ -1,4 +1,6 @@
 # intern
+[![CircleCI](https://circleci.com/gh/jhuapl-boss/intern.svg?style=svg)](https://circleci.com/gh/jhuapl-boss/intern)
+
 
 **intern** (Integrated Toolkit for Extensible and Reproducible Neuroscience) is
 a Python 2/3 module that enables big-data neuroscience.  Currently, it provides
@@ -25,4 +27,14 @@ For example, on a *nix system, if intern was cloned to ~/intern:
 
 ## Getting Started
 
-See the intern wiki: https://github.com/jhuapl-boss/intern/wiki
+To quickly get started with intern, check out the wiki: [https://github.com/jhuapl-boss/intern/wiki](https://github.com/jhuapl-boss/intern/wiki) 
+
+
+## Documentation
+
+Full detailed documentation can be found here: [https://jhuapl-boss.github.io/intern/](https://jhuapl-boss.github.io/intern/) 
+
+
+## Contributing
+
+Please submit bug reports, or get in touch using GitHub Issues. 
