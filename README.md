@@ -1,4 +1,5 @@
 # intern
+[![PyPI version](https://badge.fury.io/py/intern.svg)](https://badge.fury.io/py/intern)
 [![CircleCI](https://circleci.com/gh/jhuapl-boss/intern.svg?style=svg)](https://circleci.com/gh/jhuapl-boss/intern)
 
 
@@ -14,15 +15,38 @@ intern is inspired by the [NeuroData](http://neurodata.io) ndio package:
 
 ## Installation
 
-Clone the repository from https://github.com/jhuapl-boss/intern and run
-`pip install -r requirements.txt` from the repository's location on your
-system.
+- It's always a good idea to use virtualenv to isolate your work from your system Python installation
 
-Add `<repository location>` to your `PYTHONPATH`.
+	- Using [virtualenv](https://virtualenv.pypa.io/en/stable/):
+	
+	```
+	virtualenv intern
+	. intern/bin/activate
+	```
+	
+	- Using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/):
+	
+	```
+	mkvirtualenv intern
+	```
+	
+- (Preferred) Install via pypi
+	
+	```
+	pip install intern
+	```
 
-For example, on a *nix system, if intern was cloned to ~/intern:
+- Install via git
 
-`export PYTHONPATH=$PYTHONPATH:~/intern`
+    Clone the repository from https://github.com/jhuapl-boss/intern and run
+    `pip install -r requirements.txt` from the repository's location on your
+    system.
+    
+    Add `<repository location>` to your `PYTHONPATH`.
+    
+    For example, on a *nix system, if intern was cloned to ~/intern:
+    
+    `export PYTHONPATH=$PYTHONPATH:~/intern`
 
 
 ## Getting Started
