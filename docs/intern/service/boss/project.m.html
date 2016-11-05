@@ -979,8 +979,8 @@ table {
           
   <ul>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.__init__">__init__</a></li>
-    <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_maintainer_to_group">add_maintainer_to_group</a></li>
-    <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_member_to_group">add_member_to_group</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_group_maintainer">add_group_maintainer</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_group_member">add_group_member</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_permissions">add_permissions</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_user">add_user</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.add_user_role">add_user_role</a></li>
@@ -988,8 +988,8 @@ table {
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.create_group">create_group</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete">delete</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_group">delete_group</a></li>
-    <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_maintainer_from_group">delete_maintainer_from_group</a></li>
-    <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_member_from_group">delete_member_from_group</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_group_maintainer">delete_group_maintainer</a></li>
+    <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_group_member">delete_group_member</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_permissions">delete_permissions</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_user">delete_user</a></li>
     <li class="mono"><a href="#intern.service.boss.project.ProjectService.delete_user_role">delete_user_role</a></li>
@@ -1143,7 +1143,7 @@ class ProjectService(BossService):
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def add_member_to_group(self, name, user):
+    def add_group_member(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1156,11 +1156,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_member_to_group(
+        return self.service.add_group_member(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def delete_member_from_group(self, grp_name, user):
+    def delete_group_member(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1172,7 +1172,7 @@ class ProjectService(BossService):
         Returns:
             (bool): True on success.
         """
-        return self.service.delete_member_from_group(
+        return self.service.delete_group_member(
             grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -1203,7 +1203,7 @@ class ProjectService(BossService):
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def add_maintainer_to_group(self, name, user):
+    def add_group_maintainer(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1216,11 +1216,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_maintainer_to_group(
+        return self.service.add_group_maintainer(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def delete_maintainer_from_group(self, grp_name, user):
+    def delete_group_maintainer(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1232,7 +1232,7 @@ class ProjectService(BossService):
         Returns:
             (bool): True on success.
         """
-        return self.service.delete_maintainer_from_group(
+        return self.service.delete_group_maintainer(
             grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -1589,7 +1589,7 @@ class ProjectService(BossService):
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def add_member_to_group(self, name, user):
+    def add_group_member(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1602,11 +1602,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_member_to_group(
+        return self.service.add_group_member(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def delete_member_from_group(self, grp_name, user):
+    def delete_group_member(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1618,7 +1618,7 @@ class ProjectService(BossService):
         Returns:
             (bool): True on success.
         """
-        return self.service.delete_member_from_group(
+        return self.service.delete_group_member(
             grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -1649,7 +1649,7 @@ class ProjectService(BossService):
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def add_maintainer_to_group(self, name, user):
+    def add_group_maintainer(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1662,11 +1662,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_maintainer_to_group(
+        return self.service.add_group_maintainer(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def delete_maintainer_from_group(self, grp_name, user):
+    def delete_group_maintainer(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1678,7 +1678,7 @@ class ProjectService(BossService):
         Returns:
             (bool): True on success.
         """
-        return self.service.delete_maintainer_from_group(
+        return self.service.delete_group_maintainer(
             grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -2051,8 +2051,8 @@ class ProjectService(BossService):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.project.ProjectService.add_maintainer_to_group">
-    <p>def <span class="ident">add_maintainer_to_group</span>(</p><p>self, name, user)</p>
+    <div class="name def" id="intern.service.boss.project.ProjectService.add_group_maintainer">
+    <p>def <span class="ident">add_group_maintainer</span>(</p><p>self, name, user)</p>
     </div>
     
 
@@ -2069,9 +2069,9 @@ class ProjectService(BossService):
 <pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.add_maintainer_to_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.project.ProjectService.add_maintainer_to_group" class="source">
-    <pre><code>def add_maintainer_to_group(self, name, user):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.add_group_maintainer', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.add_group_maintainer" class="source">
+    <pre><code>def add_group_maintainer(self, name, user):
     """Add the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -2081,7 +2081,7 @@ class ProjectService(BossService):
     Raises:
         requests.HTTPError on failure.
     """
-    return self.service.add_maintainer_to_group(
+    return self.service.add_group_maintainer(
         name, user, self.url_prefix, self.auth, self.session,
         self.session_send_opts)
 </code></pre>
@@ -2092,8 +2092,8 @@ class ProjectService(BossService):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.project.ProjectService.add_member_to_group">
-    <p>def <span class="ident">add_member_to_group</span>(</p><p>self, name, user)</p>
+    <div class="name def" id="intern.service.boss.project.ProjectService.add_group_member">
+    <p>def <span class="ident">add_group_member</span>(</p><p>self, name, user)</p>
     </div>
     
 
@@ -2110,9 +2110,9 @@ class ProjectService(BossService):
 <pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.add_member_to_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.project.ProjectService.add_member_to_group" class="source">
-    <pre><code>def add_member_to_group(self, name, user):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.add_group_member', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.add_group_member" class="source">
+    <pre><code>def add_group_member(self, name, user):
     """Add the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -2122,7 +2122,7 @@ class ProjectService(BossService):
     Raises:
         requests.HTTPError on failure.
     """
-    return self.service.add_member_to_group(
+    return self.service.add_group_member(
         name, user, self.url_prefix, self.auth, self.session,
         self.session_send_opts)
 </code></pre>
@@ -2386,8 +2386,8 @@ class ProjectService(BossService):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.project.ProjectService.delete_maintainer_from_group">
-    <p>def <span class="ident">delete_maintainer_from_group</span>(</p><p>self, grp_name, user)</p>
+    <div class="name def" id="intern.service.boss.project.ProjectService.delete_group_maintainer">
+    <p>def <span class="ident">delete_group_maintainer</span>(</p><p>self, grp_name, user)</p>
     </div>
     
 
@@ -2402,9 +2402,9 @@ class ProjectService(BossService):
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.delete_maintainer_from_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.project.ProjectService.delete_maintainer_from_group" class="source">
-    <pre><code>def delete_maintainer_from_group(self, grp_name, user):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.delete_group_maintainer', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.delete_group_maintainer" class="source">
+    <pre><code>def delete_group_maintainer(self, grp_name, user):
     """Delete the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -2413,7 +2413,7 @@ class ProjectService(BossService):
     Returns:
         (bool): True on success.
     """
-    return self.service.delete_maintainer_from_group(
+    return self.service.delete_group_maintainer(
         grp_name, user, self.url_prefix, self.auth, self.session,
         self.session_send_opts)
 </code></pre>
@@ -2424,8 +2424,8 @@ class ProjectService(BossService):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.project.ProjectService.delete_member_from_group">
-    <p>def <span class="ident">delete_member_from_group</span>(</p><p>self, grp_name, user)</p>
+    <div class="name def" id="intern.service.boss.project.ProjectService.delete_group_member">
+    <p>def <span class="ident">delete_group_member</span>(</p><p>self, grp_name, user)</p>
     </div>
     
 
@@ -2440,9 +2440,9 @@ class ProjectService(BossService):
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.delete_member_from_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.project.ProjectService.delete_member_from_group" class="source">
-    <pre><code>def delete_member_from_group(self, grp_name, user):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.project.ProjectService.delete_group_member', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.project.ProjectService.delete_group_member" class="source">
+    <pre><code>def delete_group_member(self, grp_name, user):
     """Delete the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -2451,7 +2451,7 @@ class ProjectService(BossService):
     Returns:
         (bool): True on success.
     """
-    return self.service.delete_member_from_group(
+    return self.service.delete_group_member(
         grp_name, user, self.url_prefix, self.auth, self.session,
         self.session_send_opts)
 </code></pre>

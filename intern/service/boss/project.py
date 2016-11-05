@@ -110,7 +110,7 @@ class ProjectService(BossService):
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def add_member_to_group(self, name, user):
+    def add_group_member(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -123,11 +123,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_member_to_group(
+        return self.service.add_group_member(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def delete_member_from_group(self, grp_name, user):
+    def delete_group_member(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -139,7 +139,7 @@ class ProjectService(BossService):
         Returns:
             (bool): True on success.
         """
-        return self.service.delete_member_from_group(
+        return self.service.delete_group_member(
             grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -170,7 +170,7 @@ class ProjectService(BossService):
             name, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def add_maintainer_to_group(self, name, user):
+    def add_group_maintainer(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -183,11 +183,11 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_maintainer_to_group(
+        return self.service.add_group_maintainer(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
-    def delete_maintainer_from_group(self, grp_name, user):
+    def delete_group_maintainer(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -199,7 +199,7 @@ class ProjectService(BossService):
         Returns:
             (bool): True on success.
         """
-        return self.service.delete_maintainer_from_group(
+        return self.service.delete_group_maintainer(
             grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 

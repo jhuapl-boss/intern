@@ -200,7 +200,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def add_member_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+    def add_group_member(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -228,7 +228,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def delete_member_from_group(
+    def delete_group_member(
         self, grp_name, user, url_prefix, auth, session, send_opts):
         """Delete the given user from the named group.
 
@@ -313,7 +313,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def add_maintainer_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+    def add_group_maintainer(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -341,7 +341,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def delete_maintainer_from_group(
+    def delete_group_maintainer(
         self, grp_name, user, url_prefix, auth, session, send_opts):
         """Delete the given user from the named group.
 

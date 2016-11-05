@@ -986,8 +986,8 @@ table {
           
   <ul>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.__init__">__init__</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.add_maintainer_to_group">add_maintainer_to_group</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.add_member_to_group">add_member_to_group</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.add_group_maintainer">add_group_maintainer</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.add_group_member">add_group_member</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.add_permissions">add_permissions</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.add_user">add_user</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.add_user_role">add_user_role</a></li>
@@ -999,8 +999,8 @@ table {
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.create_group">create_group</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete">delete</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_group">delete_group</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_maintainer_from_group">delete_maintainer_from_group</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_member_from_group">delete_member_from_group</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_group_maintainer">delete_group_maintainer</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_group_member">delete_group_member</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_permissions">delete_permissions</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_user">delete_user</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_user_role">delete_user_role</a></li>
@@ -1252,7 +1252,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def add_member_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+    def add_group_member(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1280,7 +1280,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def delete_member_from_group(
+    def delete_group_member(
         self, grp_name, user, url_prefix, auth, session, send_opts):
         """Delete the given user from the named group.
 
@@ -1365,7 +1365,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def add_maintainer_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+    def add_group_maintainer(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1393,7 +1393,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def delete_maintainer_from_group(
+    def delete_group_maintainer(
         self, grp_name, user, url_prefix, auth, session, send_opts):
         """Delete the given user from the named group.
 
@@ -2305,7 +2305,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def add_member_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+    def add_group_member(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -2333,7 +2333,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def delete_member_from_group(
+    def delete_group_member(
         self, grp_name, user, url_prefix, auth, session, send_opts):
         """Delete the given user from the named group.
 
@@ -2418,7 +2418,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def add_maintainer_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+    def add_group_maintainer(self, grp_name, user, url_prefix, auth, session, send_opts):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -2446,7 +2446,7 @@ class ProjectService_0_7(BaseVersion):
             user, grp_name, resp.status_code, resp.text))
         raise HTTPError(msg, request = req, response = resp)
 
-    def delete_maintainer_from_group(
+    def delete_group_maintainer(
         self, grp_name, user, url_prefix, auth, session, send_opts):
         """Delete the given user from the named group.
 
@@ -3196,8 +3196,8 @@ class ProjectService_0_7(BaseVersion):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.add_maintainer_to_group">
-    <p>def <span class="ident">add_maintainer_to_group</span>(</p><p>self, grp_name, user, url_prefix, auth, session, send_opts)</p>
+    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.add_group_maintainer">
+    <p>def <span class="ident">add_group_maintainer</span>(</p><p>self, grp_name, user, url_prefix, auth, session, send_opts)</p>
     </div>
     
 
@@ -3217,9 +3217,9 @@ class ProjectService_0_7(BaseVersion):
 <pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.add_maintainer_to_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.add_maintainer_to_group" class="source">
-    <pre><code>def add_maintainer_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.add_group_maintainer', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.add_group_maintainer" class="source">
+    <pre><code>def add_group_maintainer(self, grp_name, user, url_prefix, auth, session, send_opts):
     """Add the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -3249,8 +3249,8 @@ class ProjectService_0_7(BaseVersion):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.add_member_to_group">
-    <p>def <span class="ident">add_member_to_group</span>(</p><p>self, grp_name, user, url_prefix, auth, session, send_opts)</p>
+    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.add_group_member">
+    <p>def <span class="ident">add_group_member</span>(</p><p>self, grp_name, user, url_prefix, auth, session, send_opts)</p>
     </div>
     
 
@@ -3270,9 +3270,9 @@ class ProjectService_0_7(BaseVersion):
 <pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.add_member_to_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.add_member_to_group" class="source">
-    <pre><code>def add_member_to_group(self, grp_name, user, url_prefix, auth, session, send_opts):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.add_group_member', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.add_group_member" class="source">
+    <pre><code>def add_group_member(self, grp_name, user, url_prefix, auth, session, send_opts):
     """Add the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -3872,8 +3872,8 @@ class ProjectService_0_7(BaseVersion):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.delete_maintainer_from_group">
-    <p>def <span class="ident">delete_maintainer_from_group</span>(</p><p>self, grp_name, user, url_prefix, auth, session, send_opts)</p>
+    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.delete_group_maintainer">
+    <p>def <span class="ident">delete_group_maintainer</span>(</p><p>self, grp_name, user, url_prefix, auth, session, send_opts)</p>
     </div>
     
 
@@ -3892,9 +3892,9 @@ class ProjectService_0_7(BaseVersion):
 <pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.delete_maintainer_from_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.delete_maintainer_from_group" class="source">
-    <pre><code>def delete_maintainer_from_group(
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.delete_group_maintainer', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.delete_group_maintainer" class="source">
+    <pre><code>def delete_group_maintainer(
     self, grp_name, user, url_prefix, auth, session, send_opts):
     """Delete the given user from the named group.
     Args:
@@ -3925,8 +3925,8 @@ class ProjectService_0_7(BaseVersion):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.delete_member_from_group">
-    <p>def <span class="ident">delete_member_from_group</span>(</p><p>self, grp_name, user, url_prefix, auth, session, send_opts)</p>
+    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.delete_group_member">
+    <p>def <span class="ident">delete_group_member</span>(</p><p>self, grp_name, user, url_prefix, auth, session, send_opts)</p>
     </div>
     
 
@@ -3945,9 +3945,9 @@ class ProjectService_0_7(BaseVersion):
 <pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.delete_member_from_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.delete_member_from_group" class="source">
-    <pre><code>def delete_member_from_group(
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.delete_group_member', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.delete_group_member" class="source">
+    <pre><code>def delete_group_member(
     self, grp_name, user, url_prefix, auth, session, send_opts):
     """Delete the given user from the named group.
     Args:

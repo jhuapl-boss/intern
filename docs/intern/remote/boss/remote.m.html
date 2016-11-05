@@ -992,8 +992,8 @@ table {
           
   <ul>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.__init__">__init__</a></li>
-    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_maintainer_to_group">add_maintainer_to_group</a></li>
-    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_member_to_group">add_member_to_group</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_group_maintainer">add_group_maintainer</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_group_member">add_group_member</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_permissions">add_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_user">add_user</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.add_user_role">add_user_role</a></li>
@@ -1002,8 +1002,8 @@ table {
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.create_metadata">create_metadata</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.create_project">create_project</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_group">delete_group</a></li>
-    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_maintainer_from_group">delete_maintainer_from_group</a></li>
-    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_member_from_group">delete_member_from_group</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_group_maintainer">delete_group_maintainer</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_group_member">delete_group_member</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_metadata">delete_metadata</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_permissions">delete_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_project">delete_project</a></li>
@@ -1297,7 +1297,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_members(name)
 
-    def add_member_to_group(self, grp_name, user):
+    def add_group_member(self, grp_name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1310,9 +1310,9 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_member_to_group(grp_name, user)
+        return self.project_service.add_group_member(grp_name, user)
 
-    def delete_member_from_group(self, grp_name, user):
+    def delete_group_member(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1325,7 +1325,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_member_from_group(grp_name, user)
+        return self.project_service.delete_group_member(grp_name, user)
 
     def get_is_group_member(self, grp_name, user):
         """Check if the given user is a member of the named group.
@@ -1355,7 +1355,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_maintainers(name)
 
-    def add_maintainer_to_group(self, name, user):
+    def add_group_maintainer(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1368,9 +1368,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_maintainer_to_group(name, user)
+        return self.project_service.add_group_maintainer(name, user)
 
-    def delete_maintainer_from_group(self, grp_name, user):
+    def delete_group_maintainer(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -1383,7 +1383,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_maintainer_from_group(grp_name, user)
+        return self.project_service.delete_group_maintainer(grp_name, user)
 
     def get_is_group_maintainer(self, grp_name, user):
         """Check if the given user is a member of the named group.
@@ -2053,7 +2053,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_members(name)
 
-    def add_member_to_group(self, grp_name, user):
+    def add_group_member(self, grp_name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -2066,9 +2066,9 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_member_to_group(grp_name, user)
+        return self.project_service.add_group_member(grp_name, user)
 
-    def delete_member_from_group(self, grp_name, user):
+    def delete_group_member(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -2081,7 +2081,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_member_from_group(grp_name, user)
+        return self.project_service.delete_group_member(grp_name, user)
 
     def get_is_group_member(self, grp_name, user):
         """Check if the given user is a member of the named group.
@@ -2111,7 +2111,7 @@ class BossRemote(Remote):
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_maintainers(name)
 
-    def add_maintainer_to_group(self, name, user):
+    def add_group_maintainer(self, name, user):
         """Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -2124,9 +2124,9 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_maintainer_to_group(name, user)
+        return self.project_service.add_group_maintainer(name, user)
 
-    def delete_maintainer_from_group(self, grp_name, user):
+    def delete_group_maintainer(self, grp_name, user):
         """Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
@@ -2139,7 +2139,7 @@ class BossRemote(Remote):
             (bool): True on success.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_maintainer_from_group(grp_name, user)
+        return self.project_service.delete_group_maintainer(grp_name, user)
 
     def get_is_group_maintainer(self, grp_name, user):
         """Check if the given user is a member of the named group.
@@ -2653,8 +2653,8 @@ are passed in, the value in cfg_str is used.</p>
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.remote.BossRemote.add_maintainer_to_group">
-    <p>def <span class="ident">add_maintainer_to_group</span>(</p><p>self, name, user)</p>
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.add_group_maintainer">
+    <p>def <span class="ident">add_group_maintainer</span>(</p><p>self, name, user)</p>
     </div>
     
 
@@ -2670,9 +2670,9 @@ are passed in, the value in cfg_str is used.</p>
 <pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.add_maintainer_to_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.remote.BossRemote.add_maintainer_to_group" class="source">
-    <pre><code>def add_maintainer_to_group(self, name, user):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.add_group_maintainer', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.add_group_maintainer" class="source">
+    <pre><code>def add_group_maintainer(self, name, user):
     """Add the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -2682,7 +2682,7 @@ are passed in, the value in cfg_str is used.</p>
         requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
-    return self.project_service.add_maintainer_to_group(name, user)
+    return self.project_service.add_group_maintainer(name, user)
 </code></pre>
   </div>
 </div>
@@ -2691,8 +2691,8 @@ are passed in, the value in cfg_str is used.</p>
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.remote.BossRemote.add_member_to_group">
-    <p>def <span class="ident">add_member_to_group</span>(</p><p>self, grp_name, user)</p>
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.add_group_member">
+    <p>def <span class="ident">add_group_member</span>(</p><p>self, grp_name, user)</p>
     </div>
     
 
@@ -2707,9 +2707,9 @@ are passed in, the value in cfg_str is used.</p>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.add_member_to_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.remote.BossRemote.add_member_to_group" class="source">
-    <pre><code>def add_member_to_group(self, grp_name, user):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.add_group_member', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.add_group_member" class="source">
+    <pre><code>def add_group_member(self, grp_name, user):
     """Add the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -2719,7 +2719,7 @@ are passed in, the value in cfg_str is used.</p>
         (bool): True on success.
     """
     self.project_service.set_auth(self._token_project)
-    return self.project_service.add_member_to_group(grp_name, user)
+    return self.project_service.add_group_member(grp_name, user)
 </code></pre>
   </div>
 </div>
@@ -3038,8 +3038,8 @@ Other exceptions may be raised depending on the volume service's implementation.
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.remote.BossRemote.delete_maintainer_from_group">
-    <p>def <span class="ident">delete_maintainer_from_group</span>(</p><p>self, grp_name, user)</p>
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.delete_group_maintainer">
+    <p>def <span class="ident">delete_group_maintainer</span>(</p><p>self, grp_name, user)</p>
     </div>
     
 
@@ -3054,9 +3054,9 @@ Other exceptions may be raised depending on the volume service's implementation.
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_maintainer_from_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.remote.BossRemote.delete_maintainer_from_group" class="source">
-    <pre><code>def delete_maintainer_from_group(self, grp_name, user):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_group_maintainer', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.delete_group_maintainer" class="source">
+    <pre><code>def delete_group_maintainer(self, grp_name, user):
     """Delete the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -3066,7 +3066,7 @@ Other exceptions may be raised depending on the volume service's implementation.
         (bool): True on success.
     """
     self.project_service.set_auth(self._token_project)
-    return self.project_service.delete_maintainer_from_group(grp_name, user)
+    return self.project_service.delete_group_maintainer(grp_name, user)
 </code></pre>
   </div>
 </div>
@@ -3075,8 +3075,8 @@ Other exceptions may be raised depending on the volume service's implementation.
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.remote.BossRemote.delete_member_from_group">
-    <p>def <span class="ident">delete_member_from_group</span>(</p><p>self, grp_name, user)</p>
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.delete_group_member">
+    <p>def <span class="ident">delete_group_member</span>(</p><p>self, grp_name, user)</p>
     </div>
     
 
@@ -3091,9 +3091,9 @@ Other exceptions may be raised depending on the volume service's implementation.
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_member_from_group', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.remote.BossRemote.delete_member_from_group" class="source">
-    <pre><code>def delete_member_from_group(self, grp_name, user):
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_group_member', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.delete_group_member" class="source">
+    <pre><code>def delete_group_member(self, grp_name, user):
     """Delete the given user to the named group.
     Both group and user must already exist for this to succeed.
     Args:
@@ -3103,7 +3103,7 @@ Other exceptions may be raised depending on the volume service's implementation.
         (bool): True on success.
     """
     self.project_service.set_auth(self._token_project)
-    return self.project_service.delete_member_from_group(grp_name, user)
+    return self.project_service.delete_group_member(grp_name, user)
 </code></pre>
   </div>
 </div>
