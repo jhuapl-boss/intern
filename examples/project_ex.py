@@ -28,38 +28,26 @@ the operation should be performed.  For create and update operations, the
 resource object also contains the parameters to place in the database.
 """
 
-from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import *
 
-API_VER = LATEST_VERSION
-
-#rmt = BossRemote('example.cfg', API_VER)
-rmt = BossRemote('test.cfg', API_VER)
-
-# Turn off SSL cert verification.  This is necessary for interacting with
-# developer instances of the Boss.
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-rmt.project_service.session_send_opts = { 'verify': False }
-rmt.metadata_service.session_send_opts = { 'verify': False }
-rmt.volume_service.session_send_opts = { 'verify': False }
+rmt = BossRemote('example.cfg')
 
 # List current collections.
 coll_list = rmt.list_collections()
+print("Collections: {}".format(coll_list))
 
 # For resources below the collection level, the parents must be specified.
 # For example to list all the channels that are part of the gray collection
 # and alpha experiment:
 chan_list = rmt.list_channels('gray', 'alpha')
-for chan in chan_list:
-    print(chan)
+print("Channels in Collection - gray and Experiment - alpha: {}".format(chan_list))
 
 # When creating a new resource, the corresponding resource object will need
 # the required attributes populated.
-# For example, to add a channel named beta to the alpha experiment referenced
+# For example, to add an "image" style channel named beta to the alpha experiment referenced
 # in the previous example:
-betaChan = ChannelResource('beta', 'gray', 'alpha', 'image', 'test channel')
+betaChan = ChannelResource('beta', 'gray', 'alpha', 'image')
 newBetaChan = rmt.create_project(betaChan)
 
 # Note that the create method returns a new instance of the ChannelResource.
@@ -81,6 +69,3 @@ print(betaChanUpdated.related)
 # delete the beta channel.
 rmt.delete_project(betaChan)
 
-chan_list = rmt.list_project(channels)
-for chan in chan_list:
-    print(chan['name'])

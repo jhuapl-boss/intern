@@ -1,7 +1,4 @@
 dependencies:
-  pre:
-    - sudo apt-get update; sudo apt-get install libjpeg-dev libtiff5-dev zlib1g-dev libfreetype6-dev liblcms2-dev libopenjpeg-dev
-
   override:
     - pip install tox tox-pyenv
     - pyenv local 2.7.10 3.4.3 3.5.1

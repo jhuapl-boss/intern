@@ -1043,10 +1043,10 @@ table {
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_create_group_failure">test_create_group_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_create_group_success">test_create_group_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_failure">test_delete_group_failure</a></li>
-    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_success">test_delete_group_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_maintainer_success">test_delete_group_maintainer_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_failure">test_delete_group_member_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_member_success">test_delete_group_member_success</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_success">test_delete_group_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_get_group_failure">test_get_group_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_get_group_success">test_get_group_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_group.TestGroup.test_get_is_group_maintainer_failure">test_get_is_group_maintainer_failure</a></li>
@@ -2944,7 +2944,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3005,7 +3005,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -4088,36 +4088,6 @@ def test_delete_group_failure(self, mock_session):
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_success">
-    <p>def <span class="ident">test_delete_group_success</span>(</p><p>*args, **keywargs)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_success', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_success" class="source">
-    <pre><code>@patch('requests.Session', autospec=True)
-def test_delete_group_success(self, mock_session):
-    mock_session.prepare_request.return_value = PreparedRequest()
-    fake_resp = Response()
-    fake_resp.status_code = 204
-    mock_session.send.return_value = fake_resp
-    user = None
-    url_prefix = 'https://api.theboss.io'
-    auth = 'mytoken'
-    send_opts = {}
-    self.prj.delete_group(
-        'mygroup', url_prefix, auth, mock_session, send_opts)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_maintainer_success">
     <p>def <span class="ident">test_delete_group_maintainer_success</span>(</p><p>*args, **keywargs)</p>
     </div>
@@ -4201,6 +4171,36 @@ def test_delete_group_member_success(self, mock_session):
     send_opts = {}
     self.prj.delete_group_member(
         'mygroup', user, url_prefix, auth, mock_session, send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_success">
+    <p>def <span class="ident">test_delete_group_success</span>(</p><p>*args, **keywargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_success', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_group.TestGroup.test_delete_group_success" class="source">
+    <pre><code>@patch('requests.Session', autospec=True)
+def test_delete_group_success(self, mock_session):
+    mock_session.prepare_request.return_value = PreparedRequest()
+    fake_resp = Response()
+    fake_resp.status_code = 204
+    mock_session.send.return_value = fake_resp
+    user = None
+    url_prefix = 'https://api.theboss.io'
+    auth = 'mytoken'
+    send_opts = {}
+    self.prj.delete_group(
+        'mygroup', url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
 </div>

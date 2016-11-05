@@ -11,26 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+This script sets up the data model resource used by the example scripts.
+To run this example (and create new resources), you must have a user with the resource-manager role!
+"""
 
-# This script sets up the data model used by the example scripts.
-
-from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import *
 from requests import HTTPError
-import sys
 
-API_VER = LATEST_VERSION
-#rmt = BossRemote('example.cfg', API_VER)
-rmt = BossRemote('test.cfg', API_VER)
 
-# Turn off SSL cert verification.  This is necessary for interacting with
-# developer instances of the Boss.
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-rmt.project_service.session_send_opts = { 'verify': False }
-rmt.metadata_service.session_send_opts = { 'verify': False }
-rmt.volume_service.session_send_opts = { 'verify': False }
+rmt = BossRemote('example.cfg')
 
 coll = CollectionResource('gray', 'Collection used for examples.')
 try:
@@ -68,7 +59,9 @@ except HTTPError:
     rmt.create_project(rho_layer)
 
 grp_name = 'example_group'
-if not rmt.get_group(grp_name):
+try:
+    rmt.get_group(grp_name)
+except HTTPError:
     rmt.create_group(grp_name)
 
 print('Data model for examples setup.')

@@ -23,22 +23,11 @@ and resources.  The three combined determine what a user may do with a
 particular resource.
 """
 
-from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import *
 from requests import HTTPError
 
-API_VER = LATEST_VERSION
-rmt = BossRemote(cfg_file='example.cfg', API_VER)
-#rmt = BossRemote(cfg_file='test.cfg', API_VER)
-
-# Turn off SSL cert verification.  This is necessary for interacting with
-# developer instances of the Boss.
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-rmt.project_service.session_send_opts = { 'verify': False }
-rmt.metadata_service.session_send_opts = { 'verify': False }
-rmt.volume_service.session_send_opts = { 'verify': False }
+rmt = BossRemote('example.cfg')
 
 # Note spaces are not allowed in group names.
 grp_name = 'my_group'
@@ -58,19 +47,19 @@ if rmt.get_group(grp_name):
     print('Confirmed')
 
 print('Add user to group . . .')
-rmt.add_user_to_group(grp_name, user_name)
+rmt.add_group_member(grp_name, user_name)
 
 print('Confirm user is member of group . . .')
-if rmt.get_group(grp_name, user_name):
+if rmt.get_is_group_member(grp_name, user_name):
     print('Confirmed')
 else:
     print('NOT a member of the group')
 
 print('Remove user from group . . .')
-rmt.delete_group(grp_name, user_name)
+rmt.delete_group_member(grp_name, user_name)
 
 print('Confirm user is not a member of group . . .')
-if rmt.get_group(grp_name, user_name):
+if rmt.get_is_group_member(grp_name, user_name):
     print('Still a member of the group; removal must have failed')
 else:
     print('Confirmed')

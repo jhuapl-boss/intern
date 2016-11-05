@@ -13,29 +13,16 @@
 # limitations under the License.
 
 """
-This example demonstrates user management.  To run this example, you must have
-a user with either the user-manager role or the admin role.
+This example demonstrates user management.
+To run this example, you must have a user with the user-manager role!
 """
+from intern.remote.boss import BossRemote
 
-from intern.remote.boss import BossRemote, LATEST_VERSION
-from intern.resource.boss.resource import *
-from requests import HTTPError
-
-API_VER = LATEST_VERSION
-#rmt = BossRemote('example.cfg', API_VER)
-rmt = BossRemote('test.cfg', API_VER)
-
-# Turn off SSL cert verification.  This is necessary for interacting with
-# developer instances of the Boss.
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-rmt.project_service.session_send_opts = { 'verify': False }
-rmt.metadata_service.session_send_opts = { 'verify': False }
-rmt.volume_service.session_send_opts = { 'verify': False }
+rmt = BossRemote('example.cfg')
 
 user = 'example_user'
 
+# Create a user. Note that users are unique, so it's
 print('Creating user . . .')
 rmt.add_user(user, 'John', 'Doe', 'jd@example.com', 'secure_password')
 
@@ -45,6 +32,8 @@ print(user_data)
 
 #############################################################################
 # The user needs to login before role and group operations can be performed.
+# This is due to the Single-Sign On workflow requires a manual log into update
+# the application database
 #############################################################################
 
 print('\nMake the user a resource manager . . .')

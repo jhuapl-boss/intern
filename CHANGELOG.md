@@ -14,9 +14,14 @@ ____________
 * Cutout range args now passed as a list of ints instead of a string.
 * Separate list methods for each resource type provided for convenience.
 * JHU ndio dependencies removed from requirements.txt.
+* Additional legacy code removed
+* Can provide config for each service or globally under the [Default] section of the config file
+* Can provide config via environment variables
+* Changed from a noun\_verb convention to a verb\_noun convention for function names
 
 ## v0.7 changes:
 * User management now done through entirely through SSO (Keycloak) server.
+* Resource, group, and permission API updates reflected in intern
 
 ## Sprint 4
 ___________

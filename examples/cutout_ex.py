@@ -1,26 +1,35 @@
-﻿from intern.remote.boss import BossRemote, LATEST_VERSION
+﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""
+This example shows how to work with the Boss' cutout service.  We post a tiny random matrix to the Boss and read it back
+While only a 3D matrix is shown, 4D data with a time component is supported as well.
+Matrices should be in ZYX or TZYX format.
+"""
+from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import *
-import sys
 import numpy
 from requests import HTTPError
 
-API_VER = LATEST_VERSION
-#rmt = BossRemote('example.cfg')
-rmt = BossRemote('test.cfg')
 
-# Turn off SSL cert verification.  This is necessary for interacting with
-# developer instances of the Boss.
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-rmt.project_service.session_send_opts = { 'verify': False }
-rmt.metadata_service.session_send_opts = { 'verify': False }
-rmt.volume_service.session_send_opts = { 'verify': False }
+rmt = BossRemote('example.cfg')
 
 COLL_NAME = 'gray'
 EXP_NAME = 'alpha'
 CHAN_NAME = 'ex_EM'
 
+# Create or get a channel to write to
 chan_setup = ChannelResource(
     CHAN_NAME, COLL_NAME, EXP_NAME, 'image', 'Example channel.', datatype='uint16')
 try:

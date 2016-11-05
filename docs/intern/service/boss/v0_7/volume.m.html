@@ -2264,7 +2264,7 @@ model object.</p>
     if password is not None:
         data['password'] = password
     headers = self.get_headers(content, token)
-    return Request(method, url, headers=headers, data=data)
+    return Request(method, url, headers=headers, json=data)
 </code></pre>
   </div>
 </div>
@@ -2319,7 +2319,7 @@ model object.</p>
     if role is not None:
         url = url + '/' + role
     headers = self.get_headers(content, token)
-    return Request(method, url, headers = headers)
+    return Request(method, url, headers=headers)
 </code></pre>
   </div>
 </div>

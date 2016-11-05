@@ -5,7 +5,7 @@ a Python 2/3 module that enables big-data neuroscience.  Currently, it provides
 an interface to the Boss API, and in the future may provide interfaces to other
 neuroscience databases.
 
-intern is derived from [NeuroData's](http://neurodata.io) ndio package:
+intern is inspired by the [NeuroData](http://neurodata.io) ndio package:
 
 [https://github.com/neurodata/ndio](https://github.com/neurodata/ndio)
 

@@ -27,22 +27,11 @@ a minimum.  The resource object identifies which data model object's metadata
 will be manipulated.
 """
 
-from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import *
 
-API_VER = LATEST_VERSION
 
-#rmt = BossRemote('example.cfg', API_VER)
-rmt = BossRemote('test.cfg', API_VER)
-
-# Turn off SSL cert verification.  This is necessary for interacting with
-# developer instances of the Boss.
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-rmt.project_service.session_send_opts = { 'verify': False }
-rmt.metadata_service.session_send_opts = { 'verify': False }
-rmt.volume_service.session_send_opts = { 'verify': False }
+rmt = BossRemote('example.cfg')
 
 # First, create resource objects that identify the objects of interest in the
 # data model.  Notice, that only the minimal information needed to identify
@@ -52,10 +41,9 @@ alpha_exp = ExperimentResource('alpha', 'gray', 'StdFrame')
 omega_chan = ChannelResource('omega', 'gray', 'alpha', 'image')
 
 # Add new metadata using create_metadata().
-rmt.create_metadata(coll, { 'mark': 'two', 'ten': 'four'})
-rmt.create_metadata(alpha_exp, { 'date': '04May2016', 'time': '13:00' })
-rmt.create_metadata(
-    omega_chan, { 'channel_prep': '342', 'microscope': 'sem4' })
+rmt.create_metadata(coll, {'mark': 'two', 'ten': 'four'})
+rmt.create_metadata(alpha_exp, {'date': '04May2016', 'time': '13:00'})
+rmt.create_metadata(omega_chan, {'channel_prep': '342', 'microscope': 'sem4'})
 
 # Retrieve metadata with get_metadata().
 # Use a list with a single string if you only want a single value.
@@ -87,5 +75,4 @@ print(omega_metadata['microscope'])
 # Use delete_metadata() to remove keys and values.
 rmt.delete_metadata(alpha_exp, ['date', 'time'])
 rmt.delete_metadata(coll, ['mark', 'ten'])
-rmt.delete_metadata(
-    omega_chan, ['channel_prep', 'microscope'])
+rmt.delete_metadata(omega_chan, ['channel_prep', 'microscope'])

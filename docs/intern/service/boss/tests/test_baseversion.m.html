@@ -1058,8 +1058,8 @@ table {
     <li class="mono"><a href="#intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_group_request">test_get_group_request</a></li>
     <li class="mono"><a href="#intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_headers_gives_dict_with_authorization">test_get_headers_gives_dict_with_authorization</a></li>
     <li class="mono"><a href="#intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_headers_gives_dict_with_content_type">test_get_headers_gives_dict_with_content_type</a></li>
-    <li class="mono"><a href="#intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_meta_or_permission_request">test_get_meta_or_permission_request</a></li>
     <li class="mono"><a href="#intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_metadata_request">test_get_metadata_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_permission_request">test_get_permission_request</a></li>
     <li class="mono"><a href="#intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_request">test_get_request</a></li>
     <li class="mono"><a href="#intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_user_request_just_username">test_get_user_request_just_username</a></li>
     <li class="mono"><a href="#intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_user_request_with_email">test_get_user_request_with_email</a></li>
@@ -1300,22 +1300,21 @@ class BaseVersionTest(unittest.TestCase):
 
         self.assertEqual(expected, actual.url)
 
-    def test_get_meta_or_permission_request(self):
+    def test_get_permission_request(self):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         grp_name = 'fire'
-        resrc_path = self.chanResource.get_meta_route()
-        data = { 'permissions': ['update', 'add', 'delete'] }
+        post_data = {"group": grp_name,
+                     "permissions": ['update', 'add', 'delete'],
+                     }
+        post_data.update(self.chanResource.get_dict_route())
 
-        expected = '{}/{}/permission/{}/{}'.format(
-            url_prefix, self.test_volume.version, grp_name, resrc_path)
+        expected = '{}/{}/permissions/'.format(url_prefix, self.test_volume.version)
 
         actual = self.test_project.get_permission_request(
-            'GET', 'application/json', url_prefix, token, grp_name,
-            self.chanResource, data)
+            'GET', 'application/json', url_prefix, token, post_data=post_data)
 
         self.assertEqual(expected, actual.url)
-        self.assertEqual(data, actual.data)
 
     def test_get_user_role_request(self):
         url_prefix = 'https://api.theboss.io'
@@ -1372,7 +1371,7 @@ class BaseVersionTest(unittest.TestCase):
             'POST', 'application/json', url_prefix, token, user, first)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     def test_get_user_request_with_lastname(self):
         url_prefix = 'https://api.theboss.io'
@@ -1389,7 +1388,7 @@ class BaseVersionTest(unittest.TestCase):
             'POST', 'application/json', url_prefix, token, user, last_name=last)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     def test_get_user_request_with_email(self):
         url_prefix = 'https://api.theboss.io'
@@ -1420,7 +1419,7 @@ class BaseVersionTest(unittest.TestCase):
             'POST', 'application/json', url_prefix, token, user, password=password)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     def test_get_user_request_with_password(self):
         url_prefix = 'https://api.theboss.io'
@@ -1443,7 +1442,7 @@ class BaseVersionTest(unittest.TestCase):
             email, password)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     ##
     ## Methods used for the metadata service.
@@ -1682,22 +1681,21 @@ if __name__ == '__main__':
 
         self.assertEqual(expected, actual.url)
 
-    def test_get_meta_or_permission_request(self):
+    def test_get_permission_request(self):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         grp_name = 'fire'
-        resrc_path = self.chanResource.get_meta_route()
-        data = { 'permissions': ['update', 'add', 'delete'] }
+        post_data = {"group": grp_name,
+                     "permissions": ['update', 'add', 'delete'],
+                     }
+        post_data.update(self.chanResource.get_dict_route())
 
-        expected = '{}/{}/permission/{}/{}'.format(
-            url_prefix, self.test_volume.version, grp_name, resrc_path)
+        expected = '{}/{}/permissions/'.format(url_prefix, self.test_volume.version)
 
         actual = self.test_project.get_permission_request(
-            'GET', 'application/json', url_prefix, token, grp_name,
-            self.chanResource, data)
+            'GET', 'application/json', url_prefix, token, post_data=post_data)
 
         self.assertEqual(expected, actual.url)
-        self.assertEqual(data, actual.data)
 
     def test_get_user_role_request(self):
         url_prefix = 'https://api.theboss.io'
@@ -1754,7 +1752,7 @@ if __name__ == '__main__':
             'POST', 'application/json', url_prefix, token, user, first)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     def test_get_user_request_with_lastname(self):
         url_prefix = 'https://api.theboss.io'
@@ -1771,7 +1769,7 @@ if __name__ == '__main__':
             'POST', 'application/json', url_prefix, token, user, last_name=last)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     def test_get_user_request_with_email(self):
         url_prefix = 'https://api.theboss.io'
@@ -1802,7 +1800,7 @@ if __name__ == '__main__':
             'POST', 'application/json', url_prefix, token, user, password=password)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     def test_get_user_request_with_password(self):
         url_prefix = 'https://api.theboss.io'
@@ -1825,7 +1823,7 @@ if __name__ == '__main__':
             email, password)
 
         self.assertEqual(expected, actual.url)
-        self.assertDictEqual(expectedData, actual.data)
+        self.assertDictEqual(expectedData, actual.json)
 
     ##
     ## Methods used for the metadata service.
@@ -2994,7 +2992,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.tests.test_baseversion.BaseVersionTest.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3055,7 +3053,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.service.boss.tests.test_baseversion.BaseVersionTest.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x104bbd8c0&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -4347,37 +4345,6 @@ resource's name.</p></div>
   
             
   <div class="item">
-    <div class="name def" id="intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_meta_or_permission_request">
-    <p>def <span class="ident">test_get_meta_or_permission_request</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_meta_or_permission_request', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_meta_or_permission_request" class="source">
-    <pre><code>def test_get_meta_or_permission_request(self):
-    url_prefix = 'https://api.theboss.io'
-    token = 'foobar'
-    grp_name = 'fire'
-    resrc_path = self.chanResource.get_meta_route()
-    data = { 'permissions': ['update', 'add', 'delete'] }
-    expected = '{}/{}/permission/{}/{}'.format(
-        url_prefix, self.test_volume.version, grp_name, resrc_path)
-    actual = self.test_project.get_permission_request(
-        'GET', 'application/json', url_prefix, token, grp_name,
-        self.chanResource, data)
-    self.assertEqual(expected, actual.url)
-    self.assertEqual(data, actual.data)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
     <div class="name def" id="intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_metadata_request">
     <p>def <span class="ident">test_get_metadata_request</span>(</p><p>self)</p>
     </div>
@@ -4400,6 +4367,36 @@ resource's name.</p></div>
          actual.url)
     self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
     self.assertEqual('application/json', actual.headers['Content-Type'])
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_permission_request">
+    <p>def <span class="ident">test_get_permission_request</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_permission_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.tests.test_baseversion.BaseVersionTest.test_get_permission_request" class="source">
+    <pre><code>def test_get_permission_request(self):
+    url_prefix = 'https://api.theboss.io'
+    token = 'foobar'
+    grp_name = 'fire'
+    post_data = {"group": grp_name,
+                 "permissions": ['update', 'add', 'delete'],
+                 }
+    post_data.update(self.chanResource.get_dict_route())
+    expected = '{}/{}/permissions/'.format(url_prefix, self.test_volume.version)
+    actual = self.test_project.get_permission_request(
+        'GET', 'application/json', url_prefix, token, post_data=post_data)
+    self.assertEqual(expected, actual.url)
 </code></pre>
   </div>
 </div>
@@ -4513,7 +4510,7 @@ resource's name.</p></div>
     actual = self.test_project.get_user_request(
         'POST', 'application/json', url_prefix, token, user, first)
     self.assertEqual(expected, actual.url)
-    self.assertDictEqual(expectedData, actual.data)
+    self.assertDictEqual(expectedData, actual.json)
 </code></pre>
   </div>
 </div>
@@ -4543,7 +4540,7 @@ resource's name.</p></div>
     actual = self.test_project.get_user_request(
         'POST', 'application/json', url_prefix, token, user, last_name=last)
     self.assertEqual(expected, actual.url)
-    self.assertDictEqual(expectedData, actual.data)
+    self.assertDictEqual(expectedData, actual.json)
 </code></pre>
   </div>
 </div>
@@ -4579,7 +4576,7 @@ resource's name.</p></div>
         'POST', 'application/json', url_prefix, token, user, first, last,
         email, password)
     self.assertEqual(expected, actual.url)
-    self.assertDictEqual(expectedData, actual.data)
+    self.assertDictEqual(expectedData, actual.json)
 </code></pre>
   </div>
 </div>
@@ -5428,7 +5425,7 @@ model object.</p>
     if password is not None:
         data['password'] = password
     headers = self.get_headers(content, token)
-    return Request(method, url, headers=headers, data=data)
+    return Request(method, url, headers=headers, json=data)
 </code></pre>
   </div>
 </div>
@@ -5483,7 +5480,7 @@ model object.</p>
     if role is not None:
         url = url + '/' + role
     headers = self.get_headers(content, token)
-    return Request(method, url, headers = headers)
+    return Request(method, url, headers=headers)
 </code></pre>
   </div>
 </div>
@@ -6277,7 +6274,7 @@ model object.</p>
     if password is not None:
         data['password'] = password
     headers = self.get_headers(content, token)
-    return Request(method, url, headers=headers, data=data)
+    return Request(method, url, headers=headers, json=data)
 </code></pre>
   </div>
 </div>
@@ -6332,7 +6329,7 @@ model object.</p>
     if role is not None:
         url = url + '/' + role
     headers = self.get_headers(content, token)
-    return Request(method, url, headers = headers)
+    return Request(method, url, headers=headers)
 </code></pre>
   </div>
 </div>
@@ -7126,7 +7123,7 @@ model object.</p>
     if password is not None:
         data['password'] = password
     headers = self.get_headers(content, token)
-    return Request(method, url, headers=headers, data=data)
+    return Request(method, url, headers=headers, json=data)
 </code></pre>
   </div>
 </div>
@@ -7181,7 +7178,7 @@ model object.</p>
     if role is not None:
         url = url + '/' + role
     headers = self.get_headers(content, token)
-    return Request(method, url, headers = headers)
+    return Request(method, url, headers=headers)
 </code></pre>
   </div>
 </div>

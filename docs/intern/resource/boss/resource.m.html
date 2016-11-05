@@ -1435,7 +1435,7 @@ class ChannelResource(BossResource):
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
     _valid_types = ['annotation', 'image']
 
-    def __init__(self, name, collection_name, experiment_name, type,
+    def __init__(self, name, collection_name, experiment_name, type="image",
         description='', default_time_step=0, datatype='uint8',
         base_resolution=0, sources=[], related=[], creator='', raw={}):
         """Constructor.
@@ -1444,7 +1444,7 @@ class ChannelResource(BossResource):
             name (string): Channel name.
             collection_name (string): Parent collection name.
             experiment_name (string): Parent experiment name.
-            type (string): 'image' or 'annotation'
+            type (optional[string]): 'image' or 'annotation'
             description (optional[string]): Layer description.  Defaults to empty.
             default_time_step (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
@@ -1992,7 +1992,7 @@ def get_route(self):
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
     _valid_types = ['annotation', 'image']
 
-    def __init__(self, name, collection_name, experiment_name, type,
+    def __init__(self, name, collection_name, experiment_name, type="image",
         description='', default_time_step=0, datatype='uint8',
         base_resolution=0, sources=[], related=[], creator='', raw={}):
         """Constructor.
@@ -2001,7 +2001,7 @@ def get_route(self):
             name (string): Channel name.
             collection_name (string): Parent collection name.
             experiment_name (string): Parent experiment name.
-            type (string): 'image' or 'annotation'
+            type (optional[string]): 'image' or 'annotation'
             description (optional[string]): Layer description.  Defaults to empty.
             default_time_step (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
@@ -2282,7 +2282,7 @@ def get_route(self):
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.resource.ChannelResource.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, experiment_name, type, description=&#39;&#39;, default_time_step=0, datatype=&#39;uint8&#39;, base_resolution=0, sources=[], related=[], creator=&#39;&#39;, raw={})</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, experiment_name, type=&#39;image&#39;, description=&#39;&#39;, default_time_step=0, datatype=&#39;uint8&#39;, base_resolution=0, sources=[], related=[], creator=&#39;&#39;, raw={})</p>
     </div>
     
     <p class="inheritance">
@@ -2297,7 +2297,7 @@ def get_route(self):
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Channel name.<br />
 &emsp;&emsp;&emsp;&emsp;<b>collection_name (string)</b>: Parent collection name.<br />
 &emsp;&emsp;&emsp;&emsp;<b>experiment_name (string)</b>: Parent experiment name.<br />
-&emsp;&emsp;&emsp;&emsp;<b>type (string)</b>: 'image' or 'annotation'<br />
+&emsp;&emsp;&emsp;&emsp;<b>type (optional[string])</b>: 'image' or 'annotation'<br />
 &emsp;&emsp;&emsp;&emsp;<b>description (optional[string])</b>: Layer description.  Defaults to empty.<br />
 &emsp;&emsp;&emsp;&emsp;<b>default_time_step (optional[int])</b>: Defaults to 0.<br />
 &emsp;&emsp;&emsp;&emsp;<b>datatype (optional[string])</b>: 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.<br />
@@ -2309,7 +2309,7 @@ def get_route(self):
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.__init__', this);">Show source &equiv;</a></p>
   <div id="source-intern.resource.boss.resource.ChannelResource.__init__" class="source">
-    <pre><code>def __init__(self, name, collection_name, experiment_name, type,
+    <pre><code>def __init__(self, name, collection_name, experiment_name, type="image",
     description='', default_time_step=0, datatype='uint8',
     base_resolution=0, sources=[], related=[], creator='', raw={}):
     """Constructor.
@@ -2317,7 +2317,7 @@ def get_route(self):
         name (string): Channel name.
         collection_name (string): Parent collection name.
         experiment_name (string): Parent experiment name.
-        type (string): 'image' or 'annotation'
+        type (optional[string]): 'image' or 'annotation'
         description (optional[string]): Layer description.  Defaults to empty.
         default_time_step (optional[int]): Defaults to 0.
         datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.

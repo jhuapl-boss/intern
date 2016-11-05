@@ -24,31 +24,23 @@ members of the Orange University group, it might only give read permissions to
 the Blue Mouse experiment.
 """
 
-from intern.remote.boss import BossRemote, LATEST_VERSION
+from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import *
 
-API_VER = LATEST_VERSION
-rmt = BossRemote(cfg_file='example.cfg', API_VER)
-#rmt = BossRemote(cfg_file='test.cfg', API_VER)
+# Here we pass in a config file to provide credentials.  There are multiple ways to provide credentials, which are
+# described in the intern docs on GitHub
+rmt = BossRemote('example.cfg')
 
-# Turn off SSL cert verification.  This is necessary for interacting with
-# developer instances of the Boss.
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-rmt.project_service.session_send_opts = { 'verify': False }
-rmt.metadata_service.session_send_opts = { 'verify': False }
-rmt.volume_service.session_send_opts = { 'verify': False }
-
+# Group names are unique, so a conflict may occur if another user ran this example.
 grp_name = 'example_group'
 
+# Create some resource instances that we can add permissions to
 coll = CollectionResource('gray')
 exp = ExperimentResource('alpha', coll.name, 'StdFrame')
 chan = ChannelResource('omega', coll.name, exp.name)
-lyr = LayerResource('rho', coll.name, exp.name)
 
 # Manipulate permissions at the collection level.
-
+# Attach a group, to a collection with a set of permissions
 print('Add all permissions to the {} collection . . .'.format(coll.name))
 all_perms = ['read', 'add', 'update', 'delete', 'assign_group', 'remove_group']
 rmt.add_permissions(grp_name, coll, all_perms)
@@ -56,31 +48,32 @@ rmt.add_permissions(grp_name, coll, all_perms)
 print('Visually confirm permissions added to the {} collection . . .'.format(coll.name))
 print(rmt.get_permissions(grp_name, coll))
 
-print('Remove the `remove_group` permission from the {} collection . . .'.format(coll.name))
-rmt.delete_permissions(grp_name, coll, ['remove_group'])
+print('Remove the assigned permissions from the {} collection . . .'.format(coll.name))
+rmt.delete_permissions(grp_name, coll)
 
 print('Visually confirm removal of `remove_group` permission . . .')
 print(rmt.get_permissions(grp_name, coll))
 
 
 # Manipulate permissions at the experiment level.
-
 print('\nAdd permissions to the {} experiment . . .'.format(exp.name))
 rmt.add_permissions(grp_name, exp, ['add', 'read'])
 
 print('Visually confirm permissions added to the {} experiment . . .'.format(exp.name))
 print(rmt.get_permissions(grp_name, exp))
 
-# Note that adding a new permission adds to the existing permissions assigned
-# to the group.
+# Update the permissions. Not update operation overwrite the permission set
 print('Add `update` permission to the {} experiment . . .'.format(exp.name))
-rmt.add_permissions(grp_name, exp, ['update'])
+rmt.update_permissions(grp_name, exp, ['update', 'add', 'read'])
 
 print('Visually confirm permission added to the {} experiment . . .'.format(exp.name))
 print(rmt.get_permissions(grp_name, exp))
 
+print('Remove all delete permissions from the experiment . . .')
+rmt.delete_permissions(grp_name, exp)
 
-# Channels and layers have three additional permissions:
+
+# Channels have three additional permissions:
 # 'add_volumetric_data'
 # 'read_volumetric_data'
 # 'delete_volumetric_data'
@@ -95,7 +88,8 @@ print('Visually confirm permissions added to the {} channel . . .'.format(chan.n
 print(rmt.get_permissions(grp_name, chan))
 
 print('Remove all delete permissions from the channel . . .')
-rmt.delete_permissions(grp_name, chan, ['delete', 'delete_volumetric_data'])
+rmt.delete_permissions(grp_name, chan)
 
 print('Visually confirm permissions removed from the {} channel . . .'.format(chan.name))
 print(rmt.get_permissions(grp_name, chan))
+

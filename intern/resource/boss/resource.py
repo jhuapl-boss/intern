@@ -361,7 +361,7 @@ class ChannelResource(BossResource):
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
     _valid_types = ['annotation', 'image']
 
-    def __init__(self, name, collection_name, experiment_name, type,
+    def __init__(self, name, collection_name, experiment_name, type="image",
         description='', default_time_step=0, datatype='uint8',
         base_resolution=0, sources=[], related=[], creator='', raw={}):
         """Constructor.
@@ -370,7 +370,7 @@ class ChannelResource(BossResource):
             name (string): Channel name.
             collection_name (string): Parent collection name.
             experiment_name (string): Parent experiment name.
-            type (string): 'image' or 'annotation'
+            type (optional[string]): 'image' or 'annotation'
             description (optional[string]): Layer description.  Defaults to empty.
             default_time_step (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
