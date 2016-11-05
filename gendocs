@@ -1,2 +1,4 @@
 export PYTHONPATH=$PYTHONPATH:~/intern
 pdoc intern --html --html-dir="docs" --overwrite --docstring-style=google
+mv ./docs/intern/* ./docs/
+rm -rf ./docs/intern
