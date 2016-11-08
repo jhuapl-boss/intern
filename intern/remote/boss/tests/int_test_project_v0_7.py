@@ -69,10 +69,10 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
         cls.exp = ExperimentResource(
             'exp2309-2', cls.coll.name, cls.coord.name, 'my experiment',
-            1, 'iso', 1)
+            1, 'iso')
         cls.exp_upd = ExperimentResource(
             'exp2309-2a', cls.coll.name, cls.coord.name,
-            'my first experiment', 2, 'slice', 3)
+            'my first experiment', 2, 'slice')
 
         cls.source_chan = ChannelResource(
             'sourceChan', cls.coll.name, cls.exp.name, 'image', 'test source channel',
@@ -172,7 +172,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp.coord_frame, e.coord_frame)
         self.assertEqual(self.exp.hierarchy_method, e.hierarchy_method)
         self.assertEqual(self.exp.num_hierarchy_levels, e.num_hierarchy_levels)
-        self.assertEqual(self.exp.max_time_sample, e.max_time_sample)
+        self.assertEqual(self.exp.num_time_samples, e.num_time_samples)
 
     def test_create_channel(self):
         c = self.rmt.create_project(self.coll)
@@ -287,7 +287,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp.coord_frame, e.coord_frame)
         self.assertEqual(self.exp.hierarchy_method, e.hierarchy_method)
         self.assertEqual(self.exp.num_hierarchy_levels, e.num_hierarchy_levels)
-        self.assertEqual(self.exp.max_time_sample, e.max_time_sample)
+        self.assertEqual(self.exp.num_time_samples, e.num_time_samples)
 
     def test_get_channel(self):
         c = self.rmt.create_project(self.coll)
@@ -347,7 +347,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp_upd.coord_frame, eup.coord_frame)
         self.assertEqual(self.exp_upd.hierarchy_method, eup.hierarchy_method)
         self.assertEqual(self.exp_upd.num_hierarchy_levels, eup.num_hierarchy_levels)
-        self.assertEqual(self.exp_upd.max_time_sample, eup.max_time_sample)
+        self.assertEqual(self.exp_upd.num_time_samples, eup.num_time_samples)
 
     def test_update_channel(self):
         c = self.rmt.create_project(self.coll)

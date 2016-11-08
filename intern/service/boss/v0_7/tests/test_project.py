@@ -253,7 +253,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertTrue('coord_frame' in actual)
         self.assertTrue('num_hierarchy_levels' in actual)
         self.assertTrue('hierarchy_method' in actual)
-        self.assertTrue('max_time_sample' in actual)
+        self.assertTrue('num_time_samples' in actual)
 
     def test_get_resource_params_coord_frame_for_update(self):
 
@@ -311,7 +311,7 @@ class TestProject_v0_7(unittest.TestCase):
             'name': 'fire', 'description': 'walker',
             'creator': 'auto', 'coord_frame': 3,
             'num_hierarchy_levels': 1, 'hierarchy_method': 'near_iso',
-            'max_time_sample': 500
+            'num_time_samples': 500
         }
 
         actual = self.prj._create_resource_from_dict(exp, dict)
@@ -321,7 +321,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual(3, actual.coord_frame)
         self.assertEqual(1, actual.num_hierarchy_levels)
         self.assertEqual('near_iso', actual.hierarchy_method)
-        self.assertEqual(500, actual.max_time_sample)
+        self.assertEqual(500, actual.num_time_samples)
         self.assertEqual('pyro', actual.coll_name)
         self.assertEqual(dict, actual.raw)
 

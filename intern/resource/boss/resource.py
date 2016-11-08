@@ -145,11 +145,11 @@ class ExperimentResource(BossResource):
         _coord_frame (string):
         num_hierarchy_levels (int):
         hierarchy_method (string):
-        max_time_sample (int):
+        num_time_samples (int):
     """
     def __init__(self, name, collection_name, coord_frame, description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
-        max_time_sample=0, creator='', raw={}):
+        num_time_samples=1, creator='', raw={}):
         """Constructor.
 
         Args:
@@ -159,7 +159,7 @@ class ExperimentResource(BossResource):
             description (optional[string]): Experiment description.  Defaults to empty.
             num_hierarchy_levels (optional[int]): Defaults to 1.
             hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
-            max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.
+            num_time_samples (optional[int]): Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
@@ -174,7 +174,7 @@ class ExperimentResource(BossResource):
         self.num_hierarchy_levels = num_hierarchy_levels
         self._hierarchy_method = self.validate_hierarchy_method(
             hierarchy_method)
-        self.max_time_sample = max_time_sample
+        self.num_time_samples = num_time_samples
 
     @property
     def coord_frame(self):

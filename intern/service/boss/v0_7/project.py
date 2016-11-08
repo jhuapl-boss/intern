@@ -890,7 +890,7 @@ class ProjectService_0_7(BaseVersion):
                 'coord_frame': exp.coord_frame,
                 'num_hierarchy_levels': exp.num_hierarchy_levels,
                 'hierarchy_method': exp.hierarchy_method,
-                'max_time_sample': exp.max_time_sample,
+                'num_time_samples': exp.num_time_samples,
                 'collection': exp.coll_name
             }
 
@@ -898,8 +898,7 @@ class ProjectService_0_7(BaseVersion):
             'name': exp.name,
             'description': exp.description ,
             'num_hierarchy_levels': exp.num_hierarchy_levels,
-            'hierarchy_method': exp.hierarchy_method,
-            'max_time_sample': exp.max_time_sample
+            'hierarchy_method': exp.hierarchy_method
         }
 
     def _get_coordinate_params(self, coord, for_update):
@@ -982,7 +981,7 @@ class ProjectService_0_7(BaseVersion):
     def _get_experiment(self, dict, coll_name):
         exp_keys = [
             'name', 'description', 'creator', 'coord_frame',
-            'num_hierarchy_levels', 'hierarchy_method', 'max_time_sample'
+            'num_hierarchy_levels', 'hierarchy_method', 'num_time_samples'
         ]
 
         filtered = { k:v for (k, v) in dict.items() if k in exp_keys }
