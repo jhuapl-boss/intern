@@ -85,7 +85,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
             0, 'uint8', 0, sources=['sourceChan'], related=['relatedChan'])
         cls.chan_upd = ChannelResource(
             'yourChan', cls.coll.name, cls.exp.name, 'annotation', 'your test annotation channel',
-            1, 'uint8', 1, sources=['sourceChan'], related=['relatedChan'])
+            0, 'uint8', 1, sources=['sourceChan'], related=['relatedChan'])
 
     @classmethod
     def cleanup_db(cls):
@@ -190,7 +190,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.source_chan.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
         self.assertEqual(self.source_chan.datatype, ch.datatype)
-        self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+        self.assertEqual(self.source_chan.default_time_sample, ch.default_time_sample)
         self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
 
     def test_create_annotation_channel_without_source_fails(self):
@@ -237,7 +237,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.chan.description, ann_ch.description)
         self.assertEqual(self.coll.name, ann_ch.coll_name)
         self.assertEqual(self.chan.datatype, ann_ch.datatype)
-        self.assertEqual(self.chan.default_time_step, ann_ch.default_time_step)
+        self.assertEqual(self.chan.default_time_sample, ann_ch.default_time_sample)
         self.assertEqual(self.chan.base_resolution, ann_ch.base_resolution)
         self.assertEqual(self.chan.sources, ann_ch.sources)
         self.assertEqual(self.chan.related, ann_ch.related)
@@ -308,7 +308,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.source_chan.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
         self.assertEqual(self.source_chan.datatype, ch.datatype)
-        self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+        self.assertEqual(self.source_chan.default_time_sample, ch.default_time_sample)
         self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
 
     def test_update_collection(self):
@@ -374,7 +374,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.chan_upd.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
         self.assertEqual(self.chan_upd.datatype, ch.datatype)
-        self.assertEqual(self.chan_upd.default_time_step, ch.default_time_step)
+        self.assertEqual(self.chan_upd.default_time_sample, ch.default_time_sample)
         self.assertEqual(self.chan_upd.base_resolution, ch.base_resolution)
         self.assertEqual(self.chan_upd.sources, ch.sources)
         self.assertEqual(self.chan_upd.related, ch.related)

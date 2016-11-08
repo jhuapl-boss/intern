@@ -351,7 +351,7 @@ class ChannelResource(BossResource):
         coll_name (string): Name of collection containing this resource.
         exp_name (string): Name of experiment containing this resource.
         description (string): Description of channel or layer.
-        default_time_step (int):
+        default_time_sample (int):
         base_resolution (int):
         _type (string): 'image' or 'annotation'
         _valid_datatypes (list[string]): Allowed data type values (static variable).
@@ -362,7 +362,7 @@ class ChannelResource(BossResource):
     _valid_types = ['annotation', 'image']
 
     def __init__(self, name, collection_name, experiment_name, type="image",
-        description='', default_time_step=0, datatype='uint8',
+        description='', default_time_sample=0, datatype='uint8',
         base_resolution=0, sources=[], related=[], creator='', raw={}):
         """Constructor.
 
@@ -372,7 +372,7 @@ class ChannelResource(BossResource):
             experiment_name (string): Parent experiment name.
             type (optional[string]): 'image' or 'annotation'
             description (optional[string]): Layer description.  Defaults to empty.
-            default_time_step (optional[int]): Defaults to 0.
+            default_time_sample (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
             base_resolution (optional[int]): Defaults to 0 (native).
             sources (optional[list[string]]): Channels this channel was derived from.
@@ -393,7 +393,7 @@ class ChannelResource(BossResource):
         self.related = related
 
         #ToDo: validate data types.
-        self.default_time_step = default_time_step
+        self.default_time_sample = default_time_sample
         self.base_resolution = base_resolution
 
     def get_route(self):

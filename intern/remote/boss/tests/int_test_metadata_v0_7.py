@@ -78,7 +78,7 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
 
         cls.exp = ExperimentResource(
             'myMetaExp2309', cls.coll.name, cls.coord.name, 'my experiment',
-            1, 'iso', 0)
+            1, 'iso', 1)
 
         cls.chan = ChannelResource(
             'myTestMetaChan', cls.coll.name, cls.exp.name, 'image', 'test channel',

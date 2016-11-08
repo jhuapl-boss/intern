@@ -927,7 +927,7 @@ class ProjectService_0_7(BaseVersion):
             return {
                 'name': chan.name,
                 'description': chan.description ,
-                'default_time_step': chan.default_time_step,
+                'default_time_sample': chan.default_time_sample,
                 'datatype': chan.datatype,
                 'base_resolution': chan.base_resolution,
                 'type': chan.type,
@@ -939,7 +939,6 @@ class ProjectService_0_7(BaseVersion):
             'name': chan.name,
             'description': chan.description,
             'base_resolution': chan.base_resolution,
-            'default_time_step': chan.default_time_step,
             'sources': chan.sources,
             'related': chan.related
         }
@@ -1001,7 +1000,7 @@ class ProjectService_0_7(BaseVersion):
 
     def _get_channel(self, dict, coll_name, exp_name):
         chan_keys = [
-            'name', 'description', 'creator', 'default_time_step',
+            'name', 'description', 'creator', 'default_time_sample',
             'datatype', 'base_resolution', 'type', 'sources', 'related'
         ]
 
