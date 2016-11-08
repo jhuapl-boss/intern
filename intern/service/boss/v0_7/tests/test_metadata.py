@@ -162,7 +162,7 @@ class TestMetadata_v0_7(unittest.TestCase):
         keys = ['foo']
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
-        fake_resp.status_code = 200
+        fake_resp.status_code = 204
 
         mock_session.send.return_value = fake_resp
 
