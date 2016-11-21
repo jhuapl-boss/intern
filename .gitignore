@@ -31,5 +31,5 @@ nose2-junit.xml
 /.idea
 /intern/test.cfg
 /.pypirc
-/intern.egg-info
 /build
+/intern.egg-info
