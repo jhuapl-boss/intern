@@ -154,7 +154,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         sub_y = [7, 10]
         sub_z = [12, 17]
 
-        data = numpy.random.randint(0, 3000, (9, 5, 10))
+        data = numpy.random.randint(1, 3000, (9, 5, 10))
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -166,7 +166,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 5, 90))
+        data = numpy.random.randint(1, 3000, (9, 5, 90))
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -176,7 +176,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 50]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 45, 10))
+        data = numpy.random.randint(1, 3000, (9, 45, 10))
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -186,7 +186,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 20]
 
-        data = numpy.random.randint(0, 3000, (10, 5, 10))
+        data = numpy.random.randint(1, 3000, (10, 5, 10))
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -196,7 +196,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 5, 91))
+        data = numpy.random.randint(1, 3000, (9, 5, 91))
         data = data.astype(numpy.uint8)
 
         with self.assertRaises(HTTPError):
@@ -207,7 +207,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 1001]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 46, 10))
+        data = numpy.random.randint(1, 3000, (9, 46, 10))
         data = data.astype(numpy.uint8)
 
         with self.assertRaises(HTTPError):
@@ -218,7 +218,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 101]
 
-        data = numpy.random.randint(0, 3000, (11, 5, 10))
+        data = numpy.random.randint(1, 3000, (11, 5, 10))
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -229,7 +229,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [0, 4]
         z_rng = [0, 5]
 
-        data = numpy.random.randint(0, 3000, (5, 4, 8))
+        data = numpy.random.randint(1, 3000, (5, 4, 8))
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -245,7 +245,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         sub_y = [7, 10]
         sub_z = [12, 17]
 
-        data = numpy.random.randint(0, 3000, (9, 5, 10))
+        data = numpy.random.randint(1, 3000, (9, 5, 10))
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -257,7 +257,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 5, 90))
+        data = numpy.random.randint(1, 3000, (9, 5, 90))
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -267,7 +267,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 50]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 45, 10))
+        data = numpy.random.randint(1, 3000, (9, 45, 10))
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -277,7 +277,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 20]
 
-        data = numpy.random.randint(0, 3000, (10, 5, 10))
+        data = numpy.random.randint(1, 3000, (10, 5, 10))
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -287,7 +287,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 5, 91))
+        data = numpy.random.randint(1, 3000, (9, 5, 91))
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -298,7 +298,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 1001]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 46, 10))
+        data = numpy.random.randint(1, 3000, (9, 46, 10))
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -309,7 +309,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 101]
 
-        data = numpy.random.randint(0, 3000, (11, 5, 10))
+        data = numpy.random.randint(1, 3000, (11, 5, 10))
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -320,7 +320,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [0, 4]
         z_rng = [0, 5]
 
-        data = numpy.random.randint(0, 3000, (5, 4, 8))
+        data = numpy.random.randint(1, 3000, (5, 4, 8))
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
@@ -336,7 +336,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         sub_y = [7, 10]
         sub_z = [12, 17]
 
-        data = numpy.random.randint(0, 3000, (9, 5, 10))
+        data = numpy.random.randint(1, 3000, (9, 5, 10))
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
@@ -348,7 +348,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 5, 90))
+        data = numpy.random.randint(1, 3000, (9, 5, 90))
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
@@ -358,7 +358,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 50]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 45, 10))
+        data = numpy.random.randint(1, 3000, (9, 45, 10))
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
@@ -368,7 +368,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 20]
 
-        data = numpy.random.randint(0, 3000, (10, 5, 10))
+        data = numpy.random.randint(1, 3000, (10, 5, 10))
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
@@ -378,7 +378,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 5, 91))
+        data = numpy.random.randint(1, 3000, (9, 5, 91))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
@@ -389,7 +389,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 1001]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(0, 3000, (9, 46, 10))
+        data = numpy.random.randint(1, 3000, (9, 46, 10))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
@@ -400,7 +400,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 101]
 
-        data = numpy.random.randint(0, 3000, (11, 5, 10))
+        data = numpy.random.randint(1, 3000, (11, 5, 10))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):

@@ -67,7 +67,7 @@ class TestProject_v0_7(unittest.TestCase):
         mock_resp.json.return_value = {
             'type': 'image', 'name': 'chan', 'description': 'walker',
             'experiment': 'bar', 'creator': 'me',
-            'default_time_step': 2, 'datatype': 'uint16', 'base_resolution': 0
+            'default_time_sample': 2, 'datatype': 'uint16', 'base_resolution': 0
         }
 
         mock_session.send.return_value = mock_resp
@@ -104,7 +104,7 @@ class TestProject_v0_7(unittest.TestCase):
     def test_prj_get_success(self, mock_session, mock_resp):
         chan_dict = {
             'name': 'bar', 'description': 'none', 'experiment': 8,
-            'default_time_step': 0, 'datatype': 'uint16',
+            'default_time_sample': 0, 'datatype': 'uint16',
             'base_resolution': 0, 'linked_channel_layers': [], 'creator': 'me',
             'type': 'image'
         }
@@ -113,7 +113,7 @@ class TestProject_v0_7(unittest.TestCase):
         expected.description = chan_dict['description']
         expected.datatype = chan_dict['datatype']
         expected.base_resolution = chan_dict['base_resolution']
-        expected.default_time_step = chan_dict['default_time_step']
+        expected.default_time_sample = chan_dict['default_time_sample']
         expected.type = 'image'
 
 
@@ -133,7 +133,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual(expected.description, actual.description)
         self.assertEqual(expected.exp_name, actual.exp_name)
         self.assertEqual(expected.coll_name, actual.coll_name)
-        self.assertEqual(expected.default_time_step, actual.default_time_step)
+        self.assertEqual(expected.default_time_sample, actual.default_time_sample)
         self.assertEqual(expected.datatype, actual.datatype)
         self.assertEqual(expected.base_resolution, actual.base_resolution)
         self.assertEqual(expected.type, actual.type)
@@ -159,7 +159,7 @@ class TestProject_v0_7(unittest.TestCase):
     def test_prj_update_success(self, mock_session, mock_resp):
         chan_dict = {
             'name': 'bar', 'description': 'none', 'experiment': 8, 'type': 'image',
-            'is_channel': True, 'default_time_step': 0, 'datatype': 'uint16',
+            'is_channel': True, 'default_time_sample': 0, 'datatype': 'uint16',
             'base_resolution': 0, 'linked_channel_layers': [], 'creator': 'me'
         }
         expected = ChannelResource(
@@ -167,7 +167,7 @@ class TestProject_v0_7(unittest.TestCase):
         expected.description = chan_dict['description']
         expected.datatype = chan_dict['datatype']
         expected.base_resolution = chan_dict['base_resolution']
-        expected.default_time_step = chan_dict['default_time_step']
+        expected.default_time_sample = chan_dict['default_time_sample']
         expected.type = chan_dict['type']
 
         mock_session.prepare_request.return_value = PreparedRequest()
@@ -186,7 +186,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual(expected.description, actual.description)
         self.assertEqual(expected.exp_name, actual.exp_name)
         self.assertEqual(expected.coll_name, actual.coll_name)
-        self.assertEqual(expected.default_time_step, actual.default_time_step)
+        self.assertEqual(expected.default_time_sample, actual.default_time_sample)
         self.assertEqual(expected.datatype, actual.datatype)
         self.assertEqual(expected.base_resolution, actual.base_resolution)
         self.assertEqual(expected.type, actual.type)
@@ -253,7 +253,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertTrue('coord_frame' in actual)
         self.assertTrue('num_hierarchy_levels' in actual)
         self.assertTrue('hierarchy_method' in actual)
-        self.assertTrue('max_time_sample' in actual)
+        self.assertTrue('num_time_samples' in actual)
 
     def test_get_resource_params_coord_frame_for_update(self):
 
@@ -286,7 +286,7 @@ class TestProject_v0_7(unittest.TestCase):
         actual = self.prj._get_resource_params(chan)
         self.assertEqual('foo', actual['name'])
         self.assertTrue('description' in actual)
-        self.assertTrue('default_time_step' in actual)
+        self.assertTrue('default_time_sample' in actual)
         self.assertTrue('datatype' in actual)
         self.assertTrue('base_resolution' in actual)
 
@@ -311,7 +311,7 @@ class TestProject_v0_7(unittest.TestCase):
             'name': 'fire', 'description': 'walker',
             'creator': 'auto', 'coord_frame': 3,
             'num_hierarchy_levels': 1, 'hierarchy_method': 'near_iso',
-            'max_time_sample': 500
+            'num_time_samples': 500
         }
 
         actual = self.prj._create_resource_from_dict(exp, dict)
@@ -321,7 +321,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual(3, actual.coord_frame)
         self.assertEqual(1, actual.num_hierarchy_levels)
         self.assertEqual('near_iso', actual.hierarchy_method)
-        self.assertEqual(500, actual.max_time_sample)
+        self.assertEqual(500, actual.num_time_samples)
         self.assertEqual('pyro', actual.coll_name)
         self.assertEqual(dict, actual.raw)
 
@@ -357,7 +357,7 @@ class TestProject_v0_7(unittest.TestCase):
         dict = {
             'name': 'fire', 'description': 'walker',
             'experiment': 'exp1', 'creator': 'me', 'type': 'image',
-            'default_time_step': 2, 'datatype': 'uint16', 'base_resolution': 0
+            'default_time_sample': 2, 'datatype': 'uint16', 'base_resolution': 0
         }
 
         actual = self.prj._create_resource_from_dict(chan, dict)
@@ -366,7 +366,7 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual('coll1', actual.coll_name)
         self.assertEqual('exp1', actual.exp_name)
         self.assertEqual('me', actual.creator)
-        self.assertEqual(2, actual.default_time_step)
+        self.assertEqual(2, actual.default_time_sample)
         self.assertEqual('uint16', actual.datatype)
         self.assertEqual(0, actual.base_resolution)
         self.assertEqual(dict, actual.raw)

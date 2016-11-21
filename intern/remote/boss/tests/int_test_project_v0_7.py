@@ -69,10 +69,10 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
         cls.exp = ExperimentResource(
             'exp2309-2', cls.coll.name, cls.coord.name, 'my experiment',
-            1, 'iso', 1)
+            1, 'iso')
         cls.exp_upd = ExperimentResource(
             'exp2309-2a', cls.coll.name, cls.coord.name,
-            'my first experiment', 2, 'slice', 3)
+            'my first experiment', 2, 'slice')
 
         cls.source_chan = ChannelResource(
             'sourceChan', cls.coll.name, cls.exp.name, 'image', 'test source channel',
@@ -85,7 +85,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
             0, 'uint8', 0, sources=['sourceChan'], related=['relatedChan'])
         cls.chan_upd = ChannelResource(
             'yourChan', cls.coll.name, cls.exp.name, 'annotation', 'your test annotation channel',
-            1, 'uint8', 1, sources=['sourceChan'], related=['relatedChan'])
+            0, 'uint8', 1, sources=['sourceChan'], related=['relatedChan'])
 
     @classmethod
     def cleanup_db(cls):
@@ -172,7 +172,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp.coord_frame, e.coord_frame)
         self.assertEqual(self.exp.hierarchy_method, e.hierarchy_method)
         self.assertEqual(self.exp.num_hierarchy_levels, e.num_hierarchy_levels)
-        self.assertEqual(self.exp.max_time_sample, e.max_time_sample)
+        self.assertEqual(self.exp.num_time_samples, e.num_time_samples)
 
     def test_create_channel(self):
         c = self.rmt.create_project(self.coll)
@@ -190,7 +190,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.source_chan.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
         self.assertEqual(self.source_chan.datatype, ch.datatype)
-        self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+        self.assertEqual(self.source_chan.default_time_sample, ch.default_time_sample)
         self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
 
     def test_create_annotation_channel_without_source_fails(self):
@@ -237,7 +237,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.chan.description, ann_ch.description)
         self.assertEqual(self.coll.name, ann_ch.coll_name)
         self.assertEqual(self.chan.datatype, ann_ch.datatype)
-        self.assertEqual(self.chan.default_time_step, ann_ch.default_time_step)
+        self.assertEqual(self.chan.default_time_sample, ann_ch.default_time_sample)
         self.assertEqual(self.chan.base_resolution, ann_ch.base_resolution)
         self.assertEqual(self.chan.sources, ann_ch.sources)
         self.assertEqual(self.chan.related, ann_ch.related)
@@ -287,7 +287,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp.coord_frame, e.coord_frame)
         self.assertEqual(self.exp.hierarchy_method, e.hierarchy_method)
         self.assertEqual(self.exp.num_hierarchy_levels, e.num_hierarchy_levels)
-        self.assertEqual(self.exp.max_time_sample, e.max_time_sample)
+        self.assertEqual(self.exp.num_time_samples, e.num_time_samples)
 
     def test_get_channel(self):
         c = self.rmt.create_project(self.coll)
@@ -308,7 +308,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.source_chan.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
         self.assertEqual(self.source_chan.datatype, ch.datatype)
-        self.assertEqual(self.source_chan.default_time_step, ch.default_time_step)
+        self.assertEqual(self.source_chan.default_time_sample, ch.default_time_sample)
         self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
 
     def test_update_collection(self):
@@ -347,7 +347,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp_upd.coord_frame, eup.coord_frame)
         self.assertEqual(self.exp_upd.hierarchy_method, eup.hierarchy_method)
         self.assertEqual(self.exp_upd.num_hierarchy_levels, eup.num_hierarchy_levels)
-        self.assertEqual(self.exp_upd.max_time_sample, eup.max_time_sample)
+        self.assertEqual(self.exp_upd.num_time_samples, eup.num_time_samples)
 
     def test_update_channel(self):
         c = self.rmt.create_project(self.coll)
@@ -374,7 +374,7 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.chan_upd.description, ch.description)
         self.assertEqual(self.coll.name, ch.coll_name)
         self.assertEqual(self.chan_upd.datatype, ch.datatype)
-        self.assertEqual(self.chan_upd.default_time_step, ch.default_time_step)
+        self.assertEqual(self.chan_upd.default_time_sample, ch.default_time_sample)
         self.assertEqual(self.chan_upd.base_resolution, ch.base_resolution)
         self.assertEqual(self.chan_upd.sources, ch.sources)
         self.assertEqual(self.chan_upd.related, ch.related)

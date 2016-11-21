@@ -890,7 +890,7 @@ class ProjectService_0_7(BaseVersion):
                 'coord_frame': exp.coord_frame,
                 'num_hierarchy_levels': exp.num_hierarchy_levels,
                 'hierarchy_method': exp.hierarchy_method,
-                'max_time_sample': exp.max_time_sample,
+                'num_time_samples': exp.num_time_samples,
                 'collection': exp.coll_name
             }
 
@@ -898,8 +898,7 @@ class ProjectService_0_7(BaseVersion):
             'name': exp.name,
             'description': exp.description ,
             'num_hierarchy_levels': exp.num_hierarchy_levels,
-            'hierarchy_method': exp.hierarchy_method,
-            'max_time_sample': exp.max_time_sample
+            'hierarchy_method': exp.hierarchy_method
         }
 
     def _get_coordinate_params(self, coord, for_update):
@@ -928,7 +927,7 @@ class ProjectService_0_7(BaseVersion):
             return {
                 'name': chan.name,
                 'description': chan.description ,
-                'default_time_step': chan.default_time_step,
+                'default_time_sample': chan.default_time_sample,
                 'datatype': chan.datatype,
                 'base_resolution': chan.base_resolution,
                 'type': chan.type,
@@ -940,7 +939,6 @@ class ProjectService_0_7(BaseVersion):
             'name': chan.name,
             'description': chan.description,
             'base_resolution': chan.base_resolution,
-            'default_time_step': chan.default_time_step,
             'sources': chan.sources,
             'related': chan.related
         }
@@ -982,7 +980,7 @@ class ProjectService_0_7(BaseVersion):
     def _get_experiment(self, dict, coll_name):
         exp_keys = [
             'name', 'description', 'creator', 'coord_frame',
-            'num_hierarchy_levels', 'hierarchy_method', 'max_time_sample'
+            'num_hierarchy_levels', 'hierarchy_method', 'num_time_samples'
         ]
 
         filtered = { k:v for (k, v) in dict.items() if k in exp_keys }
@@ -1002,7 +1000,7 @@ class ProjectService_0_7(BaseVersion):
 
     def _get_channel(self, dict, coll_name, exp_name):
         chan_keys = [
-            'name', 'description', 'creator', 'default_time_step',
+            'name', 'description', 'creator', 'default_time_sample',
             'datatype', 'base_resolution', 'type', 'sources', 'related'
         ]
 

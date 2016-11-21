@@ -145,11 +145,11 @@ class ExperimentResource(BossResource):
         _coord_frame (string):
         num_hierarchy_levels (int):
         hierarchy_method (string):
-        max_time_sample (int):
+        num_time_samples (int):
     """
     def __init__(self, name, collection_name, coord_frame, description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
-        max_time_sample=0, creator='', raw={}):
+        num_time_samples=1, creator='', raw={}):
         """Constructor.
 
         Args:
@@ -159,7 +159,7 @@ class ExperimentResource(BossResource):
             description (optional[string]): Experiment description.  Defaults to empty.
             num_hierarchy_levels (optional[int]): Defaults to 1.
             hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
-            max_time_sample (optional[int]): Maximum number of time samples for any time series data captured by this experiment.
+            num_time_samples (optional[int]): Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
@@ -174,7 +174,7 @@ class ExperimentResource(BossResource):
         self.num_hierarchy_levels = num_hierarchy_levels
         self._hierarchy_method = self.validate_hierarchy_method(
             hierarchy_method)
-        self.max_time_sample = max_time_sample
+        self.num_time_samples = num_time_samples
 
     @property
     def coord_frame(self):
@@ -351,7 +351,7 @@ class ChannelResource(BossResource):
         coll_name (string): Name of collection containing this resource.
         exp_name (string): Name of experiment containing this resource.
         description (string): Description of channel or layer.
-        default_time_step (int):
+        default_time_sample (int):
         base_resolution (int):
         _type (string): 'image' or 'annotation'
         _valid_datatypes (list[string]): Allowed data type values (static variable).
@@ -362,7 +362,7 @@ class ChannelResource(BossResource):
     _valid_types = ['annotation', 'image']
 
     def __init__(self, name, collection_name, experiment_name, type="image",
-        description='', default_time_step=0, datatype='uint8',
+        description='', default_time_sample=0, datatype='uint8',
         base_resolution=0, sources=[], related=[], creator='', raw={}):
         """Constructor.
 
@@ -372,7 +372,7 @@ class ChannelResource(BossResource):
             experiment_name (string): Parent experiment name.
             type (optional[string]): 'image' or 'annotation'
             description (optional[string]): Layer description.  Defaults to empty.
-            default_time_step (optional[int]): Defaults to 0.
+            default_time_sample (optional[int]): Defaults to 0.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
             base_resolution (optional[int]): Defaults to 0 (native).
             sources (optional[list[string]]): Channels this channel was derived from.
@@ -393,7 +393,7 @@ class ChannelResource(BossResource):
         self.related = related
 
         #ToDo: validate data types.
-        self.default_time_step = default_time_step
+        self.default_time_sample = default_time_sample
         self.base_resolution = base_resolution
 
     def get_route(self):

@@ -37,7 +37,8 @@ except HTTPError:
     coord_actual = rmt.create_project(coord)
 
 alpha_exp = ExperimentResource(
-    'alpha', 'gray', coord_actual.name, 'Alpha example experiment.')
+    'alpha', 'gray', coord_actual.name, 'Alpha example experiment.',
+    num_time_samples=10)
 try:
     rmt.get_project(alpha_exp)
 except HTTPError:
