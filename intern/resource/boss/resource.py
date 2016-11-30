@@ -78,6 +78,20 @@ class BossResource(Resource):
         assert NotImplemented
 
     @abstractmethod
+    def get_reserve_route(self):
+        """Get the route for reserving ids.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+
+    @abstractmethod
     def get_meta_route(self):
         """Get the route for metadata operations.
 
@@ -128,6 +142,9 @@ class CollectionResource(BossResource):
         return ''
 
     def get_cutout_route(self):
+        raise RuntimeError('Not supported for collections.')
+
+    def get_reserve_route(self):
         raise RuntimeError('Not supported for collections.')
 
     def get_meta_route(self):
@@ -201,6 +218,9 @@ class ExperimentResource(BossResource):
         return self.coll_name + '/experiment/'
 
     def get_cutout_route(self):
+        raise RuntimeError('Not supported for experiments.')
+
+    def get_reserve_route(self):
         raise RuntimeError('Not supported for experiments.')
 
     def get_meta_route(self):
@@ -294,6 +314,9 @@ class CoordinateFrameResource(BossResource):
         return ''
 
     def get_cutout_route(self):
+        raise RuntimeError('Not supported for coordinate frames.')
+
+    def get_reserve_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
     def get_meta_route(self):
@@ -403,6 +426,9 @@ class ChannelResource(BossResource):
         return self.coll_name + '/experiment/' + self.exp_name + '/channel/'
 
     def get_cutout_route(self):
+        return self.coll_name + '/' + self.exp_name + '/' + self.name
+
+    def get_reserve_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
     def get_meta_route(self):

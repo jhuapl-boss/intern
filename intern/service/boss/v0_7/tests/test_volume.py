@@ -25,6 +25,7 @@ class TestVolume_v0_7(unittest.TestCase):
     def setUp(self):
         self.vol = VolumeService_0_7()
         self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
+        self.anno_chan = ChannelResource('anno_chan', 'foo', 'bar', 'annotation', datatype='uint64', sources=['chan'])
 
     @patch('requests.Session', autospec=True)
     def test_create_cutout_success(self, mock_session):
@@ -119,3 +120,33 @@ class TestVolume_v0_7(unittest.TestCase):
             actual = self.vol.get_cutout(
                 self.chan, resolution, x_range, y_range, z_range, time_range,
                 url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_get_bounding_box_success(self, mock_session, mock_resp):
+        resolution = 0
+        id = 44444
+        bb_type = 'loose'
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        fake_prepped_req = PreparedRequest()
+        fake_prepped_req.headers = {}
+        mock_session.prepare_request.return_value = fake_prepped_req
+        mock_session.send.return_value = mock_resp
+
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = expected = {
+            'x_range': [0, 10],
+            'y_range': [0, 10],
+            'z_range': [0, 10],
+            't_range': [0, 10]
+        }
+
+        actual = self.vol.get_bounding_box(
+            self.anno_chan, resolution, id, bb_type,
+            url_prefix, auth, mock_session, send_opts)
+
+        self.assertEqual(expected, actual)

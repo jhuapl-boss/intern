@@ -144,3 +144,83 @@ class VolumeService_0_7(BaseVersion):
         msg = ('Get cutout failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
+
+    def reserve_ids(
+            self, resource, num_ids,
+            url_prefix, auth, session, send_opts):
+        """Reserve a block of unique, sequential ids for annotations.
+
+        Args:
+            resource (intern.resource.Resource): Resource should be an annotation channel.
+            num_ids (int): Number of ids to reserve.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (int): First id reserved.
+
+        Raises:
+            (TypeError): resource is not a channel or not an annotation channel.
+
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_reserve_request(
+            resource, 'GET', 'application/json', url_prefix, auth, num_ids)
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            return int(json_data['start_id'])
+
+        msg = ('Reserve ids failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
+
+    def get_bounding_box(
+            self, resource, resolution, id, bb_type,
+            url_prefix, auth, session, send_opts):
+        """Get bounding box containing object specified by id.
+
+        Currently only supports 'loose' bounding boxes.  The bounding box
+        returned is cuboid aligned.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with annotation operations.
+            resolution (int): 0 indicates native resolution.
+            id (int): Id of object of interest.
+            bb_type (string): Defaults to 'loose'.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_bounding_box_request(
+            resource, 'GET', 'application/json', url_prefix, auth, resolution,
+            id, bb_type)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            return json_data
+
+        msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
+

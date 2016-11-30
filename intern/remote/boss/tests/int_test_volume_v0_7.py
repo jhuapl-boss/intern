@@ -120,6 +120,109 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_reserve_ids(self):
+        first_id = self.rmt.reserve_ids(self.ann_chan, 20)
+        self.assertTrue(first_id > 0)
+
+    def test_get_bounding_box_spans_cuboids_in_x(self):
+        x_rng = [511, 515]
+        y_rng = [0, 8]
+        z_rng = [0, 5]
+        t_rng = [0, 1]
+
+        id = 77555
+
+        data = numpy.zeros((5, 8, 4), dtype='uint64')
+        data[1][0][0] = id
+        data[2][1][1] = id
+        data[3][2][3] = id
+
+        resolution = 0
+
+        self.rmt.create_cutout(
+            self.ann_chan, resolution, x_rng, y_rng, z_rng, data)
+
+        # Get cutout to make sure data is done writing and indices updated.
+        actual = self.rmt.get_cutout(self.ann_chan, resolution, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(data, actual)
+
+        expected = {
+            'x_range': [0, 1024],
+            'y_range': [0, 512],
+            'z_range': [0, 16],
+            't_range': [0, 1]
+        }
+
+        actual = self.rmt.get_bounding_box(self.ann_chan, resolution, id, 'loose')
+
+        self.assertEqual(expected, actual)
+
+    def test_get_bounding_box_spans_cuboids_in_y(self):
+        x_rng = [0, 8]
+        y_rng = [511, 515]
+        z_rng = [0, 5]
+        t_rng = [0, 1]
+
+        id = 77666
+
+        data = numpy.zeros((5, 4, 8), dtype='uint64')
+        data[1][0][0] = id
+        data[2][1][0] = id
+        data[3][2][0] = id
+
+        resolution = 0
+
+        self.rmt.create_cutout(
+            self.ann_chan, resolution, x_rng, y_rng, z_rng, data)
+
+        # Get cutout to make sure data is done writing and indices updated.
+        actual = self.rmt.get_cutout(self.ann_chan, resolution, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(data, actual)
+
+        expected = {
+            'x_range': [0, 512],
+            'y_range': [0, 1024],
+            'z_range': [0, 16],
+            't_range': [0, 1]
+        }
+
+        actual = self.rmt.get_bounding_box(self.ann_chan, resolution, id, 'loose')
+
+        self.assertEqual(expected, actual)
+
+    def test_get_bounding_box_spans_cuboids_in_z(self):
+        x_rng = [0, 8]
+        y_rng = [0, 4]
+        z_rng = [30, 35]
+        t_rng = [0, 1]
+
+        id = 77888
+
+        data = numpy.zeros((5, 4, 8), dtype='uint64')
+        data[1][0][0] = id
+        data[2][1][0] = id
+        data[3][2][0] = id
+
+        resolution = 0
+
+        self.rmt.create_cutout(
+            self.ann_chan, resolution, x_rng, y_rng, z_rng, data)
+
+        # Get cutout to make sure data is done writing and indices updated.
+        actual = self.rmt.get_cutout(self.ann_chan, resolution, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(data, actual)
+
+        expected = {
+            'x_range': [0, 512],
+            'y_range': [0, 512],
+            'z_range': [16, 48],
+            't_range': [0, 1]
+        }
+
+        actual = self.rmt.get_bounding_box(self.ann_chan, resolution, id, 'loose')
+
+        self.assertEqual(expected, actual)
+
     def test_upload_and_download_to_channel(self):
         x_rng = [0, 8]
         y_rng = [0, 4]
@@ -162,21 +265,21 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         numpy.testing.assert_array_equal(data[2:7, 2:5, 2:4], actual)
 
     def test_upload_to_x_edge_of_channel(self):
-        x_rng = [10, 100]
+        x_rng = [10, 1000]
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 90))
+        data = numpy.random.randint(1, 3000, (9, 5, 990))
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_to_y_edge_of_channel(self):
         x_rng = [10, 20]
-        y_rng = [5, 50]
+        y_rng = [5, 100]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 45, 10))
+        data = numpy.random.randint(1, 3000, (9, 95, 10))
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -184,9 +287,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
     def test_upload_to_z_edge_of_channel(self):
         x_rng = [10, 20]
         y_rng = [5, 10]
-        z_rng = [10, 20]
+        z_rng = [10, 100]
 
-        data = numpy.random.randint(1, 3000, (10, 5, 10))
+        data = numpy.random.randint(1, 3000, (90, 5, 10))
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -196,7 +299,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 91))
+        data = numpy.random.randint(1, 3000, (9, 5, 991))
         data = data.astype(numpy.uint8)
 
         with self.assertRaises(HTTPError):
@@ -207,7 +310,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 1001]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 46, 10))
+        data = numpy.random.randint(1, 3000, (9, 996, 10))
         data = data.astype(numpy.uint8)
 
         with self.assertRaises(HTTPError):
@@ -218,7 +321,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 101]
 
-        data = numpy.random.randint(1, 3000, (11, 5, 10))
+        data = numpy.random.randint(1, 3000, (91, 5, 10))
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -264,10 +367,10 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
     def test_upload_to_y_edge_of_channel_16bit(self):
         x_rng = [10, 20]
-        y_rng = [5, 50]
+        y_rng = [5, 1000]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 45, 10))
+        data = numpy.random.randint(1, 3000, (9, 996, 10))
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -275,9 +378,9 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
     def test_upload_to_z_edge_of_channel_16bit(self):
         x_rng = [10, 20]
         y_rng = [5, 10]
-        z_rng = [10, 20]
+        z_rng = [10, 100]
 
-        data = numpy.random.randint(1, 3000, (10, 5, 10))
+        data = numpy.random.randint(1, 3000, (90, 5, 10))
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -287,7 +390,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 91))
+        data = numpy.random.randint(1, 3000, (9, 5, 991))
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -298,7 +401,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 1001]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 46, 10))
+        data = numpy.random.randint(1, 3000, (9, 996, 10))
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -309,13 +412,13 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 101]
 
-        data = numpy.random.randint(1, 3000, (11, 5, 10))
+        data = numpy.random.randint(1, 3000, (91, 5, 10))
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
             self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
-    def test_upload_and_download_to_layer(self):
+    def test_upload_and_download_to_anno_chan(self):
         x_rng = [0, 8]
         y_rng = [0, 4]
         z_rng = [0, 5]
@@ -327,7 +430,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         actual = self.rmt.get_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng)
         numpy.testing.assert_array_equal(data, actual)
 
-    def test_upload_and_download_subsection_to_layer(self):
+    def test_upload_and_download_subsection_to_anno_chan(self):
         x_rng = [10, 20]
         y_rng = [5, 10]
         z_rng = [10, 19]
@@ -343,64 +446,64 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         actual = self.rmt.get_cutout(self.ann_chan, 0, sub_x, sub_y, sub_z)
         numpy.testing.assert_array_equal(data[2:7, 2:5, 2:4], actual)
 
-    def test_upload_to_x_edge_of_layer(self):
+    def test_upload_to_x_edge_of_anno_chan(self):
+        x_rng = [10, 1000]
+        y_rng = [5, 10]
+        z_rng = [10, 19]
+
+        data = numpy.random.randint(1, 3000, (9, 5, 990))
+        data = data.astype(numpy.uint64)
+
+        self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
+
+    def test_upload_to_y_edge_of_anno_chan(self):
+        x_rng = [10, 20]
+        y_rng = [5, 1000]
+        z_rng = [10, 19]
+
+        data = numpy.random.randint(1, 3000, (9, 995, 10))
+        data = data.astype(numpy.uint64)
+
+        self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
+
+    def test_upload_to_z_edge_of_anno_chan(self):
         x_rng = [10, 100]
         y_rng = [5, 10]
-        z_rng = [10, 19]
+        z_rng = [10, 100]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 90))
+        data = numpy.random.randint(1, 3000, (90, 5, 90))
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
-    def test_upload_to_y_edge_of_layer(self):
-        x_rng = [10, 20]
-        y_rng = [5, 50]
-        z_rng = [10, 19]
-
-        data = numpy.random.randint(1, 3000, (9, 45, 10))
-        data = data.astype(numpy.uint64)
-
-        self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
-
-    def test_upload_to_z_edge_of_layer(self):
-        x_rng = [10, 20]
-        y_rng = [5, 10]
-        z_rng = [10, 20]
-
-        data = numpy.random.randint(1, 3000, (10, 5, 10))
-        data = data.astype(numpy.uint64)
-
-        self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
-
-    def test_upload_past_x_edge_of_layer(self):
+    def test_upload_past_x_edge_of_anno_chan(self):
         x_rng = [10, 1001]
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 91))
+        data = numpy.random.randint(1, 3000, (9, 5, 991))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
             self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
-    def test_upload_past_y_edge_of_layer(self):
-        x_rng = [10, 20]
+    def test_upload_past_y_edge_of_anno_chan(self):
+        x_rng = [10, 991]
         y_rng = [5, 1001]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 46, 10))
+        data = numpy.random.randint(1, 3000, (9, 996, 991))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
             self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
-    def test_upload_past_z_edge_of_layer(self):
+    def test_upload_past_z_edge_of_anno_chan(self):
         x_rng = [10, 20]
         y_rng = [5, 10]
         z_rng = [10, 101]
 
-        data = numpy.random.randint(1, 3000, (11, 5, 10))
+        data = numpy.random.randint(1, 3000, (91, 5, 10))
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):

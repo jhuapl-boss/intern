@@ -438,3 +438,60 @@ class BaseVersion(object):
 
         headers = self.get_headers(content, token)
         return Request(method, url, headers=headers, json=data)
+
+    def get_reserve_request(
+            self, resource, method, content, url_prefix, token, num_ids):
+        """
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            num_ids (int): Number of ids to reserve.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = (url_prefix + '/' + self.version + '/reserve/' +
+               resource.get_reserve_route() + '/{}'.format(num_ids))
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers=headers)
+
+    def get_bounding_box_request(
+            self, resource, method, content, url_prefix, token, resolution,
+            id, bb_type):
+        """
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            resolution (int): 0 = default resolution.
+            id (int): Annotation object id.
+            bb_type (string): 'loose' | 'tight'.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = (url_prefix + '/' + self.version + '/boundingbox/' +
+               resource.get_cutout_route() + '/{}/{}/?type={}'.format(
+            resolution, id, bb_type))
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers=headers)
+

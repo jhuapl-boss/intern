@@ -74,3 +74,37 @@ class VolumeService(BossService):
         return self.service.get_cutout(
             resource, resolution, x_range, y_range, z_range, time_range,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def reserve_ids(self, resource, num_ids):
+        """Reserve a block of unique, sequential ids for annotations.
+
+        Args:
+            resource (intern.resource.Resource): Resource should be an annotation channel.
+            num_ids (int): Number of ids to reserve.
+
+        Returns:
+            (int): First id reserved.
+
+        """
+        return self.service.reserve_ids(
+            resource, num_ids,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
+        """Get bounding box containing object specified by id.
+
+        Currently only supports 'loose' bounding boxes.  The bounding box
+        returned is cuboid aligned.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with annotation operations.
+            resolution (int): 0 indicates native resolution.
+            id (int): Id of object of interest.
+            bb_type (optional[string]): Defaults to 'loose'.
+
+        Returns:
+            (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
+        """
+        return self.service.get_bounding_box(
+            resource, resolution, id, bb_type,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)

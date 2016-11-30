@@ -172,3 +172,41 @@ class Remote(object):
             raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.create_cutout(
             resource, resolution, x_range, y_range, z_range, data, time_range)
+
+    def reserve_ids(self, resource, num_ids):
+        """Reserve a block of unique, sequential ids for annotations.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with annotation operations.
+            num_ids (int): Number of ids to reserve.
+
+        Returns:
+            (int): First id reserved.
+
+        """
+        if not resource.valid_volume():
+            raise RuntimeError('Resource incompatible with the volume service.')
+        return self._volume.reserve_ids(resource, num_ids)
+
+    def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
+        """Get bounding box containing object specified by id.
+
+        Currently only supports 'loose' bounding boxes.  The bounding box
+        returned is cuboid aligned.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with annotation operations.
+            resolution (int): 0 indicates native resolution.
+            id (int): Id of object of interest.
+            bb_type (optional[string]): Defaults to 'loose'.
+
+        Returns:
+            (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
+        """
+        if not resource.valid_volume():
+            raise RuntimeError('Resource incompatible with the volume service.')
+
+        if bb_type != 'loose':
+            raise RuntimeError('Only loose bounding boxes currently supported.')
+
+        return self._volume.get_bounding_box(resource, resolution, id, bb_type)

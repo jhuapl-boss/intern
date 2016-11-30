@@ -61,6 +61,9 @@ class BaseVersionTest(unittest.TestCase):
         self.resource = CollectionResource('coll1')
         self.chanResource = ChannelResource(
             'chan1', 'coll1', 'exp1', 'image', 'null descr', 0, 'uint8', 0)
+        self.annoResource = ChannelResource(
+            'annChan', 'coll1', 'exp1', 'annotation', 'null descr',
+            0, 'uint64', 0, sources=['chan1'])
         self.test_project = ProjectImpl()
         self.test_meta = MetadataImpl()
         self.test_volume = VolumeImpl()
@@ -408,6 +411,38 @@ class BaseVersionTest(unittest.TestCase):
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/blosc-python', actual.headers['Content-Type'])
 
+    def test_get_reserve_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        num_ids = 20
+
+        actual = self.test_volume.get_reserve_request(
+            self.annoResource, 'GET', 'application/json', url_prefix, token,
+            num_ids)
+
+        expected = '{}/{}/reserve/{}/{}/{}/{}'.format(
+            url_prefix, self.test_volume.version, self.annoResource.coll_name,
+            self.annoResource.exp_name, self.annoResource.name, num_ids)
+
+        self.assertEqual(expected, actual.url)
+
+    def test_get_bounding_box_request_loose(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        resolution = 0
+        bb_type = 'loose'
+        id = 55555
+
+        actual = self.test_volume.get_bounding_box_request(
+            self.annoResource, 'GET', 'application/json', url_prefix, token,
+            resolution, id, bb_type)
+
+        expected = '{}/{}/boundingbox/{}/{}/{}/{}/{}/?type={}'.format(
+            url_prefix, self.test_volume.version, self.annoResource.coll_name,
+            self.annoResource.exp_name, self.annoResource.name, resolution,
+            id, bb_type)
+
+        self.assertEqual(expected, actual.url)
 
 if __name__ == '__main__':
     unittest.main()
