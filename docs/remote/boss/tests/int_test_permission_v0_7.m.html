@@ -1133,7 +1133,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
         cls.exp = ExperimentResource(
             'perm_test_exp', cls.coll.name, cls.coord.name, 'my experiment', 1,
-            'iso', 0)
+            'iso', 1)
 
         cls.chan = ChannelResource(
             'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',
@@ -1385,7 +1385,7 @@ requests are made on all potentially created groups/users during test teardown.<
 
         cls.exp = ExperimentResource(
             'perm_test_exp', cls.coll.name, cls.coord.name, 'my experiment', 1,
-            'iso', 0)
+            'iso', 1)
 
         cls.chan = ChannelResource(
             'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',
@@ -2615,7 +2615,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2676,7 +2676,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_permission_v0_7.ProjectPermissionTest_v0_7.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3465,7 +3465,7 @@ def setUpClass(cls):
         1, 1, 1, 'nanometers', 0, 'nanoseconds')
     cls.exp = ExperimentResource(
         'perm_test_exp', cls.coll.name, cls.coord.name, 'my experiment', 1,
-        'iso', 0)
+        'iso', 1)
     cls.chan = ChannelResource(
         'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',
         0, 'uint8', 0)
