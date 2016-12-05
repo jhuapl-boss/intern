@@ -54,7 +54,8 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.cleanup_db()
-        cls.rmt.delete_user(cls.user)
+        # Currently can't delete users unless admin
+        #cls.rmt.delete_user(cls.user)
 
     @classmethod
     def cleanup_db(cls):
@@ -64,10 +65,6 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         anything if an exception occurs during delete_user_role().  The role
         may not have existed for a particular test.
         """
-        try:
-            cls.rmt.delete_user_role(cls.user, cls.admin)
-        except HTTPError:
-            pass
         try:
             cls.rmt.delete_user_role(cls.user, cls.user_mgr)
         except HTTPError:
@@ -86,14 +83,15 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
     def test_add_role(self):
         self.rmt.add_user_role(self.user, self.rsrc_mgr)
 
-    def test_add_multiple_roles(self):
-        self.rmt.add_user_role(self.user, self.user_mgr)
-        self.rmt.add_user_role(self.user, self.rsrc_mgr)
-
-        expected = [self.user_mgr, self.rsrc_mgr]
+        expected = [self.rsrc_mgr]
         actual = self.rmt.get_user_roles(self.user)
 
         six.assertCountEqual(self, expected, actual)
+
+    def test_fail_add_user_manager(self):
+        # only admin can add a user manager
+        with self.assertRaises(HTTPError):
+            self.rmt.add_user_role(self.user, self.user_mgr)
 
     def test_add_invalid_user(self):
         with self.assertRaises(HTTPError):
@@ -104,6 +102,7 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
             self.rmt.add_user_role(self.user, 'foo')
 
     def test_add_invalid_admin_role(self):
+        # only the root account has the admin role
         with self.assertRaises(HTTPError):
             self.rmt.add_user_role(self.user, self.admin)
 
