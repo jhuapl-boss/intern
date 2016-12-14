@@ -364,6 +364,28 @@ class BaseVersionTest(unittest.TestCase):
             y_range + '/' + z_range + '/',
             actual)
 
+    def test_build_cutout_url_no_time_range_with_ids(self):
+        res = 0
+        x_rng_lst = [20, 40]
+        x_range = '20:40'
+        y_rng_lst = [50, 70]
+        y_range = '50:70'
+        z_rng_lst = [30, 50]
+        z_range = '30:50'
+        t_rng_lst = None
+        id_list = [2, 7]
+        id_list_str = '2,7'
+        actual = self.test_volume.build_cutout_url(
+            self.chanResource, self.url_prefix,
+            res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst, id_list)
+
+        self.assertEqual(
+            self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
+            '/' + self.chanResource.coll_name + '/' + self.chanResource.exp_name +
+            '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
+            y_range + '/' + z_range + '/?filter=' + id_list_str,
+            actual)
+
     def test_build_cutout_url_with_time_range(self):
         res = 0
         x_rng_lst = [20, 40]
@@ -385,6 +407,29 @@ class BaseVersionTest(unittest.TestCase):
             y_range + '/' + z_range + '/' + time_range + '/',
             actual)
 
+    def test_build_cutout_url_with_time_range_and_ids(self):
+        res = 0
+        x_rng_lst = [20, 40]
+        x_range = '20:40'
+        y_rng_lst = [50, 70]
+        y_range = '50:70'
+        z_rng_lst = [30, 50]
+        z_range = '30:50'
+        t_rng_lst = [10, 25]
+        time_range = '10:25'
+        id_list = [2, 7]
+        id_list_str = '2,7'
+        actual = self.test_volume.build_cutout_url(
+            self.chanResource, self.url_prefix,
+            res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst, id_list)
+
+        self.assertEqual(
+            self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
+            '/' + self.chanResource.coll_name + '/' + self.chanResource.exp_name +
+            '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
+            y_range + '/' + z_range + '/' + time_range + '/?filter=' + id_list_str,
+            actual)
+
     def test_get_cutout_request(self):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
@@ -404,9 +449,38 @@ class BaseVersionTest(unittest.TestCase):
             resolution, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst, data)
         self.assertEqual(
             '{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/'.format(url_prefix, self.test_volume.version,
+                                                       self.test_volume.endpoint, self.chanResource.coll_name,
+                                                       self.chanResource.exp_name, self.chanResource.name, resolution,
+                                                       x_range, y_range, z_range, time_range),
+            actual.url)
+        self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
+        self.assertEqual('application/blosc-python', actual.headers['Content-Type'])
+
+    def test_get_cutout_request_with_ids(self):
+        """Test request generated for a filtered cutout."""
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        resolution = 0
+        x_rng_lst = [20, 40]
+        x_range = '20:40'
+        y_rng_lst = [50, 70]
+        y_range = '50:70'
+        z_rng_lst = [30, 50]
+        z_range = '30:50'
+        t_rng_lst = [10, 25]
+        time_range = '10:25'
+        id_list = [10, 5]
+        id_list_str = '10,5'
+        data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+
+        actual = self.test_volume.get_cutout_request(
+            self.chanResource, 'GET', 'application/blosc-python', url_prefix, token,
+            resolution, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst, id_list=id_list)
+        self.assertEqual(
+            '{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/?filter={}'.format(url_prefix, self.test_volume.version,
             self.test_volume.endpoint, self.chanResource.coll_name,
             self.chanResource.exp_name, self.chanResource.name, resolution,
-            x_range, y_range, z_range, time_range),
+            x_range, y_range, z_range, time_range, id_list_str),
             actual.url)
         self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
         self.assertEqual('application/blosc-python', actual.headers['Content-Type'])
@@ -443,6 +517,18 @@ class BaseVersionTest(unittest.TestCase):
             id, bb_type)
 
         self.assertEqual(expected, actual.url)
+
+    def test_convert_int_list_to_comma_sep_str_1_ele(self):
+        """Test with a list with one element."""
+        expected = '2'
+        actual = self.test_volume.convert_int_list_to_comma_sep_str([2])
+        self.assertEqual(expected, actual)
+
+    def test_convert_int_list_to_comma_sep_str_multi_ele(self):
+        """Test with a list with multiple elements."""
+        expected = '2,6,9'
+        actual = self.test_volume.convert_int_list_to_comma_sep_str([2, 6, 9])
+        self.assertEqual(expected, actual)
 
 if __name__ == '__main__':
     unittest.main()

@@ -32,6 +32,25 @@ class BaseVersion(object):
         """
         raise NotImplemented
 
+    def convert_int_list_to_comma_sep_str(self, int_list):
+        """Convert list of ints to comma separated stringj.
+
+        Args:
+            int_list (list[int]): list of ints.
+
+        Returns:
+            (string): Example: [1, 7, 9] => '1, 7, 9'
+
+        """
+        if len(int_list) == 1:
+            return str(int_list[0])
+
+        str_list = []
+        for n in int_list:
+            str_list.append(str(n))
+
+        return (',').join(str_list)
+
     def convert_int_list_range_to_str(self, int_list):
         """Convert range in list of two ints to string representation.
 
@@ -128,7 +147,7 @@ class BaseVersion(object):
         return urlWithKey + '&value=' + str(value)
 
     def build_cutout_url(
-        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range):
+        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
         """Build the url to access the cutout function of the Boss' volume service.
 
         Args:
@@ -138,6 +157,7 @@ class BaseVersion(object):
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            id_list (optional [list[int]]): list of object ids to filter the cutout by.
 
         Returns:
             (string): Full URL to access API.
@@ -153,12 +173,15 @@ class BaseVersion(object):
         urlWithParams = (
             baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
             '/' + z_rng_lst + '/')
-        if time_range is None:
-            return urlWithParams
 
-        t_rng_lst = self.convert_int_list_range_to_str(time_range)
-        urlWithTime = urlWithParams + t_rng_lst + '/'
-        return urlWithTime
+        if time_range is not None:
+            t_rng_lst = self.convert_int_list_range_to_str(time_range)
+            urlWithParams += t_rng_lst + '/'
+
+        if len(id_list) > 0:
+            urlWithParams += '?filter=' + self.convert_int_list_to_comma_sep_str(id_list)
+
+        return urlWithParams
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
         """Create a request for accessing the Boss' data model services.
@@ -227,7 +250,7 @@ class BaseVersion(object):
 
     def get_cutout_request(
         self, resource, method, content, url_prefix, token,
-        resolution, x_range, y_range, z_range, time_range, numpyVolume=None):
+        resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[]):
 
         """Create a request for working with cutouts (part of the Boss' volume service).
 
@@ -241,8 +264,9 @@ class BaseVersion(object):
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-            numpyVolume (numpy array): The data volume encoded in a numpy array.
+            time_range (list[int]): time range such as [30, 40] which means t>=30 and t<40.
+            numpyVolume (optional numpy array): The data volume encoded in a numpy array.
+            id_list (optional [list[int]]): list of object ids to filter the cutout by.
 
         Returns:
             (requests.Request): A newly constructed Request object.
@@ -251,7 +275,7 @@ class BaseVersion(object):
             RuntimeError if url_prefix is None or an empty string.
         """
         url = self.build_cutout_url(
-            resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
+            resource, url_prefix, resolution, x_range, y_range, z_range, time_range, id_list)
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = numpyVolume)
 

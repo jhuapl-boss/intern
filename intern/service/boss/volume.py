@@ -53,7 +53,7 @@ class VolumeService(BossService):
             resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
         """Get a cutout from the volume service.
 
         Args:
@@ -63,6 +63,7 @@ class VolumeService(BossService):
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            id_list (optional [list[int]]): list of object ids to filter the cutout by.
 
         Returns:
             (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -72,7 +73,7 @@ class VolumeService(BossService):
         """
 
         return self.service.get_cutout(
-            resource, resolution, x_range, y_range, z_range, time_range,
+            resource, resolution, x_range, y_range, z_range, time_range, id_list,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     def reserve_ids(self, resource, num_ids):

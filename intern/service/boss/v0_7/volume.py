@@ -78,7 +78,7 @@ class VolumeService_0_7(BaseVersion):
         req = self.get_cutout_request(
             resource, 'POST', 'application/blosc',
             url_prefix, auth,
-            resolution, x_range, y_range, z_range, time_range, compressed)
+            resolution, x_range, y_range, z_range, time_range, numpyVolume=compressed)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
 
@@ -90,7 +90,7 @@ class VolumeService_0_7(BaseVersion):
         raise HTTPError(msg, request=req, response=resp)
 
     def get_cutout(
-        self, resource, resolution, x_range, y_range, z_range, time_range,
+        self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
         url_prefix, auth, session, send_opts):
         """Upload a cutout to the Boss data store.
 
@@ -101,6 +101,7 @@ class VolumeService_0_7(BaseVersion):
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range ([list[int]]|None): time range such as [30, 40] which means t>=30 and t<40.
+            id_list (list[int]): list of object ids to filter the cutout by.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -115,7 +116,7 @@ class VolumeService_0_7(BaseVersion):
 
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
-            url_prefix, auth, resolution, x_range, y_range, z_range, time_range)
+            url_prefix, auth, resolution, x_range, y_range, z_range, time_range, id_list=id_list)
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
         prep.headers['Accept'] = 'application/blosc'
