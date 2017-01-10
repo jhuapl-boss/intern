@@ -58,7 +58,7 @@ class ProjectPermissionTest_v0_7(unittest.TestCase):
 
         cls.exp = ExperimentResource(
             'perm_test_exp', cls.coll.name, cls.coord.name, 'my experiment', 1,
-            'iso', 0)
+            'iso', 1)
 
         cls.chan = ChannelResource(
             'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',

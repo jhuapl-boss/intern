@@ -1150,7 +1150,7 @@ class MetadataServiceTest_v0_7(unittest.TestCase):
 
         cls.exp = ExperimentResource(
             'myMetaExp2309', cls.coll.name, cls.coord.name, 'my experiment',
-            1, 'iso', 0)
+            1, 'iso', 1)
 
         cls.chan = ChannelResource(
             'myTestMetaChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
@@ -1377,7 +1377,7 @@ operations are performed within a single test of each resource.</p></div>
 
         cls.exp = ExperimentResource(
             'myMetaExp2309', cls.coll.name, cls.coord.name, 'my experiment',
-            1, 'iso', 0)
+            1, 'iso', 1)
 
         cls.chan = ChannelResource(
             'myTestMetaChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
@@ -2560,7 +2560,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_metadata_v0_7.MetadataServiceTest_v0_7.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2621,7 +2621,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_metadata_v0_7.MetadataServiceTest_v0_7.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3333,7 +3333,7 @@ def initialize(cls):
         1, 1, 1, 'nanometers', 1, 'nanoseconds')
     cls.exp = ExperimentResource(
         'myMetaExp2309', cls.coll.name, cls.coord.name, 'my experiment',
-        1, 'iso', 0)
+        1, 'iso', 1)
     cls.chan = ChannelResource(
         'myTestMetaChan', cls.coll.name, cls.exp.name, 'image', 'test channel',
         0, 'uint8', 0)

@@ -55,42 +55,22 @@ class ProjectUserTest_v0_7(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         try:
-            cls.rmt.delete_user(cls.user)
+            # TODO: Only admin can delete users now. Update test to enable cleaning up
+            pass
+            #cls.rmt.delete_user(cls.user)
         except HTTPError:
             pass
 
     def tearDown(self):
         try:
-            self.rmt.delete_user(self.user)
+            # TODO: Only admin can delete users now. Update test to enable cleaning up
+            pass
+            # self.rmt.delete_user(self.user)
         except HTTPError:
             pass
 
-    def test_add(self):
-        self.rmt.add_user(
-            self.user, self.first_name, self.last_name, self.email,
-            self.password)
-
     def test_add_user_already_exists(self):
-        self.rmt.add_user(
-            self.user, self.first_name, self.last_name, self.email,
-            self.password)
-
-        with self.assertRaises(HTTPError):
-            self.rmt.add_user(
-                self.user, self.first_name, self.last_name, self.email,
-                self.password)
-
-    def test_delete(self):
-        self.rmt.add_user(
-            self.user, self.first_name, self.last_name, self.email,
-            self.password)
-        self.rmt.delete_user(self.user)
-
-    def test_delete_invalid_user(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.delete_user('foo')
-
-    def test_get(self):
+        # Combine create, get, dup create in 1 test since you can't delete users as a non-admin
         self.rmt.add_user(
             self.user, self.first_name, self.last_name, self.email,
             self.password)
@@ -99,7 +79,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
             'username': self.user,
             'firstName': self.first_name,
             'lastName': self.last_name,
-            'email': self.email }
+            'email': self.email}
 
         actual = self.rmt.get_user(self.user)
 
@@ -110,6 +90,36 @@ class ProjectUserTest_v0_7(unittest.TestCase):
         self.assertEqual(expected["username"], actual["username"])
         self.assertEqual(expected["firstName"], actual["firstName"])
         self.assertEqual(expected["lastName"], actual["lastName"])
+
+        with self.assertRaises(HTTPError):
+            self.rmt.add_user(
+                self.user, self.first_name, self.last_name, self.email,
+                self.password)
+
+    def test_delete_invalid_user(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.delete_user('foo')
+
+    # def test_get(self):
+    #     self.rmt.add_user(
+    #         self.user, self.first_name, self.last_name, self.email,
+    #         self.password)
+    #
+    #     expected = {
+    #         'username': self.user,
+    #         'firstName': self.first_name,
+    #         'lastName': self.last_name,
+    #         'email': self.email }
+    #
+    #     actual = self.rmt.get_user(self.user)
+    #
+    #     # get also returns generated values that we cannot test for such
+    #     # as creation time.
+    #     self.assertTrue(len(expected.items()) <= len(actual.items()))
+    #     self.assertEqual(expected["email"], actual["email"])
+    #     self.assertEqual(expected["username"], actual["username"])
+    #     self.assertEqual(expected["firstName"], actual["firstName"])
+    #     self.assertEqual(expected["lastName"], actual["lastName"])
 
     def test_get_invalid_user(self):
         with self.assertRaises(HTTPError):

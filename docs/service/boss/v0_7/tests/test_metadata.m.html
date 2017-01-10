@@ -1232,7 +1232,7 @@ class TestMetadata_v0_7(unittest.TestCase):
         keys = ['foo']
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
-        fake_resp.status_code = 200
+        fake_resp.status_code = 204
 
         mock_session.send.return_value = fake_resp
 
@@ -1419,7 +1419,7 @@ if __name__ == '__main__':
         keys = ['foo']
         mock_session.prepare_request.return_value = PreparedRequest()
         fake_resp = Response()
-        fake_resp.status_code = 200
+        fake_resp.status_code = 204
 
         mock_session.send.return_value = fake_resp
 
@@ -2487,7 +2487,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_metadata.TestMetadata_v0_7.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2548,7 +2548,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_metadata.TestMetadata_v0_7.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x1039aa848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3524,7 +3524,7 @@ def test_meta_delete_success(self, mock_session):
     keys = ['foo']
     mock_session.prepare_request.return_value = PreparedRequest()
     fake_resp = Response()
-    fake_resp.status_code = 200
+    fake_resp.status_code = 204
     mock_session.send.return_value = fake_resp
     url_prefix = 'https://api.theboss.io'
     auth = 'mytoken'

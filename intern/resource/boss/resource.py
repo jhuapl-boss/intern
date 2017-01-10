@@ -164,7 +164,7 @@ class ExperimentResource(BossResource):
         hierarchy_method (string):
         num_time_samples (int):
     """
-    def __init__(self, name, collection_name, coord_frame, description='',
+    def __init__(self, name, collection_name, coord_frame='', description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
         num_time_samples=1, creator='', raw={}):
         """Constructor.
@@ -172,7 +172,7 @@ class ExperimentResource(BossResource):
         Args:
             name (string): Experiment name.
             collection_name (string): Collection name.
-            coord_frame (string): Name of coordinate frame used by experiment.
+            coord_frame (string): Name of coordinate frame used by experiment.  Defaults to empty.
             description (optional[string]): Experiment description.  Defaults to empty.
             num_hierarchy_levels (optional[int]): Defaults to 1.
             hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
@@ -195,7 +195,14 @@ class ExperimentResource(BossResource):
 
     @property
     def coord_frame(self):
-        return self._coord_frame
+        if self._coord_frame is '':
+            raise ValueError('Coordinate frame name is blank.')
+        else:
+            return self._coord_frame
+
+    @coord_frame.setter
+    def coord_frame(self, value):
+        self._coord_frame = value
 
     @property
     def hierarchy_method(self):

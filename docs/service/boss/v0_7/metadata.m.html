@@ -1231,7 +1231,7 @@ class MetadataService_0_7(BaseVersion):
                 resource, 'DELETE', 'application/json', url_prefix, auth, key)
             prep = session.prepare_request(req)
             resp = session.send(prep, **send_opts)
-            if resp.status_code == 200:
+            if resp.status_code == 204:
                 continue
             err = (
                 'Delete failed for {}: {}, got HTTP response: ({}) - {}'
@@ -1451,7 +1451,7 @@ class MetadataService_0_7(BaseVersion):
                 resource, 'DELETE', 'application/json', url_prefix, auth, key)
             prep = session.prepare_request(req)
             resp = session.send(prep, **send_opts)
-            if resp.status_code == 200:
+            if resp.status_code == 204:
                 continue
             err = (
                 'Delete failed for {}: {}, got HTTP response: ({}) - {}'
@@ -1816,7 +1816,7 @@ occurs.</p>
             resource, 'DELETE', 'application/json', url_prefix, auth, key)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
-        if resp.status_code == 200:
+        if resp.status_code == 204:
             continue
         err = (
             'Delete failed for {}: {}, got HTTP response: ({}) - {}'

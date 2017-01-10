@@ -8,7 +8,7 @@ from os import path
 # twine upload dist/*
 
 
-__version__ = '0.9.0'
+__version__ = '0.9.1'
 
 here = path.abspath(path.dirname(__file__))
 
@@ -46,6 +46,7 @@ setup(
             'connectomics',
             'spatial',
             'EM',
+            'electron',
             'calcium',
             'database',
             'boss',
