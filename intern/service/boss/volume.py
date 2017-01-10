@@ -109,3 +109,24 @@ class VolumeService(BossService):
         return self.service.get_bounding_box(
             resource, resolution, id, bb_type,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    def get_ids_in_region(
+            self, resource, resolution,
+            x_range, y_range, z_range, time_range=[0, 1]):
+        """Get all ids in the region defined by x_range, y_range, z_range.
+
+        Args:
+            resource (intern.resource.Resource): An annotation channel.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.  Defaults to [0, 1].
+
+        Returns:
+            (list[int]): Example: [1, 2, 25].
+        """
+        return self.service.get_ids_in_region(
+            resource, resolution, x_range, y_range, z_range, time_range,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+

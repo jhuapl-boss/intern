@@ -518,6 +518,53 @@ class BaseVersionTest(unittest.TestCase):
 
         self.assertEqual(expected, actual.url)
 
+    def test_build_ids_url(self):
+        url_prefix = 'https://api.theboss.io'
+        resolution = 0
+        x_range = [0, 100]
+        x_range_str = '0:100'
+        y_range = [10, 50]
+        y_range_str = '10:50'
+        z_range = [20, 42]
+        z_range_str = '20:42'
+        t_range = [0, 1]
+        t_range_str = '0:1'
+
+        actual = self.test_volume.build_ids_url(
+            self.annoResource, url_prefix, resolution,
+            x_range, y_range, z_range, t_range)
+
+        expected = '{}/{}/ids/{}/{}/{}/{}/{}/{}/{}/{}/'.format(
+            url_prefix, self.test_volume.version, self.annoResource.coll_name,
+            self.annoResource.exp_name, self.annoResource.name,
+            resolution, x_range_str, y_range_str, z_range_str, t_range_str)
+
+        self.assertEqual(expected, actual)
+
+    def test_get_ids_request(self):
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        resolution = 0
+        x_range = [0, 100]
+        x_range_str = '0:100'
+        y_range = [10, 50]
+        y_range_str = '10:50'
+        z_range = [20, 42]
+        z_range_str = '20:42'
+        t_range = [0, 1]
+        t_range_str = '0:1'
+
+        actual = self.test_volume.get_ids_request(
+            self.annoResource, 'GET', 'application/json', url_prefix, token,
+            resolution, x_range, y_range, z_range, t_range)
+
+        expected = '{}/{}/ids/{}/{}/{}/{}/{}/{}/{}/{}/'.format(
+            url_prefix, self.test_volume.version, self.annoResource.coll_name,
+            self.annoResource.exp_name, self.annoResource.name,
+            resolution, x_range_str, y_range_str, z_range_str, t_range_str)
+
+        self.assertEqual(expected, actual.url)
+
     def test_convert_int_list_to_comma_sep_str_1_ele(self):
         """Test with a list with one element."""
         expected = '2'

@@ -77,6 +77,7 @@ class TestVolume_v0_7(unittest.TestCase):
         y_range = [50, 70]
         z_range = [30, 50]
         time_range = [10, 25]
+        id_list = []
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
 
@@ -93,7 +94,7 @@ class TestVolume_v0_7(unittest.TestCase):
         send_opts = {}
 
         actual = self.vol.get_cutout(
-            self.chan, resolution, x_range, y_range, z_range, time_range,
+            self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
             url_prefix, auth, mock_session, send_opts)
 
         numpy.testing.assert_array_equal(data, actual)
@@ -105,6 +106,7 @@ class TestVolume_v0_7(unittest.TestCase):
         y_range = [50, 70]
         z_range = [30, 50]
         time_range = [10, 25]
+        id_list = []
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
 
@@ -118,7 +120,7 @@ class TestVolume_v0_7(unittest.TestCase):
 
         with self.assertRaises(HTTPError):
             actual = self.vol.get_cutout(
-                self.chan, resolution, x_range, y_range, z_range, time_range,
+                self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
                 url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Response', autospec=True)
@@ -150,3 +152,57 @@ class TestVolume_v0_7(unittest.TestCase):
             url_prefix, auth, mock_session, send_opts)
 
         self.assertEqual(expected, actual)
+
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_get_ids_in_region_success(self, mock_session, mock_resp):
+        resolution = 0
+        x_range = [0, 100]
+        y_range = [10, 50]
+        z_range = [20, 42]
+        t_range = [0, 1]
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        fake_prepped_req = PreparedRequest()
+        fake_prepped_req.headers = {}
+        mock_session.prepare_request.return_value = fake_prepped_req
+        mock_session.send.return_value = mock_resp
+
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = { 'ids': ['1', '10'] }
+
+        actual = self.vol.get_ids_in_region(
+            self.anno_chan, resolution, x_range, y_range, z_range, t_range,
+            url_prefix, auth, mock_session, send_opts)
+
+        expected = [1, 10]
+
+        self.assertEqual(expected, actual)
+
+    @patch('requests.Session', autospec=True)
+    def test_get_ids_in_region_failure(self, mock_session):
+        resolution = 0
+        x_range = [0, 100]
+        y_range = [10, 50]
+        z_range = [20, 42]
+        t_range = [0, 1]
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        fake_prepped_req = PreparedRequest()
+        fake_prepped_req.headers = {}
+        mock_session.prepare_request.return_value = fake_prepped_req
+        fake_response = Response()
+        fake_response.status_code = 403
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        with self.assertRaises(HTTPError):
+            actual = self.vol.get_ids_in_region(
+                self.anno_chan, resolution, x_range, y_range, z_range, t_range,
+                url_prefix, auth, mock_session, send_opts)

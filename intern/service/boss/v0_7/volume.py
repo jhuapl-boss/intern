@@ -204,6 +204,10 @@ class VolumeService_0_7(BaseVersion):
 
         Returns:
             (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
+
+        Raises:
+            requests.HTTPError
+            TypeError: if resource is not an annotation channel.
         """
         if not isinstance(resource, ChannelResource):
             raise TypeError('resource must be ChannelResource')
@@ -225,3 +229,48 @@ class VolumeService_0_7(BaseVersion):
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
 
+    def get_ids_in_region(
+            self, resource, resolution, x_range, y_range, z_range, time_range,
+            url_prefix, auth, session, send_opts):
+        """Get all ids in the region defined by x_range, y_range, z_range.
+
+        Args:
+            resource (intern.resource.Resource): An annotation channel.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list[int]): Example: [1, 2, 25].
+
+        Raises:
+            requests.HTTPError
+            TypeError: if resource is not an annotation channel.
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_ids_request(
+            resource, 'GET', 'application/json', url_prefix, auth,
+            resolution, x_range, y_range, z_range, time_range)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            id_str_list = json_data['ids']
+            id_int_list = [int(i) for i in id_str_list]
+            return id_int_list
+
+        msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
