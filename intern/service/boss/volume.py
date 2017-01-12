@@ -125,6 +125,10 @@ class VolumeService(BossService):
 
         Returns:
             (list[int]): Example: [1, 2, 25].
+
+        Raises:
+            requests.HTTPError
+            TypeError: if resource is not an annotation channel.
         """
         return self.service.get_ids_in_region(
             resource, resolution, x_range, y_range, z_range, time_range,
