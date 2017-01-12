@@ -85,6 +85,12 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             'annotation ids in region test channel', 0, 'uint64', 0,
             sources=[cls.chan.name])
 
+        # This channel reerved for testing tight bounding boxes.
+        cls.ann_bounding_chan = ChannelResource(
+            'annRegionChan3', cls.coll.name, cls.exp.name, 'annotation',
+            'annotation ids in bounding box test channel', 0, 'uint64', 0,
+            sources=[cls.chan.name])
+
         cls.rmt.create_project(cls.coll)
         cls.rmt.create_project(cls.coord)
         cls.rmt.create_project(cls.exp)
@@ -92,6 +98,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         cls.rmt.create_project(cls.chan)
         cls.rmt.create_project(cls.ann_chan)
         cls.rmt.create_project(cls.ann_region_chan)
+        cls.rmt.create_project(cls.ann_bounding_chan)
 
     @classmethod
     def tearDownClass(cls):
@@ -99,6 +106,10 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         This method is used by both tearDownClass() and setUpClass().
         """
+        try:
+            cls.rmt.delete_project(cls.ann_bounding_chan)
+        except HTTPError:
+            pass
         try:
             cls.rmt.delete_project(cls.ann_region_chan)
         except HTTPError:
@@ -137,6 +148,14 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
     def test_reserve_ids(self):
         first_id = self.rmt.reserve_ids(self.ann_chan, 20)
         self.assertTrue(first_id > 0)
+
+    def test_get_bounding_box_id_doesnt_exist(self):
+        resolution = 0
+        id = 12345678
+        with self.assertRaises(HTTPError) as err:
+            self.rmt.get_bounding_box(self.ann_chan, resolution, id, 'loose')
+            expected_msg_prefix = 'Reserve ids failed'
+            self.assertTrue(err.message.startwswith(expected_msg_prefix))
 
     def test_get_bounding_box_spans_cuboids_in_x(self):
         x_rng = [511, 515]
@@ -237,6 +256,41 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    def skip_test_tight_bounding_box_x_axis(self):
+        """Test tight bounding box with ids that span three cuboids along the x axis."""
+
+        # Skipped because not ready on spdb side yet.
+
+        resolution = 0
+        x_rng = [511, 1025]
+        y_rng = [512, 1024]
+        z_rng = [16, 32]
+        t_rng = [0, 1]
+
+        data = numpy.zeros((16, 512, 514), dtype='uint64')
+
+        # Id in partial region on x axis closest to origin.
+        data[1][1][0] = 123
+        # Id in partial region on x axis furthest from origin.
+        data[1][1][513] = 123
+
+        # Id in cuboid aligned region.
+        data[2][2][21] = 123
+
+        expected = {'x_range': [511, 1025], 'y_range': [513, 515], 'z_range': [17, 19]}
+
+        self.rmt.create_cutout(
+            self.ann_bounding_chan, resolution, x_rng, y_rng, z_rng, data)
+
+        # Get cutout to make sure data is done writing and indices updated.
+        actual_data = self.rmt.get_cutout(
+            self.ann_bounding_chan, resolution, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(data, actual_data)
+
+        # Method under test.
+        actual = self.rmt.get_bounding_box(
+            self.ann_bounding_chan, resolution, id, bb_type='tight')
+
     def test_get_ids_in_region_none(self):
         """Run on region that hasn't been written with ids, yet."""
         resolution = 0
@@ -251,7 +305,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         # Get cutout to make sure data is done writing and indices updated.
         actual_data = self.rmt.get_cutout(
-            self.ann_region_chan, resolution, x_rng, y_rng, z_rng)
+            self.ann_bounding_chan, resolution, x_rng, y_rng, z_rng)
         numpy.testing.assert_array_equal(data, actual_data)
 
         # Method under test.
@@ -259,6 +313,67 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
             self.ann_region_chan, resolution, x_rng, y_rng, z_rng)
 
         self.assertEqual(expected, actual)
+
+    def test_filtered_cutout(self):
+        """Test filtered cutout using same data written for get_ids_in_region_x_axis."""
+        resolution = 0
+        x_rng = [511, 1025]
+        y_rng = [512, 1024]
+        z_rng = [16, 32]
+        t_rng = [0, 1]
+
+        data = numpy.zeros((16, 512, 514), dtype='uint64')
+
+        # Id in partial region on x axis closest to origin.
+        data[1][1][0] = 123
+        # Id in partial region on x axis furthest from origin.
+        data[1][1][513] = 321
+
+        # Id in cuboid aligned region.
+        data[10][20][21] = 55555
+
+        expected = [123, 321, 55555]
+
+        self.rmt.create_cutout(
+            self.ann_region_chan, resolution, x_rng, y_rng, z_rng, data)
+
+        # Get cutout to make sure data is done writing and indices updated.
+        actual_data = self.rmt.get_cutout(
+            self.ann_region_chan, resolution, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(data, actual_data)
+
+        # Should get back the exact data given in create_cutout().
+        filtered_data1 = self.rmt.get_cutout(
+            self.ann_region_chan, resolution, x_rng, y_rng, z_rng,
+            id_list=[123, 321, 55555])
+        numpy.testing.assert_array_equal(data, filtered_data1)
+
+        # Filter on id 123.
+        expected_data_123 = numpy.zeros((16, 512, 514), dtype='uint64')
+        expected_data_123[1][1][0] = 123
+
+        filtered_data_123 = self.rmt.get_cutout(
+            self.ann_region_chan, resolution, x_rng, y_rng, z_rng, id_list=[123])
+        numpy.testing.assert_array_equal(expected_data_123, filtered_data_123)
+
+        # Filter on id 321.
+        expected_data_321 = numpy.zeros((16, 512, 514), dtype='uint64')
+        expected_data_321[1][1][513] = 321
+
+        filtered_data_321 = self.rmt.get_cutout(
+            self.ann_region_chan, resolution, x_rng, y_rng, z_rng, id_list=[321])
+        numpy.testing.assert_array_equal(expected_data_321, filtered_data_321)
+
+        # Filter on ids 123 and 55555.
+        expected_data_123_55555 = numpy.zeros((16, 512, 514), dtype='uint64')
+        expected_data_123_55555[1][1][0] = 123
+        expected_data_123_55555[10][20][21] = 55555
+
+        filtered_data_123_55555 = self.rmt.get_cutout(
+            self.ann_region_chan, resolution, x_rng, y_rng, z_rng,
+            id_list=[123, 55555])
+        numpy.testing.assert_array_equal(
+            expected_data_123_55555, filtered_data_123_55555)
 
     def test_get_ids_in_region_x_axis(self):
         """Test using a region that's cuboid aligned except for the x axis."""
@@ -278,7 +393,6 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
         # Id in cuboid aligned region.
         data[10][20][21] = 55555
 
-        # expected = [123, 321, 456, 654, 789, 987, 55555]
         expected = [123, 321, 55555]
 
         self.rmt.create_cutout(
