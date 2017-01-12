@@ -237,6 +237,29 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    def test_get_ids_in_region_none(self):
+        """Run on region that hasn't been written with ids, yet."""
+        resolution = 0
+        x_rng = [1536, 1540]
+        y_rng = [1536, 1540]
+        z_rng = [48, 56]
+        t_rng = [0, 1]
+
+        data = numpy.zeros((8, 4, 4), dtype='uint64')
+
+        expected = []
+
+        # Get cutout to make sure data is done writing and indices updated.
+        actual_data = self.rmt.get_cutout(
+            self.ann_region_chan, resolution, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(data, actual_data)
+
+        # Method under test.
+        actual = self.rmt.get_ids_in_region(
+            self.ann_region_chan, resolution, x_rng, y_rng, z_rng)
+
+        self.assertEqual(expected, actual)
+
     def test_get_ids_in_region_x_axis(self):
         """Test using a region that's cuboid aligned except for the x axis."""
         resolution = 0
