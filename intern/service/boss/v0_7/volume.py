@@ -14,6 +14,7 @@
 from intern.service.boss import BaseVersion
 from intern.service.boss.v0_7 import BOSS_API_VERSION
 from intern.resource.boss.resource import *
+from intern.utils.parallel import *
 from requests import HTTPError
 import blosc
 import numpy as np
@@ -114,9 +115,44 @@ class VolumeService_0_7(BaseVersion):
             requests.HTTPError
         """
 
+        # Check to see if this volume is larger than 1GB. If so, chunk it into
+        # several smaller bites:
+        if (
+            (x_range[1] - x_range[0]) *
+            (y_range[1] - y_range[0]) *
+            (z_range[1] - z_range[0])
+        ) >= 1e8:
+            blocks = block_compute(
+                x_range[0], x_range[1],
+                y_range[0], y_range[1],
+                z_range[0], z_range[1],
+                block_size=(512, 512, 4)
+            )
+
+            result = np.ndarray((
+                z_range[1] - z_range[0],
+                y_range[1] - y_range[0],
+                x_range[1] - x_range[0]
+            ))
+
+            for b in blocks:
+                _data = self.get_cutout(
+                    resource, resolution, b[0], b[1], b[2],
+                    time_range, url_prefix, auth, session, send_opts
+                )
+
+                result[
+                    b[2][0] - z_range[0] : b[2][1] - z_range[0],
+                    b[1][0] - y_range[0] : b[1][1] - y_range[0],
+                    b[0][0] - x_range[0] : b[0][1] - x_range[0]
+                ] = _data
+
+            return result
+
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
-            url_prefix, auth, resolution, x_range, y_range, z_range, time_range, id_list=id_list)
+            url_prefix, auth, resolution, x_range, y_range, z_range, time_range, id_list=id_list
+        )
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
         prep.headers['Accept'] = 'application/blosc'
