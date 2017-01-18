@@ -151,7 +151,9 @@ class VolumeService_0_7(BaseVersion):
 
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
-            url_prefix, auth, resolution, x_range, y_range, z_range, time_range, id_list=id_list
+            url_prefix, auth,
+            resolution, x_range, y_range, z_range, time_range,
+            id_list=id_list
         )
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
