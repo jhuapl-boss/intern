@@ -126,7 +126,7 @@ class VolumeService_0_7(BaseVersion):
                 x_range[0], x_range[1],
                 y_range[0], y_range[1],
                 z_range[0], z_range[1],
-                block_size=(512, 512, 4)
+                block_size=(1024, 1024, 16)
             )
 
             result = np.ndarray((
