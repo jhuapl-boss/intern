@@ -121,7 +121,7 @@ class VolumeService_0_7(BaseVersion):
             (x_range[1] - x_range[0]) *
             (y_range[1] - y_range[0]) *
             (z_range[1] - z_range[0])
-        ) >= 1e8:
+        ) >= 1e5:
             blocks = block_compute(
                 x_range[0], x_range[1],
                 y_range[0], y_range[1],
