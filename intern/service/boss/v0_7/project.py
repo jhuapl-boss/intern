@@ -739,7 +739,7 @@ class ProjectService_0_7(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.
 
         Raises:
             requests.HTTPError on failure.
@@ -768,7 +768,7 @@ class ProjectService_0_7(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.
 
         Raises:
             requests.HTTPError on failure.
@@ -796,7 +796,7 @@ class ProjectService_0_7(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (intern.resource.boss.BossResource): Returns updated resource of given type on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns updated resource of given type on success.
 
         Raises:
             requests.HTTPError on failure.
