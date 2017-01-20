@@ -29,112 +29,90 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss resource API.
     """
 
-    @classmethod
-    def setUpClass(cls):
-        """Do an initial DB clean up in case something went wrong the last time.
-
-        If a test failed really badly, the DB might be in a bad state despite
-        attempts to clean up during tearDown().
-        """
-        cls.initialize()
-        cls.cleanup_db()
-
-    @classmethod
-    def initialize(cls):
-        """Initialization for each test.
-
-        Called by both setUp() and setUpClass().
-        """
-        cls.rmt = BossRemote('test.cfg', API_VER)
+    def setUp(self):
+        self.rmt = BossRemote('test.cfg', API_VER)
 
         # Turn off SSL cert verification.  This is necessary for interacting with
         # developer instances of the Boss.
-        cls.rmt.project_service.session_send_opts = { 'verify': False }
-        cls.rmt.metadata_service.session_send_opts = { 'verify': False }
-        cls.rmt.volume_service.session_send_opts = { 'verify': False }
+        self.rmt.project_service.session_send_opts = { 'verify': False }
+        self.rmt.metadata_service.session_send_opts = { 'verify': False }
+        self.rmt.volume_service.session_send_opts = { 'verify': False }
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
         coll_name = 'collection2309-{}'.format(random.randint(0, 9999))
-        cls.coll = CollectionResource(coll_name, 'bar')
+        self.coll = CollectionResource(coll_name, 'bar')
         coll_name_upd = '{}-{}'.format(coll_name, random.randint(0, 9999))
-        cls.coll_upd = CollectionResource(coll_name_upd, 'latest')
+        self.coll_upd = CollectionResource(coll_name_upd, 'latest')
 
         cf_name = 'ProjTestFrame{}'.format(random.randint(0, 9999))
-        cls.coord = CoordinateFrameResource(
+        self.coord = CoordinateFrameResource(
             cf_name, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
             1, 1, 1, 'nanometers', 2, 'nanoseconds')
-        cls.coord_upd = copy.copy(cls.coord)
-        cls.coord_upd.name = 'MouseFrame'
-        cls.coord_upd.description = 'Mouse coordinate frame.'
+        self.coord_upd = copy.copy(self.coord)
+        self.coord_upd.name = 'MouseFrame{}'.format(random.randint(0, 9999))
+        self.coord_upd.description = 'Mouse coordinate frame.'
 
-        cls.exp = ExperimentResource(
-            'exp2309-2', cls.coll.name, cls.coord.name, 'my experiment',
+        self.exp = ExperimentResource(
+            'exp2309-2', self.coll.name, self.coord.name, 'my experiment',
             1, 'iso')
-        cls.exp_upd = ExperimentResource(
-            'exp2309-2a', cls.coll.name, cls.coord.name,
+        self.exp_upd = ExperimentResource(
+            'exp2309-2a', self.coll.name, self.coord.name,
             'my first experiment', 2, 'slice')
 
-        cls.source_chan = ChannelResource(
-            'sourceChan', cls.coll.name, cls.exp.name, 'image', 'test source channel',
+        self.source_chan = ChannelResource(
+            'sourceChan', self.coll.name, self.exp.name, 'image', 'test source channel',
             0, 'uint8', 0)
-        cls.related_chan = ChannelResource(
-            'relatedChan', cls.coll.name, cls.exp.name, 'image', 'test related channel',
+        self.related_chan = ChannelResource(
+            'relatedChan', self.coll.name, self.exp.name, 'image', 'test related channel',
             0, 'uint8', 0)
-        cls.chan = ChannelResource(
-            'myChan', cls.coll.name, cls.exp.name, 'annotation', 'test annotation channel',
+        self.chan = ChannelResource(
+            'myChan', self.coll.name, self.exp.name, 'annotation', 'test annotation channel',
             0, 'uint8', 0, sources=['sourceChan'], related=['relatedChan'])
-        cls.chan_upd = ChannelResource(
-            'yourChan', cls.coll.name, cls.exp.name, 'annotation', 'your test annotation channel',
+        self.chan_upd = ChannelResource(
+            'yourChan', self.coll.name, self.exp.name, 'annotation', 'your test annotation channel',
             0, 'uint8', 1, sources=['sourceChan'], related=['relatedChan'])
 
-    @classmethod
-    def cleanup_db(cls):
-        try:
-            cls.rmt.delete_project(cls.chan_upd)
-        except HTTPError:
-            pass
-        try:
-            cls.rmt.delete_project(cls.chan)
-        except HTTPError:
-            pass
-        try:
-            cls.rmt.delete_project(cls.related_chan)
-        except HTTPError:
-            pass
-        try:
-            cls.rmt.delete_project(cls.source_chan)
-        except HTTPError:
-            pass
-        try:
-            cls.rmt.delete_project(cls.exp_upd)
-        except HTTPError:
-            pass
-        try:
-            cls.rmt.delete_project(cls.exp)
-        except HTTPError:
-            pass
-        try:
-            cls.rmt.delete_project(cls.coord_upd)
-        except HTTPError:
-            pass
-        try:
-            cls.rmt.delete_project(cls.coord)
-        except HTTPError:
-            pass
-        try:
-            cls.rmt.delete_project(cls.coll_upd)
-        except HTTPError:
-            pass
-        try:
-            cls.rmt.delete_project(cls.coll)
-        except HTTPError:
-            pass
-
-    def setUp(self):
-        pass
-
     def tearDown(self):
-        self.cleanup_db()
+        try:
+            self.rmt.delete_project(self.chan_upd)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_project(self.chan)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_project(self.related_chan)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_project(self.source_chan)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_project(self.exp_upd)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_project(self.exp)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_project(self.coord_upd)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_project(self.coord)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_project(self.coll_upd)
+        except HTTPError:
+            pass
+        try:
+            self.rmt.delete_project(self.coll)
+        except HTTPError:
+            pass
 
     def test_create_coord_frame(self):
         cf = self.rmt.create_project(self.coord)
@@ -160,10 +138,8 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_create_experiment(self):
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         e = self.rmt.create_project(self.exp)
         self.assertEqual(self.exp.name, e.name)
@@ -176,13 +152,10 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_create_channel(self):
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         e = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(e)
 
         ch = self.rmt.create_project(self.source_chan)
         self.assertEqual(self.source_chan.name, ch.name)
@@ -195,16 +168,12 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_create_annotation_channel_without_source_fails(self):
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         e = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(e)
 
         rel_ch = self.rmt.create_project(self.related_chan)
-        self.assertIsNotNone(rel_ch)
 
         chan = ChannelResource(
             'myChan', self.coll.name, self.exp.name, 'annotation', 'test annotation channel',
@@ -216,19 +185,14 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
     def test_create_annotation_channel(self):
         """Annotation channels require a source channel."""
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         e = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(e)
 
         ch = self.rmt.create_project(self.source_chan)
-        self.assertIsNotNone(ch)
 
         rel_ch = self.rmt.create_project(self.related_chan)
-        self.assertIsNotNone(rel_ch)
 
         ann_ch = self.rmt.create_project(self.chan)
 
@@ -244,7 +208,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_get_collection(self):
         coll = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(coll)
 
         c = self.rmt.get_project(self.coll)
         self.assertEqual(self.coll.name, c.name)
@@ -252,7 +215,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_get_coord_frame(self):
         coord = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(coord)
 
         cf = self.rmt.get_project(self.coord)
         self.assertEqual(self.coord.name, cf.name)
@@ -272,13 +234,10 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_get_experiment(self):
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         exp = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(exp)
 
         e = self.rmt.get_project(self.exp)
         self.assertEqual(self.exp.name, e.name)
@@ -291,16 +250,12 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_get_channel(self):
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         e = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(e)
 
         chan = self.rmt.create_project(self.source_chan)
-        self.assertIsNotNone(chan)
 
         ch = self.rmt.get_project(self.source_chan)
         self.assertEqual(self.source_chan.name, ch.name)
@@ -313,7 +268,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_update_collection(self):
         coll = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(coll)
 
         c = self.rmt.update_project(self.coll.name, self.coll_upd)
         self.assertEqual(self.coll_upd.name, c.name)
@@ -321,10 +275,8 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_update_coord_frame(self):
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         coord = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(coord)
 
         cf = self.rmt.update_project(self.coord.name, self.coord_upd)
         self.assertEqual(self.coord_upd.name, cf.name)
@@ -332,13 +284,10 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_update_experiment(self):
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         e = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(e)
 
         eup = self.rmt.update_project(self.exp.name, self.exp_upd)
         self.assertEqual(self.exp_upd.name, eup.name)
@@ -351,22 +300,16 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_update_channel(self):
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         e = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(e)
 
         source_ch = self.rmt.create_project(self.source_chan)
-        self.assertIsNotNone(source_ch)
 
         rel_ch = self.rmt.create_project(self.related_chan)
-        self.assertIsNotNone(rel_ch)
 
         chan = self.rmt.create_project(self.chan)
-        self.assertIsNotNone(chan)
 
         ch = self.rmt.update_project(self.chan.name, self.chan_upd)
         self.assertEqual(self.chan_upd.name, ch.name)
@@ -381,7 +324,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_list_collections(self):
         coll = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(coll)
 
         coll_list = self.rmt.list_collections()
         c = [name for name in coll_list if name == self.coll.name]
@@ -390,7 +332,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_list_coord_frames(self):
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         cf_list = self.rmt.list_coordinate_frames()
         c = [name for name in cf_list if name == self.coord.name]
@@ -399,13 +340,10 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     def test_list_experiments(self):
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         exp = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(exp)
 
         exp_list = self.rmt.list_experiments(self.coll.name)
         e = [name for name in exp_list if name == self.exp.name]
@@ -414,16 +352,12 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
 
     #def test_list_channels(self):
     #    c = self.rmt.create_project(self.coll)
-    #    self.assertIsNotNone(c)
 
     #    cf = self.rmt.create_project(self.coord)
-    #    self.assertIsNotNone(cf)
 
     #    e = self.rmt.create_project(self.exp)
-    #    self.assertIsNotNone(e)
 
     #    chan = self.rmt.create_project(self.chan)
-    #    self.assertIsNotNone(chan)
 
     #    chan_list = self.rmt.list_channels(self.coll.name, self.exp.name)
     #    ch = [name for name in chan_list if name == self.chan.name]
@@ -437,16 +371,12 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         it here.
         """
         c = self.rmt.create_project(self.coll)
-        self.assertIsNotNone(c)
 
         cf = self.rmt.create_project(self.coord)
-        self.assertIsNotNone(cf)
 
         e = self.rmt.create_project(self.exp)
-        self.assertIsNotNone(e)
 
         ch = self.rmt.create_project(self.source_chan)
-        self.assertIsNotNone(ch)
 
         self.rmt.delete_project(self.source_chan)
         self.rmt.delete_project(self.exp)
