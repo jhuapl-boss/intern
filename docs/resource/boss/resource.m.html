@@ -983,6 +983,7 @@ table {
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_list_route">get_list_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_meta_route">get_meta_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_reserve_route">get_reserve_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.BossResource.valid_volume">valid_volume</a></li>
   </ul>
@@ -998,6 +999,7 @@ table {
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_list_route">get_list_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_meta_route">get_meta_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_reserve_route">get_reserve_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.valid_volume">valid_volume</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.validate_datatype">validate_datatype</a></li>
@@ -1015,6 +1017,7 @@ table {
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_list_route">get_list_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_meta_route">get_meta_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_reserve_route">get_reserve_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CollectionResource.valid_volume">valid_volume</a></li>
   </ul>
@@ -1030,6 +1033,7 @@ table {
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_list_route">get_list_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_meta_route">get_meta_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_reserve_route">get_reserve_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.valid_volume">valid_volume</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.validate_time_units">validate_time_units</a></li>
@@ -1047,6 +1051,7 @@ table {
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_dict_route">get_dict_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_list_route">get_list_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_meta_route">get_meta_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_reserve_route">get_reserve_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.valid_volume">valid_volume</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.validate_hierarchy_method">validate_hierarchy_method</a></li>
@@ -1152,6 +1157,20 @@ class BossResource(Resource):
         assert NotImplemented
 
     @abstractmethod
+    def get_reserve_route(self):
+        """Get the route for reserving ids.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+
+    @abstractmethod
     def get_meta_route(self):
         """Get the route for metadata operations.
 
@@ -1204,6 +1223,9 @@ class CollectionResource(BossResource):
     def get_cutout_route(self):
         raise RuntimeError('Not supported for collections.')
 
+    def get_reserve_route(self):
+        raise RuntimeError('Not supported for collections.')
+
     def get_meta_route(self):
         return self.name
 
@@ -1221,7 +1243,7 @@ class ExperimentResource(BossResource):
         hierarchy_method (string):
         num_time_samples (int):
     """
-    def __init__(self, name, collection_name, coord_frame, description='',
+    def __init__(self, name, collection_name, coord_frame='', description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
         num_time_samples=1, creator='', raw={}):
         """Constructor.
@@ -1229,7 +1251,7 @@ class ExperimentResource(BossResource):
         Args:
             name (string): Experiment name.
             collection_name (string): Collection name.
-            coord_frame (string): Name of coordinate frame used by experiment.
+            coord_frame (string): Name of coordinate frame used by experiment.  Defaults to empty.
             description (optional[string]): Experiment description.  Defaults to empty.
             num_hierarchy_levels (optional[int]): Defaults to 1.
             hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
@@ -1252,7 +1274,14 @@ class ExperimentResource(BossResource):
 
     @property
     def coord_frame(self):
-        return self._coord_frame
+        if self._coord_frame is '':
+            raise ValueError('Coordinate frame name is blank.')
+        else:
+            return self._coord_frame
+
+    @coord_frame.setter
+    def coord_frame(self, value):
+        self._coord_frame = value
 
     @property
     def hierarchy_method(self):
@@ -1275,6 +1304,9 @@ class ExperimentResource(BossResource):
         return self.coll_name + '/experiment/'
 
     def get_cutout_route(self):
+        raise RuntimeError('Not supported for experiments.')
+
+    def get_reserve_route(self):
         raise RuntimeError('Not supported for experiments.')
 
     def get_meta_route(self):
@@ -1368,6 +1400,9 @@ class CoordinateFrameResource(BossResource):
         return ''
 
     def get_cutout_route(self):
+        raise RuntimeError('Not supported for coordinate frames.')
+
+    def get_reserve_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
     def get_meta_route(self):
@@ -1477,6 +1512,9 @@ class ChannelResource(BossResource):
         return self.coll_name + '/experiment/' + self.exp_name + '/channel/'
 
     def get_cutout_route(self):
+        return self.coll_name + '/' + self.exp_name + '/' + self.name
+
+    def get_reserve_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
     def get_meta_route(self):
@@ -1636,6 +1674,20 @@ class ChannelResource(BossResource):
     @abstractmethod
     def get_cutout_route(self):
         """Get the route for cutout operations.
+
+        Not all resources will support this operation.
+
+        Returns:
+            (string): A string that can be used as part of a URL.
+
+        Raises:
+            (RuntimeError): if operation not supported by the resource.
+        """
+        assert NotImplemented
+
+    @abstractmethod
+    def get_reserve_route(self):
+        """Get the route for reserving ids.
 
         Not all resources will support this operation.
 
@@ -1905,6 +1957,42 @@ def get_meta_route(self):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.BossResource.get_reserve_route">
+    <p>def <span class="ident">get_reserve_route</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get the route for reserving ids.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.BossResource.get_reserve_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.BossResource.get_reserve_route" class="source">
+    <pre><code>@abstractmethod
+def get_reserve_route(self):
+    """Get the route for reserving ids.
+    Not all resources will support this operation.
+    Returns:
+        (string): A string that can be used as part of a URL.
+    Raises:
+        (RuntimeError): if operation not supported by the resource.
+    """
+    assert NotImplemented
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.BossResource.get_route">
     <p>def <span class="ident">get_route</span>(</p><p>self)</p>
     </div>
@@ -2034,6 +2122,9 @@ def get_route(self):
         return self.coll_name + '/experiment/' + self.exp_name + '/channel/'
 
     def get_cutout_route(self):
+        return self.coll_name + '/' + self.exp_name + '/' + self.name
+
+    def get_reserve_route(self):
         return self.coll_name + '/' + self.exp_name + '/' + self.name
 
     def get_meta_route(self):
@@ -2470,6 +2561,38 @@ def get_route(self):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_reserve_route">
+    <p>def <span class="ident">get_reserve_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_reserve_route">get_reserve_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for reserving ids.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.get_reserve_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.get_reserve_route" class="source">
+    <pre><code>def get_reserve_route(self):
+    return self.coll_name + '/' + self.exp_name + '/' + self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.ChannelResource.get_route">
     <p>def <span class="ident">get_route</span>(</p><p>self)</p>
     </div>
@@ -2603,6 +2726,9 @@ def get_route(self):
         return ''
 
     def get_cutout_route(self):
+        raise RuntimeError('Not supported for collections.')
+
+    def get_reserve_route(self):
         raise RuntimeError('Not supported for collections.')
 
     def get_meta_route(self):
@@ -2846,6 +2972,38 @@ def get_route(self):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_reserve_route">
+    <p>def <span class="ident">get_reserve_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_reserve_route">get_reserve_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for reserving ids.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CollectionResource.get_reserve_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CollectionResource.get_reserve_route" class="source">
+    <pre><code>def get_reserve_route(self):
+    raise RuntimeError('Not supported for collections.')
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.CollectionResource.get_route">
     <p>def <span class="ident">get_route</span>(</p><p>self)</p>
     </div>
@@ -3002,6 +3160,9 @@ def get_route(self):
         return ''
 
     def get_cutout_route(self):
+        raise RuntimeError('Not supported for coordinate frames.')
+
+    def get_reserve_route(self):
         raise RuntimeError('Not supported for coordinate frames.')
 
     def get_meta_route(self):
@@ -3450,6 +3611,38 @@ def get_route(self):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_reserve_route">
+    <p>def <span class="ident">get_reserve_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_reserve_route">get_reserve_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for reserving ids.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.get_reserve_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.get_reserve_route" class="source">
+    <pre><code>def get_reserve_route(self):
+    raise RuntimeError('Not supported for coordinate frames.')
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.get_route">
     <p>def <span class="ident">get_route</span>(</p><p>self)</p>
     </div>
@@ -3574,7 +3767,7 @@ layers.</p>
         hierarchy_method (string):
         num_time_samples (int):
     """
-    def __init__(self, name, collection_name, coord_frame, description='',
+    def __init__(self, name, collection_name, coord_frame='', description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
         num_time_samples=1, creator='', raw={}):
         """Constructor.
@@ -3582,7 +3775,7 @@ layers.</p>
         Args:
             name (string): Experiment name.
             collection_name (string): Collection name.
-            coord_frame (string): Name of coordinate frame used by experiment.
+            coord_frame (string): Name of coordinate frame used by experiment.  Defaults to empty.
             description (optional[string]): Experiment description.  Defaults to empty.
             num_hierarchy_levels (optional[int]): Defaults to 1.
             hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
@@ -3605,7 +3798,14 @@ layers.</p>
 
     @property
     def coord_frame(self):
-        return self._coord_frame
+        if self._coord_frame is '':
+            raise ValueError('Coordinate frame name is blank.')
+        else:
+            return self._coord_frame
+
+    @coord_frame.setter
+    def coord_frame(self, value):
+        self._coord_frame = value
 
     @property
     def hierarchy_method(self):
@@ -3628,6 +3828,9 @@ layers.</p>
         return self.coll_name + '/experiment/'
 
     def get_cutout_route(self):
+        raise RuntimeError('Not supported for experiments.')
+
+    def get_reserve_route(self):
         raise RuntimeError('Not supported for experiments.')
 
     def get_meta_route(self):
@@ -3765,7 +3968,7 @@ layers.</p>
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.resource.ExperimentResource.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, coord_frame, description=&#39;&#39;, num_hierarchy_levels=1, hierarchy_method=&#39;near_iso&#39;, num_time_samples=1, creator=&#39;&#39;, raw={})</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, coord_frame=&#39;&#39;, description=&#39;&#39;, num_hierarchy_levels=1, hierarchy_method=&#39;near_iso&#39;, num_time_samples=1, creator=&#39;&#39;, raw={})</p>
     </div>
     
     <p class="inheritance">
@@ -3779,7 +3982,7 @@ layers.</p>
 <p>Args:<br />
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Experiment name.<br />
 &emsp;&emsp;&emsp;&emsp;<b>collection_name (string)</b>: Collection name.<br />
-&emsp;&emsp;&emsp;&emsp;<b>coord_frame (string)</b>: Name of coordinate frame used by experiment.<br />
+&emsp;&emsp;&emsp;&emsp;<b>coord_frame (string)</b>: Name of coordinate frame used by experiment.  Defaults to empty.<br />
 &emsp;&emsp;&emsp;&emsp;<b>description (optional[string])</b>: Experiment description.  Defaults to empty.<br />
 &emsp;&emsp;&emsp;&emsp;<b>num_hierarchy_levels (optional[int])</b>: Defaults to 1.<br />
 &emsp;&emsp;&emsp;&emsp;<b>hierarchy_method (optional[string])</b>: 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.<br />
@@ -3789,14 +3992,14 @@ layers.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.__init__', this);">Show source &equiv;</a></p>
   <div id="source-intern.resource.boss.resource.ExperimentResource.__init__" class="source">
-    <pre><code>def __init__(self, name, collection_name, coord_frame, description='',
+    <pre><code>def __init__(self, name, collection_name, coord_frame='', description='',
     num_hierarchy_levels=1, hierarchy_method='near_iso',
     num_time_samples=1, creator='', raw={}):
     """Constructor.
     Args:
         name (string): Experiment name.
         collection_name (string): Collection name.
-        coord_frame (string): Name of coordinate frame used by experiment.
+        coord_frame (string): Name of coordinate frame used by experiment.  Defaults to empty.
         description (optional[string]): Experiment description.  Defaults to empty.
         num_hierarchy_levels (optional[int]): Defaults to 1.
         hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
@@ -3938,6 +4141,38 @@ layers.</p>
   <div id="source-intern.resource.boss.resource.ExperimentResource.get_meta_route" class="source">
     <pre><code>def get_meta_route(self):
     return self.coll_name + '/' + self.name
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.get_reserve_route">
+    <p>def <span class="ident">get_reserve_route</span>(</p><p>self)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#intern.resource.boss.resource.BossResource">BossResource</a></code>.<code><a href="#intern.resource.boss.resource.BossResource.get_reserve_route">get_reserve_route</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Get the route for reserving ids.</p>
+<p>Not all resources will support this operation.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: A string that can be used as part of a URL.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if operation not supported by the resource.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.get_reserve_route', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.get_reserve_route" class="source">
+    <pre><code>def get_reserve_route(self):
+    raise RuntimeError('Not supported for experiments.')
 </code></pre>
   </div>
 </div>

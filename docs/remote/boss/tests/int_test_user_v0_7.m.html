@@ -1043,11 +1043,8 @@ table {
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.skipTest">skipTest</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.tearDown">tearDown</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.tearDownClass">tearDownClass</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_add">test_add</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_add_user_already_exists">test_add_user_already_exists</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_delete">test_delete</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_delete_invalid_user">test_delete_invalid_user</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_get">test_get</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_get_invalid_user">test_get_invalid_user</a></li>
   </ul>
 
@@ -1128,42 +1125,22 @@ class ProjectUserTest_v0_7(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         try:
-            cls.rmt.delete_user(cls.user)
+            # TODO: Only admin can delete users now. Update test to enable cleaning up
+            pass
+            #cls.rmt.delete_user(cls.user)
         except HTTPError:
             pass
 
     def tearDown(self):
         try:
-            self.rmt.delete_user(self.user)
+            # TODO: Only admin can delete users now. Update test to enable cleaning up
+            pass
+            # self.rmt.delete_user(self.user)
         except HTTPError:
             pass
 
-    def test_add(self):
-        self.rmt.add_user(
-            self.user, self.first_name, self.last_name, self.email,
-            self.password)
-
     def test_add_user_already_exists(self):
-        self.rmt.add_user(
-            self.user, self.first_name, self.last_name, self.email,
-            self.password)
-
-        with self.assertRaises(HTTPError):
-            self.rmt.add_user(
-                self.user, self.first_name, self.last_name, self.email,
-                self.password)
-
-    def test_delete(self):
-        self.rmt.add_user(
-            self.user, self.first_name, self.last_name, self.email,
-            self.password)
-        self.rmt.delete_user(self.user)
-
-    def test_delete_invalid_user(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.delete_user('foo')
-
-    def test_get(self):
+        # Combine create, get, dup create in 1 test since you can't delete users as a non-admin
         self.rmt.add_user(
             self.user, self.first_name, self.last_name, self.email,
             self.password)
@@ -1172,7 +1149,7 @@ class ProjectUserTest_v0_7(unittest.TestCase):
             'username': self.user,
             'firstName': self.first_name,
             'lastName': self.last_name,
-            'email': self.email }
+            'email': self.email}
 
         actual = self.rmt.get_user(self.user)
 
@@ -1183,6 +1160,36 @@ class ProjectUserTest_v0_7(unittest.TestCase):
         self.assertEqual(expected["username"], actual["username"])
         self.assertEqual(expected["firstName"], actual["firstName"])
         self.assertEqual(expected["lastName"], actual["lastName"])
+
+        with self.assertRaises(HTTPError):
+            self.rmt.add_user(
+                self.user, self.first_name, self.last_name, self.email,
+                self.password)
+
+    def test_delete_invalid_user(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.delete_user('foo')
+
+    # def test_get(self):
+    #     self.rmt.add_user(
+    #         self.user, self.first_name, self.last_name, self.email,
+    #         self.password)
+    #
+    #     expected = {
+    #         'username': self.user,
+    #         'firstName': self.first_name,
+    #         'lastName': self.last_name,
+    #         'email': self.email }
+    #
+    #     actual = self.rmt.get_user(self.user)
+    #
+    #     # get also returns generated values that we cannot test for such
+    #     # as creation time.
+    #     self.assertTrue(len(expected.items()) <= len(actual.items()))
+    #     self.assertEqual(expected["email"], actual["email"])
+    #     self.assertEqual(expected["username"], actual["username"])
+    #     self.assertEqual(expected["firstName"], actual["firstName"])
+    #     self.assertEqual(expected["lastName"], actual["lastName"])
 
     def test_get_invalid_user(self):
         with self.assertRaises(HTTPError):
@@ -1249,42 +1256,22 @@ if __name__ == '__main__':
     @classmethod
     def tearDownClass(cls):
         try:
-            cls.rmt.delete_user(cls.user)
+            # TODO: Only admin can delete users now. Update test to enable cleaning up
+            pass
+            #cls.rmt.delete_user(cls.user)
         except HTTPError:
             pass
 
     def tearDown(self):
         try:
-            self.rmt.delete_user(self.user)
+            # TODO: Only admin can delete users now. Update test to enable cleaning up
+            pass
+            # self.rmt.delete_user(self.user)
         except HTTPError:
             pass
 
-    def test_add(self):
-        self.rmt.add_user(
-            self.user, self.first_name, self.last_name, self.email,
-            self.password)
-
     def test_add_user_already_exists(self):
-        self.rmt.add_user(
-            self.user, self.first_name, self.last_name, self.email,
-            self.password)
-
-        with self.assertRaises(HTTPError):
-            self.rmt.add_user(
-                self.user, self.first_name, self.last_name, self.email,
-                self.password)
-
-    def test_delete(self):
-        self.rmt.add_user(
-            self.user, self.first_name, self.last_name, self.email,
-            self.password)
-        self.rmt.delete_user(self.user)
-
-    def test_delete_invalid_user(self):
-        with self.assertRaises(HTTPError):
-            self.rmt.delete_user('foo')
-
-    def test_get(self):
+        # Combine create, get, dup create in 1 test since you can't delete users as a non-admin
         self.rmt.add_user(
             self.user, self.first_name, self.last_name, self.email,
             self.password)
@@ -1293,7 +1280,7 @@ if __name__ == '__main__':
             'username': self.user,
             'firstName': self.first_name,
             'lastName': self.last_name,
-            'email': self.email }
+            'email': self.email}
 
         actual = self.rmt.get_user(self.user)
 
@@ -1304,6 +1291,36 @@ if __name__ == '__main__':
         self.assertEqual(expected["username"], actual["username"])
         self.assertEqual(expected["firstName"], actual["firstName"])
         self.assertEqual(expected["lastName"], actual["lastName"])
+
+        with self.assertRaises(HTTPError):
+            self.rmt.add_user(
+                self.user, self.first_name, self.last_name, self.email,
+                self.password)
+
+    def test_delete_invalid_user(self):
+        with self.assertRaises(HTTPError):
+            self.rmt.delete_user('foo')
+
+    # def test_get(self):
+    #     self.rmt.add_user(
+    #         self.user, self.first_name, self.last_name, self.email,
+    #         self.password)
+    #
+    #     expected = {
+    #         'username': self.user,
+    #         'firstName': self.first_name,
+    #         'lastName': self.last_name,
+    #         'email': self.email }
+    #
+    #     actual = self.rmt.get_user(self.user)
+    #
+    #     # get also returns generated values that we cannot test for such
+    #     # as creation time.
+    #     self.assertTrue(len(expected.items()) <= len(actual.items()))
+    #     self.assertEqual(expected["email"], actual["email"])
+    #     self.assertEqual(expected["username"], actual["username"])
+    #     self.assertEqual(expected["firstName"], actual["firstName"])
+    #     self.assertEqual(expected["lastName"], actual["lastName"])
 
     def test_get_invalid_user(self):
         with self.assertRaises(HTTPError):
@@ -2351,7 +2368,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2412,7 +2429,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3271,7 +3288,9 @@ the specified test method's docstring.</p></div>
   <div id="source-intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.tearDown" class="source">
     <pre><code>def tearDown(self):
     try:
-        self.rmt.delete_user(self.user)
+        # TODO: Only admin can delete users now. Update test to enable cleaning up
+        pass
+        # self.rmt.delete_user(self.user)
     except HTTPError:
         pass
 </code></pre>
@@ -3295,31 +3314,11 @@ the specified test method's docstring.</p></div>
     <pre><code>@classmethod
 def tearDownClass(cls):
     try:
-        cls.rmt.delete_user(cls.user)
+        # TODO: Only admin can delete users now. Update test to enable cleaning up
+        pass
+        #cls.rmt.delete_user(cls.user)
     except HTTPError:
         pass
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_add">
-    <p>def <span class="ident">test_add</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_add', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_add" class="source">
-    <pre><code>def test_add(self):
-    self.rmt.add_user(
-        self.user, self.first_name, self.last_name, self.email,
-        self.password)
 </code></pre>
   </div>
 </div>
@@ -3339,36 +3338,27 @@ def tearDownClass(cls):
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_add_user_already_exists', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_add_user_already_exists" class="source">
     <pre><code>def test_add_user_already_exists(self):
+    # Combine create, get, dup create in 1 test since you can't delete users as a non-admin
     self.rmt.add_user(
         self.user, self.first_name, self.last_name, self.email,
         self.password)
+    expected = {
+        'username': self.user,
+        'firstName': self.first_name,
+        'lastName': self.last_name,
+        'email': self.email}
+    actual = self.rmt.get_user(self.user)
+    # get also returns generated values that we cannot test for such
+    # as creation time.
+    self.assertTrue(len(expected.items()) <= len(actual.items()))
+    self.assertEqual(expected["email"], actual["email"])
+    self.assertEqual(expected["username"], actual["username"])
+    self.assertEqual(expected["firstName"], actual["firstName"])
+    self.assertEqual(expected["lastName"], actual["lastName"])
     with self.assertRaises(HTTPError):
         self.rmt.add_user(
             self.user, self.first_name, self.last_name, self.email,
             self.password)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_delete">
-    <p>def <span class="ident">test_delete</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_delete', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_delete" class="source">
-    <pre><code>def test_delete(self):
-    self.rmt.add_user(
-        self.user, self.first_name, self.last_name, self.email,
-        self.password)
-    self.rmt.delete_user(self.user)
 </code></pre>
   </div>
 </div>
@@ -3390,41 +3380,6 @@ def tearDownClass(cls):
     <pre><code>def test_delete_invalid_user(self):
     with self.assertRaises(HTTPError):
         self.rmt.delete_user('foo')
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_get">
-    <p>def <span class="ident">test_get</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_get', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_user_v0_7.ProjectUserTest_v0_7.test_get" class="source">
-    <pre><code>def test_get(self):
-    self.rmt.add_user(
-        self.user, self.first_name, self.last_name, self.email,
-        self.password)
-    expected = {
-        'username': self.user,
-        'firstName': self.first_name,
-        'lastName': self.last_name,
-        'email': self.email }
-    actual = self.rmt.get_user(self.user)
-    # get also returns generated values that we cannot test for such
-    # as creation time.
-    self.assertTrue(len(expected.items()) <= len(actual.items()))
-    self.assertEqual(expected["email"], actual["email"])
-    self.assertEqual(expected["username"], actual["username"])
-    self.assertEqual(expected["firstName"], actual["firstName"])
-    self.assertEqual(expected["lastName"], actual["lastName"])
 </code></pre>
   </div>
 </div>

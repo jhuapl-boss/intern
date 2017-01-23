@@ -1047,11 +1047,11 @@ table {
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_invalid_admin_role">test_add_invalid_admin_role</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_invalid_role">test_add_invalid_role</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_invalid_user">test_add_invalid_user</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_multiple_roles">test_add_multiple_roles</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_role">test_add_role</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_delete_invalid_role">test_delete_invalid_role</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_delete_invalid_user">test_delete_invalid_user</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_delete_role">test_delete_role</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_fail_add_user_manager">test_fail_add_user_manager</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_get_roles">test_get_roles</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_get_roles_invalid_user">test_get_roles_invalid_user</a></li>
   </ul>
@@ -1132,7 +1132,8 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.cleanup_db()
-        cls.rmt.delete_user(cls.user)
+        # Currently can't delete users unless admin
+        #cls.rmt.delete_user(cls.user)
 
     @classmethod
     def cleanup_db(cls):
@@ -1142,10 +1143,6 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
         anything if an exception occurs during delete_user_role().  The role
         may not have existed for a particular test.
         """
-        try:
-            cls.rmt.delete_user_role(cls.user, cls.admin)
-        except HTTPError:
-            pass
         try:
             cls.rmt.delete_user_role(cls.user, cls.user_mgr)
         except HTTPError:
@@ -1164,14 +1161,15 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
     def test_add_role(self):
         self.rmt.add_user_role(self.user, self.rsrc_mgr)
 
-    def test_add_multiple_roles(self):
-        self.rmt.add_user_role(self.user, self.user_mgr)
-        self.rmt.add_user_role(self.user, self.rsrc_mgr)
-
-        expected = [self.user_mgr, self.rsrc_mgr]
+        expected = [self.rsrc_mgr]
         actual = self.rmt.get_user_roles(self.user)
 
         six.assertCountEqual(self, expected, actual)
+
+    def test_fail_add_user_manager(self):
+        # only admin can add a user manager
+        with self.assertRaises(HTTPError):
+            self.rmt.add_user_role(self.user, self.user_mgr)
 
     def test_add_invalid_user(self):
         with self.assertRaises(HTTPError):
@@ -1182,6 +1180,7 @@ class ProjectUserRoleTest_v0_7(unittest.TestCase):
             self.rmt.add_user_role(self.user, 'foo')
 
     def test_add_invalid_admin_role(self):
+        # only the root account has the admin role
         with self.assertRaises(HTTPError):
             self.rmt.add_user_role(self.user, self.admin)
 
@@ -1269,7 +1268,8 @@ if __name__ == '__main__':
     @classmethod
     def tearDownClass(cls):
         cls.cleanup_db()
-        cls.rmt.delete_user(cls.user)
+        # Currently can't delete users unless admin
+        #cls.rmt.delete_user(cls.user)
 
     @classmethod
     def cleanup_db(cls):
@@ -1279,10 +1279,6 @@ if __name__ == '__main__':
         anything if an exception occurs during delete_user_role().  The role
         may not have existed for a particular test.
         """
-        try:
-            cls.rmt.delete_user_role(cls.user, cls.admin)
-        except HTTPError:
-            pass
         try:
             cls.rmt.delete_user_role(cls.user, cls.user_mgr)
         except HTTPError:
@@ -1301,14 +1297,15 @@ if __name__ == '__main__':
     def test_add_role(self):
         self.rmt.add_user_role(self.user, self.rsrc_mgr)
 
-    def test_add_multiple_roles(self):
-        self.rmt.add_user_role(self.user, self.user_mgr)
-        self.rmt.add_user_role(self.user, self.rsrc_mgr)
-
-        expected = [self.user_mgr, self.rsrc_mgr]
+        expected = [self.rsrc_mgr]
         actual = self.rmt.get_user_roles(self.user)
 
         six.assertCountEqual(self, expected, actual)
+
+    def test_fail_add_user_manager(self):
+        # only admin can add a user manager
+        with self.assertRaises(HTTPError):
+            self.rmt.add_user_role(self.user, self.user_mgr)
 
     def test_add_invalid_user(self):
         with self.assertRaises(HTTPError):
@@ -1319,6 +1316,7 @@ if __name__ == '__main__':
             self.rmt.add_user_role(self.user, 'foo')
 
     def test_add_invalid_admin_role(self):
+        # only the root account has the admin role
         with self.assertRaises(HTTPError):
             self.rmt.add_user_role(self.user, self.admin)
 
@@ -2387,7 +2385,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2448,7 +2446,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2803,10 +2801,6 @@ def cleanup_db(cls):
     anything if an exception occurs during delete_user_role().  The role
     may not have existed for a particular test.
     """
-    try:
-        cls.rmt.delete_user_role(cls.user, cls.admin)
-    except HTTPError:
-        pass
     try:
         cls.rmt.delete_user_role(cls.user, cls.user_mgr)
     except HTTPError:
@@ -3367,7 +3361,6 @@ the specified test method's docstring.</p></div>
     <pre><code>@classmethod
 def tearDownClass(cls):
     cls.cleanup_db()
-    cls.rmt.delete_user(cls.user)
 </code></pre>
   </div>
 </div>
@@ -3387,6 +3380,7 @@ def tearDownClass(cls):
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_invalid_admin_role', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_invalid_admin_role" class="source">
     <pre><code>def test_add_invalid_admin_role(self):
+    # only the root account has the admin role
     with self.assertRaises(HTTPError):
         self.rmt.add_user_role(self.user, self.admin)
 </code></pre>
@@ -3439,30 +3433,6 @@ def tearDownClass(cls):
   
             
   <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_multiple_roles">
-    <p>def <span class="ident">test_add_multiple_roles</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_multiple_roles', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_multiple_roles" class="source">
-    <pre><code>def test_add_multiple_roles(self):
-    self.rmt.add_user_role(self.user, self.user_mgr)
-    self.rmt.add_user_role(self.user, self.rsrc_mgr)
-    expected = [self.user_mgr, self.rsrc_mgr]
-    actual = self.rmt.get_user_roles(self.user)
-    six.assertCountEqual(self, expected, actual)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_role">
     <p>def <span class="ident">test_add_role</span>(</p><p>self)</p>
     </div>
@@ -3475,6 +3445,9 @@ def tearDownClass(cls):
   <div id="source-intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_add_role" class="source">
     <pre><code>def test_add_role(self):
     self.rmt.add_user_role(self.user, self.rsrc_mgr)
+    expected = [self.rsrc_mgr]
+    actual = self.rmt.get_user_roles(self.user)
+    six.assertCountEqual(self, expected, actual)
 </code></pre>
   </div>
 </div>
@@ -3540,6 +3513,28 @@ def tearDownClass(cls):
     self.rmt.delete_user_role(self.user, self.rsrc_mgr)
     actual = self.rmt.get_user_roles(self.user)
     self.assertEqual([], actual)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_fail_add_user_manager">
+    <p>def <span class="ident">test_fail_add_user_manager</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_fail_add_user_manager', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_user_role_v0_7.ProjectUserRoleTest_v0_7.test_fail_add_user_manager" class="source">
+    <pre><code>def test_fail_add_user_manager(self):
+    # only admin can add a user manager
+    with self.assertRaises(HTTPError):
+        self.rmt.add_user_role(self.user, self.user_mgr)
 </code></pre>
   </div>
 </div>
