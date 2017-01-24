@@ -256,11 +256,8 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
-    def skip_test_tight_bounding_box_x_axis(self):
+    def test_tight_bounding_box_x_axis(self):
         """Test tight bounding box with ids that span three cuboids along the x axis."""
-
-        # Skipped because not ready on spdb side yet.
-
         resolution = 0
         x_rng = [511, 1025]
         y_rng = [512, 1024]
@@ -269,15 +266,85 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         data = numpy.zeros((16, 512, 514), dtype='uint64')
 
+        id = 123
+
         # Id in partial region on x axis closest to origin.
-        data[1][1][0] = 123
+        data[1][1][0] = id
         # Id in partial region on x axis furthest from origin.
-        data[1][1][513] = 123
+        data[1][1][513] = id
 
         # Id in cuboid aligned region.
-        data[2][2][21] = 123
+        data[2][2][21] = id
 
         expected = {'x_range': [511, 1025], 'y_range': [513, 515], 'z_range': [17, 19]}
+
+        self.rmt.create_cutout(
+            self.ann_bounding_chan, resolution, x_rng, y_rng, z_rng, data)
+
+        # Get cutout to make sure data is done writing and indices updated.
+        actual_data = self.rmt.get_cutout(
+            self.ann_bounding_chan, resolution, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(data, actual_data)
+
+        # Method under test.
+        actual = self.rmt.get_bounding_box(
+            self.ann_bounding_chan, resolution, id, bb_type='tight')
+
+    def test_tight_bounding_box_y_axis(self):
+        """Test tight bounding box with ids that span three cuboids along the x axis."""
+        resolution = 0
+        x_rng = [512, 1024]
+        y_rng = [511, 1026]
+        z_rng = [16, 32]
+        t_rng = [0, 1]
+
+        data = numpy.zeros((16, 514, 512), dtype='uint64')
+
+        id = 127
+
+        # Id in partial region on y axis closest to origin.
+        data[1][0][10] = id
+        # Id in partial region on y axis furthest from origin.
+        data[1][513][13] = id
+
+        # Id in cuboid aligned region.
+        data[2][2][21] = id
+
+        expected = {'x_range': [522, 526], 'y_range': [511, 1025], 'z_range': [17, 19]}
+
+        self.rmt.create_cutout(
+            self.ann_bounding_chan, resolution, x_rng, y_rng, z_rng, data)
+
+        # Get cutout to make sure data is done writing and indices updated.
+        actual_data = self.rmt.get_cutout(
+            self.ann_bounding_chan, resolution, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(data, actual_data)
+
+        # Method under test.
+        actual = self.rmt.get_bounding_box(
+            self.ann_bounding_chan, resolution, id, bb_type='tight')
+
+    def test_tight_bounding_box_z_axis(self):
+        """Test tight bounding box with ids that span three cuboids along the x axis."""
+        resolution = 0
+        x_rng = [512, 1024]
+        y_rng = [512, 1024]
+        z_rng = [15, 33]
+        t_rng = [0, 1]
+
+        data = numpy.zeros((18, 512, 512), dtype='uint64')
+
+        id = 500000000000000000
+
+        # Id in partial region on z axis closest to origin.
+        data[0][22][60] = id
+        # Id in partial region on z axis furthest from origin.
+        data[17][23][63] = id
+
+        # Id in cuboid aligned region.
+        data[5][24][71] = id
+
+        expected = {'x_range': [572, 583], 'y_range': [534, 537], 'z_range': [15, 33]}
 
         self.rmt.create_cutout(
             self.ann_bounding_chan, resolution, x_rng, y_rng, z_rng, data)
