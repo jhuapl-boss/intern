@@ -266,15 +266,19 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         data = numpy.zeros((16, 512, 514), dtype='uint64')
 
-        id = 123
+        x_id = 123
+        y_id = 127
+        z_id = 500000000000000000
 
         # Id in partial region on x axis closest to origin.
-        data[1][1][0] = id
+        data[1][1][0] = x_id
         # Id in partial region on x axis furthest from origin.
-        data[1][1][513] = id
+        data[1][1][513] = x_id
 
         # Id in cuboid aligned region.
-        data[2][2][21] = id
+        data[2][2][21] = x_id
+        data[2][1][22] = y_id
+        data[4][24][72] = z_id
 
         expected = {'x_range': [511, 1025], 'y_range': [513, 515], 'z_range': [17, 19]}
 
@@ -288,27 +292,31 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         # Method under test.
         actual = self.rmt.get_bounding_box(
-            self.ann_bounding_chan, resolution, id, bb_type='tight')
+            self.ann_bounding_chan, resolution, x_id, bb_type='tight')
 
     def test_tight_bounding_box_y_axis(self):
         """Test tight bounding box with ids that span three cuboids along the x axis."""
         resolution = 0
         x_rng = [512, 1024]
-        y_rng = [511, 1026]
+        y_rng = [511, 1025]
         z_rng = [16, 32]
         t_rng = [0, 1]
 
         data = numpy.zeros((16, 514, 512), dtype='uint64')
 
-        id = 127
+        x_id = 123
+        y_id = 127
+        z_id = 500000000000000000
 
         # Id in partial region on y axis closest to origin.
-        data[1][0][10] = id
+        data[1][0][10] = y_id
         # Id in partial region on y axis furthest from origin.
-        data[1][513][13] = id
+        data[1][513][13] = y_id
 
         # Id in cuboid aligned region.
-        data[2][2][21] = id
+        data[2][2][21] = y_id
+        data[2][3][20] = x_id
+        data[4][25][71] = z_id
 
         expected = {'x_range': [522, 526], 'y_range': [511, 1025], 'z_range': [17, 19]}
 
@@ -322,7 +330,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         # Method under test.
         actual = self.rmt.get_bounding_box(
-            self.ann_bounding_chan, resolution, id, bb_type='tight')
+            self.ann_bounding_chan, resolution, y_id, bb_type='tight')
 
     def test_tight_bounding_box_z_axis(self):
         """Test tight bounding box with ids that span three cuboids along the x axis."""
@@ -334,15 +342,19 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         data = numpy.zeros((18, 512, 512), dtype='uint64')
 
-        id = 500000000000000000
+        x_id = 123
+        y_id = 127
+        z_id = 500000000000000000
 
         # Id in partial region on z axis closest to origin.
-        data[0][22][60] = id
+        data[0][22][60] = z_id
         # Id in partial region on z axis furthest from origin.
-        data[17][23][63] = id
+        data[17][23][63] = z_id
 
         # Id in cuboid aligned region.
-        data[5][24][71] = id
+        data[5][24][71] = z_id
+        data[3][2][20] = x_id
+        data[3][1][21] = y_id
 
         expected = {'x_range': [572, 583], 'y_range': [534, 537], 'z_range': [15, 33]}
 
@@ -356,7 +368,7 @@ class VolumeServiceTest_v0_7(unittest.TestCase):
 
         # Method under test.
         actual = self.rmt.get_bounding_box(
-            self.ann_bounding_chan, resolution, id, bb_type='tight')
+            self.ann_bounding_chan, resolution, z_id, bb_type='tight')
 
     def test_get_ids_in_region_none(self):
         """Run on region that hasn't been written with ids, yet."""
