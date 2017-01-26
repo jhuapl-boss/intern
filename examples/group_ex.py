@@ -32,8 +32,9 @@ rmt = BossRemote('example.cfg')
 # Note spaces are not allowed in group names.
 grp_name = 'my_group'
 
-# Boss user names still in flux.
-user_name = 'bossadmin'
+user_name = 'example_user'
+print('Creating user . . .')
+rmt.add_user(user_name, 'John', 'Doe', 'jd@example.com', 'secure_password')
 
 print('Creating group . . .')
 try:
@@ -45,6 +46,12 @@ except HTTPError as h:
 print('Confirm group created . . .')
 if rmt.get_group(grp_name):
     print('Confirmed')
+
+#############################################################################
+# The user needs to login before group operations can be performed.
+# This is due to the Single-Sign On workflow requires a manual log into update
+# the application database
+#############################################################################
 
 print('Add user to group . . .')
 rmt.add_group_member(grp_name, user_name)
@@ -66,3 +73,6 @@ else:
 
 print('Deleting group . . .')
 rmt.delete_group(grp_name)
+
+print('\nClean up be deleting the user . . .')
+rmt.delete_user(user_name)
