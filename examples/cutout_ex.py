@@ -56,6 +56,8 @@ rmt.create_cutout(chan_actual, 0, x_rng, y_rng, z_rng, data)
 cutout_data = rmt.get_cutout(chan_actual, 0, x_rng, y_rng, z_rng)
 numpy.testing.assert_array_equal(data, cutout_data)
 
+print('Cutout uploaded and verified.')
+
 # Get only a small piece of the cutout.
 small_cutout_data = rmt.get_cutout(chan_actual, 0, [0, 1], [0, 1], [0, 5])
 numpy.testing.assert_array_equal(data[0:5, 0:1, 0:1], small_cutout_data)
@@ -69,5 +71,43 @@ rmt.create_cutout(chan_actual, 0, x_rng, y_rng, z_rng, time_data, time_rng)
 time_cutout_data = rmt.get_cutout(chan_actual, 0, x_rng, y_rng, z_rng, time_rng)
 numpy.testing.assert_array_equal(time_data, time_cutout_data)
 
+print('Time series cutout uploaded and verified.')
+
+
+### Filtered cutout example. ###
+# Filtered cutouts are only valid on annotation channels.
+# Note that annotation channels must be uint64.
+
+ANN_CHAN_NAME = 'ex_EM_ann'
+ann_chan_setup = ChannelResource(
+    ANN_CHAN_NAME, COLL_NAME, EXP_NAME, 'annotation',
+    'Example annotation channel.', datatype='uint64', sources=[CHAN_NAME])
+try:
+    ann_chan_actual = rmt.get_project(ann_chan_setup)
+except HTTPError:
+    ann_chan_actual = rmt.create_project(ann_chan_setup)
+
+print('Annotation channel ready.')
+
+# Note that the numpy matrix is in Z, Y, X order.
+ann_data = numpy.random.randint(1, 10, (5, 4, 8), dtype='uint64')
+# Make sure 1 is used at least once.
+ann_data[0][1][1] = 1
+
+# Upload annotation data to the channel.
+rmt.create_cutout(ann_chan_actual, 0, x_rng, y_rng, z_rng, ann_data)
+
+# Verify that the cutout uploaded correctly.
+ann_cutout_data = rmt.get_cutout(ann_chan_actual, 0, x_rng, y_rng, z_rng)
+numpy.testing.assert_array_equal(ann_data, ann_cutout_data)
+
+print('Annotation data uploaded and verified.')
+
+# Filter cutout by id 1.
+filtered = rmt.get_cutout(ann_chan_actual, 0, x_rng, y_rng, z_rng, id_list=[1])
+
+print('Filtered by id 1.')
+
 # Clean up.
+rmt.delete_project(ann_chan_actual)
 rmt.delete_project(chan_actual)
