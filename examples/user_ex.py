@@ -22,7 +22,8 @@ rmt = BossRemote('example.cfg')
 
 user = 'example_user'
 
-# Create a user. Note that users are unique, so it's
+# Create a user. Note that users are unique, so you may need to change
+# the user name for this example to run.
 print('Creating user . . .')
 rmt.add_user(user, 'John', 'Doe', 'jd@example.com', 'secure_password')
 
@@ -31,7 +32,7 @@ user_data = rmt.get_user(user)
 print(user_data)
 
 #############################################################################
-# The user needs to login before role and group operations can be performed.
+# The user needs to login before group operations can be performed.
 # This is due to the Single-Sign On workflow requires a manual log into update
 # the application database
 #############################################################################
