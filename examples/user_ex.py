@@ -48,8 +48,5 @@ rmt.delete_user_role(user, 'resource-manager')
 print('\nList the user\'s roles again. . .')
 print(rmt.get_user_roles(user))
 
-print('\nList the user\'s groups . . .')
-print(rmt.get_user_groups(user))
-
 print('\nClean up be deleting the user . . .')
 rmt.delete_user(user)
