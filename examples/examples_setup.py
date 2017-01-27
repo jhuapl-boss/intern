@@ -30,7 +30,7 @@ except HTTPError:
     rmt.create_project(coll)
 
 coord = CoordinateFrameResource(
-    'StdFrame', 'Standard coordinate frame for xyz.', 0, 50, 0, 50, 0, 50)
+    'StdFrame', 'Standard coordinate frame for xyz.', 0, 2048, 0, 2048, 0, 64)
 try:
     coord_actual = rmt.get_project(coord)
 except HTTPError:
