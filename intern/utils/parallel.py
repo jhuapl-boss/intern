@@ -57,8 +57,8 @@ def snap_to_cube(q_start, q_stop, chunk_depth=16, q_index=1):
 def block_compute(x_start, x_stop,
                   y_start, y_stop,
                   z_start, z_stop,
-                  origin=(0, 0, 1),
-                  block_size=(256, 256, 16)):
+                  origin=(0, 0, 0),
+                  block_size=(512, 512, 16)):
     """
     Get bounding box coordinates (in 3D) of small cutouts to request in
     order to reconstitute a larger cutout.

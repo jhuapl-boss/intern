@@ -14,6 +14,7 @@
 from intern.service.boss import BaseVersion
 from intern.service.boss.v0_7 import BOSS_API_VERSION
 from intern.resource.boss.resource import *
+from intern.utils.parallel import *
 from requests import HTTPError
 import blosc
 import numpy as np
@@ -33,7 +34,7 @@ class VolumeService_0_7(BaseVersion):
         """Method to return the bit width for blosc based on the Resource"""
         datatype = resource.datatype
 
-        if ("uint" in datatype):
+        if "uint" in datatype:
             bit_width = int(datatype.split("uint")[1])
         else:
             raise ValueError("Unsupported datatype: {}".format(datatype))
@@ -72,8 +73,9 @@ class VolumeService_0_7(BaseVersion):
                     "You must specifying a time range if providing a 4D matrix")
         else:
             raise ValueError(
-                "Invalid data format. Only 3D or 4D cutouts are supported. Number of dimensions: {}".format(
-                    numpyVolume.ndim))
+                "Invalid data format. Only 3D or 4D cutouts are supported. " +
+                "Number of dimensions: {}".format(numpyVolume.ndim)
+            )
 
         req = self.get_cutout_request(
             resource, 'POST', 'application/blosc',
@@ -90,12 +92,15 @@ class VolumeService_0_7(BaseVersion):
         raise HTTPError(msg, request=req, response=resp)
 
     def get_cutout(
-        self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-        url_prefix, auth, session, send_opts):
-        """Upload a cutout to the Boss data store.
+            self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
+            url_prefix, auth, session, send_opts
+        ):
+        """
+        Upload a cutout to the Boss data store.
 
         Args:
-            resource (intern.resource.resource.Resource): Resource compatible with cutout operations.
+            resource (intern.resource.resource.Resource): Resource compatible
+                with cutout operations
             resolution (int): 0 indicates native resolution.
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
@@ -114,9 +119,46 @@ class VolumeService_0_7(BaseVersion):
             requests.HTTPError
         """
 
+        # Check to see if this volume is larger than 1GB. If so, chunk it into
+        # several smaller bites:
+        if (
+                (x_range[1] - x_range[0]) *
+                (y_range[1] - y_range[0]) *
+                (z_range[1] - z_range[0])
+        ) > 1024*1024*32:
+            blocks = block_compute(
+                x_range[0], x_range[1],
+                y_range[0], y_range[1],
+                z_range[0], z_range[1],
+                block_size=(1024, 1024, 32)
+            )
+
+            result = np.ndarray((
+                z_range[1] - z_range[0],
+                y_range[1] - y_range[0],
+                x_range[1] - x_range[0]
+            ))
+
+            for b in blocks:
+                _data = self.get_cutout(
+                    resource, resolution, b[0], b[1], b[2],
+                    time_range, id_list, url_prefix, auth, session, send_opts
+                )
+
+                result[
+                    b[2][0] - z_range[0] : b[2][1] - z_range[0],
+                    b[1][0] - y_range[0] : b[1][1] - y_range[0],
+                    b[0][0] - x_range[0] : b[0][1] - x_range[0]
+                ] = _data
+
+            return result
+
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
-            url_prefix, auth, resolution, x_range, y_range, z_range, time_range, id_list=id_list)
+            url_prefix, auth,
+            resolution, x_range, y_range, z_range, time_range,
+            id_list=id_list
+        )
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
         prep.headers['Accept'] = 'application/blosc'
@@ -185,7 +227,7 @@ class VolumeService_0_7(BaseVersion):
         raise HTTPError(msg, request=req, response=resp)
 
     def get_bounding_box(
-            self, resource, resolution, id, bb_type,
+            self, resource, resolution, _id, bb_type,
             url_prefix, auth, session, send_opts):
         """Get bounding box containing object specified by id.
 
@@ -195,7 +237,7 @@ class VolumeService_0_7(BaseVersion):
         Args:
             resource (intern.resource.Resource): Resource compatible with annotation operations.
             resolution (int): 0 indicates native resolution.
-            id (int): Id of object of interest.
+            _id (int): Id of object of interest.
             bb_type (string): Defaults to 'loose'.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
@@ -216,7 +258,7 @@ class VolumeService_0_7(BaseVersion):
 
         req = self.get_bounding_box_request(
             resource, 'GET', 'application/json', url_prefix, auth, resolution,
-            id, bb_type)
+            _id, bb_type)
 
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)

@@ -1,4 +1,5 @@
-﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿"""
+# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
 from intern.remote import Remote
 from intern.resource.boss.resource import *
 from intern.service.boss.project import ProjectService
@@ -30,16 +32,21 @@ LATEST_VERSION = 'v0.7'
 
 
 class BossRemote(Remote):
-    """Remote provides an SDK to the Boss API.
+    """
+    Remote provides an SDK to the Boss API.
 
     Attributes:
-        _token_project (string): Django Rest Framework token for auth to the project service.
-        _token_metadata (string): Django Rest Framework token for auth to the metadata service.
-        _token_volume (string): Django Rest Framework token for auth to the volume service.
+        _token_project (string): Django Framework token for auth to the
+            project service.
+        _token_metadata (string): Django Framework token for auth to the
+            metadata service.
+        _token_volume (string): Django Framework token for auth to the
+            volume service.
     """
 
     def __init__(self, cfg_file_or_dict=None, version=None):
-        """Constructor.
+        """
+        Constructor.
 
         If not config arguments are passed in, ~/.intern/intern.cfg is read by
         default.  Config data is in INI format.  If both cfg_file and cfg_str
@@ -47,7 +54,8 @@ class BossRemote(Remote):
 
         Args:
             version (optional[string]): Version of Boss API to use.
-            cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.
+            cfg_file_or_dict (optional[string|dict]): Path to config file in
+                INI format or a dict of config parameters.
 
         Raises:
             (FileNotFoundError): if can't load given config file.
@@ -64,7 +72,8 @@ class BossRemote(Remote):
         self._init_volume_service(version)
 
     def _init_project_service(self, version):
-        """Method to initialize the Project Service from the config data
+        """
+        Method to initialize the Project Service from the config data
 
         Args:
             version (string): Version of Boss API to use.
@@ -85,7 +94,8 @@ class BossRemote(Remote):
         self._project.set_auth(self._token_project)
 
     def _init_metadata_service(self, version):
-        """Method to initialize the Metadata Service from the config data
+        """
+        Method to initialize the Metadata Service from the config data
 
         Args:
             version (string): Version of Boss API to use.
@@ -106,7 +116,8 @@ class BossRemote(Remote):
         self._metadata.set_auth(self._token_metadata)
 
     def _init_volume_service(self, version):
-        """Method to initialize the Volume Service from the config data
+        """
+        Method to initialize the Volume Service from the config data
 
         Args:
             version (string): Version of Boss API to use.
@@ -127,7 +138,9 @@ class BossRemote(Remote):
         self._volume.set_auth(self._token_volume)
 
     def _load_config_section(self, section_name):
-        """Method to load the specific Service section from the config file if it exists, or fall back to the default
+        """
+        Method to load the specific Service section from the config file if it
+        exists, or fall back to the default
 
         Args:
             section_name (str): The desired service section name
@@ -142,16 +155,25 @@ class BossRemote(Remote):
             # Load Default section
             section = dict(self._config.items("Default"))
         else:
-            raise KeyError("'{}' was not found in the configuration file and no default configuration was provided.".format(section_name))
+            raise KeyError((
+                "'{}' was not found in the configuration file and no default " +
+                "configuration was provided."
+            ).format(section_name))
 
         # Make sure section is valid
         if "protocol" in section and "host" in section and "token" in section:
             return section
         else:
-            raise KeyError("Missing values in configuration data. Must contain: protocol, host, token")
+            raise KeyError(
+                "Missing values in configuration data. " +
+                "Must contain: protocol, host, token"
+            )
 
     @property
     def token_project(self):
+        """
+        Returns the current token
+        """
         return self._token_project
 
     @token_project.setter
@@ -161,6 +183,9 @@ class BossRemote(Remote):
 
     @property
     def token_metadata(self):
+        """
+        Returns metadata for the current token
+        """
         return self._token_metadata
 
     @token_metadata.setter
@@ -170,6 +195,9 @@ class BossRemote(Remote):
 
     @property
     def token_volume(self):
+        """
+        Get the current token volume
+        """
         return self._token_volume
 
     @token_volume.setter
@@ -178,12 +206,13 @@ class BossRemote(Remote):
         self.volume_service.set_auth(self._token_volume)
 
     def list_groups(self, filtr=None):
-        """Get the groups the logged in user is a member of.
+        """
+        Get the groups the logged in user is a member of.
 
         Optionally filter by 'member' or 'maintainer'.
 
         Args:
-            filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
+            filtr (optional[string|None]): ['member'|'maintainer']
 
         Returns:
             (list[string]): List of group names.
@@ -192,20 +221,25 @@ class BossRemote(Remote):
         return self.project_service.list_groups(filtr)
 
     def get_group(self, name, user_name=None):
-        """Get information on the given group or whether or not a user is a member of the group.
+        """
+        Get information on the given group or whether or not a user is a member
+        of the group.
 
         Args:
             name (string): Name of group to query.
-            user_name (optional[string]): Supply None if not interested in determining if user is a member of the given group.
+            user_name (optional[string]): Supply None if not interested in
+            determining if user is a member of the given group.
 
         Returns:
-            (mixed): Dictionary if getting group information or bool if a user name is supplied.
+            (mixed): Dictionary if getting group information or bool if a user
+                name is supplied.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get_group(name, user_name)
 
     def create_group(self, name):
-        """Create a new group.
+        """
+        Create a new group.
 
         Args:
             name (string): Name of the group to create.
@@ -217,7 +251,8 @@ class BossRemote(Remote):
         return self.project_service.create_group(name)
 
     def delete_group(self, name):
-        """Delete given group.
+        """
+        Delete given group.
 
         Args:
             name (string): Name of group.
@@ -229,7 +264,8 @@ class BossRemote(Remote):
         return self.project_service.delete_group(name)
 
     def list_group_members(self, name):
-        """Get the members of a group.
+        """
+        Get the members of a group.
 
         Args:
             name (string): Name of group to query.
@@ -241,7 +277,8 @@ class BossRemote(Remote):
         return self.project_service.list_group_members(name)
 
     def add_group_member(self, grp_name, user):
-        """Add the given user to the named group.
+        """
+        Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
 
@@ -256,7 +293,8 @@ class BossRemote(Remote):
         return self.project_service.add_group_member(grp_name, user)
 
     def delete_group_member(self, grp_name, user):
-        """Delete the given user to the named group.
+        """
+        Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
 
@@ -271,7 +309,8 @@ class BossRemote(Remote):
         return self.project_service.delete_group_member(grp_name, user)
 
     def get_is_group_member(self, grp_name, user):
-        """Check if the given user is a member of the named group.
+        """
+        Check if the given user is a member of the named group.
 
         Note that a group maintainer is not considered a member unless the
         user is also explicitly added as a member.
@@ -287,7 +326,8 @@ class BossRemote(Remote):
         return self.project_service.get_is_group_member(grp_name, user)
 
     def list_group_maintainers(self, name):
-        """Get the maintainers of a group.
+        """
+        Get the maintainers of a group.
 
         Args:
             name (string): Name of group to query.
@@ -299,7 +339,8 @@ class BossRemote(Remote):
         return self.project_service.list_group_maintainers(name)
 
     def add_group_maintainer(self, name, user):
-        """Add the given user to the named group.
+        """
+        Add the given user to the named group.
 
         Both group and user must already exist for this to succeed.
 
@@ -314,7 +355,8 @@ class BossRemote(Remote):
         return self.project_service.add_group_maintainer(name, user)
 
     def delete_group_maintainer(self, grp_name, user):
-        """Delete the given user to the named group.
+        """
+        Delete the given user to the named group.
 
         Both group and user must already exist for this to succeed.
 
@@ -329,7 +371,8 @@ class BossRemote(Remote):
         return self.project_service.delete_group_maintainer(grp_name, user)
 
     def get_is_group_maintainer(self, grp_name, user):
-        """Check if the given user is a member of the named group.
+        """
+        Check if the given user is a member of the named group.
 
         Args:
             name (string): Name of group.
@@ -342,11 +385,13 @@ class BossRemote(Remote):
         return self.project_service.get_is_group_maintainer(grp_name, user)
 
     def list_permissions(self, group_name=None, resource=None):
-        """List permission sets associated filtering by group and/or resource.
+        """
+        List permission sets associated filtering by group and/or resource.
 
         Args:
             group_name (string): Name of group.
-            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.Resource): Identifies which data
+                model object to operate on.
 
         Returns:
             (list): List of permissions.
@@ -358,11 +403,13 @@ class BossRemote(Remote):
         return self.project_service.list_permissions(group_name, resource)
 
     def get_permissions(self, grp_name, resource):
-        """Get permissions associated the group has with the given resource.
+        """
+        Get permissions associated the group has with the given resource.
 
         Args:
             grp_name (string): Name of group.
-            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.Resource): Identifies which data
+                model object to operate on.
 
         Returns:
             (list): List of permissions.
@@ -374,12 +421,14 @@ class BossRemote(Remote):
         return self.project_service.get_permissions(grp_name, resource)
 
     def add_permissions(self, grp_name, resource, permissions):
-        """Add additional permissions for the group associated with the given resource.
+        """
+        Add additional permissions for the group associated with the resource.
 
         Args:
             grp_name (string): Name of group.
-            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
-            permissions (list): List of permissions to add to the given resource.
+            resource (intern.resource.boss.Resource): Identifies which data
+                model object to operate on.
+            permissions (list): List of permissions to add to the given resource
 
         Raises:
             requests.HTTPError on failure.
@@ -388,12 +437,14 @@ class BossRemote(Remote):
         self.project_service.add_permissions(grp_name, resource, permissions)
 
     def update_permissions(self, grp_name, resource, permissions):
-        """Update permissions for the group associated with the given resource.
+        """
+        Update permissions for the group associated with the given resource.
 
         Args:
             grp_name (string): Name of group.
-            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
-            permissions (list): List of permissions to add to the given resource.
+            resource (intern.resource.boss.Resource): Identifies which data
+                model object to operate on
+            permissions (list): List of permissions to add to the given resource
 
         Raises:
             requests.HTTPError on failure.
@@ -402,11 +453,13 @@ class BossRemote(Remote):
         self.project_service.update_permissions(grp_name, resource, permissions)
 
     def delete_permissions(self, grp_name, resource):
-        """Removes permissions from the group for the given resource.
+        """
+        Removes permissions from the group for the given resource.
 
         Args:
             grp_name (string): Name of group.
-            resource (intern.resource.boss.Resource): Identifies which data model object to operate on.
+            resource (intern.resource.boss.Resource): Identifies which data
+                model object to operate on.
 
         Raises:
             requests.HTTPError on failure.
@@ -415,7 +468,8 @@ class BossRemote(Remote):
         self.project_service.delete_permissions(grp_name, resource)
 
     def get_user_roles(self, user):
-        """Get roles associated with the given user.
+        """
+        Get roles associated with the given user.
 
         Args:
             user (string): User name.
@@ -430,7 +484,8 @@ class BossRemote(Remote):
         return self.project_service.get_user_roles(user)
 
     def add_user_role(self, user, role):
-        """Add role to given user.
+        """
+        Add role to given user.
 
         Args:
             user (string): User name.
@@ -443,7 +498,8 @@ class BossRemote(Remote):
         self.project_service.add_user_role(user, role)
 
     def delete_user_role(self, user, role):
-        """Remove role from given user.
+        """
+        Remove role from given user.
 
         Args:
             user (string): User name.
@@ -456,7 +512,8 @@ class BossRemote(Remote):
         self.project_service.delete_user_role(user, role)
 
     def get_user(self, user):
-        """Get user's data (first and last name, email, etc).
+        """
+        Get user's data (first and last name, email, etc).
 
         Args:
             user (string): User name.
@@ -471,7 +528,8 @@ class BossRemote(Remote):
         return self.project_service.get_user(user)
 
     def get_user_groups(self, user):
-        """Get user's group memberships.
+        """
+        Get user's group memberships.
 
         Args:
             user (string): User name.
@@ -486,8 +544,12 @@ class BossRemote(Remote):
         return self.project_service.get_user_groups(user)
 
     def add_user(
-        self, user, first_name=None, last_name=None, email=None, password=None):
-        """Add a new user.
+            self, user,
+            first_name=None, last_name=None,
+            email=None, password=None
+        ):
+        """
+        Add a new user.
 
         Args:
             user (string): User name.
@@ -504,7 +566,8 @@ class BossRemote(Remote):
             user, first_name, last_name, email, password)
 
     def delete_user(self, user):
-        """Delete the given user.
+        """
+        Delete the given user.
 
         Args:
             user (string): User name.
@@ -516,7 +579,8 @@ class BossRemote(Remote):
         self.project_service.delete_user(user)
 
     def _list_resource(self, resource):
-        """List all instances of the given resource type.
+        """
+        List all instances of the given resource type.
 
         Use the specific list_<resource>() methods instead:
             list_collections()
@@ -525,7 +589,8 @@ class BossRemote(Remote):
             list_coordinate_frames()
 
         Args:
-            resource (intern.resource.boss.BossResource): resource.name may be an empty string.
+            resource (intern.resource.boss.BossResource): resource.name may be
+                an empty string.
 
         Returns:
             (list)
@@ -534,7 +599,8 @@ class BossRemote(Remote):
         return super(BossRemote, self).list_project(resource=resource)
 
     def list_collections(self):
-        """List all collections.
+        """
+        List all collections.
 
         Returns:
             (list)
@@ -543,7 +609,8 @@ class BossRemote(Remote):
         return self._list_resource(coll)
 
     def list_experiments(self, collection_name):
-        """List all experiments that belong to a collection.
+        """
+        List all experiments that belong to a collection.
 
         Args:
             collection_name (string): Name of the parent collection.
@@ -556,7 +623,8 @@ class BossRemote(Remote):
         return self._list_resource(exp)
 
     def list_channels(self, collection_name, experiment_name):
-        """List all channels belonging to the named experiment that is part
+        """
+        List all channels belonging to the named experiment that is part
         of the named collection.
 
         Args:
@@ -573,7 +641,8 @@ class BossRemote(Remote):
         return self._list_resource(chan)
 
     def list_coordinate_frames(self):
-        """List all coordinate_frames.
+        """
+        List all coordinate_frames.
 
         Returns:
             (list)
@@ -582,44 +651,54 @@ class BossRemote(Remote):
         return self._list_resource(cf)
 
     def create_project(self, resource):
-        """Create the entity described by the given resource.
+        """
+        Create the entity described by the given resource.
 
         Args:
             resource (intern.resource.boss.BossResource)
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type
+                requested on success. Returns None on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create(resource)
 
     def get_project(self, resource):
-        """Get attributes of the data model object named by the given resource.
+        """
+        Get attributes of the data model object named by the given resource.
 
         Args:
-            resource (intern.resource.boss.BossResource): resource.name as well as any parents must be identified to succeed.
+            resource (intern.resource.boss.BossResource): resource.name as well
+                as any parents must be identified to succeed.
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type
+                requested on success.  Returns None on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get(resource)
 
     def update_project(self, resource_name, resource):
-        """Updates an entity in the data model using the given resource.
+        """
+        Updates an entity in the data model using the given resource.
 
         Args:
-            resource_name (string): Current name of the resource (in case the resource is getting its name changed).
-            resource (intern.resource.boss.BossResource): New attributes for the resource.
+            resource_name (string): Current name of the resource (in case the
+                resource is getting its name changed).
+            resource (intern.resource.boss.BossResource): New attributes for
+                the resource.
 
         Returns:
-            (intern.resource.boss.BossResource): Returns updated resource of given type on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns updated resource of
+                given type on success.  Returns None on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.update(resource_name, resource)
 
     def delete_project(self, resource):
-        """Deletes the entity described by the given resource.
+        """
+        Deletes the entity described by the given resource.
 
         Args:
             resource (intern.resource.boss.BossResource)
@@ -631,7 +710,8 @@ class BossRemote(Remote):
         self.project_service.delete(resource)
 
     def list_metadata(self, resource):
-        """List all keys associated with the given resource.
+        """
+        List all keys associated with the given resource.
 
         Args:
             resource (intern.resource.boss.BossResource)
@@ -646,13 +726,15 @@ class BossRemote(Remote):
         return self.metadata_service.list(resource)
 
     def create_metadata(self, resource, keys_vals):
-        """Associates new key-value pairs with the given resource.
+        """
+        Associates new key-value pairs with the given resource.
 
         Will attempt to add all key-value pairs even if some fail.
 
         Args:
             resource (intern.resource.boss.BossResource)
-            keys_vals (dictionary): Collection of key-value pairs to assign to given resource.
+            keys_vals (dictionary): Collection of key-value pairs to assign to
+                given resource.
 
         Raises:
             requests.HTTPError on a failure.
@@ -661,7 +743,8 @@ class BossRemote(Remote):
         return self.metadata_service.create(resource, keys_vals)
 
     def get_metadata(self, resource, keys):
-        """Gets the values for given keys associated with the given resource.
+        """
+        Gets the values for given keys associated with the given resource.
 
         Args:
             resource (intern.resource.boss.BossResource)
@@ -677,14 +760,16 @@ class BossRemote(Remote):
         return self.metadata_service.get(resource, keys)
 
     def update_metadata(self, resource, keys_vals):
-        """Updates key-value pairs with the given resource.
+        """
+        Updates key-value pairs with the given resource.
 
         Will attempt to update all key-value pairs even if some fail.
         Keys must already exist.
 
         Args:
             resource (intern.resource.boss.BossResource)
-            keys_vals (dictionary): Collection of key-value pairs to update on the given resource.
+            keys_vals (dictionary): Collection of key-value pairs to update on
+                the given resource.
 
         Raises:
             requests.HTTPError on a failure.
@@ -693,7 +778,8 @@ class BossRemote(Remote):
         return self.metadata_service.update(resource, keys_vals)
 
     def delete_metadata(self, resource, keys):
-        """Deletes the given key-value pairs associated with the given resource.
+        """
+        Deletes the given key-value pairs associated with the given resource.
 
         Will attempt to delete all key-value pairs even if some fail.
 
