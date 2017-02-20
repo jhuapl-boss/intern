@@ -45,7 +45,8 @@ class BossRemote(Remote):
     """
 
     def __init__(self, cfg_file_or_dict=None, version=None):
-        """Constructor.
+        """
+        Constructor.
 
         If not config arguments are passed in, ~/.intern/intern.cfg is read by
         default.  Config data is in INI format.  If both cfg_file and cfg_str
