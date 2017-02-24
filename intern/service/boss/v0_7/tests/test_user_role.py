@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import six
-from intern.service.boss.v0_7.project import ProjectService_0_7
+from intern.service.boss.v0_7.project import ProjectService_0_8
 from intern.resource.boss.resource import *
 from requests import PreparedRequest, Response, HTTPError
 import unittest
@@ -21,7 +21,7 @@ from mock import patch
 
 class TestUserRole(unittest.TestCase):
     def setUp(self):
-        self.prj = ProjectService_0_7()
+        self.prj = ProjectService_0_8()
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)

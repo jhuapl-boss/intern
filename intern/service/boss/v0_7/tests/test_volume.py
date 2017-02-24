@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from intern.service.boss.v0_7.volume import VolumeService_0_7
+from intern.service.boss.v0_7.volume import VolumeService_0_8
 from intern.resource.boss.resource import ChannelResource
 import blosc
 import numpy
@@ -21,9 +21,9 @@ import unittest
 from mock import patch
 
 
-class TestVolume_v0_7(unittest.TestCase):
+class TestVolume_v0_8(unittest.TestCase):
     def setUp(self):
-        self.vol = VolumeService_0_7()
+        self.vol = VolumeService_0_8()
         self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
         self.anno_chan = ChannelResource('anno_chan', 'foo', 'bar', 'annotation', datatype='uint64', sources=['chan'])
 
