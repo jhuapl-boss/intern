@@ -992,9 +992,11 @@ table {
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.add_user">add_user</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.add_user_role">add_user_role</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.build_cutout_url">build_cutout_url</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.build_ids_url">build_ids_url</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.build_metadata_url">build_metadata_url</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.build_url">build_url</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.convert_int_list_range_to_str">convert_int_list_range_to_str</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.convert_int_list_to_comma_sep_str">convert_int_list_to_comma_sep_str</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.create">create</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.create_group">create_group</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete">delete</a></li>
@@ -1005,18 +1007,21 @@ table {
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_user">delete_user</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.delete_user_role">delete_user_role</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get">get</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_bounding_box_request">get_bounding_box_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_cutout_request">get_cutout_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_group">get_group</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_group_maintainers_request">get_group_maintainers_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_group_members_request">get_group_members_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_group_request">get_group_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_headers">get_headers</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_ids_request">get_ids_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_is_group_maintainer">get_is_group_maintainer</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_is_group_member">get_is_group_member</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_metadata_request">get_metadata_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_permission_request">get_permission_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_permissions">get_permissions</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_request">get_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_reserve_request">get_reserve_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_user">get_user</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_user_request">get_user_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.project.ProjectService_0_7.get_user_role_request">get_user_role_request</a></li>
@@ -1791,7 +1796,7 @@ class ProjectService_0_7(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.
 
         Raises:
             requests.HTTPError on failure.
@@ -1820,7 +1825,7 @@ class ProjectService_0_7(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.
 
         Raises:
             requests.HTTPError on failure.
@@ -1848,7 +1853,7 @@ class ProjectService_0_7(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (intern.resource.boss.BossResource): Returns updated resource of given type on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns updated resource of given type on success.
 
         Raises:
             requests.HTTPError on failure.
@@ -2832,7 +2837,7 @@ class ProjectService_0_7(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.
 
         Raises:
             requests.HTTPError on failure.
@@ -2861,7 +2866,7 @@ class ProjectService_0_7(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.
 
         Raises:
             requests.HTTPError on failure.
@@ -2889,7 +2894,7 @@ class ProjectService_0_7(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (intern.resource.boss.BossResource): Returns updated resource of given type on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns updated resource of given type on success.
 
         Raises:
             requests.HTTPError on failure.
@@ -3443,7 +3448,7 @@ class ProjectService_0_7(BaseVersion):
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.build_cutout_url">
-    <p>def <span class="ident">build_cutout_url</span>(</p><p>self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range)</p>
+    <p>def <span class="ident">build_cutout_url</span>(</p><p>self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[])</p>
     </div>
     
 
@@ -3451,6 +3456,69 @@ class ProjectService_0_7(BaseVersion):
   
     <div class="desc"><p>Build the url to access the cutout function of the Boss' volume service.</p>
 <p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string): Do not end with a slash.  Example of expected value</b>: https://api.theboss.io<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
+&emsp;&emsp;&emsp;&emsp;<b>id_list (optional [list[int]])</b>: list of object ids to filter the cutout by.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: Full URL to access API.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if *_range invalid.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.build_cutout_url', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.build_cutout_url" class="source">
+    <pre><code>def build_cutout_url(
+    self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
+    """Build the url to access the cutout function of the Boss' volume service.
+    Args:
+        url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+        resolution (int): 0 indicates native resolution.
+        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+        id_list (optional [list[int]]): list of object ids to filter the cutout by.
+    Returns:
+        (string): Full URL to access API.
+    Raises:
+        (RuntimeError): if *_range invalid.
+    """
+    baseUrl = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
+    x_rng_lst = self.convert_int_list_range_to_str(x_range)
+    y_rng_lst = self.convert_int_list_range_to_str(y_range)
+    z_rng_lst = self.convert_int_list_range_to_str(z_range)
+    urlWithParams = (
+        baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+        '/' + z_rng_lst + '/')
+    if time_range is not None:
+        t_rng_lst = self.convert_int_list_range_to_str(time_range)
+        urlWithParams += t_rng_lst + '/'
+    if len(id_list) > 0:
+        urlWithParams += '?filter=' + self.convert_int_list_to_comma_sep_str(id_list)
+    return urlWithParams
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.build_ids_url">
+    <p>def <span class="ident">build_ids_url</span>(</p><p>self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Build the url to access the ids function of the Boss' volume service.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
 &emsp;&emsp;&emsp;&emsp;<b>url_prefix (string): Do not end with a slash.  Example of expected value</b>: https://api.theboss.io<br />
 &emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
 &emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
@@ -3464,12 +3532,14 @@ class ProjectService_0_7(BaseVersion):
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if *_range invalid.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.build_cutout_url', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.build_cutout_url" class="source">
-    <pre><code>def build_cutout_url(
-    self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range):
-    """Build the url to access the cutout function of the Boss' volume service.
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.build_ids_url', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.build_ids_url" class="source">
+    <pre><code>def build_ids_url(
+        self, resource, url_prefix, resolution,
+        x_range, y_range, z_range, time_range=None):
+    """Build the url to access the ids function of the Boss' volume service.
     Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
         url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
         resolution (int): 0 indicates native resolution.
         x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
@@ -3481,18 +3551,17 @@ class ProjectService_0_7(BaseVersion):
     Raises:
         (RuntimeError): if *_range invalid.
     """
-    baseUrl = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
+    base_url = self.build_url(resource, url_prefix, 'ids', req_type='cutout')
     x_rng_lst = self.convert_int_list_range_to_str(x_range)
     y_rng_lst = self.convert_int_list_range_to_str(y_range)
     z_rng_lst = self.convert_int_list_range_to_str(z_range)
-    urlWithParams = (
-        baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+    url_with_params = (
+        base_url + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
         '/' + z_rng_lst + '/')
-    if time_range is None:
-        return urlWithParams
-    t_rng_lst = self.convert_int_list_range_to_str(time_range)
-    urlWithTime = urlWithParams + t_rng_lst + '/'
-    return urlWithTime
+    if time_range is not None:
+        t_rng_lst = self.convert_int_list_range_to_str(time_range)
+        url_with_params += t_rng_lst + '/'
+    return url_with_params
 </code></pre>
   </div>
 </div>
@@ -3642,6 +3711,43 @@ class ProjectService_0_7(BaseVersion):
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.convert_int_list_to_comma_sep_str">
+    <p>def <span class="ident">convert_int_list_to_comma_sep_str</span>(</p><p>self, int_list)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Convert list of ints to comma separated stringj.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>int_list (list[int])</b>: list of ints.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string): Example</b>: [1, 7, 9] =&gt; '1, 7, 9'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.convert_int_list_to_comma_sep_str', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.convert_int_list_to_comma_sep_str" class="source">
+    <pre><code>def convert_int_list_to_comma_sep_str(self, int_list):
+    """Convert list of ints to comma separated stringj.
+    Args:
+        int_list (list[int]): list of ints.
+    Returns:
+        (string): Example: [1, 7, 9] => '1, 7, 9'
+    """
+    if len(int_list) == 1:
+        return str(int_list[0])
+    str_list = []
+    for n in int_list:
+        str_list.append(str(n))
+    return (',').join(str_list)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.create">
     <p>def <span class="ident">create</span>(</p><p>self, resource, url_prefix, auth, session, send_opts)</p>
     </div>
@@ -3658,7 +3764,7 @@ class ProjectService_0_7(BaseVersion):
 &emsp;&emsp;&emsp;&emsp;<b>send_opts (dictionary)</b>: Additional arguments to pass to session.send().</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(intern.resource.boss.BossResource)</b>: Returns resource of type requested on success.  Returns None on failure.</p>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(intern.resource.boss.BossResource)</b>: Returns resource of type requested on success.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
 <pre><code>requests.HTTPError on failure.
@@ -3675,7 +3781,7 @@ class ProjectService_0_7(BaseVersion):
         session (requests.Session): HTTP session to use for request.
         send_opts (dictionary): Additional arguments to pass to session.send().
     Returns:
-        (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+        (intern.resource.boss.BossResource): Returns resource of type requested on success.
     Raises:
         requests.HTTPError on failure.
     """
@@ -4121,7 +4227,7 @@ class ProjectService_0_7(BaseVersion):
 &emsp;&emsp;&emsp;&emsp;<b>send_opts (dictionary)</b>: Additional arguments to pass to session.send().</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(intern.resource.boss.BossResource)</b>: Returns resource of type requested on success.  Returns None on failure.</p>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(intern.resource.boss.BossResource)</b>: Returns resource of type requested on success.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
 <pre><code>requests.HTTPError on failure.
@@ -4138,7 +4244,7 @@ class ProjectService_0_7(BaseVersion):
         session (requests.Session): HTTP session to use for request.
         send_opts (dictionary): Additional arguments to pass to session.send().
     Returns:
-        (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+        (intern.resource.boss.BossResource): Returns resource of type requested on success.
     Raises:
         requests.HTTPError on failure.
     """
@@ -4159,8 +4265,67 @@ class ProjectService_0_7(BaseVersion):
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.get_bounding_box_request">
+    <p>def <span class="ident">get_bounding_box_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, id, bb_type)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 = default resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>id (int)</b>: Annotation object id.<br />
+&emsp;&emsp;&emsp;&emsp;<b>bb_type (string)</b>: 'loose' | 'tight'.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.get_bounding_box_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.get_bounding_box_request" class="source">
+    <pre><code>def get_bounding_box_request(
+        self, resource, method, content, url_prefix, token, resolution,
+        id, bb_type):
+    """
+    Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        resolution (int): 0 = default resolution.
+        id (int): Annotation object id.
+        bb_type (string): 'loose' | 'tight'.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    url = (url_prefix + '/' + self.version + '/boundingbox/' +
+           resource.get_cutout_route() + '/{}/{}/?type={}'.format(
+        resolution, id, bb_type))
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers=headers)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.get_cutout_request">
-    <p>def <span class="ident">get_cutout_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, x_range, y_range, z_range, time_range, numpyVolume=None)</p>
+    <p>def <span class="ident">get_cutout_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[])</p>
     </div>
     
 
@@ -4177,8 +4342,9 @@ class ProjectService_0_7(BaseVersion):
 &emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
-&emsp;&emsp;&emsp;&emsp;<b>numpyVolume (numpy array)</b>: The data volume encoded in a numpy array.</p>
+&emsp;&emsp;&emsp;&emsp;<b>time_range (list[int])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
+&emsp;&emsp;&emsp;&emsp;<b>numpyVolume (optional numpy array)</b>: The data volume encoded in a numpy array.<br />
+&emsp;&emsp;&emsp;&emsp;<b>id_list (optional [list[int]])</b>: list of object ids to filter the cutout by.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
@@ -4191,7 +4357,7 @@ class ProjectService_0_7(BaseVersion):
   <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.get_cutout_request" class="source">
     <pre><code>def get_cutout_request(
     self, resource, method, content, url_prefix, token,
-    resolution, x_range, y_range, z_range, time_range, numpyVolume=None):
+    resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[]):
     """Create a request for working with cutouts (part of the Boss' volume service).
     Args:
         resource (intern.resource.boss.BossResource): Resource to perform operation on.
@@ -4203,15 +4369,16 @@ class ProjectService_0_7(BaseVersion):
         x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
         y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
         z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-        numpyVolume (numpy array): The data volume encoded in a numpy array.
+        time_range (list[int]): time range such as [30, 40] which means t>=30 and t<40.
+        numpyVolume (optional numpy array): The data volume encoded in a numpy array.
+        id_list (optional [list[int]]): list of object ids to filter the cutout by.
     Returns:
         (requests.Request): A newly constructed Request object.
     Raises:
         RuntimeError if url_prefix is None or an empty string.
     """
     url = self.build_cutout_url(
-        resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
+        resource, url_prefix, resolution, x_range, y_range, z_range, time_range, id_list)
     headers = self.get_headers(content, token)
     return Request(method, url, headers = headers, data = numpyVolume)
 </code></pre>
@@ -4471,6 +4638,67 @@ authorization.</p>
         'Authorization': 'Token ' + token,
         'Content-Type': content_type
     }
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.get_ids_request">
+    <p>def <span class="ident">get_ids_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, x_range, y_range, z_range, time_range)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create a request for getting ids in a region (part of the Boss' volume service).</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_range (list[int])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.get_ids_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.get_ids_request" class="source">
+    <pre><code>def get_ids_request(
+        self, resource, method, content, url_prefix, token,
+        resolution, x_range, y_range, z_range, time_range):
+    """Create a request for getting ids in a region (part of the Boss' volume service).
+    Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        resolution (int): 0 indicates native resolution.
+        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+        time_range (list[int]): time range such as [30, 40] which means t>=30 and t<40.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    url = self.build_ids_url(
+        resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers=headers)
 </code></pre>
   </div>
 </div>
@@ -4824,6 +5052,59 @@ model object.</p>
     headers = self.get_headers(content, token)
     req = Request(method, url, headers = headers, json = json, data = data)
     return req
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.project.ProjectService_0_7.get_reserve_request">
+    <p>def <span class="ident">get_reserve_request</span>(</p><p>self, resource, method, content, url_prefix, token, num_ids)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>num_ids (int)</b>: Number of ids to reserve.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.project.ProjectService_0_7.get_reserve_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.project.ProjectService_0_7.get_reserve_request" class="source">
+    <pre><code>def get_reserve_request(
+        self, resource, method, content, url_prefix, token, num_ids):
+    """
+    Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        num_ids (int): Number of ids to reserve.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    url = (url_prefix + '/' + self.version + '/reserve/' +
+           resource.get_reserve_route() + '/{}'.format(num_ids))
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers=headers)
 </code></pre>
   </div>
 </div>
@@ -5357,7 +5638,7 @@ model object.</p>
 &emsp;&emsp;&emsp;&emsp;<b>send_opts (dictionary)</b>: Additional arguments to pass to session.send().</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(intern.resource.boss.BossResource)</b>: Returns updated resource of given type on success.  Returns None on failure.</p>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(intern.resource.boss.BossResource)</b>: Returns updated resource of given type on success.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
 <pre><code>requests.HTTPError on failure.
@@ -5375,7 +5656,7 @@ model object.</p>
         session (requests.Session): HTTP session to use for request.
         send_opts (dictionary): Additional arguments to pass to session.send().
     Returns:
-        (intern.resource.boss.BossResource): Returns updated resource of given type on success.  Returns None on failure.
+        (intern.resource.boss.BossResource): Returns updated resource of given type on success.
     Raises:
         requests.HTTPError on failure.
     """

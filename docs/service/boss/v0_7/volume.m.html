@@ -987,22 +987,30 @@ table {
   <ul>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.__init__">__init__</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.build_cutout_url">build_cutout_url</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.build_ids_url">build_ids_url</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.build_metadata_url">build_metadata_url</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.build_url">build_url</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.convert_int_list_range_to_str">convert_int_list_range_to_str</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.convert_int_list_to_comma_sep_str">convert_int_list_to_comma_sep_str</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.create_cutout">create_cutout</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_bit_width">get_bit_width</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_bounding_box">get_bounding_box</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_bounding_box_request">get_bounding_box_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_cutout">get_cutout</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_cutout_request">get_cutout_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_group_maintainers_request">get_group_maintainers_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_group_members_request">get_group_members_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_group_request">get_group_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_headers">get_headers</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_ids_in_region">get_ids_in_region</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_ids_request">get_ids_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_metadata_request">get_metadata_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_permission_request">get_permission_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_request">get_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_reserve_request">get_reserve_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_user_request">get_user_request</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.get_user_role_request">get_user_role_request</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.volume.VolumeService_0_7.reserve_ids">reserve_ids</a></li>
   </ul>
 
         </li>
@@ -1105,7 +1113,7 @@ class VolumeService_0_7(BaseVersion):
         req = self.get_cutout_request(
             resource, 'POST', 'application/blosc',
             url_prefix, auth,
-            resolution, x_range, y_range, z_range, time_range, compressed)
+            resolution, x_range, y_range, z_range, time_range, numpyVolume=compressed)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
 
@@ -1117,7 +1125,7 @@ class VolumeService_0_7(BaseVersion):
         raise HTTPError(msg, request=req, response=resp)
 
     def get_cutout(
-        self, resource, resolution, x_range, y_range, z_range, time_range,
+        self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
         url_prefix, auth, session, send_opts):
         """Upload a cutout to the Boss data store.
 
@@ -1128,6 +1136,7 @@ class VolumeService_0_7(BaseVersion):
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range ([list[int]]|None): time range such as [30, 40] which means t>=30 and t<40.
+            id_list (list[int]): list of object ids to filter the cutout by.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -1142,7 +1151,7 @@ class VolumeService_0_7(BaseVersion):
 
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
-            url_prefix, auth, resolution, x_range, y_range, z_range, time_range)
+            url_prefix, auth, resolution, x_range, y_range, z_range, time_range, id_list=id_list)
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
         prep.headers['Accept'] = 'application/blosc'
@@ -1169,6 +1178,135 @@ class VolumeService_0_7(BaseVersion):
                                   order='C')
 
         msg = ('Get cutout failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
+
+    def reserve_ids(
+            self, resource, num_ids,
+            url_prefix, auth, session, send_opts):
+        """Reserve a block of unique, sequential ids for annotations.
+
+        Args:
+            resource (intern.resource.Resource): Resource should be an annotation channel.
+            num_ids (int): Number of ids to reserve.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (int): First id reserved.
+
+        Raises:
+            (TypeError): resource is not a channel or not an annotation channel.
+
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_reserve_request(
+            resource, 'GET', 'application/json', url_prefix, auth, num_ids)
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            return int(json_data['start_id'])
+
+        msg = ('Reserve ids failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
+
+    def get_bounding_box(
+            self, resource, resolution, id, bb_type,
+            url_prefix, auth, session, send_opts):
+        """Get bounding box containing object specified by id.
+
+        Currently only supports 'loose' bounding boxes.  The bounding box
+        returned is cuboid aligned.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with annotation operations.
+            resolution (int): 0 indicates native resolution.
+            id (int): Id of object of interest.
+            bb_type (string): Defaults to 'loose'.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
+
+        Raises:
+            requests.HTTPError
+            TypeError: if resource is not an annotation channel.
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_bounding_box_request(
+            resource, 'GET', 'application/json', url_prefix, auth, resolution,
+            id, bb_type)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            return json_data
+
+        msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
+
+    def get_ids_in_region(
+            self, resource, resolution, x_range, y_range, z_range, time_range,
+            url_prefix, auth, session, send_opts):
+        """Get all ids in the region defined by x_range, y_range, z_range.
+
+        Args:
+            resource (intern.resource.Resource): An annotation channel.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list[int]): Example: [1, 2, 25].
+
+        Raises:
+            requests.HTTPError
+            TypeError: if resource is not an annotation channel.
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_ids_request(
+            resource, 'GET', 'application/json', url_prefix, auth,
+            resolution, x_range, y_range, z_range, time_range)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            id_str_list = json_data['ids']
+            id_int_list = [int(i) for i in id_str_list]
+            return id_int_list
+
+        msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
 </code></pre>
@@ -1256,7 +1394,7 @@ class VolumeService_0_7(BaseVersion):
         req = self.get_cutout_request(
             resource, 'POST', 'application/blosc',
             url_prefix, auth,
-            resolution, x_range, y_range, z_range, time_range, compressed)
+            resolution, x_range, y_range, z_range, time_range, numpyVolume=compressed)
         prep = session.prepare_request(req)
         resp = session.send(prep, **send_opts)
 
@@ -1268,7 +1406,7 @@ class VolumeService_0_7(BaseVersion):
         raise HTTPError(msg, request=req, response=resp)
 
     def get_cutout(
-        self, resource, resolution, x_range, y_range, z_range, time_range,
+        self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
         url_prefix, auth, session, send_opts):
         """Upload a cutout to the Boss data store.
 
@@ -1279,6 +1417,7 @@ class VolumeService_0_7(BaseVersion):
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range ([list[int]]|None): time range such as [30, 40] which means t>=30 and t<40.
+            id_list (list[int]): list of object ids to filter the cutout by.
             url_prefix (string): Protocol + host such as https://api.theboss.io
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
@@ -1293,7 +1432,7 @@ class VolumeService_0_7(BaseVersion):
 
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
-            url_prefix, auth, resolution, x_range, y_range, z_range, time_range)
+            url_prefix, auth, resolution, x_range, y_range, z_range, time_range, id_list=id_list)
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
         prep.headers['Accept'] = 'application/blosc'
@@ -1320,6 +1459,135 @@ class VolumeService_0_7(BaseVersion):
                                   order='C')
 
         msg = ('Get cutout failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
+
+    def reserve_ids(
+            self, resource, num_ids,
+            url_prefix, auth, session, send_opts):
+        """Reserve a block of unique, sequential ids for annotations.
+
+        Args:
+            resource (intern.resource.Resource): Resource should be an annotation channel.
+            num_ids (int): Number of ids to reserve.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (int): First id reserved.
+
+        Raises:
+            (TypeError): resource is not a channel or not an annotation channel.
+
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_reserve_request(
+            resource, 'GET', 'application/json', url_prefix, auth, num_ids)
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            return int(json_data['start_id'])
+
+        msg = ('Reserve ids failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
+
+    def get_bounding_box(
+            self, resource, resolution, id, bb_type,
+            url_prefix, auth, session, send_opts):
+        """Get bounding box containing object specified by id.
+
+        Currently only supports 'loose' bounding boxes.  The bounding box
+        returned is cuboid aligned.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with annotation operations.
+            resolution (int): 0 indicates native resolution.
+            id (int): Id of object of interest.
+            bb_type (string): Defaults to 'loose'.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
+
+        Raises:
+            requests.HTTPError
+            TypeError: if resource is not an annotation channel.
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_bounding_box_request(
+            resource, 'GET', 'application/json', url_prefix, auth, resolution,
+            id, bb_type)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            return json_data
+
+        msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
+
+    def get_ids_in_region(
+            self, resource, resolution, x_range, y_range, z_range, time_range,
+            url_prefix, auth, session, send_opts):
+        """Get all ids in the region defined by x_range, y_range, z_range.
+
+        Args:
+            resource (intern.resource.Resource): An annotation channel.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (list[int]): Example: [1, 2, 25].
+
+        Raises:
+            requests.HTTPError
+            TypeError: if resource is not an annotation channel.
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_ids_request(
+            resource, 'GET', 'application/json', url_prefix, auth,
+            resolution, x_range, y_range, z_range, time_range)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            id_str_list = json_data['ids']
+            id_int_list = [int(i) for i in id_str_list]
+            return id_int_list
+
+        msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
 </code></pre>
@@ -1370,7 +1638,7 @@ class VolumeService_0_7(BaseVersion):
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.build_cutout_url">
-    <p>def <span class="ident">build_cutout_url</span>(</p><p>self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range)</p>
+    <p>def <span class="ident">build_cutout_url</span>(</p><p>self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[])</p>
     </div>
     
 
@@ -1378,6 +1646,69 @@ class VolumeService_0_7(BaseVersion):
   
     <div class="desc"><p>Build the url to access the cutout function of the Boss' volume service.</p>
 <p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string): Do not end with a slash.  Example of expected value</b>: https://api.theboss.io<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
+&emsp;&emsp;&emsp;&emsp;<b>id_list (optional [list[int]])</b>: list of object ids to filter the cutout by.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: Full URL to access API.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if *_range invalid.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.build_cutout_url', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.build_cutout_url" class="source">
+    <pre><code>def build_cutout_url(
+    self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
+    """Build the url to access the cutout function of the Boss' volume service.
+    Args:
+        url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+        resolution (int): 0 indicates native resolution.
+        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+        id_list (optional [list[int]]): list of object ids to filter the cutout by.
+    Returns:
+        (string): Full URL to access API.
+    Raises:
+        (RuntimeError): if *_range invalid.
+    """
+    baseUrl = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
+    x_rng_lst = self.convert_int_list_range_to_str(x_range)
+    y_rng_lst = self.convert_int_list_range_to_str(y_range)
+    z_rng_lst = self.convert_int_list_range_to_str(z_range)
+    urlWithParams = (
+        baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+        '/' + z_rng_lst + '/')
+    if time_range is not None:
+        t_rng_lst = self.convert_int_list_range_to_str(time_range)
+        urlWithParams += t_rng_lst + '/'
+    if len(id_list) > 0:
+        urlWithParams += '?filter=' + self.convert_int_list_to_comma_sep_str(id_list)
+    return urlWithParams
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.build_ids_url">
+    <p>def <span class="ident">build_ids_url</span>(</p><p>self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Build the url to access the ids function of the Boss' volume service.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
 &emsp;&emsp;&emsp;&emsp;<b>url_prefix (string): Do not end with a slash.  Example of expected value</b>: https://api.theboss.io<br />
 &emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
 &emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
@@ -1391,12 +1722,14 @@ class VolumeService_0_7(BaseVersion):
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(RuntimeError)</b>: if *_range invalid.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.build_cutout_url', this);">Show source &equiv;</a></p>
-  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.build_cutout_url" class="source">
-    <pre><code>def build_cutout_url(
-    self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range):
-    """Build the url to access the cutout function of the Boss' volume service.
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.build_ids_url', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.build_ids_url" class="source">
+    <pre><code>def build_ids_url(
+        self, resource, url_prefix, resolution,
+        x_range, y_range, z_range, time_range=None):
+    """Build the url to access the ids function of the Boss' volume service.
     Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
         url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
         resolution (int): 0 indicates native resolution.
         x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
@@ -1408,18 +1741,17 @@ class VolumeService_0_7(BaseVersion):
     Raises:
         (RuntimeError): if *_range invalid.
     """
-    baseUrl = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
+    base_url = self.build_url(resource, url_prefix, 'ids', req_type='cutout')
     x_rng_lst = self.convert_int_list_range_to_str(x_range)
     y_rng_lst = self.convert_int_list_range_to_str(y_range)
     z_rng_lst = self.convert_int_list_range_to_str(z_range)
-    urlWithParams = (
-        baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+    url_with_params = (
+        base_url + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
         '/' + z_rng_lst + '/')
-    if time_range is None:
-        return urlWithParams
-    t_rng_lst = self.convert_int_list_range_to_str(time_range)
-    urlWithTime = urlWithParams + t_rng_lst + '/'
-    return urlWithTime
+    if time_range is not None:
+        t_rng_lst = self.convert_int_list_range_to_str(time_range)
+        url_with_params += t_rng_lst + '/'
+    return url_with_params
 </code></pre>
   </div>
 </div>
@@ -1569,6 +1901,43 @@ class VolumeService_0_7(BaseVersion):
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.convert_int_list_to_comma_sep_str">
+    <p>def <span class="ident">convert_int_list_to_comma_sep_str</span>(</p><p>self, int_list)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Convert list of ints to comma separated stringj.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>int_list (list[int])</b>: list of ints.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string): Example</b>: [1, 7, 9] =&gt; '1, 7, 9'</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.convert_int_list_to_comma_sep_str', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.convert_int_list_to_comma_sep_str" class="source">
+    <pre><code>def convert_int_list_to_comma_sep_str(self, int_list):
+    """Convert list of ints to comma separated stringj.
+    Args:
+        int_list (list[int]): list of ints.
+    Returns:
+        (string): Example: [1, 7, 9] => '1, 7, 9'
+    """
+    if len(int_list) == 1:
+        return str(int_list[0])
+    str_list = []
+    for n in int_list:
+        str_list.append(str(n))
+    return (',').join(str_list)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.create_cutout">
     <p>def <span class="ident">create_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range, numpyVolume, url_prefix, auth, session, send_opts)</p>
     </div>
@@ -1627,7 +1996,7 @@ class VolumeService_0_7(BaseVersion):
     req = self.get_cutout_request(
         resource, 'POST', 'application/blosc',
         url_prefix, auth,
-        resolution, x_range, y_range, z_range, time_range, compressed)
+        resolution, x_range, y_range, z_range, time_range, numpyVolume=compressed)
     prep = session.prepare_request(req)
     resp = session.send(prep, **send_opts)
     if resp.status_code == 201:
@@ -1670,8 +2039,141 @@ class VolumeService_0_7(BaseVersion):
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.get_bounding_box">
+    <p>def <span class="ident">get_bounding_box</span>(</p><p>self, resource, resolution, id, bb_type, url_prefix, auth, session, send_opts)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get bounding box containing object specified by id.</p>
+<p>Currently only supports 'loose' bounding boxes.  The bounding box<br />
+returned is cuboid aligned.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.Resource)</b>: Resource compatible with annotation operations.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>id (int)</b>: Id of object of interest.<br />
+&emsp;&emsp;&emsp;&emsp;<b>bb_type (string)</b>: Defaults to 'loose'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: Protocol + host such as https://api.theboss.io<br />
+&emsp;&emsp;&emsp;&emsp;<b>auth (string)</b>: Token to send in the request header.<br />
+&emsp;&emsp;&emsp;&emsp;<b>session (requests.Session)</b>: HTTP session to use for request.<br />
+&emsp;&emsp;&emsp;&emsp;<b>send_opts (dictionary)</b>: Additional arguments to pass to session.send().</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range'</b>: [0, 10]}</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError
+</code></pre>
+<p>&emsp;&emsp;&emsp;&emsp;<b>TypeError</b>: if resource is not an annotation channel.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_bounding_box', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_bounding_box" class="source">
+    <pre><code>def get_bounding_box(
+        self, resource, resolution, id, bb_type,
+        url_prefix, auth, session, send_opts):
+    """Get bounding box containing object specified by id.
+    Currently only supports 'loose' bounding boxes.  The bounding box
+    returned is cuboid aligned.
+    Args:
+        resource (intern.resource.Resource): Resource compatible with annotation operations.
+        resolution (int): 0 indicates native resolution.
+        id (int): Id of object of interest.
+        bb_type (string): Defaults to 'loose'.
+        url_prefix (string): Protocol + host such as https://api.theboss.io
+        auth (string): Token to send in the request header.
+        session (requests.Session): HTTP session to use for request.
+        send_opts (dictionary): Additional arguments to pass to session.send().
+    Returns:
+        (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
+    Raises:
+        requests.HTTPError
+        TypeError: if resource is not an annotation channel.
+    """
+    if not isinstance(resource, ChannelResource):
+        raise TypeError('resource must be ChannelResource')
+    if resource.type != 'annotation':
+        raise TypeError('Channel is not an annotation channel')
+    req = self.get_bounding_box_request(
+        resource, 'GET', 'application/json', url_prefix, auth, resolution,
+        id, bb_type)
+    prep = session.prepare_request(req)
+    resp = session.send(prep, **send_opts)
+    if resp.status_code == 200:
+        json_data = resp.json()
+        return json_data
+    msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
+        resource.name, resp.status_code, resp.text))
+    raise HTTPError(msg, request=req, response=resp)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.get_bounding_box_request">
+    <p>def <span class="ident">get_bounding_box_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, id, bb_type)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 = default resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>id (int)</b>: Annotation object id.<br />
+&emsp;&emsp;&emsp;&emsp;<b>bb_type (string)</b>: 'loose' | 'tight'.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_bounding_box_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_bounding_box_request" class="source">
+    <pre><code>def get_bounding_box_request(
+        self, resource, method, content, url_prefix, token, resolution,
+        id, bb_type):
+    """
+    Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        resolution (int): 0 = default resolution.
+        id (int): Annotation object id.
+        bb_type (string): 'loose' | 'tight'.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    url = (url_prefix + '/' + self.version + '/boundingbox/' +
+           resource.get_cutout_route() + '/{}/{}/?type={}'.format(
+        resolution, id, bb_type))
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers=headers)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.get_cutout">
-    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range, url_prefix, auth, session, send_opts)</p>
+    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range, id_list, url_prefix, auth, session, send_opts)</p>
     </div>
     
 
@@ -1685,6 +2187,7 @@ class VolumeService_0_7(BaseVersion):
 &emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>time_range ([list[int]]|None)</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
+&emsp;&emsp;&emsp;&emsp;<b>id_list (list[int])</b>: list of object ids to filter the cutout by.<br />
 &emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: Protocol + host such as https://api.theboss.io<br />
 &emsp;&emsp;&emsp;&emsp;<b>auth (string)</b>: Token to send in the request header.<br />
 &emsp;&emsp;&emsp;&emsp;<b>session (requests.Session)</b>: HTTP session to use for request.<br />
@@ -1700,7 +2203,7 @@ class VolumeService_0_7(BaseVersion):
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_cutout', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_cutout" class="source">
     <pre><code>def get_cutout(
-    self, resource, resolution, x_range, y_range, z_range, time_range,
+    self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
     url_prefix, auth, session, send_opts):
     """Upload a cutout to the Boss data store.
     Args:
@@ -1710,6 +2213,7 @@ class VolumeService_0_7(BaseVersion):
         y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
         z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
         time_range ([list[int]]|None): time range such as [30, 40] which means t>=30 and t<40.
+        id_list (list[int]): list of object ids to filter the cutout by.
         url_prefix (string): Protocol + host such as https://api.theboss.io
         auth (string): Token to send in the request header.
         session (requests.Session): HTTP session to use for request.
@@ -1721,7 +2225,7 @@ class VolumeService_0_7(BaseVersion):
     """
     req = self.get_cutout_request(
         resource, 'GET', 'application/blosc',
-        url_prefix, auth, resolution, x_range, y_range, z_range, time_range)
+        url_prefix, auth, resolution, x_range, y_range, z_range, time_range, id_list=id_list)
     prep = session.prepare_request(req)
     # Hack in Accept header for now.
     prep.headers['Accept'] = 'application/blosc'
@@ -1756,7 +2260,7 @@ class VolumeService_0_7(BaseVersion):
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.get_cutout_request">
-    <p>def <span class="ident">get_cutout_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, x_range, y_range, z_range, time_range, numpyVolume=None)</p>
+    <p>def <span class="ident">get_cutout_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[])</p>
     </div>
     
 
@@ -1773,8 +2277,9 @@ class VolumeService_0_7(BaseVersion):
 &emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
-&emsp;&emsp;&emsp;&emsp;<b>numpyVolume (numpy array)</b>: The data volume encoded in a numpy array.</p>
+&emsp;&emsp;&emsp;&emsp;<b>time_range (list[int])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
+&emsp;&emsp;&emsp;&emsp;<b>numpyVolume (optional numpy array)</b>: The data volume encoded in a numpy array.<br />
+&emsp;&emsp;&emsp;&emsp;<b>id_list (optional [list[int]])</b>: list of object ids to filter the cutout by.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
@@ -1787,7 +2292,7 @@ class VolumeService_0_7(BaseVersion):
   <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_cutout_request" class="source">
     <pre><code>def get_cutout_request(
     self, resource, method, content, url_prefix, token,
-    resolution, x_range, y_range, z_range, time_range, numpyVolume=None):
+    resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[]):
     """Create a request for working with cutouts (part of the Boss' volume service).
     Args:
         resource (intern.resource.boss.BossResource): Resource to perform operation on.
@@ -1799,15 +2304,16 @@ class VolumeService_0_7(BaseVersion):
         x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
         y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
         z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-        numpyVolume (numpy array): The data volume encoded in a numpy array.
+        time_range (list[int]): time range such as [30, 40] which means t>=30 and t<40.
+        numpyVolume (optional numpy array): The data volume encoded in a numpy array.
+        id_list (optional [list[int]]): list of object ids to filter the cutout by.
     Returns:
         (requests.Request): A newly constructed Request object.
     Raises:
         RuntimeError if url_prefix is None or an empty string.
     """
     url = self.build_cutout_url(
-        resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
+        resource, url_prefix, resolution, x_range, y_range, z_range, time_range, id_list)
     headers = self.get_headers(content, token)
     return Request(method, url, headers = headers, data = numpyVolume)
 </code></pre>
@@ -2021,6 +2527,143 @@ authorization.</p>
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.get_ids_in_region">
+    <p>def <span class="ident">get_ids_in_region</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range, url_prefix, auth, session, send_opts)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get all ids in the region defined by x_range, y_range, z_range.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.Resource)</b>: An annotation channel.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_range (list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: Protocol + host such as https://api.theboss.io<br />
+&emsp;&emsp;&emsp;&emsp;<b>auth (string)</b>: Token to send in the request header.<br />
+&emsp;&emsp;&emsp;&emsp;<b>session (requests.Session)</b>: HTTP session to use for request.<br />
+&emsp;&emsp;&emsp;&emsp;<b>send_opts (dictionary)</b>: Additional arguments to pass to session.send().</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[int]): Example</b>: [1, 2, 25].</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError
+</code></pre>
+<p>&emsp;&emsp;&emsp;&emsp;<b>TypeError</b>: if resource is not an annotation channel.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_ids_in_region', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_ids_in_region" class="source">
+    <pre><code>def get_ids_in_region(
+        self, resource, resolution, x_range, y_range, z_range, time_range,
+        url_prefix, auth, session, send_opts):
+    """Get all ids in the region defined by x_range, y_range, z_range.
+    Args:
+        resource (intern.resource.Resource): An annotation channel.
+        resolution (int): 0 indicates native resolution.
+        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+        time_range (list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+        url_prefix (string): Protocol + host such as https://api.theboss.io
+        auth (string): Token to send in the request header.
+        session (requests.Session): HTTP session to use for request.
+        send_opts (dictionary): Additional arguments to pass to session.send().
+    Returns:
+        (list[int]): Example: [1, 2, 25].
+    Raises:
+        requests.HTTPError
+        TypeError: if resource is not an annotation channel.
+    """
+    if not isinstance(resource, ChannelResource):
+        raise TypeError('resource must be ChannelResource')
+    if resource.type != 'annotation':
+        raise TypeError('Channel is not an annotation channel')
+    req = self.get_ids_request(
+        resource, 'GET', 'application/json', url_prefix, auth,
+        resolution, x_range, y_range, z_range, time_range)
+    prep = session.prepare_request(req)
+    resp = session.send(prep, **send_opts)
+    if resp.status_code == 200:
+        json_data = resp.json()
+        id_str_list = json_data['ids']
+        id_int_list = [int(i) for i in id_str_list]
+        return id_int_list
+    msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
+        resource.name, resp.status_code, resp.text))
+    raise HTTPError(msg, request=req, response=resp)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.get_ids_request">
+    <p>def <span class="ident">get_ids_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, x_range, y_range, z_range, time_range)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create a request for getting ids in a region (part of the Boss' volume service).</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_range (list[int])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_ids_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_ids_request" class="source">
+    <pre><code>def get_ids_request(
+        self, resource, method, content, url_prefix, token,
+        resolution, x_range, y_range, z_range, time_range):
+    """Create a request for getting ids in a region (part of the Boss' volume service).
+    Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        resolution (int): 0 indicates native resolution.
+        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+        time_range (list[int]): time range such as [30, 40] which means t>=30 and t<40.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    url = self.build_ids_url(
+        resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers=headers)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.get_metadata_request">
     <p>def <span class="ident">get_metadata_request</span>(</p><p>self, resource, method, content, url_prefix, token, key=None, value=None)</p>
     </div>
@@ -2204,6 +2847,59 @@ model object.</p>
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.get_reserve_request">
+    <p>def <span class="ident">get_reserve_request</span>(</p><p>self, resource, method, content, url_prefix, token, num_ids)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.BossResource)</b>: Resource to perform operation on.<br />
+&emsp;&emsp;&emsp;&emsp;<b>method (string)</b>: HTTP verb such as 'GET'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>content (string)</b>: HTTP Content-Type such as 'application/json'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.<br />
+&emsp;&emsp;&emsp;&emsp;<b>token (string)</b>: Django Rest Framework token for auth.<br />
+&emsp;&emsp;&emsp;&emsp;<b>num_ids (int)</b>: Number of ids to reserve.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(requests.Request)</b>: A newly constructed Request object.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError if url_prefix is None or an empty string.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_reserve_request', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.get_reserve_request" class="source">
+    <pre><code>def get_reserve_request(
+        self, resource, method, content, url_prefix, token, num_ids):
+    """
+    Args:
+        resource (intern.resource.boss.BossResource): Resource to perform operation on.
+        method (string): HTTP verb such as 'GET'.
+        content (string): HTTP Content-Type such as 'application/json'.
+        url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+        token (string): Django Rest Framework token for auth.
+        num_ids (int): Number of ids to reserve.
+    Returns:
+        (requests.Request): A newly constructed Request object.
+    Raises:
+        RuntimeError if url_prefix is None or an empty string.
+    """
+    if url_prefix is None or url_prefix == '':
+        raise RuntimeError('url_prefix required.')
+    url = (url_prefix + '/' + self.version + '/reserve/' +
+           resource.get_reserve_route() + '/{}'.format(num_ids))
+    headers = self.get_headers(content, token)
+    return Request(method, url, headers=headers)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.get_user_request">
     <p>def <span class="ident">get_user_request</span>(</p><p>self, method, content, url_prefix, token, user, first_name=None, last_name=None, email=None, password=None)</p>
     </div>
@@ -2320,6 +3016,68 @@ model object.</p>
         url = url + '/' + role
     headers = self.get_headers(content, token)
     return Request(method, url, headers=headers)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.volume.VolumeService_0_7.reserve_ids">
+    <p>def <span class="ident">reserve_ids</span>(</p><p>self, resource, num_ids, url_prefix, auth, session, send_opts)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Reserve a block of unique, sequential ids for annotations.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.Resource)</b>: Resource should be an annotation channel.<br />
+&emsp;&emsp;&emsp;&emsp;<b>num_ids (int)</b>: Number of ids to reserve.<br />
+&emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: Protocol + host such as https://api.theboss.io<br />
+&emsp;&emsp;&emsp;&emsp;<b>auth (string)</b>: Token to send in the request header.<br />
+&emsp;&emsp;&emsp;&emsp;<b>session (requests.Session)</b>: HTTP session to use for request.<br />
+&emsp;&emsp;&emsp;&emsp;<b>send_opts (dictionary)</b>: Additional arguments to pass to session.send().</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(int)</b>: First id reserved.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(TypeError)</b>: resource is not a channel or not an annotation channel.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.volume.VolumeService_0_7.reserve_ids', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.volume.VolumeService_0_7.reserve_ids" class="source">
+    <pre><code>def reserve_ids(
+        self, resource, num_ids,
+        url_prefix, auth, session, send_opts):
+    """Reserve a block of unique, sequential ids for annotations.
+    Args:
+        resource (intern.resource.Resource): Resource should be an annotation channel.
+        num_ids (int): Number of ids to reserve.
+        url_prefix (string): Protocol + host such as https://api.theboss.io
+        auth (string): Token to send in the request header.
+        session (requests.Session): HTTP session to use for request.
+        send_opts (dictionary): Additional arguments to pass to session.send().
+    Returns:
+        (int): First id reserved.
+    Raises:
+        (TypeError): resource is not a channel or not an annotation channel.
+    """
+    if not isinstance(resource, ChannelResource):
+        raise TypeError('resource must be ChannelResource')
+    if resource.type != 'annotation':
+        raise TypeError('Channel is not an annotation channel')
+    req = self.get_reserve_request(
+        resource, 'GET', 'application/json', url_prefix, auth, num_ids)
+    prep = session.prepare_request(req)
+    resp = session.send(prep, **send_opts)
+    if resp.status_code == 200:
+        json_data = resp.json()
+        return int(json_data['start_id'])
+    msg = ('Reserve ids failed on {}, got HTTP response: ({}) - {}'.format(
+        resource.name, resp.status_code, resp.text))
+    raise HTTPError(msg, request=req, response=resp)
 </code></pre>
   </div>
 </div>

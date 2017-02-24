@@ -1038,8 +1038,11 @@ table {
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.tearDownClass">tearDownClass</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_create_cutout_failure">test_create_cutout_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_create_cutout_success">test_create_cutout_success</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_bounding_box_success">test_get_bounding_box_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_cutout_failure">test_get_cutout_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_cutout_success">test_get_cutout_success</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_ids_in_region_failure">test_get_ids_in_region_failure</a></li>
+    <li class="mono"><a href="#intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_ids_in_region_success">test_get_ids_in_region_success</a></li>
   </ul>
 
         </li>
@@ -1089,6 +1092,7 @@ class TestVolume_v0_7(unittest.TestCase):
     def setUp(self):
         self.vol = VolumeService_0_7()
         self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
+        self.anno_chan = ChannelResource('anno_chan', 'foo', 'bar', 'annotation', datatype='uint64', sources=['chan'])
 
     @patch('requests.Session', autospec=True)
     def test_create_cutout_success(self, mock_session):
@@ -1140,6 +1144,7 @@ class TestVolume_v0_7(unittest.TestCase):
         y_range = [50, 70]
         z_range = [30, 50]
         time_range = [10, 25]
+        id_list = []
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
 
@@ -1156,7 +1161,7 @@ class TestVolume_v0_7(unittest.TestCase):
         send_opts = {}
 
         actual = self.vol.get_cutout(
-            self.chan, resolution, x_range, y_range, z_range, time_range,
+            self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
             url_prefix, auth, mock_session, send_opts)
 
         numpy.testing.assert_array_equal(data, actual)
@@ -1168,6 +1173,7 @@ class TestVolume_v0_7(unittest.TestCase):
         y_range = [50, 70]
         z_range = [30, 50]
         time_range = [10, 25]
+        id_list = []
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
 
@@ -1181,7 +1187,91 @@ class TestVolume_v0_7(unittest.TestCase):
 
         with self.assertRaises(HTTPError):
             actual = self.vol.get_cutout(
-                self.chan, resolution, x_range, y_range, z_range, time_range,
+                self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
+                url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_get_bounding_box_success(self, mock_session, mock_resp):
+        resolution = 0
+        id = 44444
+        bb_type = 'loose'
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        fake_prepped_req = PreparedRequest()
+        fake_prepped_req.headers = {}
+        mock_session.prepare_request.return_value = fake_prepped_req
+        mock_session.send.return_value = mock_resp
+
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = expected = {
+            'x_range': [0, 10],
+            'y_range': [0, 10],
+            'z_range': [0, 10],
+            't_range': [0, 10]
+        }
+
+        actual = self.vol.get_bounding_box(
+            self.anno_chan, resolution, id, bb_type,
+            url_prefix, auth, mock_session, send_opts)
+
+        self.assertEqual(expected, actual)
+
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_get_ids_in_region_success(self, mock_session, mock_resp):
+        resolution = 0
+        x_range = [0, 100]
+        y_range = [10, 50]
+        z_range = [20, 42]
+        t_range = [0, 1]
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        fake_prepped_req = PreparedRequest()
+        fake_prepped_req.headers = {}
+        mock_session.prepare_request.return_value = fake_prepped_req
+        mock_session.send.return_value = mock_resp
+
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = { 'ids': ['1', '10'] }
+
+        actual = self.vol.get_ids_in_region(
+            self.anno_chan, resolution, x_range, y_range, z_range, t_range,
+            url_prefix, auth, mock_session, send_opts)
+
+        expected = [1, 10]
+
+        self.assertEqual(expected, actual)
+
+    @patch('requests.Session', autospec=True)
+    def test_get_ids_in_region_failure(self, mock_session):
+        resolution = 0
+        x_range = [0, 100]
+        y_range = [10, 50]
+        z_range = [20, 42]
+        t_range = [0, 1]
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        fake_prepped_req = PreparedRequest()
+        fake_prepped_req.headers = {}
+        mock_session.prepare_request.return_value = fake_prepped_req
+        fake_response = Response()
+        fake_response.status_code = 403
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        with self.assertRaises(HTTPError):
+            actual = self.vol.get_ids_in_region(
+                self.anno_chan, resolution, x_range, y_range, z_range, t_range,
                 url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -1204,6 +1294,7 @@ class TestVolume_v0_7(unittest.TestCase):
     def setUp(self):
         self.vol = VolumeService_0_7()
         self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
+        self.anno_chan = ChannelResource('anno_chan', 'foo', 'bar', 'annotation', datatype='uint64', sources=['chan'])
 
     @patch('requests.Session', autospec=True)
     def test_create_cutout_success(self, mock_session):
@@ -1255,6 +1346,7 @@ class TestVolume_v0_7(unittest.TestCase):
         y_range = [50, 70]
         z_range = [30, 50]
         time_range = [10, 25]
+        id_list = []
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
 
@@ -1271,7 +1363,7 @@ class TestVolume_v0_7(unittest.TestCase):
         send_opts = {}
 
         actual = self.vol.get_cutout(
-            self.chan, resolution, x_range, y_range, z_range, time_range,
+            self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
             url_prefix, auth, mock_session, send_opts)
 
         numpy.testing.assert_array_equal(data, actual)
@@ -1283,6 +1375,7 @@ class TestVolume_v0_7(unittest.TestCase):
         y_range = [50, 70]
         z_range = [30, 50]
         time_range = [10, 25]
+        id_list = []
         url_prefix = 'https://api.theboss.io'
         auth = 'mytoken'
 
@@ -1296,7 +1389,91 @@ class TestVolume_v0_7(unittest.TestCase):
 
         with self.assertRaises(HTTPError):
             actual = self.vol.get_cutout(
-                self.chan, resolution, x_range, y_range, z_range, time_range,
+                self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
+                url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_get_bounding_box_success(self, mock_session, mock_resp):
+        resolution = 0
+        id = 44444
+        bb_type = 'loose'
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        fake_prepped_req = PreparedRequest()
+        fake_prepped_req.headers = {}
+        mock_session.prepare_request.return_value = fake_prepped_req
+        mock_session.send.return_value = mock_resp
+
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = expected = {
+            'x_range': [0, 10],
+            'y_range': [0, 10],
+            'z_range': [0, 10],
+            't_range': [0, 10]
+        }
+
+        actual = self.vol.get_bounding_box(
+            self.anno_chan, resolution, id, bb_type,
+            url_prefix, auth, mock_session, send_opts)
+
+        self.assertEqual(expected, actual)
+
+    @patch('requests.Response', autospec=True)
+    @patch('requests.Session', autospec=True)
+    def test_get_ids_in_region_success(self, mock_session, mock_resp):
+        resolution = 0
+        x_range = [0, 100]
+        y_range = [10, 50]
+        z_range = [20, 42]
+        t_range = [0, 1]
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        fake_prepped_req = PreparedRequest()
+        fake_prepped_req.headers = {}
+        mock_session.prepare_request.return_value = fake_prepped_req
+        mock_session.send.return_value = mock_resp
+
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = { 'ids': ['1', '10'] }
+
+        actual = self.vol.get_ids_in_region(
+            self.anno_chan, resolution, x_range, y_range, z_range, t_range,
+            url_prefix, auth, mock_session, send_opts)
+
+        expected = [1, 10]
+
+        self.assertEqual(expected, actual)
+
+    @patch('requests.Session', autospec=True)
+    def test_get_ids_in_region_failure(self, mock_session):
+        resolution = 0
+        x_range = [0, 100]
+        y_range = [10, 50]
+        z_range = [20, 42]
+        t_range = [0, 1]
+
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        send_opts = {}
+
+        fake_prepped_req = PreparedRequest()
+        fake_prepped_req.headers = {}
+        mock_session.prepare_request.return_value = fake_prepped_req
+        fake_response = Response()
+        fake_response.status_code = 403
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        with self.assertRaises(HTTPError):
+            actual = self.vol.get_ids_in_region(
+                self.anno_chan, resolution, x_range, y_range, z_range, t_range,
                 url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -2341,7 +2518,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2402,7 +2579,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10b295848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3148,6 +3325,7 @@ tearDown.</p></div>
     <pre><code>def setUp(self):
     self.vol = VolumeService_0_7()
     self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
+    self.anno_chan = ChannelResource('anno_chan', 'foo', 'bar', 'annotation', datatype='uint64', sources=['chan'])
 </code></pre>
   </div>
 </div>
@@ -3347,6 +3525,48 @@ def test_create_cutout_success(self, mock_session):
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_bounding_box_success">
+    <p>def <span class="ident">test_get_bounding_box_success</span>(</p><p>*args, **keywargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_bounding_box_success', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_bounding_box_success" class="source">
+    <pre><code>@patch('requests.Response', autospec=True)
+@patch('requests.Session', autospec=True)
+def test_get_bounding_box_success(self, mock_session, mock_resp):
+    resolution = 0
+    id = 44444
+    bb_type = 'loose'
+    url_prefix = 'https://api.theboss.io'
+    auth = 'mytoken'
+    send_opts = {}
+    fake_prepped_req = PreparedRequest()
+    fake_prepped_req.headers = {}
+    mock_session.prepare_request.return_value = fake_prepped_req
+    mock_session.send.return_value = mock_resp
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = expected = {
+        'x_range': [0, 10],
+        'y_range': [0, 10],
+        'z_range': [0, 10],
+        't_range': [0, 10]
+    }
+    actual = self.vol.get_bounding_box(
+        self.anno_chan, resolution, id, bb_type,
+        url_prefix, auth, mock_session, send_opts)
+    self.assertEqual(expected, actual)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_cutout_failure">
     <p>def <span class="ident">test_get_cutout_failure</span>(</p><p>*args, **keywargs)</p>
     </div>
@@ -3364,6 +3584,7 @@ def test_get_cutout_failure(self, mock_session):
     y_range = [50, 70]
     z_range = [30, 50]
     time_range = [10, 25]
+    id_list = []
     url_prefix = 'https://api.theboss.io'
     auth = 'mytoken'
     fake_prepped_req = PreparedRequest()
@@ -3375,7 +3596,7 @@ def test_get_cutout_failure(self, mock_session):
     send_opts = {}
     with self.assertRaises(HTTPError):
         actual = self.vol.get_cutout(
-            self.chan, resolution, x_range, y_range, z_range, time_range,
+            self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
             url_prefix, auth, mock_session, send_opts)
 </code></pre>
   </div>
@@ -3402,6 +3623,7 @@ def test_get_cutout_success(self, mock_session):
     y_range = [50, 70]
     z_range = [30, 50]
     time_range = [10, 25]
+    id_list = []
     url_prefix = 'https://api.theboss.io'
     auth = 'mytoken'
     fake_prepped_req = PreparedRequest()
@@ -3415,9 +3637,88 @@ def test_get_cutout_success(self, mock_session):
     mock_session.send.return_value = fake_response
     send_opts = {}
     actual = self.vol.get_cutout(
-        self.chan, resolution, x_range, y_range, z_range, time_range,
+        self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
         url_prefix, auth, mock_session, send_opts)
     numpy.testing.assert_array_equal(data, actual)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_ids_in_region_failure">
+    <p>def <span class="ident">test_get_ids_in_region_failure</span>(</p><p>*args, **keywargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_ids_in_region_failure', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_ids_in_region_failure" class="source">
+    <pre><code>@patch('requests.Session', autospec=True)
+def test_get_ids_in_region_failure(self, mock_session):
+    resolution = 0
+    x_range = [0, 100]
+    y_range = [10, 50]
+    z_range = [20, 42]
+    t_range = [0, 1]
+    url_prefix = 'https://api.theboss.io'
+    auth = 'mytoken'
+    send_opts = {}
+    fake_prepped_req = PreparedRequest()
+    fake_prepped_req.headers = {}
+    mock_session.prepare_request.return_value = fake_prepped_req
+    fake_response = Response()
+    fake_response.status_code = 403
+    mock_session.send.return_value = fake_response
+    send_opts = {}
+    with self.assertRaises(HTTPError):
+        actual = self.vol.get_ids_in_region(
+            self.anno_chan, resolution, x_range, y_range, z_range, t_range,
+            url_prefix, auth, mock_session, send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_ids_in_region_success">
+    <p>def <span class="ident">test_get_ids_in_region_success</span>(</p><p>*args, **keywargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_ids_in_region_success', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v0_7.tests.test_volume.TestVolume_v0_7.test_get_ids_in_region_success" class="source">
+    <pre><code>@patch('requests.Response', autospec=True)
+@patch('requests.Session', autospec=True)
+def test_get_ids_in_region_success(self, mock_session, mock_resp):
+    resolution = 0
+    x_range = [0, 100]
+    y_range = [10, 50]
+    z_range = [20, 42]
+    t_range = [0, 1]
+    url_prefix = 'https://api.theboss.io'
+    auth = 'mytoken'
+    send_opts = {}
+    fake_prepped_req = PreparedRequest()
+    fake_prepped_req.headers = {}
+    mock_session.prepare_request.return_value = fake_prepped_req
+    mock_session.send.return_value = mock_resp
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = { 'ids': ['1', '10'] }
+    actual = self.vol.get_ids_in_region(
+        self.anno_chan, resolution, x_range, y_range, z_range, t_range,
+        url_prefix, auth, mock_session, send_opts)
+    expected = [1, 10]
+    self.assertEqual(expected, actual)
 </code></pre>
   </div>
 </div>
