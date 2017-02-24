@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from intern.service.boss.v0_7.project import ProjectService_0_8
+from intern.service.boss.v0_8.project import ProjectService_0_8
 from intern.resource.boss.resource import *
 from requests import PreparedRequest, Response, Session, HTTPError
 import unittest

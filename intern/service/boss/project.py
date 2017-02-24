@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from intern.service.boss import BossService
-from intern.service.boss.v0_7.project import ProjectService_0_8
+from intern.service.boss.v0_8.project import ProjectService_0_8
 
 
 class ProjectService(BossService):

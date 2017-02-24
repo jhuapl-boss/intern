@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from intern.service.boss.v0_7.project import ProjectService_0_8
+from intern.service.boss.v0_8.project import ProjectService_0_8
 from intern.resource.boss.resource import *
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
 from mock import patch
 
 
-class TestProject_v0_7(unittest.TestCase):
+class TestProject_v0_8(unittest.TestCase):
     def setUp(self):
         self.prj = ProjectService_0_8()
         self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')

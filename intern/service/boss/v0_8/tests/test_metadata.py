@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from intern.service.boss.v0_7.metadata import MetadataService_0_8
+from intern.service.boss.v0_8.metadata import MetadataService_0_8
 from intern.resource.boss.resource import ChannelResource
 from intern.service.boss.httperrorlist import HTTPErrorList
 from requests import HTTPError, PreparedRequest, Response, Session
@@ -20,7 +20,7 @@ import unittest
 from mock import patch
 
 
-class TestMetadata_v0_7(unittest.TestCase):
+class TestMetadata_v0_8(unittest.TestCase):
     def setUp(self):
         self.meta = MetadataService_0_8()
         self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')

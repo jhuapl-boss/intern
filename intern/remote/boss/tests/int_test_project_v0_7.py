@@ -25,7 +25,7 @@ import unittest
 
 API_VER = 'v0.8'
 
-class ProjectServiceTest_v0_7(unittest.TestCase):
+class ProjectServiceTest_v0_8(unittest.TestCase):
     """Integration tests of the Boss resource API.
     """
 

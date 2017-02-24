@@ -15,7 +15,7 @@ from intern.resource.boss.resource import *
 from intern.service.boss.httperrorlist import HTTPErrorList
 from requests import HTTPError
 from intern.service.boss import BaseVersion
-from intern.service.boss.v0_7 import BOSS_API_VERSION
+from intern.service.boss.v0_8 import BOSS_API_VERSION
 
 
 class MetadataService_0_8(BaseVersion):

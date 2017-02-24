@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from intern.service.boss import BossService
-from intern.service.boss.v0_7.metadata import MetadataService_0_8
+from intern.service.boss.v0_8.metadata import MetadataService_0_8
 
 
 class MetadataService(BossService):

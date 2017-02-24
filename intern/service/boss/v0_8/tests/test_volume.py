@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from intern.service.boss.v0_7.volume import VolumeService_0_8
+from intern.service.boss.v0_8.volume import VolumeService_0_8
 from intern.resource.boss.resource import ChannelResource
 import blosc
 import numpy
