@@ -51,3 +51,23 @@ class TestExperimentResource(unittest.TestCase):
     def test_validate_hierarchy_method_bad(self):
         with self.assertRaises(ValueError):
             self.er.validate_hierarchy_method('foo')
+
+    def test_validate_time_units_ns(self):
+        exp = 'nanoseconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_micro(self):
+        exp = 'microseconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_ms(self):
+        exp = 'milliseconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_s(self):
+        exp = 'seconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_bad(self):
+        with self.assertRaises(ValueError):
+            self.er.validate_time_units('secs')

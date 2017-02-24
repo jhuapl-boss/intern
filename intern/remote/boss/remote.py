@@ -26,7 +26,7 @@ CONFIG_PROTOCOL = 'protocol'
 CONFIG_HOST = 'host'
 CONFIG_TOKEN = 'token'
 
-LATEST_VERSION = 'v0.7'
+LATEST_VERSION = 'v0.8'
 
 
 class BossRemote(Remote):

@@ -34,11 +34,6 @@ class TestCoordFrameResource(unittest.TestCase):
         self.cf.voxel_unit = exp
         self.assertEqual(exp, self.cf.voxel_unit)
 
-    def test_time_units_setter(self):
-        exp = 'seconds'
-        self.cf.time_step_unit = exp
-        self.assertEqual(exp, self.cf.time_step_unit)
-
     def test_validate_voxel_units_nm(self):
         exp = 'nanometers'
         self.assertEqual(exp, self.cf.validate_voxel_units(exp))
@@ -59,22 +54,3 @@ class TestCoordFrameResource(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.cf.validate_voxel_units('centimet')
 
-    def test_validate_time_units_ns(self):
-        exp = 'nanoseconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_micro(self):
-        exp = 'microseconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_ms(self):
-        exp = 'milliseconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_s(self):
-        exp = 'seconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_bad(self):
-        with self.assertRaises(ValueError):
-            self.cf.validate_voxel_units('secs')

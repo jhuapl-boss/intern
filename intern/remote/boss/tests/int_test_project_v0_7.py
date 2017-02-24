@@ -23,7 +23,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import copy
 import unittest
 
-API_VER = 'v0.7'
+API_VER = 'v0.8'
 
 class ProjectServiceTest_v0_7(unittest.TestCase):
     """Integration tests of the Boss resource API.
@@ -47,14 +47,14 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         cf_name = 'ProjTestFrame{}'.format(random.randint(0, 9999))
         self.coord = CoordinateFrameResource(
             cf_name, 'Test coordinate frame.', 0, 10, -5, 5, 3, 6,
-            1, 1, 1, 'nanometers', 2, 'nanoseconds')
+            1, 1, 1, 'nanometers')
         self.coord_upd = copy.copy(self.coord)
         self.coord_upd.name = 'MouseFrame{}'.format(random.randint(0, 9999))
         self.coord_upd.description = 'Mouse coordinate frame.'
 
         self.exp = ExperimentResource(
             'exp2309-2', self.coll.name, self.coord.name, 'my experiment',
-            1, 'iso')
+            1, 'iso', time_step=2, time_step_unit='nanoseconds')
         self.exp_upd = ExperimentResource(
             'exp2309-2a', self.coll.name, self.coord.name,
             'my first experiment', 2, 'slice')
@@ -128,8 +128,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.coord.y_voxel_size, cf.y_voxel_size)
         self.assertEqual(self.coord.z_voxel_size, cf.z_voxel_size)
         self.assertEqual(self.coord.voxel_unit, cf.voxel_unit)
-        self.assertEqual(self.coord.time_step, cf.time_step)
-        self.assertEqual(self.coord.time_step_unit, cf.time_step_unit)
 
     def test_create_collection(self):
         c = self.rmt.create_project(self.coll)
@@ -149,6 +147,8 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp.hierarchy_method, e.hierarchy_method)
         self.assertEqual(self.exp.num_hierarchy_levels, e.num_hierarchy_levels)
         self.assertEqual(self.exp.num_time_samples, e.num_time_samples)
+        self.assertEqual(self.exp.time_step, e.time_step)
+        self.assertEqual(self.exp.time_step_unit, e.time_step_unit)
 
     def test_create_channel(self):
         c = self.rmt.create_project(self.coll)
@@ -229,8 +229,6 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.coord.y_voxel_size, cf.y_voxel_size)
         self.assertEqual(self.coord.z_voxel_size, cf.z_voxel_size)
         self.assertEqual(self.coord.voxel_unit, cf.voxel_unit)
-        self.assertEqual(self.coord.time_step, cf.time_step)
-        self.assertEqual(self.coord.time_step_unit, cf.time_step_unit)
 
     def test_get_experiment(self):
         c = self.rmt.create_project(self.coll)
@@ -247,6 +245,8 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp.hierarchy_method, e.hierarchy_method)
         self.assertEqual(self.exp.num_hierarchy_levels, e.num_hierarchy_levels)
         self.assertEqual(self.exp.num_time_samples, e.num_time_samples)
+        self.assertEqual(self.exp.time_step, e.time_step)
+        self.assertEqual(self.exp.time_step_unit, e.time_step_unit)
 
     def test_get_channel(self):
         c = self.rmt.create_project(self.coll)
@@ -297,6 +297,8 @@ class ProjectServiceTest_v0_7(unittest.TestCase):
         self.assertEqual(self.exp_upd.hierarchy_method, eup.hierarchy_method)
         self.assertEqual(self.exp_upd.num_hierarchy_levels, eup.num_hierarchy_levels)
         self.assertEqual(self.exp_upd.num_time_samples, eup.num_time_samples)
+        self.assertEqual(self.exp.time_step, eup.time_step)
+        self.assertEqual(self.exp.time_step_unit, eup.time_step_unit)
 
     def test_update_channel(self):
         c = self.rmt.create_project(self.coll)

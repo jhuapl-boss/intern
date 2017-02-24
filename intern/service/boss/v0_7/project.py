@@ -18,8 +18,8 @@ from requests import HTTPError
 import copy
 
 
-class ProjectService_0_7(BaseVersion):
-    """The Boss API v0.7 project service.
+class ProjectService_0_8(BaseVersion):
+    """The Boss API v0.8 project service.
     """
 
     def __init__(self):
@@ -891,7 +891,9 @@ class ProjectService_0_7(BaseVersion):
                 'num_hierarchy_levels': exp.num_hierarchy_levels,
                 'hierarchy_method': exp.hierarchy_method,
                 'num_time_samples': exp.num_time_samples,
-                'collection': exp.coll_name
+                'collection': exp.coll_name,
+                'time_step': exp.time_step,
+                'time_step_unit': exp.time_step_unit
             }
 
         return {
@@ -915,9 +917,7 @@ class ProjectService_0_7(BaseVersion):
                 'x_voxel_size': coord.x_voxel_size,
                 'y_voxel_size': coord.y_voxel_size,
                 'z_voxel_size': coord.z_voxel_size,
-                'voxel_unit': coord.voxel_unit,
-                'time_step': coord.time_step,
-                'time_step_unit': coord.time_step_unit
+                'voxel_unit': coord.voxel_unit
             }
 
         return { 'name': coord.name, 'description': coord.description }
@@ -980,7 +980,8 @@ class ProjectService_0_7(BaseVersion):
     def _get_experiment(self, dict, coll_name):
         exp_keys = [
             'name', 'description', 'creator', 'coord_frame',
-            'num_hierarchy_levels', 'hierarchy_method', 'num_time_samples'
+            'num_hierarchy_levels', 'hierarchy_method', 'num_time_samples', 
+            'time_step', 'time_step_unit'
         ]
 
         filtered = { k:v for (k, v) in dict.items() if k in exp_keys }
@@ -992,7 +993,7 @@ class ProjectService_0_7(BaseVersion):
             'name', 'description', 'x_start', 'x_stop',
             'y_start', 'y_stop', 'z_start', 'z_stop',
             'x_voxel_size', 'y_voxel_size', 'z_voxel_size',
-            'voxel_unit', 'time_step', 'time_step_unit'
+            'voxel_unit'
         ]
 
         filtered = { k:v for (k, v) in dict.items() if k in coord_keys }

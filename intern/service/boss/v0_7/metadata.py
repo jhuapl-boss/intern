@@ -18,7 +18,7 @@ from intern.service.boss import BaseVersion
 from intern.service.boss.v0_7 import BOSS_API_VERSION
 
 
-class MetadataService_0_7(BaseVersion):
+class MetadataService_0_8(BaseVersion):
     def __init__(self):
         BaseVersion.__init__(self)
 

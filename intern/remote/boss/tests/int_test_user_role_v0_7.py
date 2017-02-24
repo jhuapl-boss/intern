@@ -21,9 +21,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
 
-API_VER = 'v0.7'
+API_VER = 'v0.8'
 
-class ProjectUserRoleTest_v0_7(unittest.TestCase):
+class ProjectUserRoleTest_v0_8(unittest.TestCase):
     """Integration tests of the Boss user-role API.
     """
 

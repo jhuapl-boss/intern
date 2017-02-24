@@ -19,7 +19,7 @@ import blosc
 import numpy as np
 
 
-class VolumeService_0_7(BaseVersion):
+class VolumeService_0_8(BaseVersion):
     def __init__(self):
         BaseVersion.__init__(self)
 

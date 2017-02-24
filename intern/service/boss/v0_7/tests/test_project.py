@@ -254,6 +254,8 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertTrue('num_hierarchy_levels' in actual)
         self.assertTrue('hierarchy_method' in actual)
         self.assertTrue('num_time_samples' in actual)
+        self.assertTrue('time_step' in actual)
+        self.assertTrue('time_step_unit' in actual)
 
     def test_get_resource_params_coord_frame_for_update(self):
 
@@ -278,8 +280,6 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertTrue('y_voxel_size' in actual)
         self.assertTrue('z_voxel_size' in actual)
         self.assertTrue('voxel_unit' in actual)
-        self.assertTrue('time_step' in actual)
-        self.assertTrue('time_step_unit' in actual)
 
     def test_get_resource_params_channel(self):
         chan = ChannelResource('foo', 'coll', 'exp', 'image')
@@ -311,7 +311,8 @@ class TestProject_v0_7(unittest.TestCase):
             'name': 'fire', 'description': 'walker',
             'creator': 'auto', 'coord_frame': 3,
             'num_hierarchy_levels': 1, 'hierarchy_method': 'near_iso',
-            'num_time_samples': 500
+            'num_time_samples': 500,
+            'time_step': 2, 'time_step_unit': 'milliseconds'
         }
 
         actual = self.prj._create_resource_from_dict(exp, dict)
@@ -322,6 +323,8 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual(1, actual.num_hierarchy_levels)
         self.assertEqual('near_iso', actual.hierarchy_method)
         self.assertEqual(500, actual.num_time_samples)
+        self.assertEqual(2, actual.time_step)
+        self.assertEqual('milliseconds', actual.time_step_unit)
         self.assertEqual('pyro', actual.coll_name)
         self.assertEqual(dict, actual.raw)
 
@@ -332,8 +335,7 @@ class TestProject_v0_7(unittest.TestCase):
             'x_start': 0, 'x_stop': 100,
             'y_start': 50, 'y_stop': 150, 'z_start': 75, 'z_stop': 125,
             'x_voxel_size': 2, 'y_voxel_size': 4, 'z_voxel_size': 6,
-            'voxel_unit': 'centimeters',
-            'time_step': 2, 'time_step_unit': 'milliseconds'}
+            'voxel_unit': 'centimeters'}
 
         actual = self.prj._create_resource_from_dict(coord, dict)
         self.assertEqual('fire', actual.name)
@@ -348,8 +350,6 @@ class TestProject_v0_7(unittest.TestCase):
         self.assertEqual(4, actual.y_voxel_size)
         self.assertEqual(6, actual.z_voxel_size)
         self.assertEqual('centimeters', actual.voxel_unit)
-        self.assertEqual(2, actual.time_step)
-        self.assertEqual('milliseconds', actual.time_step_unit)
         self.assertEqual(dict, actual.raw)
 
     def test_create_resource_from_dict_channel(self):

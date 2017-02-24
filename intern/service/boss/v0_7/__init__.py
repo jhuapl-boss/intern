@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""The Boss specific services using v0.7 of the API.
+"""The Boss specific services using v0.8 of the API.
 
 Author:
     Tim Gion
 """
 
-BOSS_API_VERSION = 'v0.7'
+BOSS_API_VERSION = 'v0.8'

@@ -163,10 +163,13 @@ class ExperimentResource(BossResource):
         num_hierarchy_levels (int):
         hierarchy_method (string):
         num_time_samples (int):
+        time_step (int): Defaults to 0.
+        time_step_unit (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
     """
     def __init__(self, name, collection_name, coord_frame='', description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
-        num_time_samples=1, creator='', raw={}):
+        num_time_samples=1, creator='', raw={}, 
+        time_step=0, time_step_unit='seconds'):
         """Constructor.
 
         Args:
@@ -179,6 +182,8 @@ class ExperimentResource(BossResource):
             num_time_samples (optional[int]): Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+            time_step (optional[int]): Defaults to 0.
+            time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
         """
 
         BossResource.__init__(self, name, description, creator, raw)
@@ -192,6 +197,11 @@ class ExperimentResource(BossResource):
         self._hierarchy_method = self.validate_hierarchy_method(
             hierarchy_method)
         self.num_time_samples = num_time_samples
+
+        self._valid_time_units = [
+            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+        self.time_step = time_step
+        self._time_step_unit = self.validate_time_units(time_step_unit)
 
     @property
     def coord_frame(self):
@@ -218,6 +228,20 @@ class ExperimentResource(BossResource):
         """
         self._hierarchy_method = self.validate_hierarchy_method(value)
 
+    @property
+    def time_step_unit(self):
+        return self._time_step_unit
+
+    @time_step_unit.setter
+    def time_step_unit(self, value):
+        """
+        Args:
+            value (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'
+        Raises:
+            ValueError
+        """
+        self._time_step_unit = self.validate_time_units(value)
+
     def get_route(self):
         return self.coll_name + '/experiment/' + self.name
 
@@ -238,6 +262,12 @@ class ExperimentResource(BossResource):
         if lowered in self._valid_hierarchy_methods:
             return lowered
         raise ValueError('{} is not a valid hierarchy method.'.format(value))
+
+    def validate_time_units(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_time_units:
+            return lowered
+        raise ValueError('{} is not a valid time unit.'.format(value))
 
     def get_dict_route(self):
         return {"collection": self.coll_name, "experiment": self.name}
@@ -269,7 +299,7 @@ class CoordinateFrameResource(BossResource):
         self, name, description='',
         x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
         x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
-        time_step=0, time_step_unit='seconds', creator='', raw={}):
+        creator='', raw={}):
         """Constructor.
 
         For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
@@ -287,8 +317,6 @@ class CoordinateFrameResource(BossResource):
             y_voxel_size (optional[int]): Defaults to 1.
             z_voxel_size (optional[int]): Defaults to 1.
             voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
-            time_step (optional[int]): Defaults to 0.
-            time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
@@ -297,9 +325,6 @@ class CoordinateFrameResource(BossResource):
 
         self._valid_voxel_units = [
             'nanometers', 'micrometers', 'millimeters', 'centimeters']
-
-        self._valid_time_units = [
-            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
 
         self.x_start = x_start
         self.x_stop = x_stop
@@ -311,8 +336,6 @@ class CoordinateFrameResource(BossResource):
         self.y_voxel_size = y_voxel_size
         self.z_voxel_size = z_voxel_size
         self._voxel_unit = self.validate_voxel_units(voxel_unit)
-        self.time_step = time_step
-        self._time_step_unit = self.validate_time_units(time_step_unit)
 
     def get_route(self):
         return self.name
@@ -345,7 +368,13 @@ class CoordinateFrameResource(BossResource):
 
     @property
     def time_step_unit(self):
-        return self._time_step_unit
+        """
+        Time step unit now part of Experiment.
+
+        Raises:
+            TypeError
+        """
+        raise TypeError('time_step_unit now part of Experiment.')
 
     @time_step_unit.setter
     def time_step_unit(self, value):
@@ -353,9 +382,9 @@ class CoordinateFrameResource(BossResource):
         Args:
             value (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'
         Raises:
-            ValueError
+            TypeError
         """
-        self._time_step_unit = self.validate_time_units(value)
+        raise TypeError('time_step_unit now part of Experiment.')
 
     def validate_voxel_units(self, value):
         lowered = value.lower()
@@ -363,11 +392,6 @@ class CoordinateFrameResource(BossResource):
             return lowered
         raise ValueError('{} is not a valid voxel unit.'.format(value))
 
-    def validate_time_units(self, value):
-        lowered = value.lower()
-        if lowered in self._valid_time_units:
-            return lowered
-        raise ValueError('{} is not a valid time unit.'.format(value))
 
     def get_dict_route(self):
         return {"coord": self.name}
