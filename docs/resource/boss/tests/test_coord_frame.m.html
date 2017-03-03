@@ -1039,12 +1039,6 @@ table {
     <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_get_list_route">test_get_list_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_get_route">test_get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_not_valid_volume">test_not_valid_volume</a></li>
-    <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_time_units_setter">test_time_units_setter</a></li>
-    <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_bad">test_validate_time_units_bad</a></li>
-    <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_micro">test_validate_time_units_micro</a></li>
-    <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_ms">test_validate_time_units_ms</a></li>
-    <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_ns">test_validate_time_units_ns</a></li>
-    <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_s">test_validate_time_units_s</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_voxel_units_bad">test_validate_voxel_units_bad</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_voxel_units_cm">test_validate_voxel_units_cm</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_voxel_units_micro">test_validate_voxel_units_micro</a></li>
@@ -1109,11 +1103,6 @@ class TestCoordFrameResource(unittest.TestCase):
         self.cf.voxel_unit = exp
         self.assertEqual(exp, self.cf.voxel_unit)
 
-    def test_time_units_setter(self):
-        exp = 'seconds'
-        self.cf.time_step_unit = exp
-        self.assertEqual(exp, self.cf.time_step_unit)
-
     def test_validate_voxel_units_nm(self):
         exp = 'nanometers'
         self.assertEqual(exp, self.cf.validate_voxel_units(exp))
@@ -1134,25 +1123,6 @@ class TestCoordFrameResource(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.cf.validate_voxel_units('centimet')
 
-    def test_validate_time_units_ns(self):
-        exp = 'nanoseconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_micro(self):
-        exp = 'microseconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_ms(self):
-        exp = 'milliseconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_s(self):
-        exp = 'seconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_bad(self):
-        with self.assertRaises(ValueError):
-            self.cf.validate_voxel_units('secs')
 </code></pre>
   </div>
 
@@ -1189,11 +1159,6 @@ class TestCoordFrameResource(unittest.TestCase):
         self.cf.voxel_unit = exp
         self.assertEqual(exp, self.cf.voxel_unit)
 
-    def test_time_units_setter(self):
-        exp = 'seconds'
-        self.cf.time_step_unit = exp
-        self.assertEqual(exp, self.cf.time_step_unit)
-
     def test_validate_voxel_units_nm(self):
         exp = 'nanometers'
         self.assertEqual(exp, self.cf.validate_voxel_units(exp))
@@ -1213,26 +1178,6 @@ class TestCoordFrameResource(unittest.TestCase):
     def test_validate_voxel_units_bad(self):
         with self.assertRaises(ValueError):
             self.cf.validate_voxel_units('centimet')
-
-    def test_validate_time_units_ns(self):
-        exp = 'nanoseconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_micro(self):
-        exp = 'microseconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_ms(self):
-        exp = 'milliseconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_s(self):
-        exp = 'seconds'
-        self.assertEqual(exp, self.cf.validate_time_units(exp))
-
-    def test_validate_time_units_bad(self):
-        with self.assertRaises(ValueError):
-            self.cf.validate_voxel_units('secs')
 </code></pre>
   </div>
 </div>
@@ -2276,7 +2221,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x102e07c08&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2337,7 +2282,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x102e07c08&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3261,133 +3206,6 @@ def tearDownClass(cls):
   <div id="source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_not_valid_volume" class="source">
     <pre><code>def test_not_valid_volume(self):
     self.assertFalse(self.cf.valid_volume())
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_time_units_setter">
-    <p>def <span class="ident">test_time_units_setter</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_time_units_setter', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_time_units_setter" class="source">
-    <pre><code>def test_time_units_setter(self):
-    exp = 'seconds'
-    self.cf.time_step_unit = exp
-    self.assertEqual(exp, self.cf.time_step_unit)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_bad">
-    <p>def <span class="ident">test_validate_time_units_bad</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_bad', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_bad" class="source">
-    <pre><code>def test_validate_time_units_bad(self):
-    with self.assertRaises(ValueError):
-        self.cf.validate_voxel_units('secs')
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_micro">
-    <p>def <span class="ident">test_validate_time_units_micro</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_micro', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_micro" class="source">
-    <pre><code>def test_validate_time_units_micro(self):
-    exp = 'microseconds'
-    self.assertEqual(exp, self.cf.validate_time_units(exp))
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_ms">
-    <p>def <span class="ident">test_validate_time_units_ms</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_ms', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_ms" class="source">
-    <pre><code>def test_validate_time_units_ms(self):
-    exp = 'milliseconds'
-    self.assertEqual(exp, self.cf.validate_time_units(exp))
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_ns">
-    <p>def <span class="ident">test_validate_time_units_ns</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_ns', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_ns" class="source">
-    <pre><code>def test_validate_time_units_ns(self):
-    exp = 'nanoseconds'
-    self.assertEqual(exp, self.cf.validate_time_units(exp))
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_s">
-    <p>def <span class="ident">test_validate_time_units_s</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_s', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.tests.test_coord_frame.TestCoordFrameResource.test_validate_time_units_s" class="source">
-    <pre><code>def test_validate_time_units_s(self):
-    exp = 'seconds'
-    self.assertEqual(exp, self.cf.validate_time_units(exp))
 </code></pre>
   </div>
 </div>

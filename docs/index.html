@@ -969,13 +969,6 @@ table {
   <div id="sidebar">
     <h1>Index</h1>
     <ul id="index">
-    <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
-      
-  <ul>
-    <li class="mono"><a href="#intern.version">version</a></li>
-  </ul>
-
-    </li>
 
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
@@ -1014,7 +1007,7 @@ table {
 A Python library for open neuroscience data access and manipulation.
 """
 
-version = "0.9.1"
+__version__ = "0.9.3"
 
 
 def check_version():
@@ -1024,9 +1017,9 @@ def check_version():
     import requests
     r = requests.get('https://pypi.python.org/pypi/intern/json').json()
     r = r['info']['version']
-    if r != version:
-        print("A newer version of intern is available. " +
-              "'pip install -U intern' to update.")
+    if r != __version__:
+        print("You are using version {}. A newer version of intern is available: {} ".format(__version__, r) +
+              "\n\n'pip install -U intern' to update.")
     return r
 </code></pre>
   </div>
@@ -1034,15 +1027,6 @@ def check_version():
   </header>
 
   <section id="section-items">
-    <h2 class="section-title" id="header-variables">Module variables</h2>
-      <div class="item">
-      <p id="intern.version" class="name">var <span class="ident">version</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
-      </div>
 
     <h2 class="section-title" id="header-functions">Functions</h2>
       
@@ -1065,9 +1049,9 @@ def check_version():
     import requests
     r = requests.get('https://pypi.python.org/pypi/intern/json').json()
     r = r['info']['version']
-    if r != version:
-        print("A newer version of intern is available. " +
-              "'pip install -U intern' to update.")
+    if r != __version__:
+        print("You are using version {}. A newer version of intern is available: {} ".format(__version__, r) +
+              "\n\n'pip install -U intern' to update.")
     return r
 </code></pre>
   </div>

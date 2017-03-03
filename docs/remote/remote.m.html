@@ -1224,8 +1224,8 @@ class Remote(object):
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
 
-        if bb_type != 'loose':
-            raise RuntimeError('Only loose bounding boxes currently supported.')
+        if bb_type != 'loose' and bb_type != 'tight':
+            raise RuntimeError("bb_type must be either 'loose' or 'tight'.")
 
         return self._volume.get_bounding_box(resource, resolution, id, bb_type)
 
@@ -1470,8 +1470,8 @@ class Remote(object):
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
 
-        if bb_type != 'loose':
-            raise RuntimeError('Only loose bounding boxes currently supported.')
+        if bb_type != 'loose' and bb_type != 'tight':
+            raise RuntimeError("bb_type must be either 'loose' or 'tight'.")
 
         return self._volume.get_bounding_box(resource, resolution, id, bb_type)
 
@@ -1707,8 +1707,8 @@ returned is cuboid aligned.</p>
     """
     if not resource.valid_volume():
         raise RuntimeError('Resource incompatible with the volume service.')
-    if bb_type != 'loose':
-        raise RuntimeError('Only loose bounding boxes currently supported.')
+    if bb_type != 'loose' and bb_type != 'tight':
+        raise RuntimeError("bb_type must be either 'loose' or 'tight'.")
     return self._volume.get_bounding_box(resource, resolution, id, bb_type)
 </code></pre>
   </div>
