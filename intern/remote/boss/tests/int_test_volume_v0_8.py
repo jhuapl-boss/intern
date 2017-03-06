@@ -592,7 +592,7 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         sub_y = [7, 10]
         sub_z = [12, 17]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 10))
+        data = numpy.random.randint(1, 10, (9, 5, 10))
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -604,7 +604,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 2038))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -614,7 +616,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 2048]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 2043, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -624,7 +628,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 100]
 
-        data = numpy.random.randint(1, 3000, (90, 5, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
@@ -634,7 +640,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 2039))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint8)
 
         with self.assertRaises(HTTPError):
@@ -645,7 +653,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 2049]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 2044, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint8)
 
         with self.assertRaises(HTTPError):
@@ -656,7 +666,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 101]
 
-        data = numpy.random.randint(1, 3000, (91, 5, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -667,7 +679,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [0, 4]
         z_rng = [0, 5]
 
-        data = numpy.random.randint(1, 3000, (5, 4, 8))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -683,7 +697,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         sub_y = [7, 10]
         sub_z = [12, 17]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -691,21 +707,25 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         numpy.testing.assert_array_equal(data[2:7, 2:5, 2:4], actual)
 
     def test_upload_to_x_edge_of_channel_16bit(self):
-        x_rng = [10, 2048]
+        x_rng = [2000, 2048]
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 2038))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_to_y_edge_of_channel_16bit(self):
         x_rng = [10, 20]
-        y_rng = [5, 2048]
+        y_rng = [2000, 2048]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 2043, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
@@ -715,17 +735,21 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 100]
 
-        data = numpy.random.randint(1, 3000, (90, 5, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint16)
 
         self.rmt.create_cutout(self.chan16, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_past_x_edge_of_channel_16bit(self):
-        x_rng = [10, 2049]
+        x_rng = [2000, 2049]
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 2039))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -733,10 +757,12 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
 
     def test_upload_past_y_edge_of_channel_16bit(self):
         x_rng = [10, 20]
-        y_rng = [5, 2049]
+        y_rng = [2000, 2049]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 2044, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -747,7 +773,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 101]
 
-        data = numpy.random.randint(1, 3000, (91, 5, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint16)
 
         with self.assertRaises(HTTPError):
@@ -758,7 +786,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [0, 4]
         z_rng = [0, 5]
 
-        data = numpy.random.randint(1, 3000, (5, 4, 8))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
@@ -774,7 +804,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         sub_y = [7, 10]
         sub_z = [12, 17]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
@@ -782,21 +814,25 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         numpy.testing.assert_array_equal(data[2:7, 2:5, 2:4], actual)
 
     def test_upload_to_x_edge_of_anno_chan(self):
-        x_rng = [10, 2048]
+        x_rng = [2000, 2048]
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 2038))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
 
     def test_upload_to_y_edge_of_anno_chan(self):
         x_rng = [10, 20]
-        y_rng = [5, 2048]
+        y_rng = [2000, 2048]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 2043, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
@@ -806,7 +842,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 100]
 
-        data = numpy.random.randint(1, 3000, (90, 5, 90))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint64)
 
         self.rmt.create_cutout(self.ann_chan, 0, x_rng, y_rng, z_rng, data)
@@ -816,7 +854,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 5, 2039))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
@@ -827,7 +867,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 2049]
         z_rng = [10, 19]
 
-        data = numpy.random.randint(1, 3000, (9, 2044, 991))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
@@ -838,7 +880,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         y_rng = [5, 10]
         z_rng = [10, 101]
 
-        data = numpy.random.randint(1, 3000, (91, 5, 10))
+        shape = (z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint64)
 
         with self.assertRaises(HTTPError):
@@ -850,7 +894,9 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         z_rng = [50, 55]
         t_rng = [0, 1]
 
-        data = numpy.random.randint(1, 254, (1, 5, 40, 80))
+        shape = (t_rng[1]-t_rng[0], z_rng[1]-z_rng[0], y_rng[1]-y_rng[0], x_rng[1]-x_rng[0])
+
+        data = numpy.random.randint(1, 10, shape)
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data, time_range=t_rng)
