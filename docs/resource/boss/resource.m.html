@@ -1036,7 +1036,6 @@ table {
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_reserve_route">get_reserve_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.valid_volume">valid_volume</a></li>
-    <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.validate_time_units">validate_time_units</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.CoordinateFrameResource.validate_voxel_units">validate_voxel_units</a></li>
   </ul>
 
@@ -1055,6 +1054,7 @@ table {
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.valid_volume">valid_volume</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.validate_hierarchy_method">validate_hierarchy_method</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ExperimentResource.validate_time_units">validate_time_units</a></li>
   </ul>
 
         </li>
@@ -1242,10 +1242,13 @@ class ExperimentResource(BossResource):
         num_hierarchy_levels (int):
         hierarchy_method (string):
         num_time_samples (int):
+        time_step (int): Defaults to 0.
+        time_step_unit (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
     """
     def __init__(self, name, collection_name, coord_frame='', description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
-        num_time_samples=1, creator='', raw={}):
+        num_time_samples=1, creator='', raw={}, 
+        time_step=0, time_step_unit='seconds'):
         """Constructor.
 
         Args:
@@ -1258,6 +1261,8 @@ class ExperimentResource(BossResource):
             num_time_samples (optional[int]): Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+            time_step (optional[int]): Defaults to 0.
+            time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
         """
 
         BossResource.__init__(self, name, description, creator, raw)
@@ -1271,6 +1276,11 @@ class ExperimentResource(BossResource):
         self._hierarchy_method = self.validate_hierarchy_method(
             hierarchy_method)
         self.num_time_samples = num_time_samples
+
+        self._valid_time_units = [
+            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+        self.time_step = time_step
+        self._time_step_unit = self.validate_time_units(time_step_unit)
 
     @property
     def coord_frame(self):
@@ -1297,6 +1307,20 @@ class ExperimentResource(BossResource):
         """
         self._hierarchy_method = self.validate_hierarchy_method(value)
 
+    @property
+    def time_step_unit(self):
+        return self._time_step_unit
+
+    @time_step_unit.setter
+    def time_step_unit(self, value):
+        """
+        Args:
+            value (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'
+        Raises:
+            ValueError
+        """
+        self._time_step_unit = self.validate_time_units(value)
+
     def get_route(self):
         return self.coll_name + '/experiment/' + self.name
 
@@ -1317,6 +1341,12 @@ class ExperimentResource(BossResource):
         if lowered in self._valid_hierarchy_methods:
             return lowered
         raise ValueError('{} is not a valid hierarchy method.'.format(value))
+
+    def validate_time_units(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_time_units:
+            return lowered
+        raise ValueError('{} is not a valid time unit.'.format(value))
 
     def get_dict_route(self):
         return {"collection": self.coll_name, "experiment": self.name}
@@ -1348,7 +1378,7 @@ class CoordinateFrameResource(BossResource):
         self, name, description='',
         x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
         x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
-        time_step=0, time_step_unit='seconds', creator='', raw={}):
+        creator='', raw={}):
         """Constructor.
 
         For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
@@ -1366,8 +1396,6 @@ class CoordinateFrameResource(BossResource):
             y_voxel_size (optional[int]): Defaults to 1.
             z_voxel_size (optional[int]): Defaults to 1.
             voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
-            time_step (optional[int]): Defaults to 0.
-            time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
@@ -1376,9 +1404,6 @@ class CoordinateFrameResource(BossResource):
 
         self._valid_voxel_units = [
             'nanometers', 'micrometers', 'millimeters', 'centimeters']
-
-        self._valid_time_units = [
-            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
 
         self.x_start = x_start
         self.x_stop = x_stop
@@ -1390,8 +1415,6 @@ class CoordinateFrameResource(BossResource):
         self.y_voxel_size = y_voxel_size
         self.z_voxel_size = z_voxel_size
         self._voxel_unit = self.validate_voxel_units(voxel_unit)
-        self.time_step = time_step
-        self._time_step_unit = self.validate_time_units(time_step_unit)
 
     def get_route(self):
         return self.name
@@ -1424,7 +1447,13 @@ class CoordinateFrameResource(BossResource):
 
     @property
     def time_step_unit(self):
-        return self._time_step_unit
+        """
+        Time step unit now part of Experiment.
+
+        Raises:
+            TypeError
+        """
+        raise TypeError('time_step_unit now part of Experiment.')
 
     @time_step_unit.setter
     def time_step_unit(self, value):
@@ -1432,9 +1461,9 @@ class CoordinateFrameResource(BossResource):
         Args:
             value (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'
         Raises:
-            ValueError
+            TypeError
         """
-        self._time_step_unit = self.validate_time_units(value)
+        raise TypeError('time_step_unit now part of Experiment.')
 
     def validate_voxel_units(self, value):
         lowered = value.lower()
@@ -1442,11 +1471,6 @@ class CoordinateFrameResource(BossResource):
             return lowered
         raise ValueError('{} is not a valid voxel unit.'.format(value))
 
-    def validate_time_units(self, value):
-        lowered = value.lower()
-        if lowered in self._valid_time_units:
-            return lowered
-        raise ValueError('{} is not a valid time unit.'.format(value))
 
     def get_dict_route(self):
         return {"coord": self.name}
@@ -3108,7 +3132,7 @@ def get_route(self):
         self, name, description='',
         x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
         x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
-        time_step=0, time_step_unit='seconds', creator='', raw={}):
+        creator='', raw={}):
         """Constructor.
 
         For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
@@ -3126,8 +3150,6 @@ def get_route(self):
             y_voxel_size (optional[int]): Defaults to 1.
             z_voxel_size (optional[int]): Defaults to 1.
             voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
-            time_step (optional[int]): Defaults to 0.
-            time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
@@ -3136,9 +3158,6 @@ def get_route(self):
 
         self._valid_voxel_units = [
             'nanometers', 'micrometers', 'millimeters', 'centimeters']
-
-        self._valid_time_units = [
-            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
 
         self.x_start = x_start
         self.x_stop = x_stop
@@ -3150,8 +3169,6 @@ def get_route(self):
         self.y_voxel_size = y_voxel_size
         self.z_voxel_size = z_voxel_size
         self._voxel_unit = self.validate_voxel_units(voxel_unit)
-        self.time_step = time_step
-        self._time_step_unit = self.validate_time_units(time_step_unit)
 
     def get_route(self):
         return self.name
@@ -3184,7 +3201,13 @@ def get_route(self):
 
     @property
     def time_step_unit(self):
-        return self._time_step_unit
+        """
+        Time step unit now part of Experiment.
+
+        Raises:
+            TypeError
+        """
+        raise TypeError('time_step_unit now part of Experiment.')
 
     @time_step_unit.setter
     def time_step_unit(self, value):
@@ -3192,9 +3215,9 @@ def get_route(self):
         Args:
             value (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'
         Raises:
-            ValueError
+            TypeError
         """
-        self._time_step_unit = self.validate_time_units(value)
+        raise TypeError('time_step_unit now part of Experiment.')
 
     def validate_voxel_units(self, value):
         lowered = value.lower()
@@ -3202,11 +3225,6 @@ def get_route(self):
             return lowered
         raise ValueError('{} is not a valid voxel unit.'.format(value))
 
-    def validate_time_units(self, value):
-        lowered = value.lower()
-        if lowered in self._valid_time_units:
-            return lowered
-        raise ValueError('{} is not a valid time unit.'.format(value))
 
     def get_dict_route(self):
         return {"coord": self.name}
@@ -3281,21 +3299,16 @@ def get_route(self):
 
             </div>
             <div class="item">
-            <p id="intern.resource.boss.resource.CoordinateFrameResource.time_step" class="name">var <span class="ident">time_step</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
             <p id="intern.resource.boss.resource.CoordinateFrameResource.time_step_unit" class="name">var <span class="ident">time_step_unit</span></p>
             
 
             
   
+    <div class="desc"><p>Time step unit now part of Experiment.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>TypeError
+</code></pre></div>
   <div class="source_cont">
 </div>
 
@@ -3404,7 +3417,7 @@ def get_route(self):
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, name, description=&#39;&#39;, x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1, x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit=&#39;nanometers&#39;, time_step=0, time_step_unit=&#39;seconds&#39;, creator=&#39;&#39;, raw={})</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, description=&#39;&#39;, x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1, x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit=&#39;nanometers&#39;, creator=&#39;&#39;, raw={})</p>
     </div>
     
     <p class="inheritance">
@@ -3429,8 +3442,6 @@ def get_route(self):
 &emsp;&emsp;&emsp;&emsp;<b>y_voxel_size (optional[int])</b>: Defaults to 1.<br />
 &emsp;&emsp;&emsp;&emsp;<b>z_voxel_size (optional[int])</b>: Defaults to 1.<br />
 &emsp;&emsp;&emsp;&emsp;<b>voxel_unit (optional[string])</b>: 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.<br />
-&emsp;&emsp;&emsp;&emsp;<b>time_step (optional[int])</b>: Defaults to 0.<br />
-&emsp;&emsp;&emsp;&emsp;<b>time_step_unit (optional[string])</b>: 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.<br />
 &emsp;&emsp;&emsp;&emsp;<b>creator (optional[string])</b>: Resource creator.<br />
 &emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.</p></div>
   <div class="source_cont">
@@ -3440,7 +3451,7 @@ def get_route(self):
     self, name, description='',
     x_start=0, x_stop=1, y_start=0, y_stop=1, z_start=0, z_stop=1,
     x_voxel_size=1, y_voxel_size=1, z_voxel_size=1, voxel_unit='nanometers',
-    time_step=0, time_step_unit='seconds', creator='', raw={}):
+    creator='', raw={}):
     """Constructor.
     For all ranges, the _stop value is exclusive.  This means valid values will be _less than_ the stop value.
     Args:
@@ -3456,16 +3467,12 @@ def get_route(self):
         y_voxel_size (optional[int]): Defaults to 1.
         z_voxel_size (optional[int]): Defaults to 1.
         voxel_unit (optional[string]): 'nanometers', 'micrometers', 'millimeters', 'centimeters'.  Defaults to 'nanometers'.
-        time_step (optional[int]): Defaults to 0.
-        time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
         creator (optional[string]): Resource creator.
         raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
     """
     BossResource.__init__(self, name, description, raw=raw)
     self._valid_voxel_units = [
         'nanometers', 'micrometers', 'millimeters', 'centimeters']
-    self._valid_time_units = [
-        'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
     self.x_start = x_start
     self.x_stop = x_stop
     self.y_start = y_start
@@ -3476,8 +3483,6 @@ def get_route(self):
     self.y_voxel_size = y_voxel_size
     self.z_voxel_size = z_voxel_size
     self._voxel_unit = self.validate_voxel_units(voxel_unit)
-    self.time_step = time_step
-    self._time_step_unit = self.validate_time_units(time_step_unit)
 </code></pre>
   </div>
 </div>
@@ -3696,29 +3701,6 @@ def get_route(self):
   
             
   <div class="item">
-    <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.validate_time_units">
-    <p>def <span class="ident">validate_time_units</span>(</p><p>self, value)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.CoordinateFrameResource.validate_time_units', this);">Show source &equiv;</a></p>
-  <div id="source-intern.resource.boss.resource.CoordinateFrameResource.validate_time_units" class="source">
-    <pre><code>def validate_time_units(self, value):
-    lowered = value.lower()
-    if lowered in self._valid_time_units:
-        return lowered
-    raise ValueError('{} is not a valid time unit.'.format(value))
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
     <div class="name def" id="intern.resource.boss.resource.CoordinateFrameResource.validate_voxel_units">
     <p>def <span class="ident">validate_voxel_units</span>(</p><p>self, value)</p>
     </div>
@@ -3753,7 +3735,9 @@ layers.</p>
     _coord_frame (string):<br />
     num_hierarchy_levels (int):<br />
     hierarchy_method (string):<br />
-    num_time_samples (int):</p></div>
+    num_time_samples (int):<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_step (int)</b>: Defaults to 0.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_step_unit (string)</b>: 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource', this);">Show source &equiv;</a></p>
   <div id="source-intern.resource.boss.resource.ExperimentResource" class="source">
@@ -3766,10 +3750,13 @@ layers.</p>
         num_hierarchy_levels (int):
         hierarchy_method (string):
         num_time_samples (int):
+        time_step (int): Defaults to 0.
+        time_step_unit (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
     """
     def __init__(self, name, collection_name, coord_frame='', description='',
         num_hierarchy_levels=1, hierarchy_method='near_iso',
-        num_time_samples=1, creator='', raw={}):
+        num_time_samples=1, creator='', raw={}, 
+        time_step=0, time_step_unit='seconds'):
         """Constructor.
 
         Args:
@@ -3782,6 +3769,8 @@ layers.</p>
             num_time_samples (optional[int]): Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+            time_step (optional[int]): Defaults to 0.
+            time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
         """
 
         BossResource.__init__(self, name, description, creator, raw)
@@ -3795,6 +3784,11 @@ layers.</p>
         self._hierarchy_method = self.validate_hierarchy_method(
             hierarchy_method)
         self.num_time_samples = num_time_samples
+
+        self._valid_time_units = [
+            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+        self.time_step = time_step
+        self._time_step_unit = self.validate_time_units(time_step_unit)
 
     @property
     def coord_frame(self):
@@ -3821,6 +3815,20 @@ layers.</p>
         """
         self._hierarchy_method = self.validate_hierarchy_method(value)
 
+    @property
+    def time_step_unit(self):
+        return self._time_step_unit
+
+    @time_step_unit.setter
+    def time_step_unit(self, value):
+        """
+        Args:
+            value (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'
+        Raises:
+            ValueError
+        """
+        self._time_step_unit = self.validate_time_units(value)
+
     def get_route(self):
         return self.coll_name + '/experiment/' + self.name
 
@@ -3841,6 +3849,12 @@ layers.</p>
         if lowered in self._valid_hierarchy_methods:
             return lowered
         raise ValueError('{} is not a valid hierarchy method.'.format(value))
+
+    def validate_time_units(self, value):
+        lowered = value.lower()
+        if lowered in self._valid_time_units:
+            return lowered
+        raise ValueError('{} is not a valid time unit.'.format(value))
 
     def get_dict_route(self):
         return {"collection": self.coll_name, "experiment": self.name}
@@ -3964,11 +3978,31 @@ layers.</p>
 </div>
 
             </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.time_step" class="name">var <span class="ident">time_step</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ExperimentResource.time_step_unit" class="name">var <span class="ident">time_step_unit</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
           <h3>Methods</h3>
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.resource.ExperimentResource.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, coord_frame=&#39;&#39;, description=&#39;&#39;, num_hierarchy_levels=1, hierarchy_method=&#39;near_iso&#39;, num_time_samples=1, creator=&#39;&#39;, raw={})</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, coord_frame=&#39;&#39;, description=&#39;&#39;, num_hierarchy_levels=1, hierarchy_method=&#39;near_iso&#39;, num_time_samples=1, creator=&#39;&#39;, raw={}, time_step=0, time_step_unit=&#39;seconds&#39;)</p>
     </div>
     
     <p class="inheritance">
@@ -3988,13 +4022,16 @@ layers.</p>
 &emsp;&emsp;&emsp;&emsp;<b>hierarchy_method (optional[string])</b>: 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.<br />
 &emsp;&emsp;&emsp;&emsp;<b>num_time_samples (optional[int])</b>: Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.<br />
 &emsp;&emsp;&emsp;&emsp;<b>creator (optional[string])</b>: Resource creator.<br />
-&emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.</p></div>
+&emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_step (optional[int])</b>: Defaults to 0.<br />
+&emsp;&emsp;&emsp;&emsp;<b>time_step_unit (optional[string])</b>: 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.__init__', this);">Show source &equiv;</a></p>
   <div id="source-intern.resource.boss.resource.ExperimentResource.__init__" class="source">
     <pre><code>def __init__(self, name, collection_name, coord_frame='', description='',
     num_hierarchy_levels=1, hierarchy_method='near_iso',
-    num_time_samples=1, creator='', raw={}):
+    num_time_samples=1, creator='', raw={}, 
+    time_step=0, time_step_unit='seconds'):
     """Constructor.
     Args:
         name (string): Experiment name.
@@ -4006,6 +4043,8 @@ layers.</p>
         num_time_samples (optional[int]): Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.
         creator (optional[string]): Resource creator.
         raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
+        time_step (optional[int]): Defaults to 0.
+        time_step_unit (optional[string]): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
     """
     BossResource.__init__(self, name, description, creator, raw)
     self.coll_name = collection_name
@@ -4016,6 +4055,10 @@ layers.</p>
     self._hierarchy_method = self.validate_hierarchy_method(
         hierarchy_method)
     self.num_time_samples = num_time_samples
+    self._valid_time_units = [
+        'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+    self.time_step = time_step
+    self._time_step_unit = self.validate_time_units(time_step_unit)
 </code></pre>
   </div>
 </div>
@@ -4249,6 +4292,29 @@ layers.</p>
     if lowered in self._valid_hierarchy_methods:
         return lowered
     raise ValueError('{} is not a valid hierarchy method.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ExperimentResource.validate_time_units">
+    <p>def <span class="ident">validate_time_units</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.validate_time_units', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ExperimentResource.validate_time_units" class="source">
+    <pre><code>def validate_time_units(self, value):
+    lowered = value.lower()
+    if lowered in self._valid_time_units:
+        return lowered
+    raise ValueError('{} is not a valid time unit.'.format(value))
 </code></pre>
   </div>
 </div>

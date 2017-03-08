@@ -1044,6 +1044,11 @@ table {
     <li class="mono"><a href="#intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_hierarchy_method_iso">test_validate_hierarchy_method_iso</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_hierarchy_method_near_iso">test_validate_hierarchy_method_near_iso</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_hierarchy_method_slice">test_validate_hierarchy_method_slice</a></li>
+    <li class="mono"><a href="#intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_bad">test_validate_time_units_bad</a></li>
+    <li class="mono"><a href="#intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_micro">test_validate_time_units_micro</a></li>
+    <li class="mono"><a href="#intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_ms">test_validate_time_units_ms</a></li>
+    <li class="mono"><a href="#intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_ns">test_validate_time_units_ns</a></li>
+    <li class="mono"><a href="#intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_s">test_validate_time_units_s</a></li>
   </ul>
 
         </li>
@@ -1119,6 +1124,26 @@ class TestExperimentResource(unittest.TestCase):
     def test_validate_hierarchy_method_bad(self):
         with self.assertRaises(ValueError):
             self.er.validate_hierarchy_method('foo')
+
+    def test_validate_time_units_ns(self):
+        exp = 'nanoseconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_micro(self):
+        exp = 'microseconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_ms(self):
+        exp = 'milliseconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_s(self):
+        exp = 'seconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_bad(self):
+        with self.assertRaises(ValueError):
+            self.er.validate_time_units('secs')
 </code></pre>
   </div>
 
@@ -1172,6 +1197,26 @@ class TestExperimentResource(unittest.TestCase):
     def test_validate_hierarchy_method_bad(self):
         with self.assertRaises(ValueError):
             self.er.validate_hierarchy_method('foo')
+
+    def test_validate_time_units_ns(self):
+        exp = 'nanoseconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_micro(self):
+        exp = 'microseconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_ms(self):
+        exp = 'milliseconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_s(self):
+        exp = 'seconds'
+        self.assertEqual(exp, self.er.validate_time_units(exp))
+
+    def test_validate_time_units_bad(self):
+        with self.assertRaises(ValueError):
+            self.er.validate_time_units('secs')
 </code></pre>
   </div>
 </div>
@@ -2215,7 +2260,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.tests.test_experiment.TestExperimentResource.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x102e07c08&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2276,7 +2321,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.tests.test_experiment.TestExperimentResource.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x106004848&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x102e07c08&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3308,6 +3353,111 @@ def tearDownClass(cls):
     <pre><code>def test_validate_hierarchy_method_slice(self):
     exp = 'slice'
     self.assertEqual(exp, self.er.validate_hierarchy_method(exp))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_bad">
+    <p>def <span class="ident">test_validate_time_units_bad</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_bad', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_bad" class="source">
+    <pre><code>def test_validate_time_units_bad(self):
+    with self.assertRaises(ValueError):
+        self.er.validate_time_units('secs')
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_micro">
+    <p>def <span class="ident">test_validate_time_units_micro</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_micro', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_micro" class="source">
+    <pre><code>def test_validate_time_units_micro(self):
+    exp = 'microseconds'
+    self.assertEqual(exp, self.er.validate_time_units(exp))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_ms">
+    <p>def <span class="ident">test_validate_time_units_ms</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_ms', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_ms" class="source">
+    <pre><code>def test_validate_time_units_ms(self):
+    exp = 'milliseconds'
+    self.assertEqual(exp, self.er.validate_time_units(exp))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_ns">
+    <p>def <span class="ident">test_validate_time_units_ns</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_ns', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_ns" class="source">
+    <pre><code>def test_validate_time_units_ns(self):
+    exp = 'nanoseconds'
+    self.assertEqual(exp, self.er.validate_time_units(exp))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_s">
+    <p>def <span class="ident">test_validate_time_units_s</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_s', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.tests.test_experiment.TestExperimentResource.test_validate_time_units_s" class="source">
+    <pre><code>def test_validate_time_units_s(self):
+    exp = 'seconds'
+    self.assertEqual(exp, self.er.validate_time_units(exp))
 </code></pre>
   </div>
 </div>

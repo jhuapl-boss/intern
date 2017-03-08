@@ -1,14 +1,13 @@
 from setuptools import setup, find_packages
 from codecs import open
 from os import path
+from intern import __version__
 
 # to update
 # python setup.py sdist
 # python setup.py bdist_wheel
 # twine upload dist/*
 
-
-__version__ = '0.9.2'
 
 here = path.abspath(path.dirname(__file__))
 

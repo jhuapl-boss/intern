@@ -2,7 +2,7 @@
 A Python library for open neuroscience data access and manipulation.
 """
 
-version = "0.9.1"
+__version__ = "0.9.3"
 
 
 def check_version():
@@ -12,7 +12,7 @@ def check_version():
     import requests
     r = requests.get('https://pypi.python.org/pypi/intern/json').json()
     r = r['info']['version']
-    if r != version:
-        print("A newer version of intern is available. " +
-              "'pip install -U intern' to update.")
+    if r != __version__:
+        print("You are using version {}. A newer version of intern is available: {} ".format(__version__, r) +
+              "\n\n'pip install -U intern' to update.")
     return r
