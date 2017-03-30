@@ -88,7 +88,7 @@ def block_compute(x_start, x_stop,
         x_slices.append((x_bounds[-1], x_stop))
 
     # y
-    y_bounds = range(origin[1], x_stop + block_size[1], block_size[1])
+    y_bounds = range(origin[1], y_stop + block_size[1], block_size[1])
     y_bounds = [y for y in y_bounds if (y > y_start and y < y_stop)]
     if len(y_bounds) is 0:
         y_slices = [(y_start, y_stop)]
