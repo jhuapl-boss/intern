@@ -18,4 +18,4 @@ Author:
     Tim Gion
 """
 
-BOSS_API_VERSION = 'v0.8'
+BOSS_API_VERSION = 'v1'

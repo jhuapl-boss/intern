@@ -21,10 +21,10 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import unittest
 import warnings
 
-API_VER = 'v0.8'
+API_VER = 'v1'
 
 
-class ProjectUserTest_v0_8(unittest.TestCase):
+class ProjectUserTest_v1(unittest.TestCase):
     """Integration tests of the Boss user API.
     """
 

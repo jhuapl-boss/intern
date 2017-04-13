@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from intern.service.boss import BossService
-from intern.service.boss.v0_8.project import ProjectService_0_8
+from intern.service.boss.v1.project import ProjectService_1
 
 
 class ProjectService(BossService):
@@ -33,7 +33,7 @@ class ProjectService(BossService):
         BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
-            'v0.8': ProjectService_0_8()
+            'v1': ProjectService_1()
         }
         self.service = self.get_api_impl(version)
 

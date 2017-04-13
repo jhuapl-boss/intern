@@ -23,9 +23,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import copy
 import unittest
 
-API_VER = 'v0.8'
+API_VER = 'v1'
 
-class ProjectServiceTest_v0_8(unittest.TestCase):
+class ProjectServiceTest_v1(unittest.TestCase):
     """Integration tests of the Boss resource API.
     """
 
@@ -54,10 +54,10 @@ class ProjectServiceTest_v0_8(unittest.TestCase):
 
         self.exp = ExperimentResource(
             'exp2309-2', self.coll.name, self.coord.name, 'my experiment',
-            1, 'iso', time_step=2, time_step_unit='nanoseconds')
+            1, 'isotropic', time_step=2, time_step_unit='nanoseconds')
         self.exp_upd = ExperimentResource(
             'exp2309-2a', self.coll.name, self.coord.name,
-            'my first experiment', 2, 'slice')
+            'my first experiment', 2, 'anisotropic')
 
         self.source_chan = ChannelResource(
             'sourceChan', self.coll.name, self.exp.name, 'image', 'test source channel',

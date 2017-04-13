@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from intern.service.boss import BaseVersion
-from intern.service.boss.v0_8 import BOSS_API_VERSION
+from intern.service.boss.v1 import BOSS_API_VERSION
 from intern.resource.boss.resource import *
 from requests import HTTPError
 import copy
 
 
-class ProjectService_0_8(BaseVersion):
-    """The Boss API v0.8 project service.
+class ProjectService_1(BaseVersion):
+    """The Boss API v1 project service.
     """
 
     def __init__(self):

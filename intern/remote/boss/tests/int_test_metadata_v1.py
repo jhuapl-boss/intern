@@ -23,9 +23,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
 
-API_VER = 'v0.8'
+API_VER = 'v1'
 
-class MetadataServiceTest_v0_8(unittest.TestCase):
+class MetadataServiceTest_v1(unittest.TestCase):
     """Integration tests of the Boss metadata API.
 
     Because setup and teardown involves many REST calls, tests are only
@@ -78,7 +78,7 @@ class MetadataServiceTest_v0_8(unittest.TestCase):
 
         cls.exp = ExperimentResource(
             'myMetaExp2309', cls.coll.name, cls.coord.name, 'my experiment',
-            1, 'iso', 1)
+            1, 'isotropic', 1)
 
         cls.chan = ChannelResource(
             'myTestMetaChan', cls.coll.name, cls.exp.name, 'image', 'test channel',

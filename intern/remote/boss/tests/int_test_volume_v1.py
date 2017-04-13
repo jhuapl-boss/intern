@@ -25,10 +25,10 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import unittest
 import time
 
-API_VER = 'v0.8'
+API_VER = 'v1'
 
 
-class VolumeServiceTest_v0_8(unittest.TestCase):
+class VolumeServiceTest_v1(unittest.TestCase):
     """Integration tests of the Boss volume service API.
 
     Because setup and teardown involves many REST calls, tests are only
@@ -63,7 +63,7 @@ class VolumeServiceTest_v0_8(unittest.TestCase):
         # cls.exp.coord_frame must be set with valid id before creating.
         cls.exp = ExperimentResource(
             'exp2323x2', cls.coll.name, cls.coord.name, 'my experiment',
-            1, 'iso', 10)
+            1, 'isotropic', 10)
 
         cls.chan = ChannelResource(
             'myVolChan', cls.coll.name, cls.exp.name, 'image', 'test channel',

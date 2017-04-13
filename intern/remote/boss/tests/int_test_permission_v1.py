@@ -22,10 +22,10 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import unittest
 
-API_VER = 'v0.8'
+API_VER = 'v1'
 
 
-class ProjectPermissionTest_v0_8(unittest.TestCase):
+class ProjectPermissionTest_v1(unittest.TestCase):
     """Integration tests of the Boss permission API.
 
     Note that that there will be many "Delete failed" messages because DELETE
@@ -58,7 +58,7 @@ class ProjectPermissionTest_v0_8(unittest.TestCase):
 
         cls.exp = ExperimentResource(
             'perm_test_exp', cls.coll.name, cls.coord.name, 'my experiment', 1,
-            'iso', 1)
+            'isotropic', 1)
 
         cls.chan = ChannelResource(
             'perm_test_ch', cls.coll.name, cls.exp.name, 'image', 'test channel',

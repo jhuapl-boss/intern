@@ -32,25 +32,21 @@ class TestExperimentResource(unittest.TestCase):
             self.er.get_list_route())
 
     def test_hierarchy_method_setter(self):
-        exp = 'iso'
+        exp = 'anisotropic'
         self.er.hierarchy_method = exp
         self.assertEqual(exp, self.er.hierarchy_method)
 
-    def test_validate_hierarchy_method_near_iso(self):
-        exp = 'near_iso'
+    def test_validate_hierarchy_method_aniso(self):
+        exp = 'anisotropic'
         self.assertEqual(exp, self.er.validate_hierarchy_method(exp))
 
     def test_validate_hierarchy_method_iso(self):
-        exp = 'iso'
-        self.assertEqual(exp, self.er.validate_hierarchy_method(exp))
-
-    def test_validate_hierarchy_method_slice(self):
-        exp = 'slice'
+        exp = 'isotropic'
         self.assertEqual(exp, self.er.validate_hierarchy_method(exp))
 
     def test_validate_hierarchy_method_bad(self):
         with self.assertRaises(ValueError):
-            self.er.validate_hierarchy_method('foo')
+            self.er.validate_hierarchy_method('slice')
 
     def test_validate_time_units_ns(self):
         exp = 'nanoseconds'

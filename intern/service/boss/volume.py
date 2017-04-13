@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from intern.service.boss import BossService
-from intern.service.boss.v0_8.volume import VolumeService_0_8
+from intern.service.boss.v1.volume import VolumeService_1
 
 class VolumeService(BossService):
     """VolumeService routes calls to the appropriate API version.
@@ -31,7 +31,7 @@ class VolumeService(BossService):
         BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
-            'v0.8': VolumeService_0_8()
+            'v1': VolumeService_1()
         }
         self.service = self.get_api_impl(version)
 

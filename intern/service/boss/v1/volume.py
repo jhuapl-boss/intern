@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from intern.service.boss import BaseVersion
-from intern.service.boss.v0_8 import BOSS_API_VERSION
+from intern.service.boss.v1 import BOSS_API_VERSION
 from intern.resource.boss.resource import *
 from intern.utils.parallel import *
 from requests import HTTPError
@@ -20,7 +20,7 @@ import blosc
 import numpy as np
 
 
-class VolumeService_0_8(BaseVersion):
+class VolumeService_1(BaseVersion):
     def __init__(self):
         BaseVersion.__init__(self)
 

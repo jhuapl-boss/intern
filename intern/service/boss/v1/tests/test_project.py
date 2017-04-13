@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from intern.service.boss.v0_8.project import ProjectService_0_8
+from intern.service.boss.v1.project import ProjectService_1
 from intern.resource.boss.resource import *
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
 from mock import patch
 
 
-class TestProject_v0_8(unittest.TestCase):
+class TestProject_v1(unittest.TestCase):
     def setUp(self):
-        self.prj = ProjectService_0_8()
+        self.prj = ProjectService_1()
         self.chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
 
     @patch('requests.Response', autospec=True)
@@ -310,7 +310,7 @@ class TestProject_v0_8(unittest.TestCase):
         dict = {
             'name': 'fire', 'description': 'walker',
             'creator': 'auto', 'coord_frame': 3,
-            'num_hierarchy_levels': 1, 'hierarchy_method': 'near_iso',
+            'num_hierarchy_levels': 1, 'hierarchy_method': 'isotropic',
             'num_time_samples': 500,
             'time_step': 2, 'time_step_unit': 'milliseconds'
         }
@@ -321,7 +321,7 @@ class TestProject_v0_8(unittest.TestCase):
         self.assertEqual('auto', actual.creator)
         self.assertEqual(3, actual.coord_frame)
         self.assertEqual(1, actual.num_hierarchy_levels)
-        self.assertEqual('near_iso', actual.hierarchy_method)
+        self.assertEqual('isotropic', actual.hierarchy_method)
         self.assertEqual(500, actual.num_time_samples)
         self.assertEqual(2, actual.time_step)
         self.assertEqual('milliseconds', actual.time_step_unit)

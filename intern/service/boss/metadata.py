@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from intern.service.boss import BossService
-from intern.service.boss.v0_8.metadata import MetadataService_0_8
+from intern.service.boss.v1.metadata import MetadataService_1
 
 
 class MetadataService(BossService):
@@ -33,7 +33,7 @@ class MetadataService(BossService):
         BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
-            'v0.8': MetadataService_0_8()
+            'v1': MetadataService_1()
         }
         self.service = self.get_api_impl(version)
 
