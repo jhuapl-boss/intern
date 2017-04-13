@@ -216,6 +216,9 @@ class BossRemote(Remote):
 
         Returns:
             (list[string]): List of group names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_groups(filtr)
@@ -233,6 +236,9 @@ class BossRemote(Remote):
         Returns:
             (mixed): Dictionary if getting group information or bool if a user
                 name is supplied.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get_group(name, user_name)
@@ -246,6 +252,9 @@ class BossRemote(Remote):
 
         Returns:
             (bool): True on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create_group(name)
@@ -259,6 +268,9 @@ class BossRemote(Remote):
 
         Returns:
             (bool): True on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.delete_group(name)
@@ -272,6 +284,9 @@ class BossRemote(Remote):
 
         Returns:
             (list[string]): List of member names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_members(name)
@@ -286,11 +301,11 @@ class BossRemote(Remote):
             name (string): Name of group.
             user_name (string): User to add to group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_group_member(grp_name, user)
+        self.project_service.add_group_member(grp_name, user)
 
     def delete_group_member(self, grp_name, user):
         """
@@ -302,11 +317,11 @@ class BossRemote(Remote):
             name (string): Name of group.
             user_name (string): User to delete from the group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_group_member(grp_name, user)
+        self.project_service.delete_group_member(grp_name, user)
 
     def get_is_group_member(self, grp_name, user):
         """
@@ -334,6 +349,9 @@ class BossRemote(Remote):
 
         Returns:
             (list[string]): List of maintainer names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_maintainers(name)
@@ -352,7 +370,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_group_maintainer(name, user)
+        self.project_service.add_group_maintainer(name, user)
 
     def delete_group_maintainer(self, grp_name, user):
         """
@@ -364,11 +382,11 @@ class BossRemote(Remote):
             name (string): Name of group.
             user (string): User to add to group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_group_maintainer(grp_name, user)
+        self.project_service.delete_group_maintainer(grp_name, user)
 
     def get_is_group_maintainer(self, grp_name, user):
         """
@@ -594,6 +612,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return super(BossRemote, self).list_project(resource=resource)
@@ -604,6 +625,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         coll = CollectionResource(name='')
         return self._list_resource(coll)
@@ -617,6 +641,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         exp = ExperimentResource(
             name='', collection_name=collection_name, coord_frame='foo')
@@ -633,6 +660,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         dont_care = 'image'
         chan = ChannelResource(
@@ -646,6 +676,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         cf = CoordinateFrameResource(name='')
         return self._list_resource(cf)
@@ -659,7 +692,10 @@ class BossRemote(Remote):
 
         Returns:
             (intern.resource.boss.BossResource): Returns resource of type
-                requested on success. Returns None on failure.
+                requested on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create(resource)
@@ -674,7 +710,10 @@ class BossRemote(Remote):
 
         Returns:
             (intern.resource.boss.BossResource): Returns resource of type
-                requested on success.  Returns None on failure.
+                requested on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get(resource)
@@ -691,7 +730,10 @@ class BossRemote(Remote):
 
         Returns:
             (intern.resource.boss.BossResource): Returns updated resource of
-                given type on success.  Returns None on failure.
+                given type on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.update(resource_name, resource)
@@ -737,10 +779,10 @@ class BossRemote(Remote):
                 given resource.
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.create(resource, keys_vals)
+        self.metadata_service.create(resource, keys_vals)
 
     def get_metadata(self, resource, keys):
         """
@@ -754,7 +796,7 @@ class BossRemote(Remote):
             (dictionary)
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.get(resource, keys)
@@ -772,10 +814,10 @@ class BossRemote(Remote):
                 the given resource.
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.update(resource, keys_vals)
+        self.metadata_service.update(resource, keys_vals)
 
     def delete_metadata(self, resource, keys):
         """
@@ -788,7 +830,7 @@ class BossRemote(Remote):
             keys (list)
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.delete(resource, keys)
+        self.metadata_service.delete(resource, keys)

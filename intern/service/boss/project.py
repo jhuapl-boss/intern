@@ -44,9 +44,11 @@ class ProjectService(BossService):
 
         Args:
             filtr (optional[string|None]): ['member'|'maintainer'] or defaults to None.
-
         Returns:
             (list[string]): List of group names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         return self.service.list_groups(
             filtr, self.url_prefix, self.auth, self.session,
@@ -103,6 +105,9 @@ class ProjectService(BossService):
 
         Returns:
             (list[string]): List of member names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         return self.service.list_group_members(
             name, self.url_prefix, self.auth, self.session,
@@ -121,7 +126,7 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_group_member(
+        self.service.add_group_member(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -134,10 +139,10 @@ class ProjectService(BossService):
             name (string): Name of group.
             user (string): User to add to group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
-        return self.service.delete_group_member(
+        self.service.delete_group_member(
             grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -181,7 +186,7 @@ class ProjectService(BossService):
         Raises:
             requests.HTTPError on failure.
         """
-        return self.service.add_group_maintainer(
+        self.service.add_group_maintainer(
             name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -194,10 +199,10 @@ class ProjectService(BossService):
             name (string): Name of group.
             user (string): User to add to group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
-        return self.service.delete_group_maintainer(
+        self.service.delete_group_maintainer(
             grp_name, user, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -367,6 +372,7 @@ class ProjectService(BossService):
         """
         return self.service.get_user(
             user, self.url_prefix, self.auth, self.session, self.session_send_opts)
+
     def delete_user(self, user):
         """Delete the given user.
 
@@ -402,7 +408,10 @@ class ProjectService(BossService):
             resource (intern.resource.boss.BossResource): Create a data model object with attributes matching those of the resource.
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         return self.service.create(
             resource, self.url_prefix, self.auth, self.session,
@@ -415,7 +424,10 @@ class ProjectService(BossService):
             resource (intern.resource.boss.BossResource): resource.name as well as any parents must be identified to succeed.
 
         Returns:
-            (intern.resource.boss.BossResource): Returns resource of type requested on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns resource of type requested on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         return self.service.get(
             resource, self.url_prefix, self.auth, self.session,
@@ -429,7 +441,10 @@ class ProjectService(BossService):
             resource (intern.resource.boss.BossResource): New attributes for the resource.
 
         Returns:
-            (intern.resource.boss.BossResource): Returns updated resource of given type on success.  Returns None on failure.
+            (intern.resource.boss.BossResource): Returns updated resource of given type on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         return self.service.update(
             resource_name, resource, self.url_prefix, self.auth,
@@ -440,6 +455,9 @@ class ProjectService(BossService):
 
         Args:
             resource (intern.resource.boss.BossResource)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.service.delete(
             resource, self.url_prefix, self.auth, self.session,

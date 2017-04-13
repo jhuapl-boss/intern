@@ -45,6 +45,9 @@ class ProjectService_1(BaseVersion):
 
         Returns:
             (list[string]): List of group names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_group_request(
             'GET', 'application/json', url_prefix, auth)
@@ -156,6 +159,9 @@ class ProjectService_1(BaseVersion):
 
         Returns:
             (list[string]): List of member names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_group_members_request(
             'GET', 'application/json', url_prefix, auth, name)
@@ -268,6 +274,9 @@ class ProjectService_1(BaseVersion):
 
         Returns:
             (list[string]): List of maintainer names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         req = self.get_group_maintainers_request(
             'GET', 'application/json', url_prefix, auth, name)

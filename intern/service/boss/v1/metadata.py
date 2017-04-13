@@ -72,7 +72,7 @@ class MetadataService_1(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
         success = True
         exc = HTTPErrorList('At least one key-value create failed.')
@@ -112,7 +112,7 @@ class MetadataService_1(BaseVersion):
             (dictionary): The requested metadata for the given resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
         resDict = {}
         success = True
@@ -151,7 +151,7 @@ class MetadataService_1(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
         success = True
         exc = HTTPErrorList('At least one key-value update failed.')
@@ -192,7 +192,7 @@ class MetadataService_1(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
         success = True
         exc = HTTPErrorList('At least one key-value update failed.')

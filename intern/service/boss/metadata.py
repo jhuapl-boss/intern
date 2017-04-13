@@ -63,9 +63,9 @@ class MetadataService(BossService):
             keys_vals (dictionary): The metadata to associate with the resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
-        return self.service.create(
+        self.service.create(
             resource, keys_vals, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -80,7 +80,7 @@ class MetadataService(BossService):
             (dictionary): The requested metadata for the given resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
         return self.service.get(
             resource, keys, self.url_prefix, self.auth, self.session,
@@ -97,9 +97,9 @@ class MetadataService(BossService):
             keys_vals (dictionary): The metadata to update for the resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
-        return self.service.update(
+        self.service.update(
             resource, keys_vals, self.url_prefix, self.auth,
             self.session, self.session_send_opts)
 
@@ -114,8 +114,8 @@ class MetadataService(BossService):
             keys (list): Keys to delete.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
-        return self.service.delete(
+        self.service.delete(
             resource, keys, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
