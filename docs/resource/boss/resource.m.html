@@ -1003,6 +1003,7 @@ table {
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.get_route">get_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.valid_volume">valid_volume</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.validate_datatype">validate_datatype</a></li>
+    <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.validate_downsample_status">validate_downsample_status</a></li>
     <li class="mono"><a href="#intern.resource.boss.resource.ChannelResource.validate_type">validate_type</a></li>
   </ul>
 
@@ -1246,7 +1247,7 @@ class ExperimentResource(BossResource):
         time_step_unit (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
     """
     def __init__(self, name, collection_name, coord_frame='', description='',
-        num_hierarchy_levels=1, hierarchy_method='near_iso',
+        num_hierarchy_levels=1, hierarchy_method='anisotropic',
         num_time_samples=1, creator='', raw={}, 
         time_step=0, time_step_unit='seconds'):
         """Constructor.
@@ -1257,7 +1258,7 @@ class ExperimentResource(BossResource):
             coord_frame (string): Name of coordinate frame used by experiment.  Defaults to empty.
             description (optional[string]): Experiment description.  Defaults to empty.
             num_hierarchy_levels (optional[int]): Defaults to 1.
-            hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
+            hierarchy_method (optional[string]): 'anisotropic', 'isotropic'  Defaults to 'anisotropic'.
             num_time_samples (optional[int]): Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
@@ -1268,7 +1269,7 @@ class ExperimentResource(BossResource):
         BossResource.__init__(self, name, description, creator, raw)
         self.coll_name = collection_name
 
-        self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
+        self._valid_hierarchy_methods = ['anisotropic', 'isotropic']
 
         #ToDo: validate data types.
         self._coord_frame = coord_frame
@@ -1493,10 +1494,11 @@ class ChannelResource(BossResource):
 
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
     _valid_types = ['annotation', 'image']
+    _valid_downsample_status = ['NOT_DOWNSAMPLED', 'IN_PROGRESS', 'DOWNSAMPLED', "FAILED"]
 
     def __init__(self, name, collection_name, experiment_name, type="image",
         description='', default_time_sample=0, datatype='uint8',
-        base_resolution=0, sources=[], related=[], creator='', raw={}):
+        base_resolution=0, sources=[], related=[], creator='', downsample_status="NOT_DOWNSAMPLED", raw={}):
         """Constructor.
 
         Args:
@@ -1511,6 +1513,7 @@ class ChannelResource(BossResource):
             sources (optional[list[string]]): Channels this channel was derived from.
             related (optiona[list[string]]): Channels related to this channel.
             creator (optional[string]): Resource creator.
+            downsample_status (str): Status indicating if the channel has been downsampled or not
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
@@ -1528,6 +1531,7 @@ class ChannelResource(BossResource):
         #ToDo: validate data types.
         self.default_time_sample = default_time_sample
         self.base_resolution = base_resolution
+        self.downsample_status = self.validate_downsample_status(downsample_status)
 
     def get_route(self):
         return self.coll_name + '/experiment/' + self.exp_name + '/channel/' + self.name
@@ -1620,6 +1624,12 @@ class ChannelResource(BossResource):
         if lowered in ChannelResource._valid_datatypes:
             return lowered
         raise ValueError('{} is not a valid data type.'.format(value))
+
+    def validate_downsample_status(self, value):
+        lowered = value.upper()
+        if lowered in ChannelResource._valid_downsample_status:
+            return lowered
+        raise ValueError('{} is not a valid downsample status.'.format(value))
 
     def get_dict_route(self):
         return {"collection": self.coll_name, "experiment": self.exp_name, "channel": self.name}
@@ -2103,10 +2113,11 @@ def get_route(self):
 
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
     _valid_types = ['annotation', 'image']
+    _valid_downsample_status = ['NOT_DOWNSAMPLED', 'IN_PROGRESS', 'DOWNSAMPLED', "FAILED"]
 
     def __init__(self, name, collection_name, experiment_name, type="image",
         description='', default_time_sample=0, datatype='uint8',
-        base_resolution=0, sources=[], related=[], creator='', raw={}):
+        base_resolution=0, sources=[], related=[], creator='', downsample_status="NOT_DOWNSAMPLED", raw={}):
         """Constructor.
 
         Args:
@@ -2121,6 +2132,7 @@ def get_route(self):
             sources (optional[list[string]]): Channels this channel was derived from.
             related (optiona[list[string]]): Channels related to this channel.
             creator (optional[string]): Resource creator.
+            downsample_status (str): Status indicating if the channel has been downsampled or not
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
         """
 
@@ -2138,6 +2150,7 @@ def get_route(self):
         #ToDo: validate data types.
         self.default_time_sample = default_time_sample
         self.base_resolution = base_resolution
+        self.downsample_status = self.validate_downsample_status(downsample_status)
 
     def get_route(self):
         return self.coll_name + '/experiment/' + self.exp_name + '/channel/' + self.name
@@ -2231,6 +2244,12 @@ def get_route(self):
             return lowered
         raise ValueError('{} is not a valid data type.'.format(value))
 
+    def validate_downsample_status(self, value):
+        lowered = value.upper()
+        if lowered in ChannelResource._valid_downsample_status:
+            return lowered
+        raise ValueError('{} is not a valid downsample status.'.format(value))
+
     def get_dict_route(self):
         return {"collection": self.coll_name, "experiment": self.exp_name, "channel": self.name}
 </code></pre>
@@ -2321,6 +2340,16 @@ def get_route(self):
 
             </div>
             <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.downsample_status" class="name">var <span class="ident">downsample_status</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="intern.resource.boss.resource.ChannelResource.exp_name" class="name">var <span class="ident">exp_name</span></p>
             
 
@@ -2397,7 +2426,7 @@ def get_route(self):
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.resource.ChannelResource.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, experiment_name, type=&#39;image&#39;, description=&#39;&#39;, default_time_sample=0, datatype=&#39;uint8&#39;, base_resolution=0, sources=[], related=[], creator=&#39;&#39;, raw={})</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, experiment_name, type=&#39;image&#39;, description=&#39;&#39;, default_time_sample=0, datatype=&#39;uint8&#39;, base_resolution=0, sources=[], related=[], creator=&#39;&#39;, downsample_status=&#39;NOT_DOWNSAMPLED&#39;, raw={})</p>
     </div>
     
     <p class="inheritance">
@@ -2420,13 +2449,14 @@ def get_route(self):
 &emsp;&emsp;&emsp;&emsp;<b>sources (optional[list[string]])</b>: Channels this channel was derived from.<br />
 &emsp;&emsp;&emsp;&emsp;<b>related (optiona[list[string]])</b>: Channels related to this channel.<br />
 &emsp;&emsp;&emsp;&emsp;<b>creator (optional[string])</b>: Resource creator.<br />
+&emsp;&emsp;&emsp;&emsp;<b>downsample_status (str)</b>: Status indicating if the channel has been downsampled or not<br />
 &emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.__init__', this);">Show source &equiv;</a></p>
   <div id="source-intern.resource.boss.resource.ChannelResource.__init__" class="source">
     <pre><code>def __init__(self, name, collection_name, experiment_name, type="image",
     description='', default_time_sample=0, datatype='uint8',
-    base_resolution=0, sources=[], related=[], creator='', raw={}):
+    base_resolution=0, sources=[], related=[], creator='', downsample_status="NOT_DOWNSAMPLED", raw={}):
     """Constructor.
     Args:
         name (string): Channel name.
@@ -2440,6 +2470,7 @@ def get_route(self):
         sources (optional[list[string]]): Channels this channel was derived from.
         related (optiona[list[string]]): Channels related to this channel.
         creator (optional[string]): Resource creator.
+        downsample_status (str): Status indicating if the channel has been downsampled or not
         raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
     """
     BossResource.__init__(self, name, description, creator, raw)
@@ -2452,6 +2483,7 @@ def get_route(self):
     #ToDo: validate data types.
     self.default_time_sample = default_time_sample
     self.base_resolution = base_resolution
+    self.downsample_status = self.validate_downsample_status(downsample_status)
 </code></pre>
   </div>
 </div>
@@ -2688,6 +2720,29 @@ def get_route(self):
     if lowered in ChannelResource._valid_datatypes:
         return lowered
     raise ValueError('{} is not a valid data type.'.format(value))
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.resource.ChannelResource.validate_downsample_status">
+    <p>def <span class="ident">validate_downsample_status</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.validate_downsample_status', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.ChannelResource.validate_downsample_status" class="source">
+    <pre><code>def validate_downsample_status(self, value):
+    lowered = value.upper()
+    if lowered in ChannelResource._valid_downsample_status:
+        return lowered
+    raise ValueError('{} is not a valid downsample status.'.format(value))
 </code></pre>
   </div>
 </div>
@@ -3754,7 +3809,7 @@ layers.</p>
         time_step_unit (string): 'nanoseconds', 'microseconds', 'milliseconds', 'seconds'.  Defaults to 'seconds'.
     """
     def __init__(self, name, collection_name, coord_frame='', description='',
-        num_hierarchy_levels=1, hierarchy_method='near_iso',
+        num_hierarchy_levels=1, hierarchy_method='anisotropic',
         num_time_samples=1, creator='', raw={}, 
         time_step=0, time_step_unit='seconds'):
         """Constructor.
@@ -3765,7 +3820,7 @@ layers.</p>
             coord_frame (string): Name of coordinate frame used by experiment.  Defaults to empty.
             description (optional[string]): Experiment description.  Defaults to empty.
             num_hierarchy_levels (optional[int]): Defaults to 1.
-            hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
+            hierarchy_method (optional[string]): 'anisotropic', 'isotropic'  Defaults to 'anisotropic'.
             num_time_samples (optional[int]): Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.
             creator (optional[string]): Resource creator.
             raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
@@ -3776,7 +3831,7 @@ layers.</p>
         BossResource.__init__(self, name, description, creator, raw)
         self.coll_name = collection_name
 
-        self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
+        self._valid_hierarchy_methods = ['anisotropic', 'isotropic']
 
         #ToDo: validate data types.
         self._coord_frame = coord_frame
@@ -4002,7 +4057,7 @@ layers.</p>
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.resource.ExperimentResource.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, coord_frame=&#39;&#39;, description=&#39;&#39;, num_hierarchy_levels=1, hierarchy_method=&#39;near_iso&#39;, num_time_samples=1, creator=&#39;&#39;, raw={}, time_step=0, time_step_unit=&#39;seconds&#39;)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, coord_frame=&#39;&#39;, description=&#39;&#39;, num_hierarchy_levels=1, hierarchy_method=&#39;anisotropic&#39;, num_time_samples=1, creator=&#39;&#39;, raw={}, time_step=0, time_step_unit=&#39;seconds&#39;)</p>
     </div>
     
     <p class="inheritance">
@@ -4019,7 +4074,7 @@ layers.</p>
 &emsp;&emsp;&emsp;&emsp;<b>coord_frame (string)</b>: Name of coordinate frame used by experiment.  Defaults to empty.<br />
 &emsp;&emsp;&emsp;&emsp;<b>description (optional[string])</b>: Experiment description.  Defaults to empty.<br />
 &emsp;&emsp;&emsp;&emsp;<b>num_hierarchy_levels (optional[int])</b>: Defaults to 1.<br />
-&emsp;&emsp;&emsp;&emsp;<b>hierarchy_method (optional[string])</b>: 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.<br />
+&emsp;&emsp;&emsp;&emsp;<b>hierarchy_method (optional[string])</b>: 'anisotropic', 'isotropic'  Defaults to 'anisotropic'.<br />
 &emsp;&emsp;&emsp;&emsp;<b>num_time_samples (optional[int])</b>: Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.<br />
 &emsp;&emsp;&emsp;&emsp;<b>creator (optional[string])</b>: Resource creator.<br />
 &emsp;&emsp;&emsp;&emsp;<b>raw (optional[dictionary])</b>: Holds JSON data returned by the Boss API on a POST (create) or GET operation.<br />
@@ -4029,7 +4084,7 @@ layers.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ExperimentResource.__init__', this);">Show source &equiv;</a></p>
   <div id="source-intern.resource.boss.resource.ExperimentResource.__init__" class="source">
     <pre><code>def __init__(self, name, collection_name, coord_frame='', description='',
-    num_hierarchy_levels=1, hierarchy_method='near_iso',
+    num_hierarchy_levels=1, hierarchy_method='anisotropic',
     num_time_samples=1, creator='', raw={}, 
     time_step=0, time_step_unit='seconds'):
     """Constructor.
@@ -4039,7 +4094,7 @@ layers.</p>
         coord_frame (string): Name of coordinate frame used by experiment.  Defaults to empty.
         description (optional[string]): Experiment description.  Defaults to empty.
         num_hierarchy_levels (optional[int]): Defaults to 1.
-        hierarchy_method (optional[string]): 'near_iso', 'iso', 'slice'  Defaults to 'near_iso'.
+        hierarchy_method (optional[string]): 'anisotropic', 'isotropic'  Defaults to 'anisotropic'.
         num_time_samples (optional[int]): Maximum number of time samples for any time series data captured by this experiment.  Defaults to 1.
         creator (optional[string]): Resource creator.
         raw (optional[dictionary]): Holds JSON data returned by the Boss API on a POST (create) or GET operation.
@@ -4048,7 +4103,7 @@ layers.</p>
     """
     BossResource.__init__(self, name, description, creator, raw)
     self.coll_name = collection_name
-    self._valid_hierarchy_methods = ['near_iso', 'iso', 'slice']
+    self._valid_hierarchy_methods = ['anisotropic', 'isotropic']
     #ToDo: validate data types.
     self._coord_frame = coord_frame
     self.num_hierarchy_levels = num_hierarchy_levels

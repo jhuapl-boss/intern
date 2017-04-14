@@ -1102,7 +1102,7 @@ CONFIG_PROTOCOL = 'protocol'
 CONFIG_HOST = 'host'
 CONFIG_TOKEN = 'token'
 
-LATEST_VERSION = 'v0.8'
+LATEST_VERSION = 'v1'
 
 
 class BossRemote(Remote):
@@ -1290,6 +1290,9 @@ class BossRemote(Remote):
 
         Returns:
             (list[string]): List of group names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_groups(filtr)
@@ -1307,6 +1310,9 @@ class BossRemote(Remote):
         Returns:
             (mixed): Dictionary if getting group information or bool if a user
                 name is supplied.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get_group(name, user_name)
@@ -1320,6 +1326,9 @@ class BossRemote(Remote):
 
         Returns:
             (bool): True on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create_group(name)
@@ -1333,6 +1342,9 @@ class BossRemote(Remote):
 
         Returns:
             (bool): True on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.delete_group(name)
@@ -1346,6 +1358,9 @@ class BossRemote(Remote):
 
         Returns:
             (list[string]): List of member names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_members(name)
@@ -1360,11 +1375,11 @@ class BossRemote(Remote):
             name (string): Name of group.
             user_name (string): User to add to group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_group_member(grp_name, user)
+        self.project_service.add_group_member(grp_name, user)
 
     def delete_group_member(self, grp_name, user):
         """
@@ -1376,11 +1391,11 @@ class BossRemote(Remote):
             name (string): Name of group.
             user_name (string): User to delete from the group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_group_member(grp_name, user)
+        self.project_service.delete_group_member(grp_name, user)
 
     def get_is_group_member(self, grp_name, user):
         """
@@ -1408,6 +1423,9 @@ class BossRemote(Remote):
 
         Returns:
             (list[string]): List of maintainer names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_maintainers(name)
@@ -1426,7 +1444,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_group_maintainer(name, user)
+        self.project_service.add_group_maintainer(name, user)
 
     def delete_group_maintainer(self, grp_name, user):
         """
@@ -1438,11 +1456,11 @@ class BossRemote(Remote):
             name (string): Name of group.
             user (string): User to add to group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_group_maintainer(grp_name, user)
+        self.project_service.delete_group_maintainer(grp_name, user)
 
     def get_is_group_maintainer(self, grp_name, user):
         """
@@ -1668,6 +1686,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return super(BossRemote, self).list_project(resource=resource)
@@ -1678,6 +1699,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         coll = CollectionResource(name='')
         return self._list_resource(coll)
@@ -1691,6 +1715,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         exp = ExperimentResource(
             name='', collection_name=collection_name, coord_frame='foo')
@@ -1707,6 +1734,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         dont_care = 'image'
         chan = ChannelResource(
@@ -1720,6 +1750,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         cf = CoordinateFrameResource(name='')
         return self._list_resource(cf)
@@ -1733,7 +1766,10 @@ class BossRemote(Remote):
 
         Returns:
             (intern.resource.boss.BossResource): Returns resource of type
-                requested on success. Returns None on failure.
+                requested on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create(resource)
@@ -1748,7 +1784,10 @@ class BossRemote(Remote):
 
         Returns:
             (intern.resource.boss.BossResource): Returns resource of type
-                requested on success.  Returns None on failure.
+                requested on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get(resource)
@@ -1765,7 +1804,10 @@ class BossRemote(Remote):
 
         Returns:
             (intern.resource.boss.BossResource): Returns updated resource of
-                given type on success.  Returns None on failure.
+                given type on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.update(resource_name, resource)
@@ -1811,10 +1853,10 @@ class BossRemote(Remote):
                 given resource.
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.create(resource, keys_vals)
+        self.metadata_service.create(resource, keys_vals)
 
     def get_metadata(self, resource, keys):
         """
@@ -1828,7 +1870,7 @@ class BossRemote(Remote):
             (dictionary)
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.get(resource, keys)
@@ -1846,10 +1888,10 @@ class BossRemote(Remote):
                 the given resource.
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.update(resource, keys_vals)
+        self.metadata_service.update(resource, keys_vals)
 
     def delete_metadata(self, resource, keys):
         """
@@ -1862,10 +1904,10 @@ class BossRemote(Remote):
             keys (list)
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.delete(resource, keys)
+        self.metadata_service.delete(resource, keys)
 </code></pre>
   </div>
 
@@ -2133,6 +2175,9 @@ class BossRemote(Remote):
 
         Returns:
             (list[string]): List of group names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_groups(filtr)
@@ -2150,6 +2195,9 @@ class BossRemote(Remote):
         Returns:
             (mixed): Dictionary if getting group information or bool if a user
                 name is supplied.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get_group(name, user_name)
@@ -2163,6 +2211,9 @@ class BossRemote(Remote):
 
         Returns:
             (bool): True on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create_group(name)
@@ -2176,6 +2227,9 @@ class BossRemote(Remote):
 
         Returns:
             (bool): True on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.delete_group(name)
@@ -2189,6 +2243,9 @@ class BossRemote(Remote):
 
         Returns:
             (list[string]): List of member names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_members(name)
@@ -2203,11 +2260,11 @@ class BossRemote(Remote):
             name (string): Name of group.
             user_name (string): User to add to group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_group_member(grp_name, user)
+        self.project_service.add_group_member(grp_name, user)
 
     def delete_group_member(self, grp_name, user):
         """
@@ -2219,11 +2276,11 @@ class BossRemote(Remote):
             name (string): Name of group.
             user_name (string): User to delete from the group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_group_member(grp_name, user)
+        self.project_service.delete_group_member(grp_name, user)
 
     def get_is_group_member(self, grp_name, user):
         """
@@ -2251,6 +2308,9 @@ class BossRemote(Remote):
 
         Returns:
             (list[string]): List of maintainer names.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.list_group_maintainers(name)
@@ -2269,7 +2329,7 @@ class BossRemote(Remote):
             requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.add_group_maintainer(name, user)
+        self.project_service.add_group_maintainer(name, user)
 
     def delete_group_maintainer(self, grp_name, user):
         """
@@ -2281,11 +2341,11 @@ class BossRemote(Remote):
             name (string): Name of group.
             user (string): User to add to group.
 
-        Returns:
-            (bool): True on success.
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
-        return self.project_service.delete_group_maintainer(grp_name, user)
+        self.project_service.delete_group_maintainer(grp_name, user)
 
     def get_is_group_maintainer(self, grp_name, user):
         """
@@ -2511,6 +2571,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return super(BossRemote, self).list_project(resource=resource)
@@ -2521,6 +2584,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         coll = CollectionResource(name='')
         return self._list_resource(coll)
@@ -2534,6 +2600,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         exp = ExperimentResource(
             name='', collection_name=collection_name, coord_frame='foo')
@@ -2550,6 +2619,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         dont_care = 'image'
         chan = ChannelResource(
@@ -2563,6 +2635,9 @@ class BossRemote(Remote):
 
         Returns:
             (list)
+
+        Raises:
+            requests.HTTPError on failure.
         """
         cf = CoordinateFrameResource(name='')
         return self._list_resource(cf)
@@ -2576,7 +2651,10 @@ class BossRemote(Remote):
 
         Returns:
             (intern.resource.boss.BossResource): Returns resource of type
-                requested on success. Returns None on failure.
+                requested on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.create(resource)
@@ -2591,7 +2669,10 @@ class BossRemote(Remote):
 
         Returns:
             (intern.resource.boss.BossResource): Returns resource of type
-                requested on success.  Returns None on failure.
+                requested on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.get(resource)
@@ -2608,7 +2689,10 @@ class BossRemote(Remote):
 
         Returns:
             (intern.resource.boss.BossResource): Returns updated resource of
-                given type on success.  Returns None on failure.
+                given type on success.
+
+        Raises:
+            requests.HTTPError on failure.
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.update(resource_name, resource)
@@ -2654,10 +2738,10 @@ class BossRemote(Remote):
                 given resource.
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.create(resource, keys_vals)
+        self.metadata_service.create(resource, keys_vals)
 
     def get_metadata(self, resource, keys):
         """
@@ -2671,7 +2755,7 @@ class BossRemote(Remote):
             (dictionary)
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
         return self.metadata_service.get(resource, keys)
@@ -2689,10 +2773,10 @@ class BossRemote(Remote):
                 the given resource.
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.update(resource, keys_vals)
+        self.metadata_service.update(resource, keys_vals)
 
     def delete_metadata(self, resource, keys):
         """
@@ -2705,10 +2789,10 @@ class BossRemote(Remote):
             keys (list)
 
         Raises:
-            requests.HTTPError on a failure.
+            HTTPErrorList on failure.
         """
         self.metadata_service.set_auth(self._token_metadata)
-        return self.metadata_service.delete(resource, keys)
+        self.metadata_service.delete(resource, keys)
 </code></pre>
   </div>
 </div>
@@ -2879,7 +2963,7 @@ are passed in, the value in cfg_str is used.</p>
         requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
-    return self.project_service.add_group_maintainer(name, user)
+    self.project_service.add_group_maintainer(name, user)
 </code></pre>
   </div>
 </div>
@@ -2900,9 +2984,10 @@ are passed in, the value in cfg_str is used.</p>
 <p>Args:<br />
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
 &emsp;&emsp;&emsp;&emsp;<b>user_name (string)</b>: User to add to group.</p>
-<h2 style='font-size:125% !important'>Returns</h2>
+<h2 style='font-size:125% !important'>Raises</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.add_group_member', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.add_group_member" class="source">
@@ -2913,11 +2998,11 @@ are passed in, the value in cfg_str is used.</p>
     Args:
         name (string): Name of group.
         user_name (string): User to add to group.
-    Returns:
-        (bool): True on success.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
-    return self.project_service.add_group_member(grp_name, user)
+    self.project_service.add_group_member(grp_name, user)
 </code></pre>
   </div>
 </div>
@@ -3119,7 +3204,11 @@ Other exceptions may be raised depending on the volume service's implementation.
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of the group to create.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.create_group', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.create_group" class="source">
@@ -3130,6 +3219,8 @@ Other exceptions may be raised depending on the volume service's implementation.
         name (string): Name of the group to create.
     Returns:
         (bool): True on success.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.create_group(name)
@@ -3156,7 +3247,7 @@ Other exceptions may be raised depending on the volume service's implementation.
         given resource.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>requests.HTTPError on a failure.
+<pre><code>HTTPErrorList on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.create_metadata', this);">Show source &equiv;</a></p>
@@ -3170,10 +3261,10 @@ Other exceptions may be raised depending on the volume service's implementation.
         keys_vals (dictionary): Collection of key-value pairs to assign to
             given resource.
     Raises:
-        requests.HTTPError on a failure.
+        HTTPErrorList on failure.
     """
     self.metadata_service.set_auth(self._token_metadata)
-    return self.metadata_service.create(resource, keys_vals)
+    self.metadata_service.create(resource, keys_vals)
 </code></pre>
   </div>
 </div>
@@ -3195,7 +3286,11 @@ Other exceptions may be raised depending on the volume service's implementation.
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(intern.resource.boss.BossResource)</b>: Returns resource of type<br />
-        requested on success. Returns None on failure.</p></div>
+        requested on success.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.create_project', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.create_project" class="source">
@@ -3206,7 +3301,9 @@ Other exceptions may be raised depending on the volume service's implementation.
         resource (intern.resource.boss.BossResource)
     Returns:
         (intern.resource.boss.BossResource): Returns resource of type
-            requested on success. Returns None on failure.
+            requested on success.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.create(resource)
@@ -3230,7 +3327,11 @@ Other exceptions may be raised depending on the volume service's implementation.
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_group', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.delete_group" class="source">
@@ -3241,6 +3342,8 @@ Other exceptions may be raised depending on the volume service's implementation.
         name (string): Name of group.
     Returns:
         (bool): True on success.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.delete_group(name)
@@ -3264,9 +3367,10 @@ Other exceptions may be raised depending on the volume service's implementation.
 <p>Args:<br />
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
 &emsp;&emsp;&emsp;&emsp;<b>user (string)</b>: User to add to group.</p>
-<h2 style='font-size:125% !important'>Returns</h2>
+<h2 style='font-size:125% !important'>Raises</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_group_maintainer', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.delete_group_maintainer" class="source">
@@ -3277,11 +3381,11 @@ Other exceptions may be raised depending on the volume service's implementation.
     Args:
         name (string): Name of group.
         user (string): User to add to group.
-    Returns:
-        (bool): True on success.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
-    return self.project_service.delete_group_maintainer(grp_name, user)
+    self.project_service.delete_group_maintainer(grp_name, user)
 </code></pre>
   </div>
 </div>
@@ -3302,9 +3406,10 @@ Other exceptions may be raised depending on the volume service's implementation.
 <p>Args:<br />
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group.<br />
 &emsp;&emsp;&emsp;&emsp;<b>user_name (string)</b>: User to delete from the group.</p>
-<h2 style='font-size:125% !important'>Returns</h2>
+<h2 style='font-size:125% !important'>Raises</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(bool)</b>: True on success.</p></div>
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_group_member', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.delete_group_member" class="source">
@@ -3315,11 +3420,11 @@ Other exceptions may be raised depending on the volume service's implementation.
     Args:
         name (string): Name of group.
         user_name (string): User to delete from the group.
-    Returns:
-        (bool): True on success.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
-    return self.project_service.delete_group_member(grp_name, user)
+    self.project_service.delete_group_member(grp_name, user)
 </code></pre>
   </div>
 </div>
@@ -3342,7 +3447,7 @@ Other exceptions may be raised depending on the volume service's implementation.
     keys (list)</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>requests.HTTPError on a failure.
+<pre><code>HTTPErrorList on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.delete_metadata', this);">Show source &equiv;</a></p>
@@ -3355,10 +3460,10 @@ Other exceptions may be raised depending on the volume service's implementation.
         resource (intern.resource.boss.BossResource)
         keys (list)
     Raises:
-        requests.HTTPError on a failure.
+        HTTPErrorList on failure.
     """
     self.metadata_service.set_auth(self._token_metadata)
-    return self.metadata_service.delete(resource, keys)
+    self.metadata_service.delete(resource, keys)
 </code></pre>
   </div>
 </div>
@@ -3630,7 +3735,11 @@ of the group.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(mixed)</b>: Dictionary if getting group information or bool if a user<br />
-        name is supplied.</p></div>
+        name is supplied.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_group', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.get_group" class="source">
@@ -3645,6 +3754,8 @@ of the group.</p>
     Returns:
         (mixed): Dictionary if getting group information or bool if a user
             name is supplied.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.get_group(name, user_name)
@@ -3802,7 +3913,7 @@ user is also explicitly added as a member.</p>
 </code></pre>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>requests.HTTPError on a failure.
+<pre><code>HTTPErrorList on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_metadata', this);">Show source &equiv;</a></p>
@@ -3816,7 +3927,7 @@ user is also explicitly added as a member.</p>
     Returns:
         (dictionary)
     Raises:
-        requests.HTTPError on a failure.
+        HTTPErrorList on failure.
     """
     self.metadata_service.set_auth(self._token_metadata)
     return self.metadata_service.get(resource, keys)
@@ -3886,7 +3997,11 @@ user is also explicitly added as a member.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(intern.resource.boss.BossResource)</b>: Returns resource of type<br />
-        requested on success.  Returns None on failure.</p></div>
+        requested on success.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_project', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.get_project" class="source">
@@ -3898,7 +4013,9 @@ user is also explicitly added as a member.</p>
             as any parents must be identified to succeed.
     Returns:
         (intern.resource.boss.BossResource): Returns resource of type
-            requested on success.  Returns None on failure.
+            requested on success.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.get(resource)
@@ -4045,6 +4162,10 @@ of the named collection.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <pre><code>(list)
+</code></pre>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_channels', this);">Show source &equiv;</a></p>
@@ -4058,6 +4179,8 @@ of the named collection.</p>
         experiment_name (string): Name of the parent experiment.
     Returns:
         (list)
+    Raises:
+        requests.HTTPError on failure.
     """
     dont_care = 'image'
     chan = ChannelResource(
@@ -4083,6 +4206,10 @@ of the named collection.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <pre><code>(list)
+</code></pre>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_collections', this);">Show source &equiv;</a></p>
@@ -4092,6 +4219,8 @@ of the named collection.</p>
     List all collections.
     Returns:
         (list)
+    Raises:
+        requests.HTTPError on failure.
     """
     coll = CollectionResource(name='')
     return self._list_resource(coll)
@@ -4114,6 +4243,10 @@ of the named collection.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <pre><code>(list)
+</code></pre>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_coordinate_frames', this);">Show source &equiv;</a></p>
@@ -4123,6 +4256,8 @@ of the named collection.</p>
     List all coordinate_frames.
     Returns:
         (list)
+    Raises:
+        requests.HTTPError on failure.
     """
     cf = CoordinateFrameResource(name='')
     return self._list_resource(cf)
@@ -4147,6 +4282,10 @@ of the named collection.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <pre><code>(list)
+</code></pre>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_experiments', this);">Show source &equiv;</a></p>
@@ -4158,6 +4297,8 @@ of the named collection.</p>
         collection_name (string): Name of the parent collection.
     Returns:
         (list)
+    Raises:
+        requests.HTTPError on failure.
     """
     exp = ExperimentResource(
         name='', collection_name=collection_name, coord_frame='foo')
@@ -4182,7 +4323,11 @@ of the named collection.</p>
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group to query.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of maintainer names.</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of maintainer names.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_group_maintainers', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.list_group_maintainers" class="source">
@@ -4193,6 +4338,8 @@ of the named collection.</p>
         name (string): Name of group to query.
     Returns:
         (list[string]): List of maintainer names.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.list_group_maintainers(name)
@@ -4216,7 +4363,11 @@ of the named collection.</p>
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Name of group to query.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of member names.</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of member names.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_group_members', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.list_group_members" class="source">
@@ -4227,6 +4378,8 @@ of the named collection.</p>
         name (string): Name of group to query.
     Returns:
         (list[string]): List of member names.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.list_group_members(name)
@@ -4251,7 +4404,11 @@ of the named collection.</p>
 &emsp;&emsp;&emsp;&emsp;<b>filtr (optional[string|None])</b>: ['member'|'maintainer']</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of group names.</p></div>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(list[string])</b>: List of group names.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.list_groups', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.list_groups" class="source">
@@ -4263,6 +4420,8 @@ of the named collection.</p>
         filtr (optional[string|None]): ['member'|'maintainer']
     Returns:
         (list[string]): List of group names.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.list_groups(filtr)
@@ -4481,7 +4640,7 @@ Keys must already exist.</p>
         the given resource.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>requests.HTTPError on a failure.
+<pre><code>HTTPErrorList on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.update_metadata', this);">Show source &equiv;</a></p>
@@ -4496,10 +4655,10 @@ Keys must already exist.</p>
         keys_vals (dictionary): Collection of key-value pairs to update on
             the given resource.
     Raises:
-        requests.HTTPError on a failure.
+        HTTPErrorList on failure.
     """
     self.metadata_service.set_auth(self._token_metadata)
-    return self.metadata_service.update(resource, keys_vals)
+    self.metadata_service.update(resource, keys_vals)
 </code></pre>
   </div>
 </div>
@@ -4565,7 +4724,11 @@ Keys must already exist.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(intern.resource.boss.BossResource)</b>: Returns updated resource of<br />
-        given type on success.  Returns None on failure.</p></div>
+        given type on success.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>requests.HTTPError on failure.
+</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.update_project', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.update_project" class="source">
@@ -4579,7 +4742,9 @@ Keys must already exist.</p>
             the resource.
     Returns:
         (intern.resource.boss.BossResource): Returns updated resource of
-            given type on success.  Returns None on failure.
+            given type on success.
+    Raises:
+        requests.HTTPError on failure.
     """
     self.project_service.set_auth(self._token_project)
     return self.project_service.update(resource_name, resource)

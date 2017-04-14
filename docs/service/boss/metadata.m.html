@@ -1023,7 +1023,7 @@ table {
 # limitations under the License.
 
 from intern.service.boss import BossService
-from intern.service.boss.v0_8.metadata import MetadataService_0_8
+from intern.service.boss.v1.metadata import MetadataService_1
 
 
 class MetadataService(BossService):
@@ -1043,7 +1043,7 @@ class MetadataService(BossService):
         BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
-            'v0.8': MetadataService_0_8()
+            'v1': MetadataService_1()
         }
         self.service = self.get_api_impl(version)
 
@@ -1073,9 +1073,9 @@ class MetadataService(BossService):
             keys_vals (dictionary): The metadata to associate with the resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
-        return self.service.create(
+        self.service.create(
             resource, keys_vals, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -1090,7 +1090,7 @@ class MetadataService(BossService):
             (dictionary): The requested metadata for the given resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
         return self.service.get(
             resource, keys, self.url_prefix, self.auth, self.session,
@@ -1107,9 +1107,9 @@ class MetadataService(BossService):
             keys_vals (dictionary): The metadata to update for the resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
-        return self.service.update(
+        self.service.update(
             resource, keys_vals, self.url_prefix, self.auth,
             self.session, self.session_send_opts)
 
@@ -1124,9 +1124,9 @@ class MetadataService(BossService):
             keys (list): Keys to delete.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
-        return self.service.delete(
+        self.service.delete(
             resource, keys, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 </code></pre>
@@ -1164,7 +1164,7 @@ class MetadataService(BossService):
         BossService.__init__(self)
         self.base_url = base_url
         self._versions = {
-            'v0.8': MetadataService_0_8()
+            'v1': MetadataService_1()
         }
         self.service = self.get_api_impl(version)
 
@@ -1194,9 +1194,9 @@ class MetadataService(BossService):
             keys_vals (dictionary): The metadata to associate with the resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
-        return self.service.create(
+        self.service.create(
             resource, keys_vals, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 
@@ -1211,7 +1211,7 @@ class MetadataService(BossService):
             (dictionary): The requested metadata for the given resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
         return self.service.get(
             resource, keys, self.url_prefix, self.auth, self.session,
@@ -1228,9 +1228,9 @@ class MetadataService(BossService):
             keys_vals (dictionary): The metadata to update for the resource.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
-        return self.service.update(
+        self.service.update(
             resource, keys_vals, self.url_prefix, self.auth,
             self.session, self.session_send_opts)
 
@@ -1245,9 +1245,9 @@ class MetadataService(BossService):
             keys (list): Keys to delete.
 
         Raises:
-            requests.HTTPErrorList on failure.
+            HTTPErrorList on failure.
         """
-        return self.service.delete(
+        self.service.delete(
             resource, keys, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
 </code></pre>
@@ -1365,7 +1365,7 @@ class MetadataService(BossService):
     BossService.__init__(self)
     self.base_url = base_url
     self._versions = {
-        'v0.8': MetadataService_0_8()
+        'v1': MetadataService_1()
     }
     self.service = self.get_api_impl(version)
 </code></pre>
@@ -1390,7 +1390,7 @@ class MetadataService(BossService):
 &emsp;&emsp;&emsp;&emsp;<b>keys_vals (dictionary)</b>: The metadata to associate with the resource.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>requests.HTTPErrorList on failure.
+<pre><code>HTTPErrorList on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.metadata.MetadataService.create', this);">Show source &equiv;</a></p>
@@ -1402,9 +1402,9 @@ class MetadataService(BossService):
         resource (intern.resource.boss.BossResource): List keys associated with this resource.
         keys_vals (dictionary): The metadata to associate with the resource.
     Raises:
-        requests.HTTPErrorList on failure.
+        HTTPErrorList on failure.
     """
-    return self.service.create(
+    self.service.create(
         resource, keys_vals, self.url_prefix, self.auth, self.session,
         self.session_send_opts)
 </code></pre>
@@ -1430,7 +1430,7 @@ occurs.</p>
 &emsp;&emsp;&emsp;&emsp;<b>keys (list)</b>: Keys to delete.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>requests.HTTPErrorList on failure.
+<pre><code>HTTPErrorList on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.metadata.MetadataService.delete', this);">Show source &equiv;</a></p>
@@ -1443,9 +1443,9 @@ occurs.</p>
         resource (intern.resource.boss.BossResource): Delete key-value pairs associated with this resource.
         keys (list): Keys to delete.
     Raises:
-        requests.HTTPErrorList on failure.
+        HTTPErrorList on failure.
     """
-    return self.service.delete(
+    self.service.delete(
         resource, keys, self.url_prefix, self.auth, self.session,
         self.session_send_opts)
 </code></pre>
@@ -1472,7 +1472,7 @@ occurs.</p>
 <p>&emsp;&emsp;&emsp;&emsp;<b>(dictionary)</b>: The requested metadata for the given resource.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>requests.HTTPErrorList on failure.
+<pre><code>HTTPErrorList on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.metadata.MetadataService.get', this);">Show source &equiv;</a></p>
@@ -1485,7 +1485,7 @@ occurs.</p>
     Returns:
         (dictionary): The requested metadata for the given resource.
     Raises:
-        requests.HTTPErrorList on failure.
+        HTTPErrorList on failure.
     """
     return self.service.get(
         resource, keys, self.url_prefix, self.auth, self.session,
@@ -1620,7 +1620,7 @@ update all key-value pairs even if a failure is encountered.</p>
 &emsp;&emsp;&emsp;&emsp;<b>keys_vals (dictionary)</b>: The metadata to update for the resource.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>requests.HTTPErrorList on failure.
+<pre><code>HTTPErrorList on failure.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.metadata.MetadataService.update', this);">Show source &equiv;</a></p>
@@ -1633,9 +1633,9 @@ update all key-value pairs even if a failure is encountered.</p>
         resource (intern.resource.boss.BossResource): Update values associated with this resource.
         keys_vals (dictionary): The metadata to update for the resource.
     Raises:
-        requests.HTTPErrorList on failure.
+        HTTPErrorList on failure.
     """
-    return self.service.update(
+    self.service.update(
         resource, keys_vals, self.url_prefix, self.auth,
         self.session, self.session_send_opts)
 </code></pre>
