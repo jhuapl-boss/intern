@@ -410,6 +410,7 @@ class ChannelResource(BossResource):
         _type (string): 'image' or 'annotation'
         _valid_datatypes (list[string]): Allowed data type values (static variable).
         _datatype (string):
+        _fully_initialized (bool): True if datatype specified during instantiation.
     """
 
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
@@ -417,7 +418,7 @@ class ChannelResource(BossResource):
     _valid_downsample_status = ['NOT_DOWNSAMPLED', 'IN_PROGRESS', 'DOWNSAMPLED', "FAILED"]
 
     def __init__(self, name, collection_name, experiment_name, type="image",
-        description='', default_time_sample=0, datatype='uint8',
+        description='', default_time_sample=0, datatype='',
         base_resolution=0, sources=[], related=[], creator='', downsample_status="NOT_DOWNSAMPLED", raw={}):
         """Constructor.
 
@@ -442,6 +443,15 @@ class ChannelResource(BossResource):
         self.exp_name = experiment_name
 
         self._type = self.validate_type(type)
+
+        # Class is considered fully initialized if datatype set during
+        # initialization.
+        if datatype == '':
+            self._fully_initialized = False
+            # Default to uint8.
+            datatype = 'uint8'
+        else:
+            self._fully_initialized = True
         self._datatype = self.validate_datatype(datatype)
 
         self.sources = sources
@@ -472,6 +482,15 @@ class ChannelResource(BossResource):
         """Channels and layers are valid resources for interacting with the volume service.
         """
         return True
+
+    @property
+    def fully_initialized(self):
+        """Is this channel fully configured?
+
+        Returns:
+            (bool) True if the datatype was explicitly set by the user.
+        """
+        return self._fully_initialized
 
     @property
     def sources(self):
@@ -532,6 +551,7 @@ class ChannelResource(BossResource):
             ValueError
         """
         self._datatype = self.validate_datatype(value)
+        self._fully_initialized = True
 
     def validate_type(self, value):
         lowered = value.lower()
