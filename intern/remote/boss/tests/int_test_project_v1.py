@@ -266,6 +266,33 @@ class ProjectServiceTest_v1(unittest.TestCase):
         self.assertEqual(self.source_chan.default_time_sample, ch.default_time_sample)
         self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
 
+    def test_get_channel_helper(self):
+        """
+        Test the helper get_channel() as opposed to getting a channel via get_project().
+        """
+
+        c = self.rmt.create_project(self.coll)
+
+        cf = self.rmt.create_project(self.coord)
+
+        e = self.rmt.create_project(self.exp)
+
+        chan = self.rmt.create_project(self.source_chan)
+
+        actual = self.rmt.get_channel(chan.name, chan.coll_name, chan.exp_name)
+
+        # This is not an exhaustive list of attributes, but they are the
+        # important ones for correct interaction with the volume service.
+        self.assertTrue(actual.fully_initialized)
+        self.assertEqual(chan.datatype, actual.datatype)
+        self.assertEqual(chan.default_time_sample, actual.default_time_sample)
+        self.assertEqual(chan.base_resolution, actual.base_resolution)
+        self.assertEqual(chan.downsample_status, actual.downsample_status)
+        self.assertEqual(chan.type, actual.type)
+        self.assertEqual(chan.name, actual.name)
+        self.assertEqual(chan.coll_name, actual.coll_name)
+        self.assertEqual(chan.exp_name, actual.exp_name)
+
     def test_update_collection(self):
         coll = self.rmt.create_project(self.coll)
 

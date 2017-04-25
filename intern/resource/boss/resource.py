@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 from intern.resource import Resource
 from abc import abstractmethod
 
@@ -397,6 +398,13 @@ class CoordinateFrameResource(BossResource):
         return {"coord": self.name}
 
 
+class PartialChannelResourceError(Exception):
+    """
+    Indicate that the ChannelResource is not fully initialized.
+    """
+    pass
+
+
 class ChannelResource(BossResource):
     """
     Holds channel data.
@@ -421,6 +429,14 @@ class ChannelResource(BossResource):
         description='', default_time_sample=0, datatype='',
         base_resolution=0, sources=[], related=[], creator='', downsample_status="NOT_DOWNSAMPLED", raw={}):
         """Constructor.
+
+        Note, if the channel _already_ exists in the Boss, you can use the
+        helper method get_channel(), that is part of BossRemote, to 
+        instantiate the ChannelResource with all the correct values, using only
+        the names of the collection, experiment, and channel.  
+
+        rmt = BossRemote()
+        channel = rmt.get_channel('myChannel', 'myCollection', 'myExperiment')
 
         Args:
             name (string): Channel name.

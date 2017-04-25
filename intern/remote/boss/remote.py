@@ -683,6 +683,21 @@ class BossRemote(Remote):
         cf = CoordinateFrameResource(name='')
         return self._list_resource(cf)
 
+    def get_channel(self, chan_name, coll_name, exp_name):
+        """
+        Helper that gets a fully initialized ChannelResource for an *existing* channel.
+
+        Args:
+            chan_name (str): Name of channel.
+            coll_name (str): Name of channel's collection.
+            exp_name (str): Name of channel's experiment.
+
+        Returns:
+            (intern.resource.boss.ChannelResource)
+        """
+        chan = ChannelResource(chan_name, coll_name, exp_name)
+        return self.get_project(chan)
+
     def create_project(self, resource):
         """
         Create the entity described by the given resource.

@@ -12,8 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from intern.resource.boss import ChannelResource, PartialChannelResourceError
 from intern.service.boss import BossService
 from intern.service.boss.v1.volume import VolumeService_1
+
+def check_channel(fcn):
+    """Decorator that ensures a valid channel passed in.
+
+    Args:
+        fcn (function): Function that has a ChannelResource as its second argument.
+
+    Returns:
+        (function): Wraps given function with one that checks for a valid channel.
+    """
+
+    def wrapper(*args, **kwargs):
+        if not isinstance(args[1], ChannelResource):
+            raise RuntimeError('resource must be an instance of intern.resource.boss.ChannelResource.')
+
+        if not args[1].fully_initialized:
+            raise PartialChannelResourceError(
+                    'ChannelResource not fully initialized.  Use intern.remote.BossRemote.get_channel({}, {}, {})'.format(
+                        args[1].name, args[1].coll_name, args[1].exp_name))
+        return fcn(*args, **kwargs)
+
+    return wrapper
+
 
 class VolumeService(BossService):
     """VolumeService routes calls to the appropriate API version.
@@ -35,6 +59,7 @@ class VolumeService(BossService):
         }
         self.service = self.get_api_impl(version)
 
+    @check_channel
     def create_cutout(
         self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None):
         """Upload a cutout to the volume service.
@@ -49,10 +74,12 @@ class VolumeService(BossService):
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
         """
 
+
         return self.service.create_cutout(
             resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
         """Get a cutout from the volume service.
 
@@ -76,6 +103,7 @@ class VolumeService(BossService):
             resource, resolution, x_range, y_range, z_range, time_range, id_list,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def reserve_ids(self, resource, num_ids):
         """Reserve a block of unique, sequential ids for annotations.
 
@@ -91,6 +119,7 @@ class VolumeService(BossService):
             resource, num_ids,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
         """Get bounding box containing object specified by id.
 
@@ -110,6 +139,7 @@ class VolumeService(BossService):
             resource, resolution, id, bb_type,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def get_ids_in_region(
             self, resource, resolution,
             x_range, y_range, z_range, time_range=[0, 1]):
