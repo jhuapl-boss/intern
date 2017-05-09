@@ -17,3 +17,7 @@
 Author:
     Tim Gion
 """
+from intern.resource.boss.resource import BossResource
+from intern.resource.boss.resource import CoordinateFrameResource
+from intern.resource.boss.resource import CollectionResource, ExperimentResource
+from intern.resource.boss.resource import ChannelResource, PartialChannelResourceError
