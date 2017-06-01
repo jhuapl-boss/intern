@@ -200,7 +200,7 @@ class ExperimentResource(BossResource):
         self.num_time_samples = num_time_samples
 
         self._valid_time_units = [
-            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+            '', 'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
         self.time_step = time_step
         self._time_step_unit = self.validate_time_units(time_step_unit)
 
