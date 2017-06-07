@@ -283,7 +283,7 @@ class ProjectServiceTest_v1(unittest.TestCase):
 
         # This is not an exhaustive list of attributes, but they are the
         # important ones for correct interaction with the volume service.
-        self.assertTrue(actual.fully_initialized)
+        self.assertTrue(actual.cutout_ready)
         self.assertEqual(chan.datatype, actual.datatype)
         self.assertEqual(chan.default_time_sample, actual.default_time_sample)
         self.assertEqual(chan.base_resolution, actual.base_resolution)

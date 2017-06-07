@@ -30,7 +30,7 @@ def check_channel(fcn):
         if not isinstance(args[1], ChannelResource):
             raise RuntimeError('resource must be an instance of intern.resource.boss.ChannelResource.')
 
-        if not args[1].fully_initialized:
+        if not args[1].cutout_ready:
             raise PartialChannelResourceError(
                     'ChannelResource not fully initialized.  Use intern.remote.BossRemote.get_channel({}, {}, {})'.format(
                         args[1].name, args[1].coll_name, args[1].exp_name))

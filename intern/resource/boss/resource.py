@@ -400,7 +400,8 @@ class CoordinateFrameResource(BossResource):
 
 class PartialChannelResourceError(Exception):
     """
-    Indicate that the ChannelResource is not fully initialized.
+    Indicate that the ChannelResource is not fully initialized for use with
+    the cutout service.
     """
     pass
 
@@ -418,7 +419,7 @@ class ChannelResource(BossResource):
         _type (string): 'image' or 'annotation'
         _valid_datatypes (list[string]): Allowed data type values (static variable).
         _datatype (string):
-        _fully_initialized (bool): True if datatype specified during instantiation.
+        _cutout_ready (bool): True if datatype specified during instantiation.
     """
 
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
@@ -463,11 +464,11 @@ class ChannelResource(BossResource):
         # Class is considered fully initialized if datatype set during
         # initialization.
         if datatype == '':
-            self._fully_initialized = False
+            self._cutout_ready = False
             # Default to uint8.
             datatype = 'uint8'
         else:
-            self._fully_initialized = True
+            self._cutout_ready = True
         self._datatype = self.validate_datatype(datatype)
 
         self.sources = sources
@@ -500,13 +501,13 @@ class ChannelResource(BossResource):
         return True
 
     @property
-    def fully_initialized(self):
-        """Is this channel fully configured?
+    def cutout_ready(self):
+        """Is this channel fully configured for doing cutouts?
 
         Returns:
             (bool) True if the datatype was explicitly set by the user.
         """
-        return self._fully_initialized
+        return self._cutout_ready
 
     @property
     def sources(self):
@@ -567,7 +568,7 @@ class ChannelResource(BossResource):
             ValueError
         """
         self._datatype = self.validate_datatype(value)
-        self._fully_initialized = True
+        self._cutout_ready = True
 
     def validate_type(self, value):
         lowered = value.lower()
