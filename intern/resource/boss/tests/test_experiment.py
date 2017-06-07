@@ -48,6 +48,10 @@ class TestExperimentResource(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.er.validate_hierarchy_method('slice')
 
+    def test_validate_time_units_blank(self):
+        exp = ''
+        self.assertEqual(exp, self.er.validate_time_units(''))
+
     def test_validate_time_units_ns(self):
         exp = 'nanoseconds'
         self.assertEqual(exp, self.er.validate_time_units(exp))
