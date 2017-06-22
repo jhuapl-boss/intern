@@ -1,5 +1,4 @@
 from intern.remote import Remote
-from intern.resource.DVID.resource import *
 import requests
 from PIL import Image
 from io import BytesIO
@@ -21,8 +20,8 @@ import numpy
 
 class DVIDRemote(Remote):
 
-	def__init__()
-		pass
+	# def __init__()
+	# 	pass
 
 	def get_cutout(ID, scale, typev, shape, xpix, ypix, xo, yo, zo):
 	    #ID MUST BE STRING ""
