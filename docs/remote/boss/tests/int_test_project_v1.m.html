@@ -1051,6 +1051,7 @@ table {
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_create_experiment">test_create_experiment</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_delete_all">test_delete_all</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_get_channel">test_get_channel</a></li>
+    <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_get_channel_helper">test_get_channel_helper</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_get_collection">test_get_collection</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_get_coord_frame">test_get_coord_frame</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_get_experiment">test_get_experiment</a></li>
@@ -1350,6 +1351,33 @@ class ProjectServiceTest_v1(unittest.TestCase):
         self.assertEqual(self.source_chan.datatype, ch.datatype)
         self.assertEqual(self.source_chan.default_time_sample, ch.default_time_sample)
         self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
+
+    def test_get_channel_helper(self):
+        """
+        Test the helper get_channel() as opposed to getting a channel via get_project().
+        """
+
+        c = self.rmt.create_project(self.coll)
+
+        cf = self.rmt.create_project(self.coord)
+
+        e = self.rmt.create_project(self.exp)
+
+        chan = self.rmt.create_project(self.source_chan)
+
+        actual = self.rmt.get_channel(chan.name, chan.coll_name, chan.exp_name)
+
+        # This is not an exhaustive list of attributes, but they are the
+        # important ones for correct interaction with the volume service.
+        self.assertTrue(actual.cutout_ready)
+        self.assertEqual(chan.datatype, actual.datatype)
+        self.assertEqual(chan.default_time_sample, actual.default_time_sample)
+        self.assertEqual(chan.base_resolution, actual.base_resolution)
+        self.assertEqual(chan.downsample_status, actual.downsample_status)
+        self.assertEqual(chan.type, actual.type)
+        self.assertEqual(chan.name, actual.name)
+        self.assertEqual(chan.coll_name, actual.coll_name)
+        self.assertEqual(chan.exp_name, actual.exp_name)
 
     def test_update_collection(self):
         coll = self.rmt.create_project(self.coll)
@@ -1739,6 +1767,33 @@ if __name__ == '__main__':
         self.assertEqual(self.source_chan.datatype, ch.datatype)
         self.assertEqual(self.source_chan.default_time_sample, ch.default_time_sample)
         self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
+
+    def test_get_channel_helper(self):
+        """
+        Test the helper get_channel() as opposed to getting a channel via get_project().
+        """
+
+        c = self.rmt.create_project(self.coll)
+
+        cf = self.rmt.create_project(self.coord)
+
+        e = self.rmt.create_project(self.exp)
+
+        chan = self.rmt.create_project(self.source_chan)
+
+        actual = self.rmt.get_channel(chan.name, chan.coll_name, chan.exp_name)
+
+        # This is not an exhaustive list of attributes, but they are the
+        # important ones for correct interaction with the volume service.
+        self.assertTrue(actual.cutout_ready)
+        self.assertEqual(chan.datatype, actual.datatype)
+        self.assertEqual(chan.default_time_sample, actual.default_time_sample)
+        self.assertEqual(chan.base_resolution, actual.base_resolution)
+        self.assertEqual(chan.downsample_status, actual.downsample_status)
+        self.assertEqual(chan.type, actual.type)
+        self.assertEqual(chan.name, actual.name)
+        self.assertEqual(chan.coll_name, actual.coll_name)
+        self.assertEqual(chan.exp_name, actual.exp_name)
 
     def test_update_collection(self):
         coll = self.rmt.create_project(self.coll)
@@ -2901,7 +2956,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10d61f1b8&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x103f26c08&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2962,7 +3017,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10d61f1b8&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x103f26c08&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -4141,6 +4196,45 @@ it here.</p></div>
     self.assertEqual(self.source_chan.datatype, ch.datatype)
     self.assertEqual(self.source_chan.default_time_sample, ch.default_time_sample)
     self.assertEqual(self.source_chan.base_resolution, ch.base_resolution)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_get_channel_helper">
+    <p>def <span class="ident">test_get_channel_helper</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Test the helper get_channel() as opposed to getting a channel via get_project().</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_get_channel_helper', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.tests.int_test_project_v1.ProjectServiceTest_v1.test_get_channel_helper" class="source">
+    <pre><code>def test_get_channel_helper(self):
+    """
+    Test the helper get_channel() as opposed to getting a channel via get_project().
+    """
+    c = self.rmt.create_project(self.coll)
+    cf = self.rmt.create_project(self.coord)
+    e = self.rmt.create_project(self.exp)
+    chan = self.rmt.create_project(self.source_chan)
+    actual = self.rmt.get_channel(chan.name, chan.coll_name, chan.exp_name)
+    # This is not an exhaustive list of attributes, but they are the
+    # important ones for correct interaction with the volume service.
+    self.assertTrue(actual.cutout_ready)
+    self.assertEqual(chan.datatype, actual.datatype)
+    self.assertEqual(chan.default_time_sample, actual.default_time_sample)
+    self.assertEqual(chan.base_resolution, actual.base_resolution)
+    self.assertEqual(chan.downsample_status, actual.downsample_status)
+    self.assertEqual(chan.type, actual.type)
+    self.assertEqual(chan.name, actual.name)
+    self.assertEqual(chan.coll_name, actual.coll_name)
+    self.assertEqual(chan.exp_name, actual.exp_name)
 </code></pre>
   </div>
 </div>

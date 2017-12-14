@@ -1059,6 +1059,10 @@ table {
   </ul>
 
         </li>
+        <li class="mono">
+        <span class="class_name"><a href="#intern.resource.boss.resource.PartialChannelResourceError">PartialChannelResourceError</a></span>
+        
+        </li>
       </ul>
     </li>
 
@@ -1091,6 +1095,7 @@ table {
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 from intern.resource import Resource
 from abc import abstractmethod
 
@@ -1279,7 +1284,7 @@ class ExperimentResource(BossResource):
         self.num_time_samples = num_time_samples
 
         self._valid_time_units = [
-            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+            '', 'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
         self.time_step = time_step
         self._time_step_unit = self.validate_time_units(time_step_unit)
 
@@ -1477,6 +1482,14 @@ class CoordinateFrameResource(BossResource):
         return {"coord": self.name}
 
 
+class PartialChannelResourceError(Exception):
+    """
+    Indicate that the ChannelResource is not fully initialized for use with
+    the cutout service.
+    """
+    pass
+
+
 class ChannelResource(BossResource):
     """
     Holds channel data.
@@ -1490,6 +1503,7 @@ class ChannelResource(BossResource):
         _type (string): 'image' or 'annotation'
         _valid_datatypes (list[string]): Allowed data type values (static variable).
         _datatype (string):
+        _cutout_ready (bool): True if datatype specified during instantiation.
     """
 
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
@@ -1497,9 +1511,17 @@ class ChannelResource(BossResource):
     _valid_downsample_status = ['NOT_DOWNSAMPLED', 'IN_PROGRESS', 'DOWNSAMPLED', "FAILED"]
 
     def __init__(self, name, collection_name, experiment_name, type="image",
-        description='', default_time_sample=0, datatype='uint8',
+        description='', default_time_sample=0, datatype='',
         base_resolution=0, sources=[], related=[], creator='', downsample_status="NOT_DOWNSAMPLED", raw={}):
         """Constructor.
+
+        Note, if the channel _already_ exists in the Boss, you can use the
+        helper method get_channel(), that is part of BossRemote, to 
+        instantiate the ChannelResource with all the correct values, using only
+        the names of the collection, experiment, and channel.  
+
+        rmt = BossRemote()
+        channel = rmt.get_channel('myChannel', 'myCollection', 'myExperiment')
 
         Args:
             name (string): Channel name.
@@ -1522,6 +1544,15 @@ class ChannelResource(BossResource):
         self.exp_name = experiment_name
 
         self._type = self.validate_type(type)
+
+        # Class is considered fully initialized if datatype set during
+        # initialization.
+        if datatype == '':
+            self._cutout_ready = False
+            # Default to uint8.
+            datatype = 'uint8'
+        else:
+            self._cutout_ready = True
         self._datatype = self.validate_datatype(datatype)
 
         self.sources = sources
@@ -1552,6 +1583,15 @@ class ChannelResource(BossResource):
         """Channels and layers are valid resources for interacting with the volume service.
         """
         return True
+
+    @property
+    def cutout_ready(self):
+        """Is this channel fully configured for doing cutouts?
+
+        Returns:
+            (bool) True if the datatype was explicitly set by the user.
+        """
+        return self._cutout_ready
 
     @property
     def sources(self):
@@ -1612,6 +1652,7 @@ class ChannelResource(BossResource):
             ValueError
         """
         self._datatype = self.validate_datatype(value)
+        self._cutout_ready = True
 
     def validate_type(self, value):
         lowered = value.lower()
@@ -2092,7 +2133,8 @@ def get_route(self):
     base_resolution (int):<br />
 &emsp;&emsp;&emsp;&emsp;<b>_type (string)</b>: 'image' or 'annotation'<br />
 &emsp;&emsp;&emsp;&emsp;<b>_valid_datatypes (list[string])</b>: Allowed data type values (static variable).<br />
-    _datatype (string):</p></div>
+    _datatype (string):<br />
+&emsp;&emsp;&emsp;&emsp;<b>_cutout_ready (bool)</b>: True if datatype specified during instantiation.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource', this);">Show source &equiv;</a></p>
   <div id="source-intern.resource.boss.resource.ChannelResource" class="source">
@@ -2109,6 +2151,7 @@ def get_route(self):
         _type (string): 'image' or 'annotation'
         _valid_datatypes (list[string]): Allowed data type values (static variable).
         _datatype (string):
+        _cutout_ready (bool): True if datatype specified during instantiation.
     """
 
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
@@ -2116,9 +2159,17 @@ def get_route(self):
     _valid_downsample_status = ['NOT_DOWNSAMPLED', 'IN_PROGRESS', 'DOWNSAMPLED', "FAILED"]
 
     def __init__(self, name, collection_name, experiment_name, type="image",
-        description='', default_time_sample=0, datatype='uint8',
+        description='', default_time_sample=0, datatype='',
         base_resolution=0, sources=[], related=[], creator='', downsample_status="NOT_DOWNSAMPLED", raw={}):
         """Constructor.
+
+        Note, if the channel _already_ exists in the Boss, you can use the
+        helper method get_channel(), that is part of BossRemote, to 
+        instantiate the ChannelResource with all the correct values, using only
+        the names of the collection, experiment, and channel.  
+
+        rmt = BossRemote()
+        channel = rmt.get_channel('myChannel', 'myCollection', 'myExperiment')
 
         Args:
             name (string): Channel name.
@@ -2141,6 +2192,15 @@ def get_route(self):
         self.exp_name = experiment_name
 
         self._type = self.validate_type(type)
+
+        # Class is considered fully initialized if datatype set during
+        # initialization.
+        if datatype == '':
+            self._cutout_ready = False
+            # Default to uint8.
+            datatype = 'uint8'
+        else:
+            self._cutout_ready = True
         self._datatype = self.validate_datatype(datatype)
 
         self.sources = sources
@@ -2171,6 +2231,15 @@ def get_route(self):
         """Channels and layers are valid resources for interacting with the volume service.
         """
         return True
+
+    @property
+    def cutout_ready(self):
+        """Is this channel fully configured for doing cutouts?
+
+        Returns:
+            (bool) True if the datatype was explicitly set by the user.
+        """
+        return self._cutout_ready
 
     @property
     def sources(self):
@@ -2231,6 +2300,7 @@ def get_route(self):
             ValueError
         """
         self._datatype = self.validate_datatype(value)
+        self._cutout_ready = True
 
     def validate_type(self, value):
         lowered = value.lower()
@@ -2296,6 +2366,21 @@ def get_route(self):
 
             
   
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.ChannelResource.cutout_ready" class="name">var <span class="ident">cutout_ready</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Is this channel fully configured for doing cutouts?</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<pre><code>(bool) True if the datatype was explicitly set by the user.
+</code></pre></div>
   <div class="source_cont">
 </div>
 
@@ -2426,7 +2511,7 @@ def get_route(self):
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.resource.ChannelResource.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, experiment_name, type=&#39;image&#39;, description=&#39;&#39;, default_time_sample=0, datatype=&#39;uint8&#39;, base_resolution=0, sources=[], related=[], creator=&#39;&#39;, downsample_status=&#39;NOT_DOWNSAMPLED&#39;, raw={})</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, name, collection_name, experiment_name, type=&#39;image&#39;, description=&#39;&#39;, default_time_sample=0, datatype=&#39;&#39;, base_resolution=0, sources=[], related=[], creator=&#39;&#39;, downsample_status=&#39;NOT_DOWNSAMPLED&#39;, raw={})</p>
     </div>
     
     <p class="inheritance">
@@ -2437,6 +2522,12 @@ def get_route(self):
     
   
     <div class="desc"><p>Constructor.</p>
+<p>Note, if the channel <em>already</em> exists in the Boss, you can use the<br />
+helper method get_channel(), that is part of BossRemote, to <br />
+instantiate the ChannelResource with all the correct values, using only<br />
+the names of the collection, experiment, and channel.  </p>
+<p>rmt = BossRemote()<br />
+channel = rmt.get_channel('myChannel', 'myCollection', 'myExperiment')</p>
 <p>Args:<br />
 &emsp;&emsp;&emsp;&emsp;<b>name (string)</b>: Channel name.<br />
 &emsp;&emsp;&emsp;&emsp;<b>collection_name (string)</b>: Parent collection name.<br />
@@ -2455,9 +2546,15 @@ def get_route(self):
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.ChannelResource.__init__', this);">Show source &equiv;</a></p>
   <div id="source-intern.resource.boss.resource.ChannelResource.__init__" class="source">
     <pre><code>def __init__(self, name, collection_name, experiment_name, type="image",
-    description='', default_time_sample=0, datatype='uint8',
+    description='', default_time_sample=0, datatype='',
     base_resolution=0, sources=[], related=[], creator='', downsample_status="NOT_DOWNSAMPLED", raw={}):
     """Constructor.
+    Note, if the channel _already_ exists in the Boss, you can use the
+    helper method get_channel(), that is part of BossRemote, to 
+    instantiate the ChannelResource with all the correct values, using only
+    the names of the collection, experiment, and channel.  
+    rmt = BossRemote()
+    channel = rmt.get_channel('myChannel', 'myCollection', 'myExperiment')
     Args:
         name (string): Channel name.
         collection_name (string): Parent collection name.
@@ -2477,6 +2574,14 @@ def get_route(self):
     self.coll_name = collection_name
     self.exp_name = experiment_name
     self._type = self.validate_type(type)
+    # Class is considered fully initialized if datatype set during
+    # initialization.
+    if datatype == '':
+        self._cutout_ready = False
+        # Default to uint8.
+        datatype = 'uint8'
+    else:
+        self._cutout_ready = True
     self._datatype = self.validate_datatype(datatype)
     self.sources = sources
     self.related = related
@@ -3841,7 +3946,7 @@ layers.</p>
         self.num_time_samples = num_time_samples
 
         self._valid_time_units = [
-            'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+            '', 'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
         self.time_step = time_step
         self._time_step_unit = self.validate_time_units(time_step_unit)
 
@@ -4111,7 +4216,7 @@ layers.</p>
         hierarchy_method)
     self.num_time_samples = num_time_samples
     self._valid_time_units = [
-        'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
+        '', 'nanoseconds', 'microseconds', 'milliseconds', 'seconds']
     self.time_step = time_step
     self._time_step_unit = self.validate_time_units(time_step_unit)
 </code></pre>
@@ -4376,6 +4481,58 @@ layers.</p>
 
   </div>
   
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="intern.resource.boss.resource.PartialChannelResourceError" class="name">class <span class="ident">PartialChannelResourceError</span></p>
+      
+  
+    <div class="desc"><p>Indicate that the ChannelResource is not fully initialized for use with<br />
+the cutout service.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.resource.PartialChannelResourceError', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.resource.PartialChannelResourceError" class="source">
+    <pre><code>class PartialChannelResourceError(Exception):
+    """
+    Indicate that the ChannelResource is not fully initialized for use with
+    the cutout service.
+    """
+    pass
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#intern.resource.boss.resource.PartialChannelResourceError">PartialChannelResourceError</a></li>
+          <li>exceptions.Exception</li>
+          <li>exceptions.BaseException</li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="intern.resource.boss.resource.PartialChannelResourceError.args" class="name">var <span class="ident">args</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="intern.resource.boss.resource.PartialChannelResourceError.message" class="name">var <span class="ident">message</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
       </div>
       </div>
 

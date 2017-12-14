@@ -970,6 +970,13 @@ table {
     <h1>Index</h1>
     <ul id="index">
 
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#intern.service.boss.volume.check_channel">check_channel</a></li>
+  </ul>
+
+    </li>
 
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
@@ -1022,8 +1029,32 @@ table {
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from intern.resource.boss import ChannelResource, PartialChannelResourceError
 from intern.service.boss import BossService
 from intern.service.boss.v1.volume import VolumeService_1
+
+def check_channel(fcn):
+    """Decorator that ensures a valid channel passed in.
+
+    Args:
+        fcn (function): Function that has a ChannelResource as its second argument.
+
+    Returns:
+        (function): Wraps given function with one that checks for a valid channel.
+    """
+
+    def wrapper(*args, **kwargs):
+        if not isinstance(args[1], ChannelResource):
+            raise RuntimeError('resource must be an instance of intern.resource.boss.ChannelResource.')
+
+        if not args[1].cutout_ready:
+            raise PartialChannelResourceError(
+                    'ChannelResource not fully initialized.  Use intern.remote.BossRemote.get_channel({}, {}, {})'.format(
+                        args[1].name, args[1].coll_name, args[1].exp_name))
+        return fcn(*args, **kwargs)
+
+    return wrapper
+
 
 class VolumeService(BossService):
     """VolumeService routes calls to the appropriate API version.
@@ -1045,6 +1076,7 @@ class VolumeService(BossService):
         }
         self.service = self.get_api_impl(version)
 
+    @check_channel
     def create_cutout(
         self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None):
         """Upload a cutout to the volume service.
@@ -1059,10 +1091,12 @@ class VolumeService(BossService):
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
         """
 
+
         return self.service.create_cutout(
             resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
         """Get a cutout from the volume service.
 
@@ -1086,6 +1120,7 @@ class VolumeService(BossService):
             resource, resolution, x_range, y_range, z_range, time_range, id_list,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def reserve_ids(self, resource, num_ids):
         """Reserve a block of unique, sequential ids for annotations.
 
@@ -1101,6 +1136,7 @@ class VolumeService(BossService):
             resource, num_ids,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
         """Get bounding box containing object specified by id.
 
@@ -1120,6 +1156,7 @@ class VolumeService(BossService):
             resource, resolution, id, bb_type,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def get_ids_in_region(
             self, resource, resolution,
             x_range, y_range, z_range, time_range=[0, 1]):
@@ -1151,6 +1188,52 @@ class VolumeService(BossService):
 
   <section id="section-items">
 
+    <h2 class="section-title" id="header-functions">Functions</h2>
+      
+  <div class="item">
+    <div class="name def" id="intern.service.boss.volume.check_channel">
+    <p>def <span class="ident">check_channel</span>(</p><p>fcn)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Decorator that ensures a valid channel passed in.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>fcn (function)</b>: Function that has a ChannelResource as its second argument.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(function)</b>: Wraps given function with one that checks for a valid channel.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.volume.check_channel', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.volume.check_channel" class="source">
+    <pre><code>def check_channel(fcn):
+    """Decorator that ensures a valid channel passed in.
+
+    Args:
+        fcn (function): Function that has a ChannelResource as its second argument.
+
+    Returns:
+        (function): Wraps given function with one that checks for a valid channel.
+    """
+
+    def wrapper(*args, **kwargs):
+        if not isinstance(args[1], ChannelResource):
+            raise RuntimeError('resource must be an instance of intern.resource.boss.ChannelResource.')
+
+        if not args[1].cutout_ready:
+            raise PartialChannelResourceError(
+                    'ChannelResource not fully initialized.  Use intern.remote.BossRemote.get_channel({}, {}, {})'.format(
+                        args[1].name, args[1].coll_name, args[1].exp_name))
+        return fcn(*args, **kwargs)
+
+    return wrapper
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
 
     <h2 class="section-title" id="header-classes">Classes</h2>
       
@@ -1182,6 +1265,7 @@ class VolumeService(BossService):
         }
         self.service = self.get_api_impl(version)
 
+    @check_channel
     def create_cutout(
         self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None):
         """Upload a cutout to the volume service.
@@ -1196,10 +1280,12 @@ class VolumeService(BossService):
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
         """
 
+
         return self.service.create_cutout(
             resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
         """Get a cutout from the volume service.
 
@@ -1223,6 +1309,7 @@ class VolumeService(BossService):
             resource, resolution, x_range, y_range, z_range, time_range, id_list,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def reserve_ids(self, resource, num_ids):
         """Reserve a block of unique, sequential ids for annotations.
 
@@ -1238,6 +1325,7 @@ class VolumeService(BossService):
             resource, num_ids,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
         """Get bounding box containing object specified by id.
 
@@ -1257,6 +1345,7 @@ class VolumeService(BossService):
             resource, resolution, id, bb_type,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
     def get_ids_in_region(
             self, resource, resolution,
             x_range, y_range, z_range, time_range=[0, 1]):
@@ -1407,39 +1496,23 @@ class VolumeService(BossService):
             
   <div class="item">
     <div class="name def" id="intern.service.boss.volume.VolumeService.create_cutout">
-    <p>def <span class="ident">create_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None)</p>
+    <p>def <span class="ident">create_cutout</span>(</p><p>*args, **kwargs)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Upload a cutout to the volume service.</p>
-<p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.Resource)</b>: Resource compatible with cutout operations.<br />
-&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
-&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>numpyVolume (numpy.array)</b>: A 3D or 4D (time) numpy matrix in (time)ZYX order.<br />
-&emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.volume.VolumeService.create_cutout', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.volume.VolumeService.create_cutout" class="source">
-    <pre><code>def create_cutout(
-    self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None):
-    """Upload a cutout to the volume service.
-    Args:
-        resource (intern.resource.Resource): Resource compatible with cutout operations.
-        resolution (int): 0 indicates native resolution.
-        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-        numpyVolume (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
-        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-    """
-    return self.service.create_cutout(
-        resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
-        self.url_prefix, self.auth, self.session, self.session_send_opts)
+    <pre><code>def wrapper(*args, **kwargs):
+    if not isinstance(args[1], ChannelResource):
+        raise RuntimeError('resource must be an instance of intern.resource.boss.ChannelResource.')
+    if not args[1].cutout_ready:
+        raise PartialChannelResourceError(
+                'ChannelResource not fully initialized.  Use intern.remote.BossRemote.get_channel({}, {}, {})'.format(
+                    args[1].name, args[1].coll_name, args[1].exp_name))
+    return fcn(*args, **kwargs)
 </code></pre>
   </div>
 </div>
@@ -1489,41 +1562,23 @@ class VolumeService(BossService):
             
   <div class="item">
     <div class="name def" id="intern.service.boss.volume.VolumeService.get_bounding_box">
-    <p>def <span class="ident">get_bounding_box</span>(</p><p>self, resource, resolution, id, bb_type=&#39;loose&#39;)</p>
+    <p>def <span class="ident">get_bounding_box</span>(</p><p>*args, **kwargs)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Get bounding box containing object specified by id.</p>
-<p>Currently only supports 'loose' bounding boxes.  The bounding box<br />
-returned is cuboid aligned.</p>
-<p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.Resource)</b>: Resource compatible with annotation operations.<br />
-&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
-&emsp;&emsp;&emsp;&emsp;<b>id (int)</b>: Id of object of interest.<br />
-&emsp;&emsp;&emsp;&emsp;<b>bb_type (optional[string])</b>: Defaults to 'loose'.</p>
-<h2 style='font-size:125% !important'>Returns</h2>
-
-<p>&emsp;&emsp;&emsp;&emsp;<b>(dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range'</b>: [0, 10]}</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.volume.VolumeService.get_bounding_box', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.volume.VolumeService.get_bounding_box" class="source">
-    <pre><code>def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
-    """Get bounding box containing object specified by id.
-    Currently only supports 'loose' bounding boxes.  The bounding box
-    returned is cuboid aligned.
-    Args:
-        resource (intern.resource.Resource): Resource compatible with annotation operations.
-        resolution (int): 0 indicates native resolution.
-        id (int): Id of object of interest.
-        bb_type (optional[string]): Defaults to 'loose'.
-    Returns:
-        (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
-    """
-    return self.service.get_bounding_box(
-        resource, resolution, id, bb_type,
-        self.url_prefix, self.auth, self.session, self.session_send_opts)
+    <pre><code>def wrapper(*args, **kwargs):
+    if not isinstance(args[1], ChannelResource):
+        raise RuntimeError('resource must be an instance of intern.resource.boss.ChannelResource.')
+    if not args[1].cutout_ready:
+        raise PartialChannelResourceError(
+                'ChannelResource not fully initialized.  Use intern.remote.BossRemote.get_channel({}, {}, {})'.format(
+                    args[1].name, args[1].coll_name, args[1].exp_name))
+    return fcn(*args, **kwargs)
 </code></pre>
   </div>
 </div>
@@ -1533,49 +1588,23 @@ returned is cuboid aligned.</p>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.volume.VolumeService.get_cutout">
-    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[])</p>
+    <p>def <span class="ident">get_cutout</span>(</p><p>*args, **kwargs)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Get a cutout from the volume service.</p>
-<p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.resource.ChannelResource)</b>: Channel or layer resource.<br />
-&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
-&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
-&emsp;&emsp;&emsp;&emsp;<b>id_list (optional [list[int]])</b>: list of object ids to filter the cutout by.</p>
-<h2 style='font-size:125% !important'>Returns</h2>
-
-<p>&emsp;&emsp;&emsp;&emsp;<b>(numpy.array)</b>: A 3D or 4D (time) numpy matrix in (time)ZYX order.</p>
-<h2 style='font-size:125% !important'>Raises</h2>
-
-<pre><code>requests.HTTPError on error.
-</code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.volume.VolumeService.get_cutout', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.volume.VolumeService.get_cutout" class="source">
-    <pre><code>def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
-    """Get a cutout from the volume service.
-    Args:
-        resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
-        resolution (int): 0 indicates native resolution.
-        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-        id_list (optional [list[int]]): list of object ids to filter the cutout by.
-    Returns:
-        (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
-    Raises:
-        requests.HTTPError on error.
-    """
-    return self.service.get_cutout(
-        resource, resolution, x_range, y_range, z_range, time_range, id_list,
-        self.url_prefix, self.auth, self.session, self.session_send_opts)
+    <pre><code>def wrapper(*args, **kwargs):
+    if not isinstance(args[1], ChannelResource):
+        raise RuntimeError('resource must be an instance of intern.resource.boss.ChannelResource.')
+    if not args[1].cutout_ready:
+        raise PartialChannelResourceError(
+                'ChannelResource not fully initialized.  Use intern.remote.BossRemote.get_channel({}, {}, {})'.format(
+                    args[1].name, args[1].coll_name, args[1].exp_name))
+    return fcn(*args, **kwargs)
 </code></pre>
   </div>
 </div>
@@ -1585,51 +1614,23 @@ returned is cuboid aligned.</p>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.volume.VolumeService.get_ids_in_region">
-    <p>def <span class="ident">get_ids_in_region</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range=[0, 1])</p>
+    <p>def <span class="ident">get_ids_in_region</span>(</p><p>*args, **kwargs)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Get all ids in the region defined by x_range, y_range, z_range.</p>
-<p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.Resource)</b>: An annotation channel.<br />
-&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
-&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
-&emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.  Defaults to [0, 1].</p>
-<h2 style='font-size:125% !important'>Returns</h2>
-
-<p>&emsp;&emsp;&emsp;&emsp;<b>(list[int]): Example</b>: [1, 2, 25].</p>
-<h2 style='font-size:125% !important'>Raises</h2>
-
-<pre><code>requests.HTTPError
-</code></pre>
-<p>&emsp;&emsp;&emsp;&emsp;<b>TypeError</b>: if resource is not an annotation channel.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.volume.VolumeService.get_ids_in_region', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.volume.VolumeService.get_ids_in_region" class="source">
-    <pre><code>def get_ids_in_region(
-        self, resource, resolution,
-        x_range, y_range, z_range, time_range=[0, 1]):
-    """Get all ids in the region defined by x_range, y_range, z_range.
-    Args:
-        resource (intern.resource.Resource): An annotation channel.
-        resolution (int): 0 indicates native resolution.
-        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.  Defaults to [0, 1].
-    Returns:
-        (list[int]): Example: [1, 2, 25].
-    Raises:
-        requests.HTTPError
-        TypeError: if resource is not an annotation channel.
-    """
-    return self.service.get_ids_in_region(
-        resource, resolution, x_range, y_range, z_range, time_range,
-        self.url_prefix, self.auth, self.session, self.session_send_opts)
+    <pre><code>def wrapper(*args, **kwargs):
+    if not isinstance(args[1], ChannelResource):
+        raise RuntimeError('resource must be an instance of intern.resource.boss.ChannelResource.')
+    if not args[1].cutout_ready:
+        raise PartialChannelResourceError(
+                'ChannelResource not fully initialized.  Use intern.remote.BossRemote.get_channel({}, {}, {})'.format(
+                    args[1].name, args[1].coll_name, args[1].exp_name))
+    return fcn(*args, **kwargs)
 </code></pre>
   </div>
 </div>
@@ -1639,33 +1640,23 @@ returned is cuboid aligned.</p>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.volume.VolumeService.reserve_ids">
-    <p>def <span class="ident">reserve_ids</span>(</p><p>self, resource, num_ids)</p>
+    <p>def <span class="ident">reserve_ids</span>(</p><p>*args, **kwargs)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Reserve a block of unique, sequential ids for annotations.</p>
-<p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.Resource)</b>: Resource should be an annotation channel.<br />
-&emsp;&emsp;&emsp;&emsp;<b>num_ids (int)</b>: Number of ids to reserve.</p>
-<h2 style='font-size:125% !important'>Returns</h2>
-
-<p>&emsp;&emsp;&emsp;&emsp;<b>(int)</b>: First id reserved.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.volume.VolumeService.reserve_ids', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.volume.VolumeService.reserve_ids" class="source">
-    <pre><code>def reserve_ids(self, resource, num_ids):
-    """Reserve a block of unique, sequential ids for annotations.
-    Args:
-        resource (intern.resource.Resource): Resource should be an annotation channel.
-        num_ids (int): Number of ids to reserve.
-    Returns:
-        (int): First id reserved.
-    """
-    return self.service.reserve_ids(
-        resource, num_ids,
-        self.url_prefix, self.auth, self.session, self.session_send_opts)
+    <pre><code>def wrapper(*args, **kwargs):
+    if not isinstance(args[1], ChannelResource):
+        raise RuntimeError('resource must be an instance of intern.resource.boss.ChannelResource.')
+    if not args[1].cutout_ready:
+        raise PartialChannelResourceError(
+                'ChannelResource not fully initialized.  Use intern.remote.BossRemote.get_channel({}, {}, {})'.format(
+                    args[1].name, args[1].coll_name, args[1].exp_name))
+    return fcn(*args, **kwargs)
 </code></pre>
   </div>
 </div>

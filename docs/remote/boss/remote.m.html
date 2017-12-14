@@ -1012,6 +1012,7 @@ table {
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_user">delete_user</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_user_role">delete_user_role</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_bounding_box">get_bounding_box</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_channel">get_channel</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_cutout">get_cutout</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_group">get_group</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_ids_in_region">get_ids_in_region</a></li>
@@ -1756,6 +1757,21 @@ class BossRemote(Remote):
         """
         cf = CoordinateFrameResource(name='')
         return self._list_resource(cf)
+
+    def get_channel(self, chan_name, coll_name, exp_name):
+        """
+        Helper that gets a fully initialized ChannelResource for an *existing* channel.
+
+        Args:
+            chan_name (str): Name of channel.
+            coll_name (str): Name of channel's collection.
+            exp_name (str): Name of channel's experiment.
+
+        Returns:
+            (intern.resource.boss.ChannelResource)
+        """
+        chan = ChannelResource(chan_name, coll_name, exp_name)
+        return self.get_project(chan)
 
     def create_project(self, resource):
         """
@@ -2641,6 +2657,21 @@ class BossRemote(Remote):
         """
         cf = CoordinateFrameResource(name='')
         return self._list_resource(cf)
+
+    def get_channel(self, chan_name, coll_name, exp_name):
+        """
+        Helper that gets a fully initialized ChannelResource for an *existing* channel.
+
+        Args:
+            chan_name (str): Name of channel.
+            coll_name (str): Name of channel's collection.
+            exp_name (str): Name of channel's experiment.
+
+        Returns:
+            (intern.resource.boss.ChannelResource)
+        """
+        chan = ChannelResource(chan_name, coll_name, exp_name)
+        return self.get_project(chan)
 
     def create_project(self, resource):
         """
@@ -3656,6 +3687,45 @@ returned is cuboid aligned.</p>
     if bb_type != 'loose' and bb_type != 'tight':
         raise RuntimeError("bb_type must be either 'loose' or 'tight'.")
     return self._volume.get_bounding_box(resource, resolution, id, bb_type)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.get_channel">
+    <p>def <span class="ident">get_channel</span>(</p><p>self, chan_name, coll_name, exp_name)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Helper that gets a fully initialized ChannelResource for an <em>existing</em> channel.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>chan_name (str)</b>: Name of channel.<br />
+&emsp;&emsp;&emsp;&emsp;<b>coll_name (str)</b>: Name of channel's collection.<br />
+&emsp;&emsp;&emsp;&emsp;<b>exp_name (str)</b>: Name of channel's experiment.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<pre><code>(intern.resource.boss.ChannelResource)
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_channel', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.get_channel" class="source">
+    <pre><code>def get_channel(self, chan_name, coll_name, exp_name):
+    """
+    Helper that gets a fully initialized ChannelResource for an *existing* channel.
+    Args:
+        chan_name (str): Name of channel.
+        coll_name (str): Name of channel's collection.
+        exp_name (str): Name of channel's experiment.
+    Returns:
+        (intern.resource.boss.ChannelResource)
+    """
+    chan = ChannelResource(chan_name, coll_name, exp_name)
+    return self.get_project(chan)
 </code></pre>
   </div>
 </div>

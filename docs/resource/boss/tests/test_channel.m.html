@@ -1036,12 +1036,16 @@ table {
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.skipTest">skipTest</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.tearDown">tearDown</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.tearDownClass">tearDownClass</a></li>
+    <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_channel_defaults_to_uint8">test_channel_defaults_to_uint8</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_default_related_is_empty">test_default_related_is_empty</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_default_source_is_empty">test_default_source_is_empty</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_get_list_route">test_get_list_route</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_get_route">test_get_route</a></li>
+    <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_init_status_false">test_init_status_false</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_related_list">test_related_list</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_related_string_stored_as_list">test_related_string_stored_as_list</a></li>
+    <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_setting_datatype_means_cutout_ready">test_setting_datatype_means_cutout_ready</a></li>
+    <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_setting_datatype_means_cutout_ready_at_construction">test_setting_datatype_means_cutout_ready_at_construction</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_source_list">test_source_list</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_source_string_stored_as_list">test_source_string_stored_as_list</a></li>
     <li class="mono"><a href="#intern.resource.boss.tests.test_channel.TestChannelResource.test_valid_volume">test_valid_volume</a></li>
@@ -1091,6 +1095,23 @@ from intern.resource.boss.resource import ChannelResource
 class TestChannelResource(unittest.TestCase):
     def setUp(self):
         self.chan = ChannelResource('mychan', 'foo', 'bar', 'image')
+
+    def test_init_status_false(self):
+        chan = ChannelResource('somechan', 'foo', 'bar')
+        self.assertFalse(chan.cutout_ready)
+
+    def test_channel_defaults_to_uint8(self):
+        chan = ChannelResource('somechan', 'foo', 'bar')
+        self.assertEqual('uint8', chan.datatype)
+
+    def test_setting_datatype_means_cutout_ready_at_construction(self):
+        chan = ChannelResource('somechan', 'foo', 'bar', datatype='uint8')
+        self.assertTrue(chan.cutout_ready)
+
+    def test_setting_datatype_means_cutout_ready(self):
+        chan = ChannelResource('somechan', 'foo', 'bar')
+        chan.datatype = 'uint16'
+        self.assertTrue(chan.cutout_ready)
 
     def test_default_source_is_empty(self):
         self.assertEqual([], self.chan.sources)
@@ -1162,6 +1183,23 @@ class TestChannelResource(unittest.TestCase):
     <pre><code>class TestChannelResource(unittest.TestCase):
     def setUp(self):
         self.chan = ChannelResource('mychan', 'foo', 'bar', 'image')
+
+    def test_init_status_false(self):
+        chan = ChannelResource('somechan', 'foo', 'bar')
+        self.assertFalse(chan.cutout_ready)
+
+    def test_channel_defaults_to_uint8(self):
+        chan = ChannelResource('somechan', 'foo', 'bar')
+        self.assertEqual('uint8', chan.datatype)
+
+    def test_setting_datatype_means_cutout_ready_at_construction(self):
+        chan = ChannelResource('somechan', 'foo', 'bar', datatype='uint8')
+        self.assertTrue(chan.cutout_ready)
+
+    def test_setting_datatype_means_cutout_ready(self):
+        chan = ChannelResource('somechan', 'foo', 'bar')
+        chan.datatype = 'uint16'
+        self.assertTrue(chan.cutout_ready)
 
     def test_default_source_is_empty(self):
         self.assertEqual([], self.chan.sources)
@@ -2256,7 +2294,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.tests.test_channel.TestChannelResource.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10d61f1b8&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x103f26c08&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2317,7 +2355,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.resource.boss.tests.test_channel.TestChannelResource.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10d61f1b8&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x103f26c08&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3188,6 +3226,27 @@ def tearDownClass(cls):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.tests.test_channel.TestChannelResource.test_channel_defaults_to_uint8">
+    <p>def <span class="ident">test_channel_defaults_to_uint8</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_channel.TestChannelResource.test_channel_defaults_to_uint8', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.tests.test_channel.TestChannelResource.test_channel_defaults_to_uint8" class="source">
+    <pre><code>def test_channel_defaults_to_uint8(self):
+    chan = ChannelResource('somechan', 'foo', 'bar')
+    self.assertEqual('uint8', chan.datatype)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.tests.test_channel.TestChannelResource.test_default_related_is_empty">
     <p>def <span class="ident">test_default_related_is_empty</span>(</p><p>self)</p>
     </div>
@@ -3272,6 +3331,27 @@ def tearDownClass(cls):
   
             
   <div class="item">
+    <div class="name def" id="intern.resource.boss.tests.test_channel.TestChannelResource.test_init_status_false">
+    <p>def <span class="ident">test_init_status_false</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_channel.TestChannelResource.test_init_status_false', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.tests.test_channel.TestChannelResource.test_init_status_false" class="source">
+    <pre><code>def test_init_status_false(self):
+    chan = ChannelResource('somechan', 'foo', 'bar')
+    self.assertFalse(chan.cutout_ready)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.resource.boss.tests.test_channel.TestChannelResource.test_related_list">
     <p>def <span class="ident">test_related_list</span>(</p><p>self)</p>
     </div>
@@ -3306,6 +3386,49 @@ def tearDownClass(cls):
     <pre><code>def test_related_string_stored_as_list(self):
     self.chan.related = 'foo'
     self.assertEqual(['foo'], self.chan.related)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.tests.test_channel.TestChannelResource.test_setting_datatype_means_cutout_ready">
+    <p>def <span class="ident">test_setting_datatype_means_cutout_ready</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_channel.TestChannelResource.test_setting_datatype_means_cutout_ready', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.tests.test_channel.TestChannelResource.test_setting_datatype_means_cutout_ready" class="source">
+    <pre><code>def test_setting_datatype_means_cutout_ready(self):
+    chan = ChannelResource('somechan', 'foo', 'bar')
+    chan.datatype = 'uint16'
+    self.assertTrue(chan.cutout_ready)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.resource.boss.tests.test_channel.TestChannelResource.test_setting_datatype_means_cutout_ready_at_construction">
+    <p>def <span class="ident">test_setting_datatype_means_cutout_ready_at_construction</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.resource.boss.tests.test_channel.TestChannelResource.test_setting_datatype_means_cutout_ready_at_construction', this);">Show source &equiv;</a></p>
+  <div id="source-intern.resource.boss.tests.test_channel.TestChannelResource.test_setting_datatype_means_cutout_ready_at_construction" class="source">
+    <pre><code>def test_setting_datatype_means_cutout_ready_at_construction(self):
+    chan = ChannelResource('somechan', 'foo', 'bar', datatype='uint8')
+    self.assertTrue(chan.cutout_ready)
 </code></pre>
   </div>
 </div>
