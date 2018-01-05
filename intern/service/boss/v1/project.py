@@ -1011,7 +1011,7 @@ class ProjectService_1(BaseVersion):
     def _get_channel(self, dict, coll_name, exp_name):
         chan_keys = [
             'name', 'description', 'creator', 'default_time_sample',
-            'datatype', 'base_resolution', 'type', 'sources', 'related'
+            'datatype', 'base_resolution', 'type', 'sources', 'related', 'downsample_status'
         ]
 
         filtered = { k:v for (k, v) in dict.items() if k in chan_keys }
