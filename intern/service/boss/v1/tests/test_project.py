@@ -357,7 +357,8 @@ class TestProject_v1(unittest.TestCase):
         dict = {
             'name': 'fire', 'description': 'walker',
             'experiment': 'exp1', 'creator': 'me', 'type': 'image',
-            'default_time_sample': 2, 'datatype': 'uint16', 'base_resolution': 0
+            'default_time_sample': 2, 'datatype': 'uint16', 
+            'base_resolution': 0, 'downsample_status': 'IN_PROGRESS'
         }
 
         actual = self.prj._create_resource_from_dict(chan, dict)
@@ -369,6 +370,7 @@ class TestProject_v1(unittest.TestCase):
         self.assertEqual(2, actual.default_time_sample)
         self.assertEqual('uint16', actual.datatype)
         self.assertEqual(0, actual.base_resolution)
+        self.assertEqual('IN_PROGRESS', actual.downsample_status)
         self.assertEqual(dict, actual.raw)
 
 
