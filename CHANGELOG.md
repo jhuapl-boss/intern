@@ -1,5 +1,19 @@
 # Change Log
 ____________
+## v0.9.6
+* Merged PR #14 from ben_dev - correctly populate downsample_status of ChannelResource.
+* Relaxed requests dependency to >= 2.11.1.
+
+## v0.9.5
+* Added BossRemote.get_channel() to ensure users use a fully specified channel with the cutout service.
+* Allow experiment time units to be unspecified.
+
+## v0.9.4
+* API v1
+* Fix recursion loop when breaking cutout into chunks.
+* Fix x-y mistake in chunking.
+* Coordinate frame hierarchy methods now `anisotropic` and `isotropic`.
+* Channels now have downsample_status.
 
 ## Sprint 7
 
