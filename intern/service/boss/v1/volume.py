@@ -137,7 +137,7 @@ class VolumeService_1(BaseVersion):
                 z_range[1] - z_range[0],
                 y_range[1] - y_range[0],
                 x_range[1] - x_range[0]
-            ))
+            ), dtype=resource.datatype)
 
             for b in blocks:
                 _data = self.get_cutout(
