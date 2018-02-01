@@ -70,7 +70,7 @@ class LocalRemote(Remote):
 		"""
 		return LocalResource.get_cutout(datastore, channelRes, res, xspan, yspan, zspan)
 
-	def get_channel(self, collection,channel,experiment=''):
+	def ChannelResource(self, collection,channel,experiment=''):
 		"""
 			Method to reques specific collection/channel/experiment where the data is located
 
