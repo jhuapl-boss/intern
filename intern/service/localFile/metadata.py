@@ -45,7 +45,7 @@ class MetadataService(Service):
             value = keys_vals.values()[i]
             resource.attrs.__setitem__(key,value)
             i = i+1
-        print 'Done creating metadata'
+        print('Done creating metadata')
 
     @classmethod
     def get(self, resource, keys):
@@ -92,7 +92,7 @@ class MetadataService(Service):
             value = keys_vals.values()[i]
             resource.attrs.modify(key,value)
             i = i+1
-        print 'Done updating metadata.'
+        print('Done updating metadata.')
 
     @classmethod
     def delete(self, resource, keys):
@@ -113,7 +113,7 @@ class MetadataService(Service):
         while i < keyN:
             resource.attrs.__delitem__(keys[i])
             i = i+1
-        print 'Done deleting.'
+        print('Done deleting.')
 
     @classmethod
     def list(self,resource):

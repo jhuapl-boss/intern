@@ -216,5 +216,5 @@ class LocalResource(Resource):
         """
 
         def printname(name):
-            print name
+            print(name)
         return userFind.visit(printname)
