@@ -162,7 +162,7 @@ class DvidService(Service):
 			Deletes a data instance of given dataname within the given UUID.
 		"""
 		# raise RuntimeError('One of your inputs is not correct')
-		del2 = requests. delete(api + "/api/repo/" + UUID + "/" + dataname + "?imsure=true")
+		del2 = requests.delete(api + "/api/repo/" + UUID + "/" + dataname + "?imsure=true")
 		return ("The instance: " + dataname + " within UUID: " + UUID + " has been successfully deleted.")
 
 	@classmethod
