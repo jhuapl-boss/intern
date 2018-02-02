@@ -112,46 +112,45 @@ class DvidResource(Resource):
         #Returns a 3-dimensional numpy array to the user
         return volumeOut
 
-    @classmethod
-    def get_cutoutI(self, api, chan, res, xspan, yspan, zspan):
-
-        """
-            ID MUST BE STRING ""
-            xpix = "x" how many pixels traveled in x
-            ypix = "y" how many pixels traveled in y
-            zpix = "z" how many pixels traveled in z
-            xo, yo, zo (x,y,z offsets)
-            type = "raw"
-            scale = "grayscale"
-        """
-        #Defining used variables
-        chan = chan.split("/")
-        UUID = chan[0]
-        exp = chan[2]
-
-        xpix = xspan[1]-xspan[0]
-        xo = xspan[0]
-        ypix = yspan[1]-yspan[0]
-        yo = yspan[0]
-        zpix = zspan[1]-zspan[0]
-        zo = zspan[0]
-
-        size = str(xpix) + "_" + str(ypix) + "_" + str(xpix)
-        offset = str(xo) + "_" + str(yo) + "_" + str(zo)
-
-        #User entered IP address with added octet-stream line to obtain data from api in octet-stream form
-        #0_1_2 specifies a 3 dimensional octet-stream "xy" "xz" "yz"
-        address = api + "/api/node/" + UUID + "/" + exp + "/raw/0_1_2/256_256_256/" + offset + "/octet-stream"
-        r = requests.get(address)
-        octet_stream = str(r.content)
-        dat = octet_stream.split("///////////////")
-        dat = dat[0]
-        print len(dat)
-        block = np.fromstring(dat, dtype = np.uint8)
-        volumeOut =  block.reshape(xpix,ypix,zpix)
-
-        #Returns a 3-dimensional numpy array to the user
-        return volumeOut
+    # @classmethod
+    # def get_cutoutI(self, api, chan, res, xspan, yspan, zspan):
+    #
+    #     """
+    #         ID MUST BE STRING ""
+    #         xpix = "x" how many pixels traveled in x
+    #         ypix = "y" how many pixels traveled in y
+    #         zpix = "z" how many pixels traveled in z
+    #         xo, yo, zo (x,y,z offsets)
+    #         type = "raw"
+    #         scale = "grayscale"
+    #     """
+    #     #Defining used variables
+    #     chan = chan.split("/")
+    #     UUID = chan[0]
+    #     exp = chan[2]
+    #
+    #     xpix = xspan[1]-xspan[0]
+    #     xo = xspan[0]
+    #     ypix = yspan[1]-yspan[0]
+    #     yo = yspan[0]
+    #     zpix = zspan[1]-zspan[0]
+    #     zo = zspan[0]
+    #
+    #     size = str(xpix) + "_" + str(ypix) + "_" + str(xpix)
+    #     offset = str(xo) + "_" + str(yo) + "_" + str(zo)
+    #
+    #     #User entered IP address with added octet-stream line to obtain data from api in octet-stream form
+    #     #0_1_2 specifies a 3 dimensional octet-stream "xy" "xz" "yz"
+    #     address = api + "/api/node/" + UUID + "/" + exp + "/raw/0_1_2/256_256_256/" + offset + "/octet-stream"
+    #     r = requests.get(address)
+    #     octet_stream = str(r.content)
+    #     dat = octet_stream.split("///////////////")
+    #     dat = dat[0]
+    #     block = np.fromstring(dat, dtype = np.uint8)
+    #     volumeOut =  block.reshape(xpix,ypix,zpix)
+    #
+    #     #Returns a 3-dimensional numpy array to the user
+    #     return volumeOut
 
     @classmethod
     def create_project(self, api, chan):
