@@ -4,5 +4,5 @@ blosc==1.4.4
 six
 mock
 nose2
-ast
+#ast
 h5py
