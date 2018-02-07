@@ -101,7 +101,8 @@ class DvidResource(Resource):
         #0_1_2 specifies a 3 dimensional octet-stream "xy" "xz" "yz"
         address = api + "/api/node/" + UUID + "/" + exp + "/raw/0_1_2/" + size + "/" + offset + "/octet-stream"
         r = requests.get(address)
-        octet_stream = str(r.content)
+        octet_stream = r.content
+        print("Grabbing your cutout...")
 
          #Converts obtained octet-stream into a numpy array of specified type uint8
         block = np.fromstring(octet_stream, dtype = np.uint8)
