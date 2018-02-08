@@ -44,6 +44,20 @@ class DVIDRemote(Remote):
 		global api
 		api = host + "://" + protocol
 
+	def StartLocalDvid(self, repoName, portName, port, imagePath):
+		"""
+            Method to spin up a local version of Dvid
+
+            Args:
+                repoName (str) : name of the repository docker container
+                portName (str) : name of the port where dvid will be Running
+                port (str) : Port where dvid will be Running
+                imagePath(str) : name of the path where data is located
+
+            Returns:
+                Str : all outputs from the command prompt
+		"""
+		return DvidResource.StartLocalDvid(repoName,portName,port,imagePath)
 
 	def get_UUID(self, ID, repos):
 		"""
@@ -61,7 +75,7 @@ class DVIDRemote(Remote):
 		"""
 		return DvidResource.get_UUID(ID,repos)
 
-	def get_channel(self, UUID, coll, exp = ""):
+	def get_channel(self, UUID_coll_exp):
 		"""
             Method to input all channel hierarchy requirememnts, works as a dummy
             for BossRemote Parallelism.
@@ -74,7 +88,7 @@ class DVIDRemote(Remote):
             Returns:
                 chan (str) : String of UUID/col/exp
 		"""
-		return DvidResource.get_channel(UUID,coll,exp)
+		return DvidResource.get_channel(UUID_coll_exp)
 
 	def get_cutout(self, chan, res, xspan, yspan, zspan):
 		"""
@@ -94,33 +108,13 @@ class DVIDRemote(Remote):
 		"""
 		return DvidResource.get_cutout(api, chan, res, xspan, yspan, zspan)
 
-	def get_cutoutI(self, chan, res, xspan, yspan, zspan):
-		"""
-			Method to request a volume of data from dvid server of data uploaded by intern
-
-			Args:
-				IDrepos (string) : UUID assigned to DVID repository and repository name
-				xspan (int) : range of pixels in x axis ([1000:1500])
-				yspan (int) : range of pixels in y axis ([1000:1500])
-				zspan (int) : range of pixels in z axis ([1000:1010])
-
-			Returns:
-				array: numpy array representation of the requested volume
-
-			Raises:
-				(KeyError): if given invalid version.
-		"""
-		return DvidResource.get_cutoutI(api, chan, res, xspan, yspan, zspan)
-
-
-	def create_project(self, chan):
+	def create_project(self, coll, des):
 		"""
 			Method to create a project space in the dvid server
 
 			Args:
-				typename (string): describes data type stored (labelblk, labelvol, imagetile)
-				dataname (string): user desired name of the instance
-				version (int): describes the version of the instance the user is creating (default: 0)
+				coll (str) : Name of collection
+				des (str) : Description of collection
 
 			Returns:
 				string: Confirmation message
@@ -128,18 +122,19 @@ class DVIDRemote(Remote):
 			Raises:
 				(KeyError): if given invalid version.
 		"""
-		return DvidResource.create_project(api, chan)
+		return DvidResource.create_project(api, coll, des)
 
-	def create_cutout(self, chan, xrang, yrang, zrang, volume):
+	def create_cutout(self, chan, portName, xrang, yrang, zrang, volume):
 		"""
 			Method to upload data onto the dvid server.
 
 			Args:
-				UUID (string): ID of the DVID repository where the instance is found
-				typename (string): type of data accepted by the project space
-				dataname (string): user assigned name of the project space
-				version (string): describes the version of the instance the user is creating (default: 0)
-				fileDir (string): direcotry to the file of png to upload
+                chan (str) : Project string which carries UUID, and channel name information
+                portName (str) : Name of the docker port from which the local dvid instance is running
+                xrang (str) : Start x value within the 3D space
+                yrang (str) : Start y value within the 3D space
+                zrang (str) : Start z value witinn the 3D space
+                volume (str) : Path to the data within the mounted docker file
 
 			Returns:
 				string: Confirmation message
@@ -147,23 +142,22 @@ class DVIDRemote(Remote):
 			Raises:
 				(KeyError): if given invalid version.
 		"""
-		return DvidResource.create_cutout(api, chan, xrang, yrang, zrang, volume)
+		return DvidResource.create_cutout(chan, portName, xrang, yrang, zrang, volume)
 
-	def ChannelResource(self, coll, exp, chan, des, datatype =  "uint8blk"):
+	def ChannelResource(self, UUID, exp, datatype =  "uint8blk"):
 		"""
 		Method to create a channel within specified collection, experiment and of a known datatype
 
 		Args:
-			Coll (str) : Alias of the UUID
+			UUID (str) : UUID
 			exp (str) : Name of the instance of data that will be created
-			des (str) : Description of what is saved under the given UUID
 			datatype (str) : Type of data that will be uploaded. Deafaults to uint8blk
 
 		Returns:
 			chan (str) : composed of UUID, exp and chan for use in create_cutout function
 		"""
 
-		return DvidResource.ChannelResource(api, coll, exp, chan, des, datatype)
+		return DvidResource.ChannelResource(api, UUID, exp, datatype)
 
 	def get_info(self, UUID):
 		"""

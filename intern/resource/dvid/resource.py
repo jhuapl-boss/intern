@@ -14,11 +14,11 @@
 
 from intern.resource import Resource
 from io import BytesIO
+from subprocess import call
 import numpy as np
 import requests
 import json
 import ast
-
 
 class DvidResource(Resource):
 
@@ -39,6 +39,25 @@ class DvidResource(Resource):
         Resource.__init__(self)
 
     @classmethod
+    def StartLocalDvid(self, repoName, portName, port, imagePath):
+        """
+            Method to spin up a local version of Dvid
+
+            Args:
+                repoName (str) : name of the repository docker container
+                portName (str) : name of the port where dvid will be Running
+                port (str) : Port where dvid will be Running
+                imagePath(str) : name of the path where data is located
+
+            Returns:
+                Str : all outputs from the command prompt
+        """
+        call(["docker", "pull", "flyem/dvid"])
+        call(["docker", "run", "-v", imagePath + ":/dataLoad/", "--name", repoName, "-d", "flyem/dvid"])
+        print("Running your container...")
+        call(["docker", "run", "--volumes-from", repoName, "-p", port + ":" + port, "--name", portName, "-t", "flyem/dvid"])
+
+    @classmethod
     def get_UUID(self, ID, repos):
 
         """
@@ -53,7 +72,7 @@ class DvidResource(Resource):
             return IDrepos
 
     @classmethod
-    def get_channel(self, UUID, coll, exp):
+    def get_channel(self, UUID_coll_exp):
         """
             Method to input all channel hierarchy requirememnts, works as a dummy
             for BossRemote Parallelism.
@@ -67,8 +86,7 @@ class DvidResource(Resource):
                 chan (str) : String of UUID/col/exp
         """
 
-        chan = UUID + "/" + coll + "/" + exp
-        return chan
+        return UUID_coll_exp
 
     @classmethod
     def get_cutout(self, api, chan, res, xspan, yspan, zspan):
@@ -114,89 +132,54 @@ class DvidResource(Resource):
         return volumeOut
 
     @classmethod
-    def get_cutoutI(self, api, chan, res, xspan, yspan, zspan):
-
-        """
-            ID MUST BE STRING ""
-            xpix = "x" how many pixels traveled in x
-            ypix = "y" how many pixels traveled in y
-            zpix = "z" how many pixels traveled in z
-            xo, yo, zo (x,y,z offsets)
-            type = "raw"
-            scale = "grayscale"
-        """
-        #Defining used variables
-        chan = chan.split("/")
-        UUID = chan[0]
-        exp = chan[2]
-
-        xpix = xspan[1]-xspan[0]
-        xo = xspan[0]
-        ypix = yspan[1]-yspan[0]
-        yo = yspan[0]
-        zpix = zspan[1]-zspan[0]
-        zo = zspan[0]
-
-        size = str(xpix) + "_" + str(ypix) + "_" + str(xpix)
-        offset = str(xo) + "_" + str(yo) + "_" + str(zo)
-
-        #User entered IP address with added octet-stream line to obtain data from api in octet-stream form
-        #0_1_2 specifies a 3 dimensional octet-stream "xy" "xz" "yz"
-        address = api + "/api/node/" + UUID + "/" + exp + "/raw/0_1_2/256_256_256/" + offset + "/octet-stream"
-        r = requests.get(address)
-        octet_stream = str(r.content)
-        dat = octet_stream.split("///////////////")
-        dat = dat[0]
-        print(len(dat))
-        block = np.fromstring(dat, dtype = np.uint8)
-        volumeOut =  block.reshape(xpix,ypix,zpix)
-
-        #Returns a 3-dimensional numpy array to the user
-        return volumeOut
-
-    @classmethod
-    def create_project(self, api, chan):
+    def create_project(self, api, coll, des):
 
         """
             Creates a repository for the data to be placed in.
             Returns randomly generated 32 character long UUID
         """
 
-        print("Your Channel/Collection/Experiment space has been created: " + str(chan))
-        return chan
-
-    @classmethod
-    def create_cutout(self, api, chan, xrang, yrang, zrang, volume):
-
-        """
-            Creates an instance which works as a sub-folder where the data is stored
-            Must specify:
-            dataname(required) = "example1"
-            version(required) = "1"
-            The size of the space reserved must be a cube with sides of multiples of 32
-        """
-        x = xrang[1] - xrang[0]
-        y = yrang[1] - yrang[0]
-        z = zrang[1] - zrang[0]
-
-        chan = chan.split("/")
-        UUID_exp = chan[0] + "/" + chan[1]
-        chan = chan[2]
-
-        volume = volume.tobytes()
-        dif = (x * y * x) - len(volume)
-        dataBytes = volume + str("".join((["/"] * dif)))
-
-        res = requests.post(
-            api + "/api/node/" + UUID_exp + "/raw/0_1_2/{}_{}_{}/{}_{}_{}".format(
-            x,y,x,xrang[0],yrang[0],zrang[1]
-            ),
-            data = dataBytes
+        r = requests.post(api + "/api/repos",
+            data = json.dumps({"Alias" : coll,
+                "Description" : des}
+                )
         )
-        print("Your data has been uploaded.")
+        r = str(r.content)
+        r = r.split("'")
+        r = r[1]
+        cont = ast.literal_eval(r)
+        UUID = cont["root"]
+        return UUID
 
     @classmethod
-    def ChannelResource(self, api, coll, exp, chan, des, datatype):
+    def create_cutout(self, chan, portName, xrang, yrang, zrang, volume):
+        """
+            Method to upload a cutout of data
+
+            Args:
+                chan (str) : Project string which carries UUID, and channel name information
+                portName (str) : Name of the docker port from which the local dvid instance is running
+                xrang (str) : Start x value within the 3D space
+                yrang (str) : Start y value within the 3D space
+                zrang (str) : Start z value witinn the 3D space
+                volume (str) : Path to the data within the mounted docker file
+
+            Retruns:
+                message (str) : Uploading Data... message
+
+        """
+        chan = chan.split("/")
+        UUID = str(chan[0])
+        print("Your data is uploading onto the UUID, please ignore the next timeout message!")
+        instanceName = str(chan[1])
+        xrang = str(xrang)
+        yrang = str(yrang)
+        zrang = str(zrang)
+        call(["docker", "exec", portName, "dvid", "node", UUID, instanceName, "load", xrang + "," + yrang + "," + zrang, "/dataLoad/" + volume])
+        return "Your data is uploading..."
+
+    @classmethod
+    def ChannelResource(self, api, UUID, exp, datatype):
         """
 		Method to create a channel within specified collection, experiment and of a known datatype
 
@@ -210,20 +193,12 @@ class DvidResource(Resource):
 			chan (str) : composed of UUID, exp and chan for use in create_cutout function
         """
 
-        a = requests.post(api + "/api/repos",
-            data = json.dumps({"Alias" : coll,
-                "Description" : des}
-                )
-        )
-        cont = ast.literal_eval(a.content)
-        UUID = cont["root"]
-
         dat1 = requests.post(api + "/api/repo/" + UUID + "/instance" ,
             data=json.dumps({"typename" : datatype,
                 "dataname" : exp,
                 "versioned" : "0"
             }))
-        chan = str(UUID) + "/" + str(exp) + "/" + str(chan)
+        chan = str(UUID) + "/" + str(exp)
         return chan
 
     @classmethod
