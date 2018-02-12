@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from intern.service.service import Service
+from subprocess import call
 import requests
 
 
