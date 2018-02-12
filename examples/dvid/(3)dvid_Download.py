@@ -10,7 +10,7 @@ dvid = DVIDRemote({
 
 chan = "UUID/ChannelName"
 volumeD = dvid.get_cutout(
-	dvid.get_channel(chan),0
+	dvid.get_channel(chan),0,
 	[0,2560],[0,2560],[390,392]
 	)
 print(volumeD)

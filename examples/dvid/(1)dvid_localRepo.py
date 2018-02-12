@@ -14,4 +14,4 @@ path = "/Users/rod/to/where/your/data/is"
 #Creating Local Dvid Repository
 #Specification include: name of container, container port,
 #and port number along with path
-repo = dvid.StartLocalDvid("xbrain_dvid9","xbrain_port9","8000",path)
+repo = dvid.StartLocalDvid("xbrain_dvid11","xbrain_port11","8000",path)
