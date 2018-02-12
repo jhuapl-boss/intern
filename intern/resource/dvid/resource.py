@@ -124,10 +124,11 @@ class DvidResource(Resource):
 
          #Converts obtained octet-stream into a numpy array of specified type uint8
         block = np.fromstring(octet_stream, dtype = np.uint8)
-
-        #Specifies the 3 dimensional shape of the numpy array of the size given by the user
-        volumeOut =  block.reshape(zpix,ypix,xpix)
-
+        try:
+            #Specifies the 3 dimensional shape of the numpy array of the size given by the user
+            volumeOut =  block.reshape(zpix,ypix,xpix)
+        except ValueError:
+            print("There is no data currently loaded on your specified host.")
         #Returns a 3-dimensional numpy array to the user
         return volumeOut
 
@@ -200,18 +201,3 @@ class DvidResource(Resource):
             }))
         chan = str(UUID) + "/" + str(exp)
         return chan
-
-    @classmethod
-    def delete_project(self, api, UUID):
-        """
-        Method to delete a project
-
-        Args:
-            UUID (str) : hexadecimal character long string characterizing the project
-
-        Returns:
-            (str) : Confirmation message
-        """
-
-        requests.delete(api + "/api/repo/" + UUID + "?imsure=true")
-        return "Your instance has been deleted"

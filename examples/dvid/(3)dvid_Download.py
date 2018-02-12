@@ -15,5 +15,5 @@ volumeD = dvid.get_cutout(
 	)
 print(volumeD)
 
-imgplot = plt.imshow(volumeD[0,:,:])
+imgplot = plt.imshow(volumeD[0,:,:], cmap = "gray")
 plt.show()

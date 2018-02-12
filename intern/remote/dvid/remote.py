@@ -308,6 +308,19 @@ class DVIDRemote(Remote):
 
 		return DvidService.delete_data(api, UUID, dataname)
 
+	def StopLocalDvid(self, repoName, portName):
+		"""
+			Method to stop local Dvid repository
+
+			Args:
+				repoName (str) :
+				portName (str) :
+
+			Returns:
+				Confirmation message (str)
+		"""
+		return DvidService.StopLocalDvid(repoName, portName)
+
 	def change_server_setting(self,gc1,throt1):
 		"""
 		NOT IMPLEMENTED

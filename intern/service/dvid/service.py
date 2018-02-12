@@ -151,7 +151,13 @@ class DvidService(Service):
 	@classmethod
 	def delete_project(self, api, UUID):
 		"""
-			Deletes the repository holding a node with the given UUID.
+        Method to delete a project
+
+        Args:
+            UUID (str) : hexadecimal character long string characterizing the project
+
+        Returns:
+            (str) : Confirmation message
 		"""
 		del1 = requests.delete(api + "/api/repo/" + UUID + "?imsure=true")
 		return ("The repository with UUID: " + UUID + " has been successfully deleted.")
@@ -164,6 +170,22 @@ class DvidService(Service):
 		# raise RuntimeError('One of your inputs is not correct')
 		del2 = requests. delete(api + "/api/repo/" + UUID + "/" + dataname + "?imsure=true")
 		return ("The instance: " + dataname + " within UUID: " + UUID + " has been successfully deleted.")
+
+	@classmethod
+	def StopLocalDvid(self, repoName, portName):
+		"""
+			Method to stop local Dvid repository
+
+			Args:
+				repoName (str) :
+				portName (str) :
+
+			Returns:
+				Confirmation message (str)
+		"""
+		call(["docker", "stop", repoName])
+		call(["docker", "stop", portName])
+		return "You're Dvid instance is no longer running."
 
 	@classmethod
 	def change_server_setting(self,api,gc1,throt1):
