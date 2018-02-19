@@ -186,7 +186,7 @@ class DvidService(Service):
 		"""
 		call(["docker", "stop", repoName])
 		call(["docker", "stop", portName])
-		return "You're Dvid instance is no longer running."
+		return "Your Dvid instance is no longer running."
 
 	@classmethod
 	def change_server_setting(self,api,gc1,throt1):
