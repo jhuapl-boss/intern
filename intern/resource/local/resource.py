@@ -19,11 +19,11 @@ import h5py
 
 class LocalResource(Resource):
 
-    """Base class for LocalFile resources.
+    """Base class for LocalHDF5 resources.
 
     Attributes:
         name (string): Name of resource.  Used as identifier when talking to
-        the LocalFile database.
+        the LocalHDF5 database.
         description (string): Text description of resource.
         creator (string): Resource creator.
         raw (dictionary): Holds JSON data returned by DVID on a POST (create) or GET operation.
@@ -36,7 +36,7 @@ class LocalResource(Resource):
         Resource.__init__(self)
 
     @classmethod
-    def create_LocalFile(self,filePath,fileName):
+    def create_LocalHDF5(self,filePath,fileName):
 
         """
             Method to create a local HDF5 datastore. This method is not necessary as the remote

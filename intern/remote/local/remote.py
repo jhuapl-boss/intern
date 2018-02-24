@@ -14,8 +14,8 @@
 # limitations under the License.
 """
 from intern.remote import Remote
-from intern.resource.localFile.resource import *
-from intern.service.localFile.metadata import MetadataService
+from intern.resource.local.resource import *
+from intern.service.local.metadata import MetadataService
 import os.path
 
 LATEST_VERSION = 'v0'
@@ -33,6 +33,7 @@ class LocalRemote(Remote):
 			Checks for latest version. If no version is given, assigns version as none
 			Protocol and host specifications are taken in as keys -values of dictionary.
 			global hos and datastore values are assigned.
+			If the data store initialized does not exist the remote will create a new one.
 		"""
 
 		if version is None:
@@ -48,7 +49,7 @@ class LocalRemote(Remote):
 		if os.path.isfile(filePath + datastore + ".hdf5") == True:
 			datastore = h5py.File(filePath + datastore + ".hdf5")
 		else:
-			datastore = LocalResource.create_LocalFile(filePath,datastore)
+			datastore = LocalResource.create_LocalHDF5(filePath,datastore)
 			print("Your data store did not exist, so we created one.")
 
 	def get_cutout(self, channelRes, res, xspan, yspan, zspan):
@@ -89,7 +90,7 @@ class LocalRemote(Remote):
 
 	def create_collection(self, groupName):
 		"""
-			Method to create a group space within local HDF5 datastore
+			Method to create a group space within local HDF5 datastore (collection)
 
 			Args:
 				groupName (string) : Desired name of the group which will be categorized 'collection'
@@ -101,7 +102,7 @@ class LocalRemote(Remote):
 
 	def create_channel(self, groupName, subGroup):
 		"""
-			Method to create a sub-group space within local HDF5 datastore
+			Method to create a sub-group space within local HDF5 datastore (channel)
 
 			Args:
 				groupName (string) : name of the group (collection) this sub-group (channel) will be created in
@@ -114,7 +115,7 @@ class LocalRemote(Remote):
 
 	def create_project(self, chan_setup):
 		"""
-			Method to reques specific collection/channel/experiment where the data is located
+			Method to request specific collection/channel/experiment where the data is located
 
 			Args:
 				collection (string) : name of collection

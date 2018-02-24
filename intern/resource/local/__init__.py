@@ -1,4 +1,3 @@
-"""
 # Copyright 2017 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Author:
-	Luis Rodriguez
-"""
+"""local HDF5 specific resource objects that are passed to intern.service.Service methods.
 
-from intern.remote.localFile.remote import LocalRemote
+Author:
+    Luis Rodriguez
+"""
+from intern.resource.local.resource import LocalResource

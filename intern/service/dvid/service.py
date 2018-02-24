@@ -21,7 +21,6 @@ class DvidService(Service):
 
 	"""
 		Partial implementation of intern.service.service.Service for the Dvid' services.
-
 	"""
 
 	def __init__(self):
@@ -33,6 +32,15 @@ class DvidService(Service):
 		"""
 			Returns JSON for just the repository with given root UUID.  The UUID string can be
 			shortened as long as it is uniquely identifiable across the managed repositories.
+
+			Args:
+				UUID (string): UUID of the DVID repository (str)
+
+			Returns:
+				string: History information of the repository
+
+			Raises:
+				(KeyError): if given invalid version.
 		"""
 		if UUID is '':
 			raise ValueError('The UUID was not specified')
@@ -48,6 +56,15 @@ class DvidService(Service):
 			The log is a list of strings that will be appended to the repo's log.  They should be
 			descriptions for the entire repo and not just one node.  For particular versions, use
 			node-level logging (below).
+
+			Args:
+			    UUID (string): UUID of the DVID repository (str)
+
+			Returns:
+			    string: list of all log recordings related to the DVID repository
+
+			Raises:
+			    (KeyError): if given invalid version.
 		"""
 		if UUID is '':
 			raise ValueError('The UUID was not specified')
@@ -62,6 +79,15 @@ class DvidService(Service):
 		"""
 			Allows the user to write a short description of the content in the repository
 			{ "log": [ "provenance data...", "provenance data...", ...] }
+			Args:
+			    UUID (string): UUID of the DVID repository (str)
+			    log1 (string): Message to record on the repositories history log (str)
+
+			Returns:
+			    string: Confirmation message
+
+			Raises:
+			    (KeyError): if given invalid version.
 		"""
 
 		if  UUID is '':
@@ -108,7 +134,7 @@ class DvidService(Service):
 			Creates a conflict-free merge of a set of committed parent UUIDs into a child.  Note
 			the merge will not necessarily create an error immediately, but later GETs that
 			detect conflicts will produce an error at that time.  These can be resolved by
-			doing a POST on the "resolve" endpoint below.
+			doing a POST on the "resolve" endpoint below. -DVID
 
 			"mergeType": "conflict-free",
 			"parents": [ "parent-uuid1", "parent-uuid2", ... ],
@@ -129,12 +155,7 @@ class DvidService(Service):
 		"""
 			Forces a merge of a set of committed parent UUIDs into a child by specifying a
 			UUID order that establishes priorities in case of conflicts (see "parents" description
-			below.
-
-			Unlike the very fast but lazily-enforced 'merge' endpoint, this request spawns an
-			asynchronous routine that checks all data for the given data instances (see "data" in
-			JSON post), creates versions to delete conflicts, and then performs the conflict-free
-			merge to a final child.
+			below. -DVID
 
 			"data": [ "instance-name-1", "instance-name2", ... ],
 			"parents": [ "parent-uuid1", "parent-uuid2", ... ],
@@ -202,7 +223,7 @@ class DvidService(Service):
 			            request that can affect overall request latency.
 			            See: https://golang.org/pkg/runtime/debug/#SetGCPercent
 			throttle  Maximum number of CPU-intensive requests that can be executed under throttle mode.
-			            See imageblk and labelblk GET 3d voxels and POST voxels.
+			            See imageblk and labelblk GET 3d voxels and POST voxels. -DVID Team
 		"""
 
 		setting = requests.post(api,

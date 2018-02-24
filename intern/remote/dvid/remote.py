@@ -40,7 +40,6 @@ class DVIDRemote(Remote):
 		protocol = specs[CONFIG_HOST]
 		host = specs[CONFIG_PROTOCOL]
 
-
 		global api
 		api = host + "://" + protocol
 
@@ -81,9 +80,7 @@ class DVIDRemote(Remote):
             for BossRemote Parallelism.
 
             Args:
-                UUID (str) : Root UUID of the repository
-                col (str) : Name of collection
-                exp (str) : Name of experiment
+                UUID_coll_exp (str) : Root UUID of the repository along with collection and experiment
 
             Returns:
                 chan (str) : String of UUID/col/exp

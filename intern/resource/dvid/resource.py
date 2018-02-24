@@ -134,7 +134,6 @@ class DvidResource(Resource):
 
     @classmethod
     def create_project(self, api, coll, des):
-
         """
             Creates a repository for the data to be placed in.
             Returns randomly generated 32 character long UUID
