@@ -1,5 +1,5 @@
 import intern
-from intern.remote.localFile import LocalRemote
+from intern.remote.local import LocalRemote
 from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import ChannelResource
 import matplotlib.pyplot as plt
@@ -49,8 +49,8 @@ chan_setup = local.get_channel('FlyBrain','testSet2')
 proj = local.create_project(chan_setup)
 
 #Additional possible functions
-print 'This is a list of all the posible files you can access within this local datastore:'
-print local.list()
+print('This is a list of all the posible files you can access within this local datastore:')
+print(local.list())
 
-print 'Using local.retrieve you can get the HDF5 dataset saved on the requested path:'
-print local.retrieve('em/pinky40/v1')
+print('Using local.retrieve you can get the HDF5 dataset saved on the requested path:')
+print(local.retrieve('em/pinky40/v1'))

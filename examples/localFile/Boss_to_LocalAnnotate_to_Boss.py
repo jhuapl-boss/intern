@@ -1,5 +1,5 @@
 import intern
-from intern.remote.localFile import LocalRemote
+from intern.remote.local import LocalRemote
 from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import *
 import matplotlib.pyplot as plt
