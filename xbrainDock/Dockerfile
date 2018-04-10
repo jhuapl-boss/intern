@@ -18,7 +18,7 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubunt
 RUN apt-get update
 RUN apt-get install -y docker-ce
 
-RUN echo dothisagain
+#RUN echo dothisagain
 #XBrain section with intern
 RUN git clone https://github.com/aplbrain/intern.git && cd intern && git checkout RemoteExtension && git pull && python3 setup.py install --user
 

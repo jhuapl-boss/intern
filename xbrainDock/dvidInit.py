@@ -1,3 +1,5 @@
+from subprocess import call
+
 #This path leads to where your data is stored.
 imagePath = "./publicData/proj4"
 
