@@ -18,17 +18,12 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubunt
 RUN apt-get update
 RUN apt-get install -y docker-ce
 
-#RUN echo dothisagain
 #XBrain section with intern
 RUN git clone https://github.com/aplbrain/intern.git && cd intern && git checkout RemoteExtension && git pull && python3 setup.py install --user
-
-#Create a local dvid repository in docker container.
-RUN cd intern/xbrainDock/ && python3 dvidInit.py && python3 xBrainUpload.py
 
 #Xbrain workflow dependencies.
 RUN conda install --yes -c ilastik-forge ilastik-dependencies-no-solvers
 RUN conda install --yes --force libgfortran
-
 RUN pip install mahotas
 RUN conda install --yes --force scipy
 RUN pip install ndparse
