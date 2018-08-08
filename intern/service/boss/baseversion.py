@@ -147,7 +147,7 @@ class BaseVersion(object):
         return urlWithKey + '&value=' + str(value)
 
     def build_cutout_url(
-        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache):
+        self, resource, url_prefix, resolution, x_range, y_range, z_range, no_cache, time_range=None, id_list=[]):
         """Build the url to access the cutout function of the Boss' volume service.
 
         Args:
@@ -181,8 +181,8 @@ class BaseVersion(object):
         if len(id_list) > 0:
             urlWithParams += '?filter=' + self.convert_int_list_to_comma_sep_str(id_list)
 
-        if no_cash:
-            urlWithParams += 'no-cache=true' + '/' 
+        if no_cache:
+            urlWithParams += '?no-cache=true' + '/' 
 
         return urlWithParams
 
@@ -253,7 +253,7 @@ class BaseVersion(object):
 
     def get_cutout_request(
         self, resource, method, content, url_prefix, token,
-        resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[], no_cache=False):
+        resolution, x_range, y_range, z_range, time_range, no_cache=False, numpyVolume=None, id_list=[]):
 
         """Create a request for working with cutouts (part of the Boss' volume service).
 
@@ -278,7 +278,7 @@ class BaseVersion(object):
             RuntimeError if url_prefix is None or an empty string.
         """
         url = self.build_cutout_url(
-            resource, url_prefix, resolution, x_range, y_range, z_range, time_range, id_list, no_cache)
+            resource, url_prefix, resolution, x_range, y_range, z_range, no_cache, time_range,  id_list)
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = numpyVolume)
 
