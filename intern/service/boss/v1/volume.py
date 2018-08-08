@@ -111,6 +111,7 @@ class VolumeService_1(BaseVersion):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
+            no_cache (optional [boolean]): specifies the use of cache to be True or False. 
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.

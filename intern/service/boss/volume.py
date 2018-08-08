@@ -91,6 +91,7 @@ class VolumeService(BossService):
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
             id_list (optional [list[int]]): list of object ids to filter the cutout by.
+            no_cache (optional [boolean]): specifies the use of cache to be True or False. 
 
         Returns:
             (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
