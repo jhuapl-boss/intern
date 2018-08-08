@@ -147,7 +147,7 @@ class BaseVersion(object):
         return urlWithKey + '&value=' + str(value)
 
     def build_cutout_url(
-        self, resource, url_prefix, resolution, x_range, y_range, z_range, no_cache, time_range=None, id_list=[]):
+        self, resource, url_prefix, resolution, x_range, y_range, z_range,  time_range=None, id_list=[], no_cache=False):
         """Build the url to access the cutout function of the Boss' volume service.
 
         Args:
@@ -278,7 +278,7 @@ class BaseVersion(object):
             RuntimeError if url_prefix is None or an empty string.
         """
         url = self.build_cutout_url(
-            resource, url_prefix, resolution, x_range, y_range, z_range, no_cache, time_range,  id_list)
+            resource, url_prefix, resolution, x_range, y_range, z_range, time_range,  id_list, no_cache)
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = numpyVolume)
 
