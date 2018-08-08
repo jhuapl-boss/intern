@@ -253,7 +253,7 @@ class BaseVersion(object):
 
     def get_cutout_request(
         self, resource, method, content, url_prefix, token,
-        resolution, x_range, y_range, z_range, time_range, no_cache=False, numpyVolume=None, id_list=[]):
+        resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[], no_cache=False,):
 
         """Create a request for working with cutouts (part of the Boss' volume service).
 
