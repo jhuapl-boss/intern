@@ -93,7 +93,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts
+            url_prefix, auth, session, send_opts, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -157,7 +157,7 @@ class VolumeService_1(BaseVersion):
             resource, 'GET', 'application/blosc',
             url_prefix, auth,
             resolution, x_range, y_range, z_range, time_range,
-            id_list=id_list
+            id_list=id_list, **kwargs
         )
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
