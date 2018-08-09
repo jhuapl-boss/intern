@@ -853,6 +853,11 @@ class BossRemote(Remote):
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
             """Get a cutout from the volume service.
 
+            Note that no_cache=True is desirable when reading large amounts of
+            data at once.  In these cases, the data is not first read into the
+            cache, but instead, is sent directly from the data store to the
+            requester.
+
             Args:
                 resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
                 resolution (int): 0 indicates native resolution.
