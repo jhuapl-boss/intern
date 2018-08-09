@@ -1924,6 +1924,33 @@ class BossRemote(Remote):
         """
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
+
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
+            """Get a cutout from the volume service.
+
+            Note that no_cache=True is desirable when reading large amounts of
+            data at once.  In these cases, the data is not first read into the
+            cache, but instead, is sent directly from the data store to the
+            requester.
+
+            Args:
+                resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
+                resolution (int): 0 indicates native resolution.
+                x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+                y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+                z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+                time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+                id_list (optional [list[int]]): list of object ids to filter the cutout by.
+                no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+
+            Returns:
+                (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
+
+            Raises:
+                requests.HTTPError on error.
+            """
+
+            return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
 </code></pre>
   </div>
 
@@ -2824,6 +2851,33 @@ class BossRemote(Remote):
         """
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
+
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
+            """Get a cutout from the volume service.
+
+            Note that no_cache=True is desirable when reading large amounts of
+            data at once.  In these cases, the data is not first read into the
+            cache, but instead, is sent directly from the data store to the
+            requester.
+
+            Args:
+                resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
+                resolution (int): 0 indicates native resolution.
+                x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+                y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+                z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+                time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+                id_list (optional [list[int]]): list of object ids to filter the cutout by.
+                no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+
+            Returns:
+                (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
+
+            Raises:
+                requests.HTTPError on error.
+            """
+
+            return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
 </code></pre>
   </div>
 </div>
@@ -3742,47 +3796,50 @@ returned is cuboid aligned.</p>
     
   
     <div class="desc"><p>Get a cutout from the volume service.</p>
+<p>Note that no_cache=True is desirable when reading large amounts of<br />
+data at once.  In these cases, the data is not first read into the<br />
+cache, but instead, is sent directly from the data store to the<br />
+requester.</p>
 <p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.Resource)</b>: Resource compatible with cutout operations.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.resource.ChannelResource)</b>: Channel or layer resource.<br />
 &emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
 &emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
-&emsp;&emsp;&emsp;&emsp;<b>id_list (optional [list])</b>: list of object ids to filter the cutout by.</p>
+&emsp;&emsp;&emsp;&emsp;<b>id_list (optional [list[int]])</b>: list of object ids to filter the cutout by.<br />
 &emsp;&emsp;&emsp;&emsp;<b>no_cache (optional [boolean])</b>: specifies the use of cache to be True or False. </p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<p>&emsp;&emsp;&emsp;&emsp;<b>()</b>: Return type depends on volume service's implementation.</p>
+<p>&emsp;&emsp;&emsp;&emsp;<b>(numpy.array)</b>: A 3D or 4D (time) numpy matrix in (time)ZYX order.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>RuntimeError when given invalid resource.
-Other exceptions may be raised depending on the volume service's implementation.
+<pre><code>requests.HTTPError on error.
 </code></pre></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_cutout', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.get_cutout" class="source">
-    <pre><code>def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
-    """Get a cutout from the volume service.
-    Args:
-        resource (intern.resource.Resource): Resource compatible with cutout operations.
-        resolution (int): 0 indicates native resolution.
-        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-        id_list (optional [list]): list of object ids to filter the cutout by.
-        no_cache (optional [boolean]): specifies the use of cache to be True or False. 
-    Returns:
-        (): Return type depends on volume service's implementation.
-    Raises:
-        RuntimeError when given invalid resource.
-        Other exceptions may be raised depending on the volume service's implementation.
-    """
-    if not resource.valid_volume():
-        raise RuntimeError('Resource incompatible with the volume service.')
-    return self._volume.get_cutout(
-        resource, resolution, x_range, y_range, z_range, time_range, id_list)
+    <pre><code>def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
+        """Get a cutout from the volume service.
+        Note that no_cache=True is desirable when reading large amounts of
+        data at once.  In these cases, the data is not first read into the
+        cache, but instead, is sent directly from the data store to the
+        requester.
+        Args:
+            resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            id_list (optional [list[int]]): list of object ids to filter the cutout by.
+            no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+        Returns:
+            (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
+        Raises:
+            requests.HTTPError on error.
+        """
+        return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
 </code></pre>
   </div>
 </div>

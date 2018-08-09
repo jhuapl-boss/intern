@@ -1128,7 +1128,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts
+            url_prefix, auth, session, send_opts, no_cache=False, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -1146,6 +1146,7 @@ class VolumeService_1(BaseVersion):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
+            no_cache (optional [boolean]): specifies the use of cache to be True or False. 
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
@@ -1172,7 +1173,7 @@ class VolumeService_1(BaseVersion):
                 z_range[1] - z_range[0],
                 y_range[1] - y_range[0],
                 x_range[1] - x_range[0]
-            ))
+            ), dtype=resource.datatype)
 
             for b in blocks:
                 _data = self.get_cutout(
@@ -1192,7 +1193,7 @@ class VolumeService_1(BaseVersion):
             resource, 'GET', 'application/blosc',
             url_prefix, auth,
             resolution, x_range, y_range, z_range, time_range,
-            id_list=id_list
+            id_list=id_list, no_cache=no_cache, **kwargs
         )
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
@@ -1450,7 +1451,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts
+            url_prefix, auth, session, send_opts, no_cache=False, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -1468,6 +1469,7 @@ class VolumeService_1(BaseVersion):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
+            no_cache (optional [boolean]): specifies the use of cache to be True or False. 
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
@@ -1494,7 +1496,7 @@ class VolumeService_1(BaseVersion):
                 z_range[1] - z_range[0],
                 y_range[1] - y_range[0],
                 x_range[1] - x_range[0]
-            ))
+            ), dtype=resource.datatype)
 
             for b in blocks:
                 _data = self.get_cutout(
@@ -1514,7 +1516,7 @@ class VolumeService_1(BaseVersion):
             resource, 'GET', 'application/blosc',
             url_prefix, auth,
             resolution, x_range, y_range, z_range, time_range,
-            id_list=id_list
+            id_list=id_list, no_cache=no_cache, **kwargs
         )
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
@@ -1721,7 +1723,7 @@ class VolumeService_1(BaseVersion):
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v1.volume.VolumeService_1.build_cutout_url">
-    <p>def <span class="ident">build_cutout_url</span>(</p><p>self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[])</p>
+    <p>def <span class="ident">build_cutout_url</span>(</p><p>self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False)</p>
     </div>
     
 
@@ -1746,7 +1748,7 @@ class VolumeService_1(BaseVersion):
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v1.volume.VolumeService_1.build_cutout_url', this);">Show source &equiv;</a></p>
   <div id="source-intern.service.boss.v1.volume.VolumeService_1.build_cutout_url" class="source">
     <pre><code>def build_cutout_url(
-    self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
+    self, resource, url_prefix, resolution, x_range, y_range, z_range,  time_range=None, id_list=[], no_cache=False):
     """Build the url to access the cutout function of the Boss' volume service.
     Args:
         url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
@@ -1773,6 +1775,8 @@ class VolumeService_1(BaseVersion):
         urlWithParams += t_rng_lst + '/'
     if len(id_list) > 0:
         urlWithParams += '?filter=' + self.convert_int_list_to_comma_sep_str(id_list)
+    if no_cache:
+        urlWithParams += '?no-cache=true' + '/' 
     return urlWithParams
 </code></pre>
   </div>
@@ -2257,7 +2261,7 @@ returned is cuboid aligned.</p>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v1.volume.VolumeService_1.get_cutout">
-    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range, id_list, url_prefix, auth, session, send_opts)</p>
+    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range, id_list, url_prefix, auth, session, send_opts, no_cache=False, **kwargs)</p>
     </div>
     
 
@@ -2276,7 +2280,8 @@ returned is cuboid aligned.</p>
 &emsp;&emsp;&emsp;&emsp;<b>url_prefix (string)</b>: Protocol + host such as https://api.theboss.io<br />
 &emsp;&emsp;&emsp;&emsp;<b>auth (string)</b>: Token to send in the request header.<br />
 &emsp;&emsp;&emsp;&emsp;<b>session (requests.Session)</b>: HTTP session to use for request.<br />
-&emsp;&emsp;&emsp;&emsp;<b>send_opts (dictionary)</b>: Additional arguments to pass to session.send().</p>
+&emsp;&emsp;&emsp;&emsp;<b>send_opts (dictionary)</b>: Additional arguments to pass to session.send().<br />
+&emsp;&emsp;&emsp;&emsp;<b>no_cache (optional [boolean])</b>: specifies the use of cache to be True or False. </p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(numpy.array)</b>: A 3D or 4D numpy matrix in ZXY(time) order.</p>
@@ -2289,7 +2294,7 @@ returned is cuboid aligned.</p>
   <div id="source-intern.service.boss.v1.volume.VolumeService_1.get_cutout" class="source">
     <pre><code>def get_cutout(
         self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-        url_prefix, auth, session, send_opts
+        url_prefix, auth, session, send_opts, no_cache=False, **kwargs
     ):
     """
     Upload a cutout to the Boss data store.
@@ -2306,6 +2311,7 @@ returned is cuboid aligned.</p>
         auth (string): Token to send in the request header.
         session (requests.Session): HTTP session to use for request.
         send_opts (dictionary): Additional arguments to pass to session.send().
+        no_cache (optional [boolean]): specifies the use of cache to be True or False. 
     Returns:
         (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
     Raises:
@@ -2328,7 +2334,7 @@ returned is cuboid aligned.</p>
             z_range[1] - z_range[0],
             y_range[1] - y_range[0],
             x_range[1] - x_range[0]
-        ))
+        ), dtype=resource.datatype)
         for b in blocks:
             _data = self.get_cutout(
                 resource, resolution, b[0], b[1], b[2],
@@ -2344,7 +2350,7 @@ returned is cuboid aligned.</p>
         resource, 'GET', 'application/blosc',
         url_prefix, auth,
         resolution, x_range, y_range, z_range, time_range,
-        id_list=id_list
+        id_list=id_list, no_cache=no_cache, **kwargs
     )
     prep = session.prepare_request(req)
     # Hack in Accept header for now.
@@ -2380,7 +2386,7 @@ returned is cuboid aligned.</p>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v1.volume.VolumeService_1.get_cutout_request">
-    <p>def <span class="ident">get_cutout_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[])</p>
+    <p>def <span class="ident">get_cutout_request</span>(</p><p>self, resource, method, content, url_prefix, token, resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[], no_cache=False)</p>
     </div>
     
 
@@ -2412,7 +2418,7 @@ returned is cuboid aligned.</p>
   <div id="source-intern.service.boss.v1.volume.VolumeService_1.get_cutout_request" class="source">
     <pre><code>def get_cutout_request(
     self, resource, method, content, url_prefix, token,
-    resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[]):
+    resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[], no_cache=False,):
     """Create a request for working with cutouts (part of the Boss' volume service).
     Args:
         resource (intern.resource.boss.BossResource): Resource to perform operation on.
@@ -2433,7 +2439,7 @@ returned is cuboid aligned.</p>
         RuntimeError if url_prefix is None or an empty string.
     """
     url = self.build_cutout_url(
-        resource, url_prefix, resolution, x_range, y_range, z_range, time_range, id_list)
+        resource, url_prefix, resolution, x_range, y_range, z_range, time_range,  id_list, no_cache)
     headers = self.get_headers(content, token)
     return Request(method, url, headers = headers, data = numpyVolume)
 </code></pre>

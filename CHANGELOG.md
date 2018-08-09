@@ -1,5 +1,8 @@
 # Change Log
 ____________
+## v0.9.7
+* Added new no-cache option to the get_cutout(... no_cache=True)  This option will pull directly from the S3.  It should be used when reading large amounts of data at once.  Using this option can also increase throughput as the cache can become a bottleneck if a large amount of data is cycled through the cache.
+
 ## v0.9.6
 * Merged PR #14 from ben_dev - correctly populate downsample_status of ChannelResource.
 * Relaxed requests dependency to >= 2.11.1.
