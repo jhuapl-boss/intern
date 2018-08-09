@@ -125,7 +125,7 @@ class Remote(object):
         """
         return self._project.list(**kwargs)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], **kwargs):
         """Get a cutout from the volume service.
 
         Args:
@@ -148,7 +148,7 @@ class Remote(object):
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.get_cutout(
-            resource, resolution, x_range, y_range, z_range, time_range, id_list)
+            resource, resolution, x_range, y_range, z_range, time_range, id_list, **kwargs)
 
     def create_cutout(self, resource, resolution, x_range, y_range, z_range, data, time_range=None):
         """Upload a cutout to the volume service.
