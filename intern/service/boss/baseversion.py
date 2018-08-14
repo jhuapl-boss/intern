@@ -182,7 +182,7 @@ class BaseVersion(object):
             urlWithParams += '?filter=' + self.convert_int_list_to_comma_sep_str(id_list)
 
         if no_cache:
-            urlWithParams += '?no-cache=true' + '/' 
+            urlWithParams += '?no-cache=true'
 
         return urlWithParams
 
