@@ -17,6 +17,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
             sudo pip install --user tox tox-pyenv
             pyenv local 2.7.10 3.4.3 3.5.1
             sudo pip install --user -r requirements.txt
