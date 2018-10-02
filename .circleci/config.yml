@@ -28,7 +28,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            nosetests .
+            nose2 .
 
       - store_artifacts:
           path: test-reports
