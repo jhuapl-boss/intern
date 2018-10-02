@@ -1,0 +1,56 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
+      - image: circleci/python:3.6.4
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "requirements.txt" }}
+            - cache-
+
+      - run:
+          name: install dependencies
+          command: |
+            pip install tox tox-pyenv
+            pyenv local 2.7.10 3.4.3 3.5.1
+            pip install -r requirements.txt
+
+
+      - save_cache:
+          paths:
+            - ~/.local
+            - ~/.cache
+          key: cache-{{ checksum "requirements.txt" }}
+
+      # run tests!
+      # this example uses Django's built-in test-runner
+      # other common Python testing frameworks include pytest and nose
+      # https://pytest.org
+      # https://nose.readthedocs.io
+      - run:
+          name: run tests
+          command: |
+            tox
+
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
+
