@@ -31,7 +31,7 @@ jobs:
           command: |
             pip install tox tox-pyenv
             pyenv local 2.7.10 3.4.3 3.5.1
-            sudo pip install -r requirements.txt
+            pip install --user -r requirements.txt
 
 
       - save_cache:
