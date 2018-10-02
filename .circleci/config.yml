@@ -18,6 +18,7 @@ jobs:
           name: install dependencies
           command: |
             sudo pip install -r requirements.txt
+            sudo pip install -U .
 
       - save_cache:
           paths:
@@ -28,7 +29,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            nose2 .
+            nose2 intern
 
       - store_artifacts:
           path: test-reports
