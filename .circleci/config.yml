@@ -30,7 +30,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            tox
+            nosetests .
 
       - store_artifacts:
           path: test-reports
