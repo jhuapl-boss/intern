@@ -1925,7 +1925,7 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
             """Get a cutout from the volume service.
 
             Note that no_cache=True is desirable when reading large amounts of
@@ -2852,7 +2852,7 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
             """Get a cutout from the volume service.
 
             Note that no_cache=True is desirable when reading large amounts of
@@ -3789,7 +3789,7 @@ returned is cuboid aligned.</p>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.remote.BossRemote.get_cutout">
-    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs)</p>
+    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs)</p>
     </div>
     
 
@@ -3819,7 +3819,7 @@ requester.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_cutout', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote.BossRemote.get_cutout" class="source">
-    <pre><code>def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
+    <pre><code>def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
         """Get a cutout from the volume service.
         Note that no_cache=True is desirable when reading large amounts of
         data at once.  In these cases, the data is not first read into the
