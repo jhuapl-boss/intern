@@ -54,7 +54,7 @@ class RemoteConfigTest(unittest.TestCase):
 
     def test_init_with_missing_file(self):
         """Test when a non-existent config file is provided"""
-        with self.assertRaises(IOError):
+        with self.assertRaises(OSError):
             rmt = BossRemote('nofile.cfg')
 
     def test_init_with_malformed_file(self):
