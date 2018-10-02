@@ -17,8 +17,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pip install -r requirements.txt
-            # pyenv local 2.7.10 3.4.3 3.5.1
+            sudo pip install -r requirements.txt
 
       - save_cache:
           paths:
