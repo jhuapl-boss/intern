@@ -850,7 +850,7 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
             """Get a cutout from the volume service.
 
             Note that no_cache=True is desirable when reading large amounts of
