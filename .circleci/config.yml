@@ -18,8 +18,8 @@ jobs:
           name: install dependencies
           command: |
             pip install tox
-            pyenv local 2.7.10 3.4.3 3.5.1
             pip install -r requirements.txt
+            # pyenv local 2.7.10 3.4.3 3.5.1
 
       - save_cache:
           paths:
