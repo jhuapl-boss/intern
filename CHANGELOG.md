@@ -3,7 +3,6 @@ ____________
 ## v0.9.10
 *  Intern now forwards no_cache option when breaking apart large cutouts.
 
-
 ## v0.9.9
 * Modified the intern get_cutout() no_cache option to default to true instead of false
 
