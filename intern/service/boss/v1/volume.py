@@ -93,7 +93,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts, no_cache=False, **kwargs
+            url_prefix, auth, session, send_opts, no_cache=True, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.

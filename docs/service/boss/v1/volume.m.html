@@ -1128,7 +1128,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts, no_cache=False, **kwargs
+            url_prefix, auth, session, send_opts, no_cache=True, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -1178,7 +1178,8 @@ class VolumeService_1(BaseVersion):
             for b in blocks:
                 _data = self.get_cutout(
                     resource, resolution, b[0], b[1], b[2],
-                    time_range, id_list, url_prefix, auth, session, send_opts
+                    time_range, id_list, url_prefix, auth, session, send_opts, 
+                    no_cache, **kwargs
                 )
 
                 result[
@@ -1451,7 +1452,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts, no_cache=False, **kwargs
+            url_prefix, auth, session, send_opts, no_cache=True, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -1501,7 +1502,8 @@ class VolumeService_1(BaseVersion):
             for b in blocks:
                 _data = self.get_cutout(
                     resource, resolution, b[0], b[1], b[2],
-                    time_range, id_list, url_prefix, auth, session, send_opts
+                    time_range, id_list, url_prefix, auth, session, send_opts, 
+                    no_cache, **kwargs
                 )
 
                 result[
@@ -2261,7 +2263,7 @@ returned is cuboid aligned.</p>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v1.volume.VolumeService_1.get_cutout">
-    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range, id_list, url_prefix, auth, session, send_opts, no_cache=False, **kwargs)</p>
+    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range, id_list, url_prefix, auth, session, send_opts, no_cache=True, **kwargs)</p>
     </div>
     
 
@@ -2294,7 +2296,7 @@ returned is cuboid aligned.</p>
   <div id="source-intern.service.boss.v1.volume.VolumeService_1.get_cutout" class="source">
     <pre><code>def get_cutout(
         self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-        url_prefix, auth, session, send_opts, no_cache=False, **kwargs
+        url_prefix, auth, session, send_opts, no_cache=True, **kwargs
     ):
     """
     Upload a cutout to the Boss data store.
@@ -2338,7 +2340,8 @@ returned is cuboid aligned.</p>
         for b in blocks:
             _data = self.get_cutout(
                 resource, resolution, b[0], b[1], b[2],
-                time_range, id_list, url_prefix, auth, session, send_opts
+                time_range, id_list, url_prefix, auth, session, send_opts, 
+                no_cache, **kwargs
             )
             result[
                 b[2][0] - z_range[0] : b[2][1] - z_range[0],
