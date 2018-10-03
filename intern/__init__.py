@@ -2,7 +2,7 @@
 A Python library for open neuroscience data access and manipulation.
 """
 
-__version__ = "0.9.9"
+__version__ = "0.9.10"
 
 
 def check_version():
