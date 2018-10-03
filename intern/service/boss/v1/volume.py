@@ -143,7 +143,8 @@ class VolumeService_1(BaseVersion):
             for b in blocks:
                 _data = self.get_cutout(
                     resource, resolution, b[0], b[1], b[2],
-                    time_range, id_list, url_prefix, auth, session, send_opts
+                    time_range, id_list, url_prefix, auth, session, send_opts, 
+                    no_cache, **kwargs
                 )
 
                 result[
