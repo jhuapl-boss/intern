@@ -15,6 +15,8 @@
 from intern.remote.boss import LATEST_VERSION
 from intern.resource.boss import ChannelResource, PartialChannelResourceError
 from intern.service.boss.volume import VolumeService
+from intern.service.boss.v1.volume import VolumeService_1
+from mock import patch, ANY
 import numpy as np
 import unittest
 
@@ -25,7 +27,8 @@ class TestVolumeService(unittest.TestCase):
     """
 
     def setUp(self):
-        self.vs = VolumeService('some.host.name', LATEST_VERSION)
+        self.url = 'some.host.name'
+        self.vs = VolumeService(self.url, LATEST_VERSION)
 
     def test_given_invalid_channel(self):
         with self.assertRaises(RuntimeError):
@@ -39,3 +42,22 @@ class TestVolumeService(unittest.TestCase):
             vol = np.ones((100, 100, 100))
             self.vs.create_cutout(
                 chan, 0, [0, 100], [0, 100], [0, 100], vol)
+
+    @patch.object(VolumeService_1, 'get_cutout', autospec=True)
+    def test_get_cutout_no_cache_defaults_true_v1(self, fake_volume):
+        """
+        Test that if no_cache not provided, it defaults to True when calling
+        the VolumeService_1's get_cutout().
+        """
+        chan = ChannelResource('chan', 'foo', 'bar', 'image', datatype='uint16')
+        resolution = 0
+        x_range = [20, 40]
+        y_range = [50, 70]
+        z_range = [30, 50]
+        t_range = [0,1]
+        id_list = []
+        self.vs.get_cutout(chan, resolution, x_range, y_range, z_range, t_range)
+        fake_volume.assert_called_with(
+            ANY, chan, resolution, x_range, y_range, z_range, t_range, id_list,
+            ANY, ANY, ANY, ANY,    # Session related args.
+            True)   # This should be the no_cache argument.

@@ -80,7 +80,7 @@ class VolumeService(BossService):
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     @check_channel
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
         """Get a cutout from the volume service.
 
         Args:
