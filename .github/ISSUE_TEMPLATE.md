@@ -1,13 +1,15 @@
 <!--
-The following chart is provided to improve bug-tracking and reporting.
+When possible, provide the version of intern, the OS, and the 
+version of Python you're using when you encounter a bug. 
+Inapplicable fields can be left blank. Table columns need not 
+line up to render properly.
 
-When possible, provide the version of ndio, the OS, and the version of Python you're using when you encounter a bug. Inapplicable fields can be left blank. Table columns need not line up to render properly.
-
-You can get the version of ndio using `import ndio; ndio.version`.
+You can get the version of intern using 
+`import intern; print(intern.__version__)`.
 -->
 
-| ndio version |  os  | python |
-|-----|------|-------|
-| *   | *    | *     |
+| intern version |  os  | python |
+|----------------|------|--------|
+| *              | *    | *      |
 
 <!-- start issue report after this line. -->
