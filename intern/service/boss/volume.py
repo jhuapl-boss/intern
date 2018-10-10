@@ -86,7 +86,7 @@ class VolumeService(BossService):
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     @check_channel
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], mode=CacheMode.no_cache, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], access_mode=CacheMode.no_cache, **kwargs):
         """Get a cutout from the volume service.
 
         Args:
@@ -112,7 +112,7 @@ class VolumeService(BossService):
 
         return self.service.get_cutout(
             resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            self.url_prefix, self.auth, self.session, self.session_send_opts, mode, **kwargs)
+            self.url_prefix, self.auth, self.session, self.session_send_opts, access_mode, **kwargs)
 
     @check_channel
     def reserve_ids(self, resource, num_ids):
