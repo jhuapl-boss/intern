@@ -30,7 +30,6 @@ CONFIG_TOKEN = 'token'
 
 LATEST_VERSION = 'v1'
 
-
 class BossRemote(Remote):
     """
     Remote provides an SDK to the Boss API.
@@ -850,10 +849,10 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], access_mode=CacheMode.no_cache, **kwargs):
             """Get a cutout from the volume service.
 
-            Note that no_cache=True is desirable when reading large amounts of
+            Note that mode=no_cache is desirable when reading large amounts of
             data at once.  In these cases, the data is not first read into the
             cache, but instead, is sent directly from the data store to the
             requester.
@@ -866,7 +865,12 @@ class BossRemote(Remote):
                 z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
                 time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
                 id_list (optional [list[int]]): list of object ids to filter the cutout by.
-                no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+                access_mode (optional [Enum]): Identifies one of three cache access options:
+                    cache = Will check both cache and for dirty keys
+                    no_cache = Will skip cache check but check for dirty keys
+                    raw = Will skip both the cache and dirty keys check
+
+                TODO: Add mode to ocumentation
 
             Returns:
                 (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -875,4 +879,4 @@ class BossRemote(Remote):
                 requests.HTTPError on error.
             """
 
-            return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
+            return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, access_mode, **kwargs)

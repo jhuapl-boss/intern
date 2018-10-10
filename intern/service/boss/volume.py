@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from intern.resource.boss import ChannelResource, PartialChannelResourceError
+from intern.resource.boss.resource import CacheMode
 from intern.service.boss import BossService
 from intern.service.boss.v1.volume import VolumeService_1
 
@@ -80,7 +81,7 @@ class VolumeService(BossService):
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     @check_channel
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=False, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], mode=CacheMode.no_cache, **kwargs):
         """Get a cutout from the volume service.
 
         Args:
@@ -92,6 +93,10 @@ class VolumeService(BossService):
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
             id_list (optional [list[int]]): list of object ids to filter the cutout by.
             no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+            access_mode (optional [Enum]): Identifies one of three cache access options:
+                cache = Will check both cache and for dirty keys
+                no_cache = Will skip cache check but check for dirty keys
+                raw = Will skip both the cache and dirty keys check
 
         Returns:
             (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -102,7 +107,7 @@ class VolumeService(BossService):
 
         return self.service.get_cutout(
             resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            self.url_prefix, self.auth, self.session, self.session_send_opts, no_cache, **kwargs)
+            self.url_prefix, self.auth, self.session, self.session_send_opts, mode, **kwargs)
 
     @check_channel
     def reserve_ids(self, resource, num_ids):

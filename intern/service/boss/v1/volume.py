@@ -15,6 +15,7 @@ from intern.service.boss import BaseVersion
 from intern.service.boss.v1 import BOSS_API_VERSION
 from intern.resource.boss.resource import *
 from intern.utils.parallel import *
+from intern.utils.
 from requests import HTTPError
 import blosc
 import numpy as np
@@ -93,7 +94,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts, no_cache=True, **kwargs
+            url_prefix, auth, session, send_opts, access_mode=CacheMode.no_cache, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -111,7 +112,10 @@ class VolumeService_1(BaseVersion):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
-            no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+            access_mode (optional [Enum]): Identifies one of three cache access options:
+                cache = Will check both cache and for dirty keys
+                no_cache = Will skip cache check but check for dirty keys
+                raw = Will skip both the cache and dirty keys check
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
@@ -144,7 +148,7 @@ class VolumeService_1(BaseVersion):
                 _data = self.get_cutout(
                     resource, resolution, b[0], b[1], b[2],
                     time_range, id_list, url_prefix, auth, session, send_opts, 
-                    no_cache, **kwargs
+                    access_mode, **kwargs
                 )
 
                 result[
@@ -159,7 +163,7 @@ class VolumeService_1(BaseVersion):
             resource, 'GET', 'application/blosc',
             url_prefix, auth,
             resolution, x_range, y_range, z_range, time_range,
-            id_list=id_list, no_cache=no_cache, **kwargs
+            id_list=id_list, access_mode.value, **kwargs
         )
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
