@@ -13,6 +13,7 @@
 # limitations under the License.
 from intern.service.boss import BaseVersion
 from intern.service.boss.v1 import BOSS_API_VERSION
+from intern.service.boss.volume import CacheMode
 from intern.resource.boss.resource import *
 from intern.utils.parallel import *
 from intern.utils.

@@ -14,7 +14,7 @@
 import six
 from abc import ABCMeta, abstractmethod
 from intern.resource.boss.resource import CoordinateFrameResource
-from intern.resource.boss.resource import CacheMode
+from intern.service.boss.volume import CacheMode
 from requests import Request
 
 

@@ -18,6 +18,7 @@ from intern.resource.boss.resource import *
 from intern.service.boss.project import ProjectService
 from intern.service.boss.metadata import MetadataService
 from intern.service.boss.volume import VolumeService
+from intern.service.boss.volume import CacheMode
 
 
 CONFIG_PROJECT_SECTION = 'Project Service'
