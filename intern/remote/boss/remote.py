@@ -19,6 +19,7 @@ from intern.service.boss.project import ProjectService
 from intern.service.boss.metadata import MetadataService
 from intern.service.boss.volume import VolumeService
 from intern.service.boss.volume import CacheMode
+import warnings
 
 
 CONFIG_PROJECT_SECTION = 'Project Service'
@@ -850,7 +851,7 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], access_mode=CacheMode.no_cache, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, access_mode=CacheMode.no_cache, **kwargs):
             """Get a cutout from the volume service.
 
             Note that access_mode=no_cache is desirable when reading large amounts of
@@ -879,5 +880,9 @@ class BossRemote(Remote):
             Raises:
                 requests.HTTPError on error.
             """
-
+            if no_cache:
+                access_mode=CacheMode.no_cache
+            elif not no_cache:
+                access_mode-CacheMode.cache
+            warnings.warn("The no-cache option has been depracted and will not be used in future version of intern. Please use access_mode=raw,cache,no_cache.",DeprecationWarning)
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, access_mode, **kwargs)
