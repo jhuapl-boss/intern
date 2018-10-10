@@ -853,7 +853,7 @@ class BossRemote(Remote):
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], access_mode=CacheMode.no_cache, **kwargs):
             """Get a cutout from the volume service.
 
-            Note that mode=no_cache is desirable when reading large amounts of
+            Note that access_mode=no_cache is desirable when reading large amounts of
             data at once.  In these cases, the data is not first read into the
             cache, but instead, is sent directly from the data store to the
             requester.
@@ -871,7 +871,7 @@ class BossRemote(Remote):
                     no_cache = Will skip cache check but check for dirty keys
                     raw = Will skip both the cache and dirty keys check
 
-                TODO: Add mode to ocumentation
+                TODO: Add mode to documentation
 
             Returns:
                 (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
