@@ -880,9 +880,9 @@ class BossRemote(Remote):
             Raises:
                 requests.HTTPError on error.
             """
-            if no_cache:
+            warnings.warn("The no-cache option has been depracted and will not be used in future version of intern. Please use access_mode=raw,cache,no_cache.",DeprecationWarning)
+            if no_cache and access_mode.value=='no_cache':
                 access_mode=CacheMode.no_cache
             elif not no_cache:
-                access_mode-CacheMode.cache
-            warnings.warn("The no-cache option has been depracted and will not be used in future version of intern. Please use access_mode=raw,cache,no_cache.",DeprecationWarning)
+                access_mode=CacheMode.cache
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, access_mode, **kwargs)

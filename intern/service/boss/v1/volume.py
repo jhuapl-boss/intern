@@ -13,10 +13,8 @@
 # limitations under the License.
 from intern.service.boss import BaseVersion
 from intern.service.boss.v1 import BOSS_API_VERSION
-from intern.service.boss.volume import CacheMode
 from intern.resource.boss.resource import *
 from intern.utils.parallel import *
-from intern.utils.
 from requests import HTTPError
 import blosc
 import numpy as np
@@ -95,7 +93,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts, access_mode=CacheMode.no_cache, **kwargs
+            url_prefix, auth, session, send_opts, access_mode, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -163,8 +161,8 @@ class VolumeService_1(BaseVersion):
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
             url_prefix, auth,
-            resolution, x_range, y_range, z_range, time_range,
-            id_list=id_list, access_mode.value, **kwargs
+            resolution, x_range, y_range, z_range, time_range, access_mode.value,
+            id_list=id_list, **kwargs
         )
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
