@@ -14,7 +14,12 @@
 
 from intern.resource import Resource
 from abc import abstractmethod
+from enum import Enum
 
+class CacheMode(Enum):
+    cache = 'cache'
+    no_cache = 'no_cache'
+    raw = 'raw'
 
 class BossResource(Resource):
     """Base class for Boss resources.
