@@ -186,11 +186,11 @@ class BaseVersion(object):
             urlWithParams += '?filter=' + self.convert_int_list_to_comma_sep_str(id_list)
 
         if access_mode == 'no_cache':
-            urlWithParams += '?access_mode=no-cache'
+            urlWithParams += '?access-mode=no-cache'
         elif access_mode == 'raw':
-            urlWithParams += '?access_mode=raw'
+            urlWithParams += '?access-mode=raw'
         else:
-            urlWithParams += '?access_mode=cache'
+            urlWithParams += '?access-mode=cache'
 
         return urlWithParams
 
