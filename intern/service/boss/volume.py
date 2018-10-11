@@ -15,12 +15,7 @@
 from intern.resource.boss import ChannelResource, PartialChannelResourceError
 from intern.service.boss import BossService
 from intern.service.boss.v1.volume import VolumeService_1
-from enum import Enum
-
-class CacheMode(str, Enum):
-    cache = 'cache'
-    no_cache = 'no_cache'
-    raw = 'raw'
+from intern.service.boss.baseversion import CacheMode
 
 def check_channel(fcn):
     """Decorator that ensures a valid channel passed in.

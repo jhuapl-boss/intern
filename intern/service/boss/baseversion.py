@@ -15,7 +15,12 @@ import six
 from abc import ABCMeta, abstractmethod
 from intern.resource.boss.resource import CoordinateFrameResource
 from requests import Request
+from enum import Enum
 
+class CacheMode(str, Enum):
+    cache = 'cache'
+    no_cache = 'no_cache'
+    raw = 'raw'
 
 @six.add_metaclass(ABCMeta)
 class BaseVersion(object):
@@ -147,7 +152,7 @@ class BaseVersion(object):
         return urlWithKey + '&value=' + str(value)
 
     def build_cutout_url(
-        self, resource, url_prefix, resolution, x_range, y_range, z_range,  access_mode, time_range=None, id_list=[]):
+        self, resource, url_prefix, resolution, x_range, y_range, z_range,  access_mode=CacheMode.no_cache, time_range=None, id_list=[]):
         """Build the url to access the cutout function of the Boss' volume service.
 
         Args:
@@ -261,7 +266,7 @@ class BaseVersion(object):
 
     def get_cutout_request(
         self, resource, method, content, url_prefix, token,
-        resolution, x_range, y_range, z_range, time_range, access_mode, numpyVolume=None, id_list=[]):
+        resolution, x_range, y_range, z_range, time_range, access_mode=CacheMode.no_cache, numpyVolume=None, id_list=[]):
 
         """Create a request for working with cutouts (part of the Boss' volume service).
 

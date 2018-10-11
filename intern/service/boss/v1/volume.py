@@ -15,6 +15,7 @@ from intern.service.boss import BaseVersion
 from intern.service.boss.v1 import BOSS_API_VERSION
 from intern.resource.boss.resource import *
 from intern.utils.parallel import *
+from intern.service.boss.baseversion import CacheMode
 from requests import HTTPError
 import blosc
 import numpy as np
@@ -93,7 +94,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts, access_mode, **kwargs
+            url_prefix, auth, session, send_opts, access_mode=CacheMode.no_cache, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
