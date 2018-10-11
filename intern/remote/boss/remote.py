@@ -851,7 +851,7 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, access_mode=CacheMode.no_cache, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=None, access_mode=CacheMode.no_cache, **kwargs):
             """Get a cutout from the volume service.
 
             Note that access_mode=no_cache is desirable when reading large amounts of
@@ -880,10 +880,11 @@ class BossRemote(Remote):
             Raises:
                 requests.HTTPError on error.
             """
-            print("\033[93mThe no-cache option has been depracted and will not be used in future versions of intern.\033[0m")
-            print("\033[93mPlease from intern.service.boss.volume import CacheMode and use access_mode=CacheMode.[cache,no-cache,raw] instead.\033[0m")
+            if no_cache != None:
+                print("\033[93mThe no-cache option has been deprecated and will not be used in future versions of intern.\033[0m")
+                print("\033[93mPlease from intern.service.boss.volume import CacheMode and use access_mode=CacheMode.[cache,no-cache,raw] instead.\033[0m")
             if no_cache and access_mode.value=='no_cache':
                 access_mode=CacheMode.no_cache
-            elif not no_cache:
+            elif no_cache == False:
                 access_mode=CacheMode.cache
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, access_mode, **kwargs)
