@@ -880,7 +880,7 @@ class BossRemote(Remote):
             Raises:
                 requests.HTTPError on error.
             """
-            if no_cache != None:
+            if no_cache is not None:
                 print("\033[93mThe no-cache option has been deprecated and will not be used in future versions of intern.\033[0m")
                 print("\033[93mPlease from intern.service.boss.volume import CacheMode and use access_mode=CacheMode.[cache,no-cache,raw] instead.\033[0m")
             if no_cache and access_mode.value=='no_cache':
