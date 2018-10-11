@@ -17,7 +17,7 @@ from intern.service.boss import BossService
 from intern.service.boss.v1.volume import VolumeService_1
 from enum import Enum
 
-class CacheMode(Enum):
+class CacheMode(str, Enum):
     cache = 'cache'
     no_cache = 'no_cache'
     raw = 'raw'
