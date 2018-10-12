@@ -14,6 +14,7 @@
 
 import unittest
 from intern.service.boss.baseversion import BaseVersion
+from intern.service.boss.v1.volume import CacheMode
 from intern.resource.boss.resource import CollectionResource
 from intern.resource.boss.resource import ChannelResource
 import numpy
@@ -478,6 +479,35 @@ class BaseVersionTest(unittest.TestCase):
             resolution, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst, id_list=id_list)
         self.assertEqual(
             '{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/?filter={}'.format(url_prefix, self.test_volume.version,
+            self.test_volume.endpoint, self.chanResource.coll_name,
+            self.chanResource.exp_name, self.chanResource.name, resolution,
+            x_range, y_range, z_range, time_range, id_list_str),
+            actual.url)
+        self.assertEqual('Token {}'.format(token), actual.headers['Authorization'])
+        self.assertEqual('application/blosc-python', actual.headers['Content-Type'])
+
+    def test_get_cutout_request_with_ids_and_access_mode(self):
+        """Test request generated for a filtered cutout."""
+        url_prefix = 'https://api.theboss.io'
+        token = 'foobar'
+        resolution = 0
+        x_rng_lst = [20, 40]
+        x_range = '20:40'
+        y_rng_lst = [50, 70]
+        y_range = '50:70'
+        z_rng_lst = [30, 50]
+        z_range = '30:50'
+        t_rng_lst = [10, 25]
+        time_range = '10:25'
+        id_list = [10, 5]
+        id_list_str = '10,5'
+        data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+
+        actual = self.test_volume.get_cutout_request(
+            self.chanResource, 'GET', 'application/blosc-python', url_prefix, token,
+            resolution, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst, id_list=id_list, access_mode=CacheMode.no_cache)
+        self.assertEqual(
+            '{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/?filter={}&access-mode=no-cache'.format(url_prefix, self.test_volume.version,
             self.test_volume.endpoint, self.chanResource.coll_name,
             self.chanResource.exp_name, self.chanResource.name, resolution,
             x_range, y_range, z_range, time_range, id_list_str),
