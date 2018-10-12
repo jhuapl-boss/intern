@@ -15,11 +15,15 @@ from intern.service.boss import BaseVersion
 from intern.service.boss.v1 import BOSS_API_VERSION
 from intern.resource.boss.resource import *
 from intern.utils.parallel import *
-from intern.service.boss.baseversion import CacheMode
 from requests import HTTPError
 import blosc
 import numpy as np
+from enum import Enum
 
+class CacheMode(str, Enum):
+    cache = 'cache'
+    no_cache = 'no-cache'
+    raw = 'raw'
 
 class VolumeService_1(BaseVersion):
     def __init__(self):
@@ -162,7 +166,7 @@ class VolumeService_1(BaseVersion):
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
             url_prefix, auth,
-            resolution, x_range, y_range, z_range, time_range, access_mode,
+            resolution, x_range, y_range, z_range, time_range, access_mode=access_mode,
             id_list=id_list, **kwargs
         )
         prep = session.prepare_request(req)

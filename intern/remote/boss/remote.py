@@ -18,7 +18,7 @@ from intern.resource.boss.resource import *
 from intern.service.boss.project import ProjectService
 from intern.service.boss.metadata import MetadataService
 from intern.service.boss.volume import VolumeService
-from intern.service.boss.baseversion import CacheMode
+from intern.service.boss.v1.volume import CacheMode
 import warnings
 
 
