@@ -162,7 +162,7 @@ class VolumeService_1(BaseVersion):
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
             url_prefix, auth,
-            resolution, x_range, y_range, z_range, time_range, access_mode.value,
+            resolution, x_range, y_range, z_range, time_range, access_mode,
             id_list=id_list, **kwargs
         )
         prep = session.prepare_request(req)

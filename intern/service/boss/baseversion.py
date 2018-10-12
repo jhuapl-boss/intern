@@ -19,7 +19,7 @@ from enum import Enum
 
 class CacheMode(str, Enum):
     cache = 'cache'
-    no_cache = 'no_cache'
+    no_cache = 'no-cache'
     raw = 'raw'
 
 @six.add_metaclass(ABCMeta)
@@ -190,12 +190,8 @@ class BaseVersion(object):
         if len(id_list) > 0:
             urlWithParams += '?filter=' + self.convert_int_list_to_comma_sep_str(id_list)
 
-        if access_mode == 'no_cache':
-            urlWithParams += '?access-mode=no-cache'
-        elif access_mode == 'raw':
-            urlWithParams += '?access-mode=raw'
-        else:
-            urlWithParams += '?access-mode=cache'
+        # Add the access_mode parameter
+        urlWithParams += '?access-mode={}'.format(access_mode)
 
         return urlWithParams
 

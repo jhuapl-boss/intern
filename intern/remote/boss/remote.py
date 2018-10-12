@@ -883,7 +883,7 @@ class BossRemote(Remote):
             if no_cache is not None:
                 warnings.warn("The no-cache option has been deprecated and will not be used in future versions of intern.")
                 warnings.warn("Please from intern.service.boss.volume import CacheMode and use access_mode=CacheMode.[cache,no-cache,raw] instead.")
-            if no_cache and access_mode != "no_cache":
+            if no_cache and access_mode != CacheMode.no_cache:
                 warnings.warn("Both no_cache and access_mode were used, please use access_mode only. As no_cache has been deprecated. ")
                 warnings.warn("Your request will be made using the default mode no_cache.")
                 access_mode=CacheMode.no_cache    
