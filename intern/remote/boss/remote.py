@@ -858,6 +858,22 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
+    def parse_bossURI(self, uri: str) -> Resource:
+        """
+        Parse a bossDB URI and handle malform errors.
+
+        Arguments:
+            uri (str): URI of the form bossdb://<collection/<experiment>/<channel>
+
+        Returns:
+            Resource
+
+        """
+        t = uri.split("://")[1].split("/")
+        if len(t) is 3:
+            return self.get_channel(t[2], t[0], t[1])
+        raise ValueError(f"Cannot parse URI {uri}.")
+
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
             """Get a cutout from the volume service.
 
@@ -874,7 +890,7 @@ class BossRemote(Remote):
                 z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
                 time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
                 id_list (optional [list[int]]): list of object ids to filter the cutout by.
-                no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+                no_cache (optional [boolean]): specifies the use of cache to be True or False.
 
             Returns:
                 (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -882,5 +898,6 @@ class BossRemote(Remote):
             Raises:
                 requests.HTTPError on error.
             """
-
+            if isinstance(resource, str):
+                resource = self.parse_bossURI(resource)
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
