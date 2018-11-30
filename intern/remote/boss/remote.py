@@ -71,6 +71,14 @@ class BossRemote(Remote):
         self._init_metadata_service(version)
         self._init_volume_service(version)
 
+    def __repr__(self):
+        """
+        Stringify the Remote.
+
+        Returns a representation of the BossRemote that lists the host.
+        """
+        return f"<intern.remote.BossRemote [{self._config['Default']['host']}]>"
+
     def _init_project_service(self, version):
         """
         Method to initialize the Project Service from the config data
