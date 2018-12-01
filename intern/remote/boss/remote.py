@@ -77,7 +77,7 @@ class BossRemote(Remote):
 
         Returns a representation of the BossRemote that lists the host.
         """
-        return f"<intern.remote.BossRemote [{self._config['Default']['host']}]>"
+        return "<intern.remote.BossRemote [" + self._config['Default']['host'] + "]>"
 
     def _init_project_service(self, version):
         """
