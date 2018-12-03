@@ -318,3 +318,26 @@ class VolumeService_1(BaseVersion):
         msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
+
+    def get_cutout_link(self, resource, resolution, x_range, y_range, z_range, time_range, url_prefix, **kwargs):
+        """
+        Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with cutout operations.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+
+        Returns:
+            (string): Return neuroglancer link.
+
+        Raises:
+            RuntimeError when given invalid resource.
+            Other exceptions may be raised depending on the volume service's implementation.
+        """
+        link = "https://neuroglancer.theboss.io/#!{'layers':{'" + str(resource.name)   + "':{'type':'" + resource.type + "'_'source':" + "'boss://" + url_prefix+ "/" + resource.coll_name + "/" + resource.exp_name + "/" + resource.name + "'}}_'navigation':{'pose':{'position':{'voxelCoordinates':[" + str(x_range[0]) + "_" + str(y_range[0]) + "_" + str(z_range[0]) + "]}}}}"
+        return link
