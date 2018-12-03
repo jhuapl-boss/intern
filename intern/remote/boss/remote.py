@@ -1,4 +1,4 @@
-﻿"""
+"""
 # Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -872,7 +872,7 @@ class BossRemote(Remote):
         t = uri.split("://")[1].split("/")
         if len(t) is 3:
             return self.get_channel(t[2], t[0], t[1])
-        raise ValueError(f"Cannot parse URI {uri}.")
+        raise ValueError("Cannot parse URI " + uri + ".")
 
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
             """Get a cutout from the volume service.
