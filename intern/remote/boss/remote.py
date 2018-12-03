@@ -915,3 +915,15 @@ class BossRemote(Remote):
             (dict): {'base_resolution': 0, 'default_time_sample': 0, 'downsample_status': 'DOWNSAMPLED', 'experiment': 'em', 'datatype': 'uint8', 'sources': [], 'description': '', 'name': 'cc', 'creator': 'will', 'related': ['syn_obj-test2', 'syn_obj_v1'], 'type': 'image'}
         """
         return self._volume.get_channel_properties(resource)
+
+    def get_coordinate_frame(self, name):
+        """
+        Gets the coordinate frame properties displayed under the coordinate frame on the boss
+
+        Args:
+            name (str): Name of the coordinate frame
+        
+        Returns:
+            (dict) : {'voxel_unit': 'nanometers', 'z_start': 0, 'x_start': 0, 'z_voxel_size': 30.0, 'x_voxel_size': 6.0, 'x_stop': 10752, 'y_start': 0, 'name': 'kasthuri2015_6nm_offset0', 'z_stop': 1849, 'description': '6nm data', 'y_stop': 13312, 'y_voxel_size': 6.0}
+        """
+        return self.project_service.get_coordinate_frame(name)

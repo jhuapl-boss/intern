@@ -1043,3 +1043,21 @@ class ProjectService_1(BaseVersion):
             return rsrc_dict['coords']
 
         raise RuntimeError('Invalid list response received from Boss.  No known resource type returned.')
+
+    def get_coordinate_frame(self, session, auth, url_prefix, name):
+        """
+        Gets the coordinate frame properties displayed under the coordinate frame on the boss
+
+        Args:
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            name (str): Name of the coordinate frame
+        
+        Returns:
+            (dict) : {'voxel_unit': 'nanometers', 'z_start': 0, 'x_start': 0, 'z_voxel_size': 30.0, 'x_voxel_size': 6.0, 'x_stop': 10752, 'y_start': 0, 'name': 'kasthuri2015_6nm_offset0', 'z_stop': 1849, 'description': '6nm data', 'y_stop': 13312, 'y_voxel_size': 6.0}
+        """
+        req = self.get_coordinate_frame_request('GET', 'application/json', url_prefix, auth, name)
+        prep = session.prepare_request(req)
+        resp = session.send(prep)
+        return resp.json()
