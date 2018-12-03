@@ -1,4 +1,4 @@
-﻿"""
+"""
 # Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -70,6 +70,14 @@ class BossRemote(Remote):
         self._init_project_service(version)
         self._init_metadata_service(version)
         self._init_volume_service(version)
+
+    def __repr__(self):
+        """
+        Stringify the Remote.
+
+        Returns a representation of the BossRemote that lists the host.
+        """
+        return "<intern.remote.BossRemote [" + self._config['Default']['host'] + "]>"
 
     def _init_project_service(self, version):
         """
@@ -850,6 +858,22 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
+    def parse_bossURI(self, uri): # type: (str) -> Resource
+        """
+        Parse a bossDB URI and handle malform errors.
+
+        Arguments:
+            uri (str): URI of the form bossdb://<collection>/<experiment>/<channel>
+
+        Returns:
+            Resource
+
+        """
+        t = uri.split("://")[1].split("/")
+        if len(t) is 3:
+            return self.get_channel(t[2], t[0], t[1])
+        raise ValueError("Cannot parse URI " + uri + ".")
+
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
             """Get a cutout from the volume service.
 
@@ -859,14 +883,16 @@ class BossRemote(Remote):
             requester.
 
             Args:
-                resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
+                resource (intern.resource.boss.resource.ChannelResource | str): Channel or layer Resource. If a 
+                    string is provided instead, BossRemote.parse_bossURI is called instead on a URI-formatted 
+                    string of the form `bossdb://collection/experiment/channel`.
                 resolution (int): 0 indicates native resolution.
                 x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
                 y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
                 z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
                 time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
                 id_list (optional [list[int]]): list of object ids to filter the cutout by.
-                no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+                no_cache (optional [boolean]): specifies the use of cache to be True or False.
 
             Returns:
                 (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -874,5 +900,6 @@ class BossRemote(Remote):
             Raises:
                 requests.HTTPError on error.
             """
-
+            if isinstance(resource, str):
+                resource = self.parse_bossURI(resource)
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
