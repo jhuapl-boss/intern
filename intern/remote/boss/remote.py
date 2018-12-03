@@ -858,7 +858,7 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
-    def parse_bossURI(self, uri: str) -> Resource:
+    def parse_bossURI(self, uri): # type: (str) -> Resource
         """
         Parse a bossDB URI and handle malform errors.
 
