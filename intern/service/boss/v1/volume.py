@@ -319,7 +319,7 @@ class VolumeService_1(BaseVersion):
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
 
-    def get_cutout_link(self, resource, resolution, x_range, y_range, z_range, time_range, url_prefix, **kwargs):
+    def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, time_range, url_prefix, **kwargs):
         """
         Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
 

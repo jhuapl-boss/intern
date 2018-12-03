@@ -166,7 +166,7 @@ class VolumeService(BossService):
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     @check_channel
-    def get_cutout_link(self, resource, resolution, x_range, y_range, z_range, time_range, **kwargs):
+    def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, time_range, **kwargs):
         """
         Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
 
@@ -185,4 +185,4 @@ class VolumeService(BossService):
             RuntimeError when given invalid resource.
             Other exceptions may be raised depending on the volume service's implementation.
         """
-        return self.service.get_cutout_link(resource, resolution, x_range, y_range, z_range, time_range, self.url_prefix, **kwargs)
+        return self.service.get_neuroglancer_link(resource, resolution, x_range, y_range, z_range, time_range, self.url_prefix, **kwargs)

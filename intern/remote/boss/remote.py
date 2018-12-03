@@ -877,7 +877,7 @@ class BossRemote(Remote):
 
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
 
-    def get_cutout_link(self, resource, resolution, x_range, y_range, z_range, time_range=None, **kwargs):
+    def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, time_range=None, **kwargs):
             """
             Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
 
@@ -896,4 +896,4 @@ class BossRemote(Remote):
                 RuntimeError when given invalid resource.
                 Other exceptions may be raised depending on the volume service's implementation.
             """
-            return self._volume.get_cutout_link(resource, resolution, x_range, y_range, z_range, time_range, **kwargs)
+            return self._volume.get_neuroglancer_link(resource, resolution, x_range, y_range, z_range, time_range, **kwargs)
