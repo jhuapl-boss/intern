@@ -1,4 +1,4 @@
-"""
+﻿"""
 # Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -903,3 +903,6 @@ class BossRemote(Remote):
             if isinstance(resource, str):
                 resource = self.parse_bossURI(resource)
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
+
+    def get_channel_properties(self, resource):
+        return self._volume.get_channel_properties(resource)

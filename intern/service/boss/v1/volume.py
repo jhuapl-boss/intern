@@ -318,3 +318,9 @@ class VolumeService_1(BaseVersion):
         msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
+
+    def get_channel_properties(self, resource, auth, url_prefix, session):
+        req = self.get_request(resource, 'GET', 'application/json', url_prefix, auth)
+        prep = session.prepare_request(req)
+        resp = session.send(prep)
+        return resp.json()

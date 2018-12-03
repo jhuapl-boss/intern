@@ -165,3 +165,6 @@ class VolumeService(BossService):
             resource, resolution, x_range, y_range, z_range, time_range,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
+    @check_channel
+    def get_channel_properties(self, resource):
+        return self.service.get_channel_properties(resource, self.auth, self.url_prefix, self.session)
