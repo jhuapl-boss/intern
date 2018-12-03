@@ -905,4 +905,13 @@ class BossRemote(Remote):
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
 
     def get_channel_properties(self, resource):
+        """
+        Gets a json dictionary of the channel properties displayed on the boss
+        
+        Args:
+            resource (intern.resource.Resource): A channel.
+
+        Returns:
+            (dict): {'base_resolution': 0, 'default_time_sample': 0, 'downsample_status': 'DOWNSAMPLED', 'experiment': 'em', 'datatype': 'uint8', 'sources': [], 'description': '', 'name': 'cc', 'creator': 'will', 'related': ['syn_obj-test2', 'syn_obj_v1'], 'type': 'image'}
+        """
         return self._volume.get_channel_properties(resource)
