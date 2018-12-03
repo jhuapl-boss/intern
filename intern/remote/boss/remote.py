@@ -863,7 +863,7 @@ class BossRemote(Remote):
         Parse a bossDB URI and handle malform errors.
 
         Arguments:
-            uri (str): URI of the form bossdb://<collection/<experiment>/<channel>
+            uri (str): URI of the form bossdb://<collection>/<experiment>/<channel>
 
         Returns:
             Resource
