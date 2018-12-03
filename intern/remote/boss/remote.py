@@ -883,7 +883,9 @@ class BossRemote(Remote):
             requester.
 
             Args:
-                resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
+                resource (intern.resource.boss.resource.ChannelResource | str): Channel or layer Resource. If a 
+                    string is provided instead, BossRemote.parse_bossURI is called instead on a URI-formatted 
+                    string of the form `bossdb://collection/experiment/channel`.
                 resolution (int): 0 indicates native resolution.
                 x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
                 y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
