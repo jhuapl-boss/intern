@@ -913,7 +913,7 @@ class BossRemote(Remote):
             exp_name (str): Experiment name
 
         Returns:
-            ExperimentResource
+            (ExperimentResource)
         """
         exp = ExperimentResource(exp_name, coll_name)
         return self.get_project(exp)
@@ -926,7 +926,7 @@ class BossRemote(Remote):
             name (str): Name of the coordinate frame
         
         Returns:
-            CoordinateFrame Resource
+            (CoordinateFrameResource)
         """
         cf = CoordinateFrameResource(name)
         return self.get_project(cf)
