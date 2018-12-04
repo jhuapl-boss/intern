@@ -1,5 +1,8 @@
 # Change Log
 ____________
+## v0.9.11
+* `create_cutout` will now chunk large cutouts into smaller components to eliminate HTTP size limitation and timeout errors.
+
 ## v0.9.10
 *  Intern now forwards no_cache option when breaking apart large cutouts.
 
