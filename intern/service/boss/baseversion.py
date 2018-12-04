@@ -15,7 +15,6 @@ import six
 from abc import ABCMeta, abstractmethod
 from intern.resource.boss.resource import CoordinateFrameResource
 from requests import Request
-from requests import get
 
 
 @six.add_metaclass(ABCMeta)
