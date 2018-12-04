@@ -319,7 +319,7 @@ class VolumeService_1(BaseVersion):
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
 
-    def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, time_range, url_prefix, **kwargs):
+    def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, url_prefix, **kwargs):
         """
         Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
 
@@ -329,7 +329,6 @@ class VolumeService_1(BaseVersion):
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
             url_prefix (string): Protocol + host such as https://api.theboss.io
 
         Returns:
