@@ -914,7 +914,7 @@ class BossRemote(Remote):
         Returns:
             (dict): {'base_resolution': 0, 'default_time_sample': 0, 'downsample_status': 'DOWNSAMPLED', 'experiment': 'em', 'datatype': 'uint8', 'sources': [], 'description': '', 'name': 'cc', 'creator': 'will', 'related': ['syn_obj-test2', 'syn_obj_v1'], 'type': 'image'}
         """
-        return self._volume.get_channel_properties(resource)
+        return self.project_service.get_channel_properties(resource)
 
     def get_coordinate_frame(self, name):
         """

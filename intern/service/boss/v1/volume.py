@@ -318,21 +318,3 @@ class VolumeService_1(BaseVersion):
         msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
-
-    def get_channel_properties(self, resource, auth, url_prefix, session):
-        """
-        Gets a json dictionary of the channel properties displayed on the boss
-        
-        Args:
-            resource (intern.resource.Resource): A channel.
-            url_prefix (string): Protocol + host such as https://api.theboss.io
-            auth (string): Token to send in the request header.
-            session (requests.Session): HTTP session to use for request.
-
-        Returns:
-            (dict): {'base_resolution': 0, 'default_time_sample': 0, 'downsample_status': 'DOWNSAMPLED', 'experiment': 'em', 'datatype': 'uint8', 'sources': [], 'description': '', 'name': 'cc', 'creator': 'will', 'related': ['syn_obj-test2', 'syn_obj_v1'], 'type': 'image'}
-        """
-        req = self.get_request(resource, 'GET', 'application/json', url_prefix, auth)
-        prep = session.prepare_request(req)
-        resp = session.send(prep)
-        return resp.json()

@@ -164,16 +164,3 @@ class VolumeService(BossService):
         return self.service.get_ids_in_region(
             resource, resolution, x_range, y_range, z_range, time_range,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
-
-    @check_channel
-    def get_channel_properties(self, resource):
-        """
-        Gets a json dictionary of the channel properties displayed on the boss
-        
-        Args:
-            resource (intern.resource.Resource): A channel.
-
-        Returns:
-            (dict): {'base_resolution': 0, 'default_time_sample': 0, 'downsample_status': 'DOWNSAMPLED', 'experiment': 'em', 'datatype': 'uint8', 'sources': [], 'description': '', 'name': 'cc', 'creator': 'will', 'related': ['syn_obj-test2', 'syn_obj_v1'], 'type': 'image'}
-        """
-        return self.service.get_channel_properties(resource, self.auth, self.url_prefix, self.session)
