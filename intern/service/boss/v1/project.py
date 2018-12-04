@@ -1044,6 +1044,25 @@ class ProjectService_1(BaseVersion):
 
         raise RuntimeError('Invalid list response received from Boss.  No known resource type returned.')
 
+    def get_channel_properties(self, resource, auth, url_prefix, session):
+        """
+        Gets a json dictionary of the channel properties displayed on the boss
+        
+        Args:
+            resource (intern.resource.Resource): A channel.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+
+        Returns:
+            (dict): Dictionary containing, base_resolution, default_time_sample, downsample_status, 
+                    experiment, datatype, sources, description, name, creator, related, and type.
+        """
+        req = self.get_request(resource, 'GET', 'application/json', url_prefix, auth)
+        prep = session.prepare_request(req)
+        resp = session.send(prep)
+        return resp.json()
+
     def get_coordinate_frame(self, session, auth, url_prefix, name):
         """
         Gets the coordinate frame properties displayed under the coordinate frame on the boss
@@ -1058,24 +1077,6 @@ class ProjectService_1(BaseVersion):
             (dict) : Dictionary containing, voxel_unit, x/y/z_voxel_size, x/y/z_start, x/y/z_stop name, description
         """
         req = self.get_coordinate_frame_request('GET', 'application/json', url_prefix, auth, name)
-        prep = session.prepare_request(req)
-        resp = session.send(prep)
-        return resp.json()
-
-    def get_channel_properties(self, resource, auth, url_prefix, session):
-        """
-        Gets a json dictionary of the channel properties displayed on the boss
-        
-        Args:
-            resource (intern.resource.Resource): A channel.
-            url_prefix (string): Protocol + host such as https://api.theboss.io
-            auth (string): Token to send in the request header.
-            session (requests.Session): HTTP session to use for request.
-
-        Returns:
-            (dict): {'base_resolution': 0, 'default_time_sample': 0, 'downsample_status': 'DOWNSAMPLED', 'experiment': 'em', 'datatype': 'uint8', 'sources': [], 'description': '', 'name': 'cc', 'creator': 'will', 'related': ['syn_obj-test2', 'syn_obj_v1'], 'type': 'image'}
-        """
-        req = self.get_request(resource, 'GET', 'application/json', url_prefix, auth)
         prep = session.prepare_request(req)
         resp = session.send(prep)
         return resp.json()

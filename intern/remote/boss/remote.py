@@ -912,7 +912,7 @@ class BossRemote(Remote):
             resource (intern.resource.Resource): A channel.
 
         Returns:
-            (dict): {'base_resolution': 0, 'default_time_sample': 0, 'downsample_status': 'DOWNSAMPLED', 'experiment': 'em', 'datatype': 'uint8', 'sources': [], 'description': '', 'name': 'cc', 'creator': 'will', 'related': ['syn_obj-test2', 'syn_obj_v1'], 'type': 'image'}
+            (dict): Dictionary of channel properties
         """
         return self.project_service.get_channel_properties(resource)
 
@@ -924,6 +924,6 @@ class BossRemote(Remote):
             name (str): Name of the coordinate frame
         
         Returns:
-            (dicttionary): Coordinate frame in a dictionary.
+            (dictionary): Dictionary of coordinate frame information.
         """
         return self.project_service.get_coordinate_frame(name)

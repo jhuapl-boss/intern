@@ -471,7 +471,7 @@ class ProjectService(BossService):
             resource (intern.resource.Resource): A channel.
 
         Returns:
-            (dict): {'base_resolution': 0, 'default_time_sample': 0, 'downsample_status': 'DOWNSAMPLED', 'experiment': 'em', 'datatype': 'uint8', 'sources': [], 'description': '', 'name': 'cc', 'creator': 'will', 'related': ['syn_obj-test2', 'syn_obj_v1'], 'type': 'image'}
+            (dict): Dictionary of channel properties.
         """
         return self.service.get_channel_properties(resource, self.auth, self.url_prefix, self.session)
 
@@ -483,6 +483,6 @@ class ProjectService(BossService):
             name (str): Name of the coordinate frame
         
         Returns:
-            (dictionary) : Coordinate frame encoded in a dictionary
+            (dictionary) : Coordinate frame encoded in a dictionary.
         """
         return self.service.get_coordinate_frame(self.session, self.auth, self.url_prefix, name)
