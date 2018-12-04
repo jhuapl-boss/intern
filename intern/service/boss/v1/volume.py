@@ -91,11 +91,14 @@ class VolumeService_1(BaseVersion):
             )
 
             for b in blocks:
-                _data = numpyVolume[
-                    b[2][0] - z_range[0]: b[2][1] - z_range[0],
-                    b[1][0] - y_range[0]: b[1][1] - y_range[0],
-                    b[0][0] - x_range[0]: b[0][1] - x_range[0]
-                ]
+                _data = np.ascontiguousarray(
+                    numpyVolume[
+                        b[2][0] - z_range[0]: b[2][1] - z_range[0],
+                        b[1][0] - y_range[0]: b[1][1] - y_range[0],
+                        b[0][0] - x_range[0]: b[0][1] - x_range[0]
+                    ],
+                    dtype=numpyVolume.dtype
+                )
                 self.create_cutout(
                     resource, resolution, b[0], b[1], b[2],
                     time_range, _data, url_prefix, auth, session, send_opts
