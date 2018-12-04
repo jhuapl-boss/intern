@@ -904,7 +904,7 @@ class BossRemote(Remote):
                 resource = self.parse_bossURI(resource)
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
 
-    def get_channel_properties(self, resource):
+    def get_experiment(self, coll_name, exp_name):
         """
         Gets a json dictionary of the channel properties displayed on the boss
         
@@ -914,7 +914,8 @@ class BossRemote(Remote):
         Returns:
             (dict): Dictionary of channel properties
         """
-        return self.project_service.get_channel_properties(resource)
+        exp = ExperimentResource(exp_name, coll_name)
+        return self.get_project(exp)
 
     def get_coordinate_frame(self, name):
         """
@@ -926,4 +927,5 @@ class BossRemote(Remote):
         Returns:
             (dictionary): Dictionary of coordinate frame information.
         """
-        return self.project_service.get_coordinate_frame(name)
+        cf = CoordinateFrameResource(name)
+        return self.get_project(cf)

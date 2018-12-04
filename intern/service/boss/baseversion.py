@@ -187,19 +187,6 @@ class BaseVersion(object):
 
         return urlWithParams
 
-    def build_coordinate_frame_url(self, url_prefix, name):
-        """Build the url to access the get coordinate frame function
-
-        Args:
-            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.i
-            name (str): Name of the coordinate frame. 
-        
-        Return:
-            url (str): Full URL to access API.
-        """
-        url = url_prefix + "/v1/coord/:" + name 
-        return url
-
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
         """Create a request for accessing the Boss' data model services.
 
@@ -596,24 +583,5 @@ class BaseVersion(object):
         """
         url = self.build_ids_url(
             resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
-        headers = self.get_headers(content, token)
-        return Request(method, url, headers=headers)
-
-    def get_coordinate_frame_request(
-        self, method, content, url_prefix, token, name):
-        """
-        Creates a request for coordinate frame.
-
-        Args:
-            method (string): HTTP verb such as 'GET'.
-            content (string): HTTP Content-Type such as 'application/json'.
-            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
-            token (string): Django Rest Framework token for auth.
-            name (str): Name of the coordinate frame
-        
-        Returns:
-            (dict) : {'voxel_unit': 'nanometers', 'z_start': 0, 'x_start': 0, 'z_voxel_size': 30.0, 'x_voxel_size': 6.0, 'x_stop': 10752, 'y_start': 0, 'name': 'kasthuri2015_6nm_offset0', 'z_stop': 1849, 'description': '6nm data', 'y_stop': 13312, 'y_voxel_size': 6.0}
-        """
-        url = self.build_coordinate_frame_url(url_prefix,name)
         headers = self.get_headers(content, token)
         return Request(method, url, headers=headers)

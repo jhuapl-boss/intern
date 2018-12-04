@@ -462,27 +462,3 @@ class ProjectService(BossService):
         self.service.delete(
             resource, self.url_prefix, self.auth, self.session,
             self.session_send_opts)
-
-    def get_channel_properties(self, resource):
-        """
-        Gets a json dictionary of the channel properties displayed on the boss
-        
-        Args:
-            resource (intern.resource.Resource): A channel.
-
-        Returns:
-            (dict): Dictionary of channel properties.
-        """
-        return self.service.get_channel_properties(resource, self.auth, self.url_prefix, self.session)
-
-    def get_coordinate_frame(self, name):
-        """
-        Gets the coordinate frame properties displayed under the coordinate frame on the boss
-
-        Args:
-            name (str): Name of the coordinate frame
-        
-        Returns:
-            (dictionary) : Coordinate frame encoded in a dictionary.
-        """
-        return self.service.get_coordinate_frame(self.session, self.auth, self.url_prefix, name)
