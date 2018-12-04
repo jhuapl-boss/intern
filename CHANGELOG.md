@@ -1,5 +1,8 @@
 # Change Log
 ____________
+## v0.9.11
+*  Convenience functions added get_experiment() and get_coordinate_frame()
+
 ## v0.9.10
 *  Intern now forwards no_cache option when breaking apart large cutouts.
 
