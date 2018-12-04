@@ -59,7 +59,6 @@ class VolumeService_1(BaseVersion):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
         """
-        compressed = blosc.compress(numpyVolume, typesize=self.get_bit_width(resource))
 
         if numpyVolume.ndim == 3:
             # Can't have time
@@ -77,6 +76,38 @@ class VolumeService_1(BaseVersion):
                 "Number of dimensions: {}".format(numpyVolume.ndim)
             )
 
+        # Check to see if this volume is larger than 1GB. If so, chunk it into
+        # several smaller bites:
+        if (
+                (x_range[1] - x_range[0]) *
+                (y_range[1] - y_range[0]) *
+                (z_range[1] - z_range[0])
+        ) > 1024 * 1024 * 32 * 2:
+            blocks = block_compute(
+                x_range[0], x_range[1],
+                y_range[0], y_range[1],
+                z_range[0], z_range[1],
+                block_size=(1024, 1024, 32)
+            )
+
+            for b in blocks:
+                _data = np.ascontiguousarray(
+                    numpyVolume[
+                        b[2][0] - z_range[0]: b[2][1] - z_range[0],
+                        b[1][0] - y_range[0]: b[1][1] - y_range[0],
+                        b[0][0] - x_range[0]: b[0][1] - x_range[0]
+                    ],
+                    dtype=numpyVolume.dtype
+                )
+                self.create_cutout(
+                    resource, resolution, b[0], b[1], b[2],
+                    time_range, _data, url_prefix, auth, session, send_opts
+                )
+            return
+
+        compressed = blosc.compress(
+            numpyVolume, typesize=self.get_bit_width(resource)
+        )
         req = self.get_cutout_request(
             resource, 'POST', 'application/blosc',
             url_prefix, auth,
@@ -111,7 +142,7 @@ class VolumeService_1(BaseVersion):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
-            no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+            no_cache (optional [boolean]): specifies the use of cache to be True or False.
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
@@ -143,7 +174,7 @@ class VolumeService_1(BaseVersion):
             for b in blocks:
                 _data = self.get_cutout(
                     resource, resolution, b[0], b[1], b[2],
-                    time_range, id_list, url_prefix, auth, session, send_opts, 
+                    time_range, id_list, url_prefix, auth, session, send_opts,
                     no_cache, **kwargs
                 )
 
