@@ -906,26 +906,27 @@ class BossRemote(Remote):
 
     def get_experiment(self, coll_name, exp_name):
         """
-        Gets a json dictionary of the channel properties displayed on the boss
+        Convenience method that gets experiment resource.
         
         Args:
-            resource (intern.resource.Resource): A channel.
+            coll_name (str): Collection name
+            exp_name (str): Experiment name
 
         Returns:
-            (dict): Dictionary of channel properties
+            ExperimentResource
         """
         exp = ExperimentResource(exp_name, coll_name)
         return self.get_project(exp)
 
     def get_coordinate_frame(self, name):
         """
-        Gets the coordinate frame properties displayed under the coordinate frame on the boss
+        Convenience method that gets coordinate frame resource
 
         Args:
             name (str): Name of the coordinate frame
         
         Returns:
-            (dictionary): Dictionary of coordinate frame information.
+            CoordinateFrame Resource
         """
         cf = CoordinateFrameResource(name)
         return self.get_project(cf)
