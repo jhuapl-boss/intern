@@ -54,7 +54,7 @@ class TestVolume_v1(unittest.TestCase):
         resolution = 0
         x_range = [3000, 6000]
         y_range = [3000, 6000]
-        z_range = [30, 62]
+        z_range = [30, 63]
         time_range = [10, 25]
         data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
         url_prefix = 'https://api.theboss.io'
