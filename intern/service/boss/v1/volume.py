@@ -15,9 +15,78 @@ from intern.service.boss import BaseVersion
 from intern.service.boss.v1 import BOSS_API_VERSION
 from intern.resource.boss.resource import *
 from intern.utils.parallel import *
+import requests
 from requests import HTTPError
 import blosc
 import numpy as np
+import copy
+
+from deco import synchronized, concurrent
+
+@concurrent
+def _get_cutout_parallel(url, auth, time_range, dtype, x_range, y_range, z_range):
+    headers = {
+        "Accept": 'application/blosc',
+        "Authorization": "token " + auth
+    }
+    resp = requests.get(url, headers=headers)
+    raw_data = blosc.decompress(resp.content)
+    data_mat = np.fromstring(raw_data, dtype=dtype)
+
+    if time_range:
+        # Reshape including time
+        return np.reshape(data_mat,
+                            (time_range[1] - time_range[0],
+                            z_range[1] - z_range[0],
+                            y_range[1] - y_range[0],
+                            x_range[1] - x_range[0]),
+                            order='C')
+    else:
+        # Reshape without including time
+        return np.reshape(data_mat,
+                            (z_range[1] - z_range[0],
+                            y_range[1] - y_range[0],
+                            x_range[1] - x_range[0]),
+                            order='C')
+
+
+@synchronized
+def _parallel_get_cutout(x_range, y_range, z_range, time_range, resource, volservice, url_prefix, resolution, id_list, no_cache, auth):
+    blocks = block_compute(
+        x_range[0], x_range[1],
+        y_range[0], y_range[1],
+        z_range[0], z_range[1],
+        block_size=(1024, 1024, 32)
+    )
+
+    result = {}
+
+    for b in blocks:
+        url = volservice.build_cutout_url(
+            resource, url_prefix, resolution,
+            b[0], b[1], b[2], time_range,
+            id_list, no_cache
+        )
+        # _get_cutout_parallel(url, auth, time_range, resource.datatype, b[0], b[1], b[2])
+        result[
+            ((b[2][0] - z_range[0], b[2][1] - z_range[0]),
+            (b[1][0] - y_range[0], b[1][1] - y_range[0]),
+            (b[0][0] - x_range[0], b[0][1] - x_range[0]))
+        ] = _get_cutout_parallel(url, auth, time_range, resource.datatype, b[0], b[1], b[2])
+
+    return result
+
+
+def _deparallelify_get_cutout(x_range, y_range, z_range, time_range, resource, volservice, url_prefix, resolution, id_list, no_cache, auth):
+    results = _parallel_get_cutout(x_range, y_range, z_range, time_range, resource, volservice, url_prefix, resolution, id_list, no_cache, auth)
+    result = np.zeros((
+        z_range[1] - z_range[0],
+        y_range[1] - y_range[0],
+        x_range[1] - x_range[0]
+    ), dtype=resource.datatype)
+    for (zs, ys, xs), val in results.items():
+        result[zs[0]:zs[1], ys[0]:ys[1], xs[0]:xs[1]] = val
+    return result
 
 
 class VolumeService_1(BaseVersion):
@@ -157,34 +226,12 @@ class VolumeService_1(BaseVersion):
                 (x_range[1] - x_range[0]) *
                 (y_range[1] - y_range[0]) *
                 (z_range[1] - z_range[0])
-        ) > 1024*1024*32*2:
-            blocks = block_compute(
-                x_range[0], x_range[1],
-                y_range[0], y_range[1],
-                z_range[0], z_range[1],
-                block_size=(1024, 1024, 32)
+        ) > 1024*1024*32*2 or 1==1:
+            return _deparallelify_get_cutout(
+                x_range, y_range, z_range,
+                time_range, resource,
+                self, url_prefix, resolution, id_list, no_cache, auth
             )
-
-            result = np.ndarray((
-                z_range[1] - z_range[0],
-                y_range[1] - y_range[0],
-                x_range[1] - x_range[0]
-            ), dtype=resource.datatype)
-
-            for b in blocks:
-                _data = self.get_cutout(
-                    resource, resolution, b[0], b[1], b[2],
-                    time_range, id_list, url_prefix, auth, session, send_opts,
-                    no_cache, **kwargs
-                )
-
-                result[
-                    b[2][0] - z_range[0] : b[2][1] - z_range[0],
-                    b[1][0] - y_range[0] : b[1][1] - y_range[0],
-                    b[0][0] - x_range[0] : b[0][1] - x_range[0]
-                ] = _data
-
-            return result
 
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
