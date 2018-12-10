@@ -56,7 +56,7 @@ def _parallel_get_cutout(x_range, y_range, z_range, time_range, resource, volser
         x_range[0], x_range[1],
         y_range[0], y_range[1],
         z_range[0], z_range[1],
-        block_size=(1024, 1024, 128)
+        block_size=(512, 512, 128)
     )
 
     result = {}
