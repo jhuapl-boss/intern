@@ -56,7 +56,7 @@ def _parallel_get_cutout(x_range, y_range, z_range, time_range, resource, volser
         x_range[0], x_range[1],
         y_range[0], y_range[1],
         z_range[0], z_range[1],
-        block_size=(512, 512, 256)
+        block_size=(512, 512, 128)
     )
 
     result = {}
@@ -226,7 +226,7 @@ class VolumeService_1(BaseVersion):
                 (x_range[1] - x_range[0]) *
                 (y_range[1] - y_range[0]) *
                 (z_range[1] - z_range[0])
-        ) > (1024*512*512):
+        ) > 1024*1024*32*2:
             return _deparallelify_get_cutout(
                 x_range, y_range, z_range,
                 time_range, resource,
