@@ -18,6 +18,7 @@ from intern.utils.parallel import *
 from requests import HTTPError
 import blosc
 import numpy as np
+from PIL import Image
 
 
 class VolumeService_1(BaseVersion):
@@ -59,7 +60,6 @@ class VolumeService_1(BaseVersion):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
         """
-
         if numpyVolume.ndim == 3:
             # Can't have time
             if time_range is not None:
@@ -75,6 +75,45 @@ class VolumeService_1(BaseVersion):
                 "Invalid data format. Only 3D or 4D cutouts are supported. " +
                 "Number of dimensions: {}".format(numpyVolume.ndim)
             )
+
+        if resolution == resource.base_resolution + 1:
+
+            if numpyVolume.dtype == np.uint8:
+                image_type = 'L'
+            elif numpyVolume.dtype == np.uint16:
+                image_type = 'I;16'
+
+            # Raise error if dimensions of x and y are not even
+            if numpyVolume.shape[2]%2 != 0 and numpyVolume.shape[1]%2 != 0:
+                raise ValueError(
+                    "When uploading a tile at res value other than BaseResolution, the tile's x,y dimensions must be even"
+                    "Dimensions of your data: {},{},{}".format(numpyVolume.shape[0],numpyVolume.shape[1],numpyVolume.shape[2])
+                )
+            # Raise error if attemting to upload more than a single tile
+            if numpyVolume.shape[0] != 1:
+                raise ValueError(
+                    "When uploading a tile at res value other than BaseResolution, the tile's z dimension must be one"
+                    "Dimensions of your data: {},{},{}".format(numpyVolume.shape[0],numpyVolume.shape[1],numpyVolume.shape[2])
+                )
+
+            # Resize x and y range to fit new resolution
+            x_range = [int(x_range[0]/2), int(x_range[1]/2)]
+            y_range = [int(y_range[0]/2), int(y_range[1]/2)]
+
+            # Assign value for x and y size and then divide b two for reshaping. 
+            x_size = numpyVolume.shape[2]
+            y_size = numpyVolume.shape[1]
+            x_resize = int(x_size/2)
+            y_resize = int(y_size/2)
+
+            # Downsample single tile:
+            image = Image.frombuffer(image_type, (x_size, y_size), numpyVolume.flatten(), 'raw', image_type, 0, 1)
+            image = image.resize((x_resize, y_resize), Image.BILINEAR)
+            res_1_tile = np.asarray(image)
+
+            # TODO LR: Allow for multiple z slices to be uploaded.
+            # Define numpyVolume as the new downsampled tile with three dimensions. 
+            numpyVolume = np.expand_dims(res_1_tile, axis=0)
 
         # Check to see if this volume is larger than 1GB. If so, chunk it into
         # several smaller bites:
