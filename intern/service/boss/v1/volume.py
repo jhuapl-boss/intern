@@ -76,8 +76,8 @@ class VolumeService_1(BaseVersion):
                 "Number of dimensions: {}".format(numpyVolume.ndim)
             )
 
+        # If resolution is +1 base resolution then downsample the single tile and then create the cutout. 
         if resolution == resource.base_resolution + 1:
-
             if numpyVolume.dtype == np.uint8:
                 image_type = 'L'
             elif numpyVolume.dtype == np.uint16:
