@@ -1,4 +1,4 @@
-﻿"""
+"""
 # Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -930,3 +930,23 @@ class BossRemote(Remote):
         """
         cf = CoordinateFrameResource(name)
         return self.get_project(cf)
+
+    def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, **kwargs):
+            """
+            Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
+
+            Args:
+                resource (intern.resource.Resource): Resource compatible with cutout operations.
+                resolution (int): 0 indicates native resolution.
+                x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+                y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+                z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+
+            Returns:
+                (string): Return neuroglancer link.
+
+            Raises:
+                RuntimeError when given invalid resource.
+                Other exceptions may be raised depending on the volume service's implementation.
+            """
+            return self._volume.get_neuroglancer_link(resource, resolution, x_range, y_range, z_range, **kwargs)
