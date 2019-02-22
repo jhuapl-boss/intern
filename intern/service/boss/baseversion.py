@@ -584,4 +584,3 @@ class BaseVersion(object):
             resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
         headers = self.get_headers(content, token)
         return Request(method, url, headers=headers)
-

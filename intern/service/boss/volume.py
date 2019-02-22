@@ -164,4 +164,3 @@ class VolumeService(BossService):
         return self.service.get_ids_in_region(
             resource, resolution, x_range, y_range, z_range, time_range,
             self.url_prefix, self.auth, self.session, self.session_send_opts)
-

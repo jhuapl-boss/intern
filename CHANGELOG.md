@@ -1,6 +1,9 @@
 # Change Log
 ____________
 ## v0.9.11
+*  Convenience functions added: 
+  * `BossRemote#get_experiment()`
+  * `BossRemote#get_coordinate_frame()`
 * `create_cutout` will now chunk large cutouts into smaller components to eliminate HTTP size limitation and timeout errors.
 
 ## v0.9.10

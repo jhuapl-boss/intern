@@ -1,4 +1,4 @@
-"""
+﻿"""
 # Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -903,3 +903,30 @@ class BossRemote(Remote):
             if isinstance(resource, str):
                 resource = self.parse_bossURI(resource)
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
+
+    def get_experiment(self, coll_name, exp_name):
+        """
+        Convenience method that gets experiment resource.
+        
+        Args:
+            coll_name (str): Collection name
+            exp_name (str): Experiment name
+
+        Returns:
+            (ExperimentResource)
+        """
+        exp = ExperimentResource(exp_name, coll_name)
+        return self.get_project(exp)
+
+    def get_coordinate_frame(self, name):
+        """
+        Convenience method that gets coordinate frame resource
+
+        Args:
+            name (str): Name of the coordinate frame
+        
+        Returns:
+            (CoordinateFrameResource)
+        """
+        cf = CoordinateFrameResource(name)
+        return self.get_project(cf)
