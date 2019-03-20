@@ -64,7 +64,6 @@ class VolumeService_1(BaseVersion):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
         """
-        compressed = blosc.compress(numpyVolume, typesize=self.get_bit_width(resource))
 
         if numpyVolume.ndim == 3:
             # Can't have time
@@ -82,6 +81,38 @@ class VolumeService_1(BaseVersion):
                 "Number of dimensions: {}".format(numpyVolume.ndim)
             )
 
+        # Check to see if this volume is larger than 1GB. If so, chunk it into
+        # several smaller bites:
+        if (
+                (x_range[1] - x_range[0]) *
+                (y_range[1] - y_range[0]) *
+                (z_range[1] - z_range[0])
+        ) > 1024 * 1024 * 32 * 2:
+            blocks = block_compute(
+                x_range[0], x_range[1],
+                y_range[0], y_range[1],
+                z_range[0], z_range[1],
+                block_size=(1024, 1024, 32)
+            )
+
+            for b in blocks:
+                _data = np.ascontiguousarray(
+                    numpyVolume[
+                        b[2][0] - z_range[0]: b[2][1] - z_range[0],
+                        b[1][0] - y_range[0]: b[1][1] - y_range[0],
+                        b[0][0] - x_range[0]: b[0][1] - x_range[0]
+                    ],
+                    dtype=numpyVolume.dtype
+                )
+                self.create_cutout(
+                    resource, resolution, b[0], b[1], b[2],
+                    time_range, _data, url_prefix, auth, session, send_opts
+                )
+            return
+
+        compressed = blosc.compress(
+            numpyVolume, typesize=self.get_bit_width(resource)
+        )
         req = self.get_cutout_request(
             resource, 'POST', 'application/blosc',
             url_prefix, auth,
@@ -120,6 +151,8 @@ class VolumeService_1(BaseVersion):
                 cache = Will check both cache and for dirty keys
                 no_cache = Will skip cache check but check for dirty keys
                 raw = Will skip both the cache and dirty keys check
+            chunk_size (optional Tuple[int, int, int]): The chunk size to request
+
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
@@ -127,19 +160,32 @@ class VolumeService_1(BaseVersion):
         Raises:
             requests.HTTPError
         """
+        chunk_size = kwargs.pop("chunk_size", (512, 512, 16 * 8))
+        # TODO: magic number
+        chunk_limit = (chunk_size[0] * chunk_size[1] * chunk_size[2]) * 1.2
 
-        # Check to see if this volume is larger than 1GB. If so, chunk it into
-        # several smaller bites:
-        if (
+        # Check to see if this volume is larger than a single request. If so,
+        # chunk it into several smaller bites:
+        if time_range:
+            cutout_size = (
+                (x_range[1] - x_range[0]) *
+                (y_range[1] - y_range[0]) *
+                (z_range[1] - z_range[0]) *
+                (time_range[1] - time_range[0])
+            )
+        else:
+            cutout_size = (
                 (x_range[1] - x_range[0]) *
                 (y_range[1] - y_range[0]) *
                 (z_range[1] - z_range[0])
-        ) > 1024*1024*32*2:
+            )
+
+        if cutout_size > chunk_limit:
             blocks = block_compute(
                 x_range[0], x_range[1],
                 y_range[0], y_range[1],
                 z_range[0], z_range[1],
-                block_size=(1024, 1024, 32)
+                block_size=chunk_size
             )
 
             result = np.ndarray((
@@ -326,3 +372,25 @@ class VolumeService_1(BaseVersion):
         msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
+
+    def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, url_prefix, **kwargs):
+        """
+        Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with cutout operations.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+
+        Returns:
+            (string): Return neuroglancer link.
+
+        Raises:
+            RuntimeError when given invalid resource.
+            Other exceptions may be raised depending on the volume service's implementation.
+        """
+        link = "https://neuroglancer.theboss.io/#!{'layers':{'" + str(resource.name)   + "':{'type':'" + resource.type + "'_'source':" + "'boss://" + url_prefix+ "/" + resource.coll_name + "/" + resource.exp_name + "/" + resource.name + "'}}_'navigation':{'pose':{'position':{'voxelCoordinates':[" + str(x_range[0]) + "_" + str(y_range[0]) + "_" + str(z_range[0]) + "]}}}}"
+        return link

@@ -1038,8 +1038,11 @@ table {
     <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.tearDownClass">tearDownClass</a></li>
     <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_create_cutout_failure">test_create_cutout_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_create_cutout_success">test_create_cutout_success</a></li>
+    <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_create_large_cutout_success">test_create_large_cutout_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_bounding_box_success">test_get_bounding_box_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_failure">test_get_cutout_failure</a></li>
+    <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_no_cache_defaults_true_large_cutout">test_get_cutout_no_cache_defaults_true_large_cutout</a></li>
+    <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_no_cache_defaults_true_small_cutout">test_get_cutout_no_cache_defaults_true_small_cutout</a></li>
     <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_success">test_get_cutout_success</a></li>
     <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_ids_in_region_failure">test_get_ids_in_region_failure</a></li>
     <li class="mono"><a href="#intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_ids_in_region_success">test_get_ids_in_region_success</a></li>
@@ -1080,12 +1083,13 @@ table {
 # limitations under the License.
 
 from intern.service.boss.v1.volume import VolumeService_1
+from intern.service.boss import BaseVersion
 from intern.resource.boss.resource import ChannelResource
 import blosc
 import numpy
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
-from mock import patch
+from mock import patch, ANY
 
 
 class TestVolume_v1(unittest.TestCase):
@@ -1100,6 +1104,27 @@ class TestVolume_v1(unittest.TestCase):
         x_range = [20, 40]
         y_range = [50, 70]
         z_range = [30, 50]
+        time_range = [10, 25]
+        data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_response = Response()
+        fake_response.status_code = 201
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        self.vol.create_cutout(
+            self.chan, resolution, x_range, y_range, z_range, time_range, data,
+            url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Session', autospec=True)
+    def test_create_large_cutout_success(self, mock_session):
+        resolution = 0
+        x_range = [3000, 6000]
+        y_range = [3000, 6000]
+        z_range = [30, 63]
         time_range = [10, 25]
         data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
         url_prefix = 'https://api.theboss.io'
@@ -1189,6 +1214,70 @@ class TestVolume_v1(unittest.TestCase):
             actual = self.vol.get_cutout(
                 self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
                 url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Session', autospec=True)
+    def test_get_cutout_no_cache_defaults_true_small_cutout(self, mock_session):
+        """Ensure no-cache defaults to True."""
+        resolution = 0
+        x_range = [20, 40]
+        y_range = [50, 70]
+        z_range = [30, 50]
+        time_range = [10, 25]
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        id_list = []
+
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.prepare_request.return_value.headers = {}
+
+        fake_response = Response()
+        fake_response.status_code = 200
+        data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+        compressed_data = blosc.compress(data, typesize=16)
+        fake_response._content = compressed_data
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        with patch.object(
+                BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+                time_range, id_list, url_prefix, auth, mock_session, send_opts)
+            req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
+                x_range, y_range, z_range, time_range, id_list=[], no_cache=True)
+            self.assertEqual(1, req_spy.call_count)
+
+    @patch('requests.Session', autospec=True)
+    def test_get_cutout_no_cache_defaults_true_large_cutout(self, mock_session):
+        """Ensure no-cache defaults to True for all recursive calls generated
+        by get_cutout."""
+        resolution = 0
+        x_range = [20, 1045]
+        y_range = [50, 1075]
+        z_range = [30, 33]
+        time_range = [10, 11]
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        id_list = []
+
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.prepare_request.return_value.headers = {}
+
+        fake_response = Response()
+        fake_response.status_code = 200
+        data = numpy.random.randint(0, 3000, (1, 3, 1025, 1025), numpy.uint16)
+        compressed_data = blosc.compress(data, typesize=16)
+        fake_response._content = compressed_data
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        with patch.object(
+                BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+                time_range, id_list, url_prefix, auth, mock_session, send_opts)
+            req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
+                ANY, ANY, ANY, ANY, id_list=[], no_cache=True)
+            # Verify that chunking occured.
+            self.assertTrue(req_spy.call_count > 0)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
@@ -1318,6 +1407,27 @@ class TestVolume_v1(unittest.TestCase):
             url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
+    def test_create_large_cutout_success(self, mock_session):
+        resolution = 0
+        x_range = [3000, 6000]
+        y_range = [3000, 6000]
+        z_range = [30, 63]
+        time_range = [10, 25]
+        data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_response = Response()
+        fake_response.status_code = 201
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        self.vol.create_cutout(
+            self.chan, resolution, x_range, y_range, z_range, time_range, data,
+            url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Session', autospec=True)
     def test_create_cutout_failure(self, mock_session):
         resolution = 0
         x_range = [20, 40]
@@ -1391,6 +1501,70 @@ class TestVolume_v1(unittest.TestCase):
             actual = self.vol.get_cutout(
                 self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
                 url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Session', autospec=True)
+    def test_get_cutout_no_cache_defaults_true_small_cutout(self, mock_session):
+        """Ensure no-cache defaults to True."""
+        resolution = 0
+        x_range = [20, 40]
+        y_range = [50, 70]
+        z_range = [30, 50]
+        time_range = [10, 25]
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        id_list = []
+
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.prepare_request.return_value.headers = {}
+
+        fake_response = Response()
+        fake_response.status_code = 200
+        data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+        compressed_data = blosc.compress(data, typesize=16)
+        fake_response._content = compressed_data
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        with patch.object(
+                BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+                time_range, id_list, url_prefix, auth, mock_session, send_opts)
+            req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
+                x_range, y_range, z_range, time_range, id_list=[], no_cache=True)
+            self.assertEqual(1, req_spy.call_count)
+
+    @patch('requests.Session', autospec=True)
+    def test_get_cutout_no_cache_defaults_true_large_cutout(self, mock_session):
+        """Ensure no-cache defaults to True for all recursive calls generated
+        by get_cutout."""
+        resolution = 0
+        x_range = [20, 1045]
+        y_range = [50, 1075]
+        z_range = [30, 33]
+        time_range = [10, 11]
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+        id_list = []
+
+        mock_session.prepare_request.return_value = PreparedRequest()
+        mock_session.prepare_request.return_value.headers = {}
+
+        fake_response = Response()
+        fake_response.status_code = 200
+        data = numpy.random.randint(0, 3000, (1, 3, 1025, 1025), numpy.uint16)
+        compressed_data = blosc.compress(data, typesize=16)
+        fake_response._content = compressed_data
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        with patch.object(
+                BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+                time_range, id_list, url_prefix, auth, mock_session, send_opts)
+            req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
+                ANY, ANY, ANY, ANY, id_list=[], no_cache=True)
+            # Verify that chunking occured.
+            self.assertTrue(req_spy.call_count > 0)
 
     @patch('requests.Response', autospec=True)
     @patch('requests.Session', autospec=True)
@@ -2518,7 +2692,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v1.tests.test_volume.TestVolume_v1.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10d1eb8c0&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x1026e9de8&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2579,7 +2753,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.service.boss.v1.tests.test_volume.TestVolume_v1.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10d1eb8c0&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x1026e9de8&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3525,6 +3699,42 @@ def test_create_cutout_success(self, mock_session):
   
             
   <div class="item">
+    <div class="name def" id="intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_create_large_cutout_success">
+    <p>def <span class="ident">test_create_large_cutout_success</span>(</p><p>*args, **keywargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_create_large_cutout_success', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_create_large_cutout_success" class="source">
+    <pre><code>@patch('requests.Session', autospec=True)
+def test_create_large_cutout_success(self, mock_session):
+    resolution = 0
+    x_range = [3000, 6000]
+    y_range = [3000, 6000]
+    z_range = [30, 63]
+    time_range = [10, 25]
+    data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+    url_prefix = 'https://api.theboss.io'
+    auth = 'mytoken'
+    mock_session.prepare_request.return_value = PreparedRequest()
+    fake_response = Response()
+    fake_response.status_code = 201
+    mock_session.send.return_value = fake_response
+    send_opts = {}
+    self.vol.create_cutout(
+        self.chan, resolution, x_range, y_range, z_range, time_range, data,
+        url_prefix, auth, mock_session, send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_bounding_box_success">
     <p>def <span class="ident">test_get_bounding_box_success</span>(</p><p>*args, **keywargs)</p>
     </div>
@@ -3598,6 +3808,101 @@ def test_get_cutout_failure(self, mock_session):
         actual = self.vol.get_cutout(
             self.chan, resolution, x_range, y_range, z_range, time_range, id_list,
             url_prefix, auth, mock_session, send_opts)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_no_cache_defaults_true_large_cutout">
+    <p>def <span class="ident">test_get_cutout_no_cache_defaults_true_large_cutout</span>(</p><p>*args, **keywargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Ensure no-cache defaults to True for all recursive calls generated<br />
+by get_cutout.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_no_cache_defaults_true_large_cutout', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_no_cache_defaults_true_large_cutout" class="source">
+    <pre><code>@patch('requests.Session', autospec=True)
+def test_get_cutout_no_cache_defaults_true_large_cutout(self, mock_session):
+    """Ensure no-cache defaults to True for all recursive calls generated
+    by get_cutout."""
+    resolution = 0
+    x_range = [20, 1045]
+    y_range = [50, 1075]
+    z_range = [30, 33]
+    time_range = [10, 11]
+    url_prefix = 'https://api.theboss.io'
+    auth = 'mytoken'
+    id_list = []
+    mock_session.prepare_request.return_value = PreparedRequest()
+    mock_session.prepare_request.return_value.headers = {}
+    fake_response = Response()
+    fake_response.status_code = 200
+    data = numpy.random.randint(0, 3000, (1, 3, 1025, 1025), numpy.uint16)
+    compressed_data = blosc.compress(data, typesize=16)
+    fake_response._content = compressed_data
+    mock_session.send.return_value = fake_response
+    send_opts = {}
+    with patch.object(
+            BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
+        self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+            time_range, id_list, url_prefix, auth, mock_session, send_opts)
+        req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
+            ANY, ANY, ANY, ANY, id_list=[], no_cache=True)
+        # Verify that chunking occured.
+        self.assertTrue(req_spy.call_count > 0)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_no_cache_defaults_true_small_cutout">
+    <p>def <span class="ident">test_get_cutout_no_cache_defaults_true_small_cutout</span>(</p><p>*args, **keywargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Ensure no-cache defaults to True.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_no_cache_defaults_true_small_cutout', this);">Show source &equiv;</a></p>
+  <div id="source-intern.service.boss.v1.tests.test_volume.TestVolume_v1.test_get_cutout_no_cache_defaults_true_small_cutout" class="source">
+    <pre><code>@patch('requests.Session', autospec=True)
+def test_get_cutout_no_cache_defaults_true_small_cutout(self, mock_session):
+    """Ensure no-cache defaults to True."""
+    resolution = 0
+    x_range = [20, 40]
+    y_range = [50, 70]
+    z_range = [30, 50]
+    time_range = [10, 25]
+    url_prefix = 'https://api.theboss.io'
+    auth = 'mytoken'
+    id_list = []
+    mock_session.prepare_request.return_value = PreparedRequest()
+    mock_session.prepare_request.return_value.headers = {}
+    fake_response = Response()
+    fake_response.status_code = 200
+    data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+    compressed_data = blosc.compress(data, typesize=16)
+    fake_response._content = compressed_data
+    mock_session.send.return_value = fake_response
+    send_opts = {}
+    with patch.object(
+            BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
+        self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+            time_range, id_list, url_prefix, auth, mock_session, send_opts)
+        req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
+            x_range, y_range, z_range, time_range, id_list=[], no_cache=True)
+        self.assertEqual(1, req_spy.call_count)
 </code></pre>
   </div>
 </div>

@@ -51,6 +51,27 @@ class TestVolume_v1(unittest.TestCase):
             url_prefix, auth, mock_session, send_opts)
 
     @patch('requests.Session', autospec=True)
+    def test_create_large_cutout_success(self, mock_session):
+        resolution = 0
+        x_range = [3000, 6000]
+        y_range = [3000, 6000]
+        z_range = [30, 63]
+        time_range = [10, 25]
+        data = numpy.random.randint(0, 3000, (15, 20, 20, 20), numpy.uint16)
+        url_prefix = 'https://api.theboss.io'
+        auth = 'mytoken'
+
+        mock_session.prepare_request.return_value = PreparedRequest()
+        fake_response = Response()
+        fake_response.status_code = 201
+        mock_session.send.return_value = fake_response
+        send_opts = {}
+
+        self.vol.create_cutout(
+            self.chan, resolution, x_range, y_range, z_range, time_range, data,
+            url_prefix, auth, mock_session, send_opts)
+
+    @patch('requests.Session', autospec=True)
     def test_create_cutout_failure(self, mock_session):
         resolution = 0
         x_range = [20, 40]

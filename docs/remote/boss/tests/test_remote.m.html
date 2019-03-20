@@ -1052,7 +1052,6 @@ table {
     <li class="mono"><a href="#intern.remote.boss.tests.test_remote.RemoteConfigTest.test_init_with_config_dict">test_init_with_config_dict</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.test_remote.RemoteConfigTest.test_init_with_default_file">test_init_with_default_file</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.test_remote.RemoteConfigTest.test_init_with_malformed_file">test_init_with_malformed_file</a></li>
-    <li class="mono"><a href="#intern.remote.boss.tests.test_remote.RemoteConfigTest.test_init_with_missing_file">test_init_with_missing_file</a></li>
     <li class="mono"><a href="#intern.remote.boss.tests.test_remote.RemoteConfigTest.test_init_with_specific_file">test_init_with_specific_file</a></li>
   </ul>
 
@@ -1130,10 +1129,10 @@ class RemoteConfigTest(unittest.TestCase):
         os.remove(cls.specific_cfg)
         os.remove(cls.missing_cfg)
 
-    def test_init_with_missing_file(self):
-        """Test when a non-existent config file is provided"""
-        with self.assertRaises(IOError):
-            rmt = BossRemote('nofile.cfg')
+    # def test_init_with_missing_file(self):
+    #     """Test when a non-existent config file is provided"""
+    #     with self.assertRaises(OSError):
+    #         rmt = BossRemote('nofile.cfg')
 
     def test_init_with_malformed_file(self):
         """Test when a bad config file is provided"""
@@ -1306,10 +1305,10 @@ if __name__ == '__main__':
         os.remove(cls.specific_cfg)
         os.remove(cls.missing_cfg)
 
-    def test_init_with_missing_file(self):
-        """Test when a non-existent config file is provided"""
-        with self.assertRaises(IOError):
-            rmt = BossRemote('nofile.cfg')
+    # def test_init_with_missing_file(self):
+    #     """Test when a non-existent config file is provided"""
+    #     with self.assertRaises(OSError):
+    #         rmt = BossRemote('nofile.cfg')
 
     def test_init_with_malformed_file(self):
         """Test when a bad config file is provided"""
@@ -2426,7 +2425,7 @@ operator.</p></div>
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.test_remote.RemoteConfigTest.assertRaises">
-    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x10d1eb8c0&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaises</span>(</p><p>self, excClass, callableObj=&lt;function _sentinel at 0x1026e9de8&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -2487,7 +2486,7 @@ self.assertEqual(the_exception.error_code, 3)
             
   <div class="item">
     <div class="name def" id="intern.remote.boss.tests.test_remote.RemoteConfigTest.assertRaisesRegexp">
-    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x10d1eb8c0&gt;, *args, **kwargs)</p>
+    <p>def <span class="ident">assertRaisesRegexp</span>(</p><p>self, expected_exception, expected_regexp, callable_obj=&lt;function _sentinel at 0x1026e9de8&gt;, *args, **kwargs)</p>
     </div>
     
 
@@ -3483,29 +3482,6 @@ def tearDownClass(cls):
     """Test when a bad config file is provided"""
     with self.assertRaises(KeyError):
         rmt = BossRemote(self.missing_cfg)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="intern.remote.boss.tests.test_remote.RemoteConfigTest.test_init_with_missing_file">
-    <p>def <span class="ident">test_init_with_missing_file</span>(</p><p>self)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Test when a non-existent config file is provided</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.tests.test_remote.RemoteConfigTest.test_init_with_missing_file', this);">Show source &equiv;</a></p>
-  <div id="source-intern.remote.boss.tests.test_remote.RemoteConfigTest.test_init_with_missing_file" class="source">
-    <pre><code>def test_init_with_missing_file(self):
-    """Test when a non-existent config file is provided"""
-    with self.assertRaises(IOError):
-        rmt = BossRemote('nofile.cfg')
 </code></pre>
   </div>
 </div>

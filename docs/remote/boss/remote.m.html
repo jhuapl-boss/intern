@@ -1013,12 +1013,15 @@ table {
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.delete_user_role">delete_user_role</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_bounding_box">get_bounding_box</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_channel">get_channel</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_coordinate_frame">get_coordinate_frame</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_cutout">get_cutout</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_experiment">get_experiment</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_group">get_group</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_ids_in_region">get_ids_in_region</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_is_group_maintainer">get_is_group_maintainer</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_is_group_member">get_is_group_member</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_metadata">get_metadata</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_neuroglancer_link">get_neuroglancer_link</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_permissions">get_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_project">get_project</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.get_user">get_user</a></li>
@@ -1035,6 +1038,7 @@ table {
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_permissions">list_permissions</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.list_project">list_project</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.load_config_file">load_config_file</a></li>
+    <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.parse_bossURI">parse_bossURI</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.reserve_ids">reserve_ids</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.update_metadata">update_metadata</a></li>
     <li class="mono"><a href="#intern.remote.boss.remote.BossRemote.update_permissions">update_permissions</a></li>
@@ -1073,7 +1077,7 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.boss.remote" class="source">
-    <pre><code>﻿"""
+    <pre><code>"""
 # Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -1145,6 +1149,14 @@ class BossRemote(Remote):
         self._init_project_service(version)
         self._init_metadata_service(version)
         self._init_volume_service(version)
+
+    def __repr__(self):
+        """
+        Stringify the Remote.
+
+        Returns a representation of the BossRemote that lists the host.
+        """
+        return "<intern.remote.BossRemote [" + self._config['Default']['host'] + "]>"
 
     def _init_project_service(self, version):
         """
@@ -1925,6 +1937,22 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
+    def parse_bossURI(self, uri): # type: (str) -> Resource
+        """
+        Parse a bossDB URI and handle malform errors.
+
+        Arguments:
+            uri (str): URI of the form bossdb://<collection>/<experiment>/<channel>
+
+        Returns:
+            Resource
+
+        """
+        t = uri.split("://")[1].split("/")
+        if len(t) is 3:
+            return self.get_channel(t[2], t[0], t[1])
+        raise ValueError("Cannot parse URI " + uri + ".")
+
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
             """Get a cutout from the volume service.
 
@@ -1934,14 +1962,16 @@ class BossRemote(Remote):
             requester.
 
             Args:
-                resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
+                resource (intern.resource.boss.resource.ChannelResource | str): Channel or layer Resource. If a 
+                    string is provided instead, BossRemote.parse_bossURI is called instead on a URI-formatted 
+                    string of the form `bossdb://collection/experiment/channel`.
                 resolution (int): 0 indicates native resolution.
                 x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
                 y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
                 z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
                 time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
                 id_list (optional [list[int]]): list of object ids to filter the cutout by.
-                no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+                no_cache (optional [boolean]): specifies the use of cache to be True or False.
 
             Returns:
                 (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -1949,8 +1979,56 @@ class BossRemote(Remote):
             Raises:
                 requests.HTTPError on error.
             """
-
+            if isinstance(resource, str):
+                resource = self.parse_bossURI(resource)
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
+
+    def get_experiment(self, coll_name, exp_name):
+        """
+        Convenience method that gets experiment resource.
+        
+        Args:
+            coll_name (str): Collection name
+            exp_name (str): Experiment name
+
+        Returns:
+            (ExperimentResource)
+        """
+        exp = ExperimentResource(exp_name, coll_name)
+        return self.get_project(exp)
+
+    def get_coordinate_frame(self, name):
+        """
+        Convenience method that gets coordinate frame resource
+
+        Args:
+            name (str): Name of the coordinate frame
+        
+        Returns:
+            (CoordinateFrameResource)
+        """
+        cf = CoordinateFrameResource(name)
+        return self.get_project(cf)
+
+    def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, **kwargs):
+            """
+            Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
+
+            Args:
+                resource (intern.resource.Resource): Resource compatible with cutout operations.
+                resolution (int): 0 indicates native resolution.
+                x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+                y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+                z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+
+            Returns:
+                (string): Return neuroglancer link.
+
+            Raises:
+                RuntimeError when given invalid resource.
+                Other exceptions may be raised depending on the volume service's implementation.
+            """
+            return self._volume.get_neuroglancer_link(resource, resolution, x_range, y_range, z_range, **kwargs)
 </code></pre>
   </div>
 
@@ -2073,6 +2151,14 @@ class BossRemote(Remote):
         self._init_metadata_service(version)
         self._init_volume_service(version)
 
+    def __repr__(self):
+        """
+        Stringify the Remote.
+
+        Returns a representation of the BossRemote that lists the host.
+        """
+        return "<intern.remote.BossRemote [" + self._config['Default']['host'] + "]>"
+
     def _init_project_service(self, version):
         """
         Method to initialize the Project Service from the config data
@@ -2852,6 +2938,22 @@ class BossRemote(Remote):
         self.metadata_service.set_auth(self._token_metadata)
         self.metadata_service.delete(resource, keys)
 
+    def parse_bossURI(self, uri): # type: (str) -> Resource
+        """
+        Parse a bossDB URI and handle malform errors.
+
+        Arguments:
+            uri (str): URI of the form bossdb://<collection>/<experiment>/<channel>
+
+        Returns:
+            Resource
+
+        """
+        t = uri.split("://")[1].split("/")
+        if len(t) is 3:
+            return self.get_channel(t[2], t[0], t[1])
+        raise ValueError("Cannot parse URI " + uri + ".")
+
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
             """Get a cutout from the volume service.
 
@@ -2861,14 +2963,16 @@ class BossRemote(Remote):
             requester.
 
             Args:
-                resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
+                resource (intern.resource.boss.resource.ChannelResource | str): Channel or layer Resource. If a 
+                    string is provided instead, BossRemote.parse_bossURI is called instead on a URI-formatted 
+                    string of the form `bossdb://collection/experiment/channel`.
                 resolution (int): 0 indicates native resolution.
                 x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
                 y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
                 z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
                 time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
                 id_list (optional [list[int]]): list of object ids to filter the cutout by.
-                no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+                no_cache (optional [boolean]): specifies the use of cache to be True or False.
 
             Returns:
                 (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -2876,8 +2980,56 @@ class BossRemote(Remote):
             Raises:
                 requests.HTTPError on error.
             """
-
+            if isinstance(resource, str):
+                resource = self.parse_bossURI(resource)
             return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
+
+    def get_experiment(self, coll_name, exp_name):
+        """
+        Convenience method that gets experiment resource.
+        
+        Args:
+            coll_name (str): Collection name
+            exp_name (str): Experiment name
+
+        Returns:
+            (ExperimentResource)
+        """
+        exp = ExperimentResource(exp_name, coll_name)
+        return self.get_project(exp)
+
+    def get_coordinate_frame(self, name):
+        """
+        Convenience method that gets coordinate frame resource
+
+        Args:
+            name (str): Name of the coordinate frame
+        
+        Returns:
+            (CoordinateFrameResource)
+        """
+        cf = CoordinateFrameResource(name)
+        return self.get_project(cf)
+
+    def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, **kwargs):
+            """
+            Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
+
+            Args:
+                resource (intern.resource.Resource): Resource compatible with cutout operations.
+                resolution (int): 0 indicates native resolution.
+                x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+                y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+                z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+
+            Returns:
+                (string): Return neuroglancer link.
+
+            Raises:
+                RuntimeError when given invalid resource.
+                Other exceptions may be raised depending on the volume service's implementation.
+            """
+            return self._volume.get_neuroglancer_link(resource, resolution, x_range, y_range, z_range, **kwargs)
 </code></pre>
   </div>
 </div>
@@ -3788,6 +3940,42 @@ returned is cuboid aligned.</p>
   
             
   <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.get_coordinate_frame">
+    <p>def <span class="ident">get_coordinate_frame</span>(</p><p>self, name)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Convenience method that gets coordinate frame resource</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>name (str)</b>: Name of the coordinate frame</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<pre><code>(CoordinateFrameResource)
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_coordinate_frame', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.get_coordinate_frame" class="source">
+    <pre><code>def get_coordinate_frame(self, name):
+    """
+    Convenience method that gets coordinate frame resource
+    Args:
+        name (str): Name of the coordinate frame
+    
+    Returns:
+        (CoordinateFrameResource)
+    """
+    cf = CoordinateFrameResource(name)
+    return self.get_project(cf)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="intern.remote.boss.remote.BossRemote.get_cutout">
     <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs)</p>
     </div>
@@ -3801,14 +3989,16 @@ data at once.  In these cases, the data is not first read into the<br />
 cache, but instead, is sent directly from the data store to the<br />
 requester.</p>
 <p>Args:<br />
-&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.resource.ChannelResource)</b>: Channel or layer resource.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.boss.resource.ChannelResource | str)</b>: Channel or layer Resource. If a <br />
+        string is provided instead, BossRemote.parse_bossURI is called instead on a URI-formatted <br />
+        string of the form <code>bossdb://collection/experiment/channel</code>.<br />
 &emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
 &emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.<br />
 &emsp;&emsp;&emsp;&emsp;<b>time_range (optional [list[int]])</b>: time range such as [30, 40] which means t&gt;=30 and t&lt;40.<br />
 &emsp;&emsp;&emsp;&emsp;<b>id_list (optional [list[int]])</b>: list of object ids to filter the cutout by.<br />
-&emsp;&emsp;&emsp;&emsp;<b>no_cache (optional [boolean])</b>: specifies the use of cache to be True or False. </p>
+&emsp;&emsp;&emsp;&emsp;<b>no_cache (optional [boolean])</b>: specifies the use of cache to be True or False.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
 <p>&emsp;&emsp;&emsp;&emsp;<b>(numpy.array)</b>: A 3D or 4D (time) numpy matrix in (time)ZYX order.</p>
@@ -3826,20 +4016,62 @@ requester.</p>
         cache, but instead, is sent directly from the data store to the
         requester.
         Args:
-            resource (intern.resource.boss.resource.ChannelResource): Channel or layer resource.
+            resource (intern.resource.boss.resource.ChannelResource | str): Channel or layer Resource. If a 
+                string is provided instead, BossRemote.parse_bossURI is called instead on a URI-formatted 
+                string of the form `bossdb://collection/experiment/channel`.
             resolution (int): 0 indicates native resolution.
             x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
             id_list (optional [list[int]]): list of object ids to filter the cutout by.
-            no_cache (optional [boolean]): specifies the use of cache to be True or False. 
+            no_cache (optional [boolean]): specifies the use of cache to be True or False.
         Returns:
             (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
         Raises:
             requests.HTTPError on error.
         """
+        if isinstance(resource, str):
+            resource = self.parse_bossURI(resource)
         return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.get_experiment">
+    <p>def <span class="ident">get_experiment</span>(</p><p>self, coll_name, exp_name)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Convenience method that gets experiment resource.</p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>coll_name (str)</b>: Collection name<br />
+&emsp;&emsp;&emsp;&emsp;<b>exp_name (str)</b>: Experiment name</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<pre><code>(ExperimentResource)
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_experiment', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.get_experiment" class="source">
+    <pre><code>def get_experiment(self, coll_name, exp_name):
+    """
+    Convenience method that gets experiment resource.
+    
+    Args:
+        coll_name (str): Collection name
+        exp_name (str): Experiment name
+    Returns:
+        (ExperimentResource)
+    """
+    exp = ExperimentResource(exp_name, coll_name)
+    return self.get_project(exp)
 </code></pre>
   </div>
 </div>
@@ -4060,6 +4292,55 @@ user is also explicitly added as a member.</p>
     """
     self.metadata_service.set_auth(self._token_metadata)
     return self.metadata_service.get(resource, keys)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.get_neuroglancer_link">
+    <p>def <span class="ident">get_neuroglancer_link</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. </p>
+<p>Args:<br />
+&emsp;&emsp;&emsp;&emsp;<b>resource (intern.resource.Resource)</b>: Resource compatible with cutout operations.<br />
+&emsp;&emsp;&emsp;&emsp;<b>resolution (int)</b>: 0 indicates native resolution.<br />
+&emsp;&emsp;&emsp;&emsp;<b>x_range (list[int])</b>: x range such as [10, 20] which means x&gt;=10 and x&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>y_range (list[int])</b>: y range such as [10, 20] which means y&gt;=10 and y&lt;20.<br />
+&emsp;&emsp;&emsp;&emsp;<b>z_range (list[int])</b>: z range such as [10, 20] which means z&gt;=10 and z&lt;20.</p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>(string)</b>: Return neuroglancer link.</p>
+<h2 style='font-size:125% !important'>Raises</h2>
+
+<pre><code>RuntimeError when given invalid resource.
+Other exceptions may be raised depending on the volume service's implementation.
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.get_neuroglancer_link', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.get_neuroglancer_link" class="source">
+    <pre><code>def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, **kwargs):
+        """
+        Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
+        Args:
+            resource (intern.resource.Resource): Resource compatible with cutout operations.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+        Returns:
+            (string): Return neuroglancer link.
+        Raises:
+            RuntimeError when given invalid resource.
+            Other exceptions may be raised depending on the volume service's implementation.
+        """
+        return self._volume.get_neuroglancer_link(resource, resolution, x_range, y_range, z_range, **kwargs)
 </code></pre>
   </div>
 </div>
@@ -4709,6 +4990,44 @@ of the named collection.</p>
     cfg_parser = configparser.ConfigParser()
     cfg_parser.readfp(config_handle)
     return cfg_parser
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="intern.remote.boss.remote.BossRemote.parse_bossURI">
+    <p>def <span class="ident">parse_bossURI</span>(</p><p>self, uri)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Parse a bossDB URI and handle malform errors.</p>
+<h2 style='font-size:125% !important'>Arguments</h2>
+
+<p>&emsp;&emsp;&emsp;&emsp;<b>uri (str)</b>: URI of the form bossdb://<collection>/<experiment>/<channel></p>
+<h2 style='font-size:125% !important'>Returns</h2>
+
+<pre><code>Resource
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.boss.remote.BossRemote.parse_bossURI', this);">Show source &equiv;</a></p>
+  <div id="source-intern.remote.boss.remote.BossRemote.parse_bossURI" class="source">
+    <pre><code>def parse_bossURI(self, uri): # type: (str) -> Resource
+    """
+    Parse a bossDB URI and handle malform errors.
+    Arguments:
+        uri (str): URI of the form bossdb://<collection>/<experiment>/<channel>
+    Returns:
+        Resource
+    """
+    t = uri.split("://")[1].split("/")
+    if len(t) is 3:
+        return self.get_channel(t[2], t[0], t[1])
+    raise ValueError("Cannot parse URI " + uri + ".")
 </code></pre>
   </div>
 </div>
