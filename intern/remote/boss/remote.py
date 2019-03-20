@@ -18,6 +18,8 @@ from intern.resource.boss.resource import *
 from intern.service.boss.project import ProjectService
 from intern.service.boss.metadata import MetadataService
 from intern.service.boss.volume import VolumeService
+from intern.service.boss.v1.volume import CacheMode
+import warnings
 
 
 CONFIG_PROJECT_SECTION = 'Project Service'
@@ -29,7 +31,6 @@ CONFIG_HOST = 'host'
 CONFIG_TOKEN = 'token'
 
 LATEST_VERSION = 'v1'
-
 
 class BossRemote(Remote):
     """
@@ -874,10 +875,10 @@ class BossRemote(Remote):
             return self.get_channel(t[2], t[0], t[1])
         raise ValueError("Cannot parse URI " + uri + ".")
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=True, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=None, access_mode=CacheMode.no_cache, **kwargs):
             """Get a cutout from the volume service.
 
-            Note that no_cache=True is desirable when reading large amounts of
+            Note that access_mode=no_cache is desirable when reading large amounts of
             data at once.  In these cases, the data is not first read into the
             cache, but instead, is sent directly from the data store to the
             requester.
@@ -892,7 +893,15 @@ class BossRemote(Remote):
                 z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
                 time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
                 id_list (optional [list[int]]): list of object ids to filter the cutout by.
-                no_cache (optional [boolean]): specifies the use of cache to be True or False.
+                no_cache (optional [boolean or None]): Deprecated way to specify the use of cache to be True or False.
+                    access_mode should be used instead
+                access_mode (optional [Enum]): Identifies one of three cache access options:
+                    cache = Will check both cache and for dirty keys
+                    no_cache = Will skip cache check but check for dirty keys
+                    raw = Will skip both the cache and dirty keys check
+
+                TODO: Add mode to documentation
+
 
             Returns:
                 (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -900,9 +909,18 @@ class BossRemote(Remote):
             Raises:
                 requests.HTTPError on error.
             """
-            if isinstance(resource, str):
-                resource = self.parse_bossURI(resource)
-            return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, no_cache, **kwargs)
+            if no_cache is not None:
+                warnings.warn("The no-cache option has been deprecated and will not be used in future versions of intern.")
+                warnings.warn("Please from intern.service.boss.volume import CacheMode and use access_mode=CacheMode.[cache,no-cache,raw] instead.")
+            if no_cache and access_mode != CacheMode.no_cache:
+                warnings.warn("Both no_cache and access_mode were used, please use access_mode only. As no_cache has been deprecated. ")
+                warnings.warn("Your request will be made using the default mode no_cache.")
+                access_mode=CacheMode.no_cache    
+            if no_cache:
+                access_mode=CacheMode.no_cache
+            elif no_cache == False:
+                access_mode=CacheMode.cache
+            return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, access_mode, **kwargs)
 
     def get_experiment(self, coll_name, exp_name):
         """

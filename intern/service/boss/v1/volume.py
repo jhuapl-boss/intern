@@ -18,7 +18,12 @@ from intern.utils.parallel import *
 from requests import HTTPError
 import blosc
 import numpy as np
+from enum import Enum
 
+class CacheMode(str, Enum):
+    cache = 'cache'
+    no_cache = 'no-cache'
+    raw = 'raw'
 
 class VolumeService_1(BaseVersion):
     def __init__(self):
@@ -124,7 +129,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts, no_cache=True, **kwargs
+            url_prefix, auth, session, send_opts, access_mode=CacheMode.no_cache, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -142,8 +147,12 @@ class VolumeService_1(BaseVersion):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
-            no_cache (optional [boolean]): specifies the use of cache to be True or False.
+            access_mode (optional [Enum]): Identifies one of three cache access options:
+                cache = Will check both cache and for dirty keys
+                no_cache = Will skip cache check but check for dirty keys
+                raw = Will skip both the cache and dirty keys check
             chunk_size (optional Tuple[int, int, int]): The chunk size to request
+
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
@@ -188,8 +197,8 @@ class VolumeService_1(BaseVersion):
             for b in blocks:
                 _data = self.get_cutout(
                     resource, resolution, b[0], b[1], b[2],
-                    time_range, id_list, url_prefix, auth, session, send_opts,
-                    no_cache, **kwargs
+                    time_range, id_list, url_prefix, auth, session, send_opts, 
+                    access_mode, **kwargs
                 )
 
                 result[
@@ -203,8 +212,8 @@ class VolumeService_1(BaseVersion):
         req = self.get_cutout_request(
             resource, 'GET', 'application/blosc',
             url_prefix, auth,
-            resolution, x_range, y_range, z_range, time_range,
-            id_list=id_list, no_cache=no_cache, **kwargs
+            resolution, x_range, y_range, z_range, time_range, access_mode=access_mode,
+            id_list=id_list, **kwargs
         )
         prep = session.prepare_request(req)
         # Hack in Accept header for now.
