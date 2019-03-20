@@ -143,6 +143,7 @@ class VolumeService_1(BaseVersion):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
             no_cache (optional [boolean]): specifies the use of cache to be True or False.
+            chunk_size (optional Tuple[int, int, int]): The chunk size to request
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
@@ -150,19 +151,32 @@ class VolumeService_1(BaseVersion):
         Raises:
             requests.HTTPError
         """
+        chunk_size = kwargs.pop("chunk_size", (512, 512, 16 * 8))
+        # TODO: magic number
+        chunk_limit = (chunk_size[0] * chunk_size[1] * chunk_size[2]) * 1.2
 
-        # Check to see if this volume is larger than 1GB. If so, chunk it into
-        # several smaller bites:
-        if (
+        # Check to see if this volume is larger than a single request. If so,
+        # chunk it into several smaller bites:
+        if time_range:
+            cutout_size = (
+                (x_range[1] - x_range[0]) *
+                (y_range[1] - y_range[0]) *
+                (z_range[1] - z_range[0]) *
+                (time_range[1] - time_range[0])
+            )
+        else:
+            cutout_size = (
                 (x_range[1] - x_range[0]) *
                 (y_range[1] - y_range[0]) *
                 (z_range[1] - z_range[0])
-        ) > 1024*1024*32*2:
+            )
+
+        if cutout_size > chunk_limit:
             blocks = block_compute(
                 x_range[0], x_range[1],
                 y_range[0], y_range[1],
                 z_range[0], z_range[1],
-                block_size=(1024, 1024, 32)
+                block_size=chunk_size
             )
 
             result = np.ndarray((
@@ -352,7 +366,7 @@ class VolumeService_1(BaseVersion):
 
     def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, url_prefix, **kwargs):
         """
-        Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
+        Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step.
 
         Args:
             resource (intern.resource.Resource): Resource compatible with cutout operations.
