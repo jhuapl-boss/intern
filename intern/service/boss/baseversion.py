@@ -15,7 +15,7 @@ import six
 from abc import ABCMeta, abstractmethod
 from intern.resource.boss.resource import CoordinateFrameResource
 from requests import Request
-import urllib
+from six.moves import urllib
 
 @six.add_metaclass(ABCMeta)
 class BaseVersion(object):
