@@ -190,8 +190,17 @@ class BaseVersion(object):
         if access_mode is not None:
             queryParamDict['access-mode'] = access_mode.value 
         if queryParamDict:
+            # The first time include '?'
+            urlWithParams += '?'
             for k, v in queryParamDict.items():
-                urlWithParams += '?{}={}/'.format(k,v)
+                # if this is the first run through, last char in str will be ?, so don't include '&'
+                if urlWithParams[len(urlWithParams)-1] == '?':
+                    pass
+                # otherwise use '&'
+                else:
+                    urlWithParams += '&'
+                # Add key and value members
+                urlWithParams += '{}={}'.format(k,v)
         return urlWithParams
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
