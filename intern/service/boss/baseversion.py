@@ -15,7 +15,6 @@ import six
 from abc import ABCMeta, abstractmethod
 from intern.resource.boss.resource import CoordinateFrameResource
 from requests import Request
-from six.moves import urllib
 
 @six.add_metaclass(ABCMeta)
 class BaseVersion(object):
@@ -191,7 +190,8 @@ class BaseVersion(object):
         if access_mode is not None:
             queryParamDict['access-mode'] = access_mode.value 
         if queryParamDict:
-            urlWithParams += '?' + urllib.parse.urlencode(queryParamDict,safe=",")
+            for k, v in queryParamDict:
+                urlWithParams += '?{}={}'.format(k,v)
         return urlWithParams
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
