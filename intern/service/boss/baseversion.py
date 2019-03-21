@@ -189,6 +189,12 @@ class BaseVersion(object):
         # If creating a cutout, the url will not include the access_mode otherwise it will
         if access_mode is not None:
             queryParamDict['access-mode'] = access_mode.value 
+        """
+        TODO: LMR
+        The following could be done using urlib.urlencode(urlWithParams += '?' + urllib.parse.urlencode(queryParamDict,safe=",")),
+        however urllib's python2 version of this function does not take in the 'safe' parameter and thus we can not use the 
+        function interchangable for python2/3. In order to keep our python2/3 compatability, we do not use urllib. 
+        """
         if queryParamDict:
             # The first time include '?'
             urlWithParams += '?'
