@@ -190,7 +190,7 @@ class BaseVersion(object):
         if access_mode is not None:
             queryParamDict['access-mode'] = access_mode.value 
         if queryParamDict:
-            for k, v in queryParamDict:
+            for k, v in queryParamDict.items():
                 urlWithParams += '?{}={}'.format(k,v)
         return urlWithParams
 
