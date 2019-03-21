@@ -191,7 +191,7 @@ class BaseVersion(object):
             queryParamDict['access-mode'] = access_mode.value 
         if queryParamDict:
             for k, v in queryParamDict.items():
-                urlWithParams += '?{}={}'.format(k,v)
+                urlWithParams += '?{}={}/'.format(k,v)
         return urlWithParams
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
