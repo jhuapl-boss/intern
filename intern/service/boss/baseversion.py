@@ -15,7 +15,6 @@ import six
 from abc import ABCMeta, abstractmethod
 from intern.resource.boss.resource import CoordinateFrameResource
 from requests import Request
-import urllib
 
 @six.add_metaclass(ABCMeta)
 class BaseVersion(object):
@@ -190,8 +189,24 @@ class BaseVersion(object):
         # If creating a cutout, the url will not include the access_mode otherwise it will
         if access_mode is not None:
             queryParamDict['access-mode'] = access_mode.value 
+        """
+        TODO: LMR
+        The following could be done using urlib.urlencode(urlWithParams += '?' + urllib.parse.urlencode(queryParamDict,safe=",")),
+        however urllib's python2 version of this function does not take in the 'safe' parameter and thus we can not use the 
+        function interchangable for python2/3. In order to keep our python2/3 compatability, we do not use urllib. 
+        """
         if queryParamDict:
-            urlWithParams += '?' + urllib.parse.urlencode(queryParamDict,safe=",")
+            # The first time include '?'
+            urlWithParams += '?'
+            for k, v in queryParamDict.items():
+                # if this is the first run through, last char in str will be ?, so don't include '&'
+                if urlWithParams[len(urlWithParams)-1] == '?':
+                    pass
+                # otherwise use '&'
+                else:
+                    urlWithParams += '&'
+                # Add key and value members
+                urlWithParams += '{}={}'.format(k,v)
         return urlWithParams
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
