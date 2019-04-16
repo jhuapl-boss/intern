@@ -6,12 +6,6 @@ from os import path
 class CloudVolumeResource(Resource):
 
     """Base class for CloudVolume resources.
-    Attributes:
-        name (string): Name of resource.  Used as identifier when talking to
-        the cloud volume APO. 
-        description (string): Text description of resource.
-        creator (string): Resource creator.
-        raw (dictionary): Holds JSON data returned by DVID on a POST (create) or GET operation.
     """
 
     def __init__(self):
@@ -29,39 +23,42 @@ class CloudVolumeResource(Resource):
         return True
 
     @classmethod
-    def create_CV(self, protocol, path, description = None, **kwargs):
+    def create_CV(self, protocol, path, description = None, **params):
         """
         Creates a cloud volume instance with keyword parameters. 
 
         """
         info = CloudVolume.create_new_info(
-            num_channels = kwargs['num_channels'],
-            layer_type = kwargs['layer_type'], # 'image' or 'segmentation'
-            data_type = kwargs['data_type'], # can pick any popular uint
-            encoding = kwargs['encoding'], # other options: 'jpeg', 'compressed_segmentation' (req. uint32 or uint64)
-            resolution = kwargs['resolution'], # X,Y,Z values in nanometers
-            voxel_offset = kwargs['voxel_offset'], # values X,Y,Z values in voxels
-            chunk_size = kwargs['chunk_size'], # rechunk of image X,Y,Z in voxels
-            volume_size = kwargs['volume_size'], # X,Y,Z size in voxels)
+            num_channels = params['num_channels'],
+            layer_type = params['layer_type'], # 'image' or 'segmentation'
+            data_type = params['data_type'], # can pick any popular uint
+            encoding = params['encoding'], # other options: 'jpeg', 'compressed_segmentation' (req. uint32 or uint64)
+            resolution = params['resolution'], # X,Y,Z values in nanometers
+            voxel_offset = params['voxel_offset'], # values X,Y,Z values in voxels
+            chunk_size = params['chunk_size'], # rechunk of image X,Y,Z in voxels
+            volume_size = params['volume_size'], # X,Y,Z size in voxels)
         )
-        # If you're using amazon or the local file system, you can replace 'gs' with 's3' or 'file'
         if protocol == 'local':
             vol = CloudVolume('file://' + path, info=info)
-            vol.provenance.description = description
-            vol.provenance.owners = kwargs['owners'] # list of contact email addresses
-            return vol
 
         elif protocol == 'gs':
-            pass
+            vol = CloudVolume('gs:/' + path, info = info)
 
         elif protocol == 's3':
             pass
+            
+        else:
+            print('Not a valid protocol')
+
+        vol.provenance.description = description
+        # vol.provenance.owners = params['owners'] # list of contact email addresses
+        return vol
 
     def create_cutout(self, data, volume, xrang, yrang, zrang):
-        vol[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
-        return "Your data is uploading..."
+        volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
+        print("Your data is uploading...")
 
     def get_cutout(self, volume, xrang, yrang, zrang):
-        data = vol[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
+        data = volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
         return data
         
