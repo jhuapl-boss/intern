@@ -4,8 +4,6 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
-from cloudvolume import view
-
 cv_resource = cvr.CloudVolumeResource()
 
 info = {'num_channels':1,
@@ -39,7 +37,6 @@ for z in range(10):
 	IMarray = np.array(list(image.getdata()), dtype=np.uint8)
 	IMarray = IMarray.reshape((1, height, width)).T
 	cv_resource.create_cutout(IMarray, vol, [0, width], [0, height], [z,z+1])
-	#vol[:,:, z] = array
 	image.close()
 
 cutout = cv_resource.get_cutout(vol, [0,100], [0,100], [0,10])

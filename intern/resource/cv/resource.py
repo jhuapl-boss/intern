@@ -1,5 +1,20 @@
+# Copyright 2017 The Johns Hopkins University Applied Physics Laboratory
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from intern.resource import Resource
 from cloudvolume import CloudVolume
+
 import numpy as np
 from os import path
 
@@ -23,26 +38,45 @@ class CloudVolumeResource(Resource):
         return True
 
     @classmethod
-    def create_CV(self, protocol, path, description = None, **params):
+    def create_CV(self, protocol, path, description = None, owners = None, **params):
         """
-        Creates a cloud volume instance with keyword parameters. 
+        Method to spin up a cloudvolume instance.
+
+        Args:
+            protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
+            path (str) : in the form of "/$BUCKET/$DATASET/$LAYER"
+            description (str) : short description of the data
+            **params () : keyword-value arguments for info object
+
+        Returns:
+            CloudVolume : cloudvolume instance with specified parameters   
 
         """
         info = CloudVolume.create_new_info(
-            num_channels = params['num_channels'],
-            layer_type = params['layer_type'], # 'image' or 'segmentation'
-            data_type = params['data_type'], # can pick any popular uint
-            encoding = params['encoding'], # other options: 'jpeg', 'compressed_segmentation' (req. uint32 or uint64)
-            resolution = params['resolution'], # X,Y,Z values in nanometers
-            voxel_offset = params['voxel_offset'], # values X,Y,Z values in voxels
-            chunk_size = params['chunk_size'], # rechunk of image X,Y,Z in voxels
-            volume_size = params['volume_size'], # X,Y,Z size in voxels)
+            num_channels = params.get('num_channels', None),
+            layer_type = params.get('layer_type', None), # 'image' or 'segmentation'
+            data_type = params.get('data_type', None, # can pick any popular uint
+            encoding = params.get('encoding', None), # other options: 'jpeg', 'compressed_segmentation' (req. uint32 or uint64)
+            resolution = params.get('resolution', None), # X,Y,Z values in nanometers
+            voxel_offset = params.get('voxel_offset', None), # values X,Y,Z values in voxels
+            chunk_size = params.get('chunk_size', None), # rechunk of image X,Y,Z in voxels
+            volume_size = params.get('volume_size', None), # X,Y,Z size in voxels)
         )
+
+        owners = params.get('owners', []) # list of contact email addresses
+
+        if description != None and owners != []:
+            vol.provenance.description = description
+            vol.provenance.owners = owners 
+        
         if protocol == 'local':
-            vol = CloudVolume('file://' + path, info=info)
+            vol = CloudVolume('file://' + path, info = info)
 
         elif protocol == 'gs':
             vol = CloudVolume('gs:/' + path, info = info)
+            vol.commit_info() # generates gs://bucket/dataset/layer/info json file
+            vol.commit_provenance() # generates gs://bucket/dataset/layer/provenance json file
+
 
         elif protocol == 's3':
             pass
@@ -50,15 +84,36 @@ class CloudVolumeResource(Resource):
         else:
             print('Not a valid protocol')
 
-        vol.provenance.description = description
-        # vol.provenance.owners = params['owners'] # list of contact email addresses
         return vol
 
+    @classmethod
     def create_cutout(self, data, volume, xrang, yrang, zrang):
+        """
+            Method to upload a cutout of data
+            Args:
+                data (str) : Path to the data
+                vol (CloudVolume) : Existing cloudvolume instance 
+                xrang (list) : x range within the 3D space
+                yrang (list) : y range within the 3D space
+                zrang (list) : z range witinn the 3D space
+            Retruns:
+                message (str) : Uploading Data... message
+        """
         volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
         print("Your data is uploading...")
 
+    @classmethod
     def get_cutout(self, volume, xrang, yrang, zrang):
+        """
+            Method to download a cutout of data
+            Args:
+                vol (CloudVolume) : Existing non-empty cloudvolume instance 
+                xrang (list) : x range within the 3D space
+                yrang (list) : y range within the 3D space
+                zrang (list) : z range witinn the 3D space
+            Retruns:
+                data (numpy array) : image stack from the cloud or local system
+        """
         data = volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
         return data
         
