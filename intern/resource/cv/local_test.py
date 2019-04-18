@@ -20,14 +20,14 @@ abs_path = '/Users/dxenes/Projects/aplbrain/intern/intern/resource/cv/test_datas
 description = "test with kasthuri data"
 
 vol = cv_resource.create_CV('local', abs_path, description, 
-	num_channels = 1, 
+	num_channels = 1, #req
 	data_type = 'uint8',
 	layer_type = 'image',
 	encoding = 'raw',
-	resolution = [1,1,1],
-	voxel_offset = [0,0,0],
+	resolution = [1,1,1], #req
+	voxel_offset = [0,0,0], #req
 	chunk_size = [1100,700,1],
-	volume_size = [1100,700,10])
+	volume_size = [1100,700,10]) #req
 
 for z in range(10):
 	path = 'test_dataset/'
@@ -43,7 +43,7 @@ cutout = cv_resource.get_cutout(vol, [0,100], [0,100], [0,10])
 
 for z in range(10):
 	im = Image.fromarray(cutout[:,:,z,0])
-	im.save('cutout_{}.png'.format(z)) 
+	im.save('cutout_{}.png'.format(z))
 
 
 
