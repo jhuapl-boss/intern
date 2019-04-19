@@ -28,6 +28,7 @@ class CloudVolumeResource(Resource):
             Initializes intern.Resource parent class
         """
         Resource.__init__(self)
+        self.cloudvolume = None
 
     def valid_volume(self):
         """Returns True if resource is something that can access the volume service.
@@ -83,11 +84,13 @@ class CloudVolumeResource(Resource):
             
         else:
             print('Not a valid protocol')
+            return
 
+        self.cloudvolume = vol
         return vol
 
     @classmethod
-    def create_cutout(self, data, volume, xrang, yrang, zrang):
+    def create_cutout(self, data, xrang, yrang, zrang, volume = None):
         """
             Method to upload a cutout of data
             Args:
@@ -99,6 +102,11 @@ class CloudVolumeResource(Resource):
             Retruns:
                 message (str) : Uploading Data... message
         """
+        if volume = None and self.cloudvolume != None:
+            volume = self.cloudvolume
+        else:
+            print("No cloudvolume provided")
+            return
         volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
         print("Your data is uploading...")
 
@@ -116,5 +124,8 @@ class CloudVolumeResource(Resource):
         """
         data = volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
         return data
+
+    def get_volume():
+        return self.cloudvolume
 
         
