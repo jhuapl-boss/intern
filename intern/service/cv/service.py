@@ -30,7 +30,6 @@ class CloudVolumeService(Service):
 		Returns a JSON of the resource properties.
 
 		Args:
-		resource 
+		resource (CloudVolumeResource object)
 		"""
-		vol = resource.get_volume()
-		return vol.info
+		return resource.cloudvolume.info

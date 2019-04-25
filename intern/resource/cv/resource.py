@@ -95,24 +95,19 @@ class CloudVolumeResource(Resource):
             Retruns:
                 message (str) : Uploading Data... message
         """
-        if volume = None and self.cloudvolume != None:
-            volume = self.cloudvolume
-        else:
-            print("No cloudvolume provided")
-            return
-        volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
+        self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
         print("Your data is uploading...")
 
-    def get_cutout(self, volume, xrang, yrang, zrang):
+    def get_cutout(self, xrang, yrang, zrang):
         """
             Method to download a cutout of data
             Args:
                 vol (CloudVolume) : Existing non-empty cloudvolume instance 
                 xrang (list) : x range within the 3D space
                 yrang (list) : y range within the 3D space
-                zrang (list) : z range witinn the 3D space
+                zrang (list) : z range within the 3D space
             Retruns:
                 data (numpy array) : image stack from the cloud or local system
         """
-        data = volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
+        data = self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
         return data

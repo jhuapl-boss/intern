@@ -1,10 +1,10 @@
 import os
-import resource as cvr
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
-cv_resource = cvr.CloudVolumeResource()
+from intern.resource.cv.resource import *
+from intern.service.cv.service import *
 
 info = {'num_channels':1,
 		'layer_type':'image',
@@ -15,11 +15,9 @@ info = {'num_channels':1,
 		'chunk_size':[1100,700,1],
 		'volume_size':[1100,700,10]}
 
-abs_path = '/Users/dxenes/Projects/aplbrain/intern/intern/resource/cv/test_dataset'
+abs_path = '/Users/dxenes/Projects/aplbrain/intern/intern/cloudvolume_test/test_dataset'
 
-description = "test with kasthuri data"
-
-vol = cv_resource.create_CV('local', abs_path, description, 
+cv_resource = CloudVolumeResource('local', abs_path, 
 	num_channels = 1, #req
 	data_type = 'uint8',
 	layer_type = 'image',
@@ -36,14 +34,18 @@ for z in range(10):
 	width, height = image.size
 	IMarray = np.array(list(image.getdata()), dtype=np.uint8)
 	IMarray = IMarray.reshape((1, height, width)).T
-	cv_resource.create_cutout(IMarray, vol, [0, width], [0, height], [z,z+1])
+	cv_resource.create_cutout(IMarray, [0, width], [0, height], [z,z+1])
 	image.close()
 
-cutout = cv_resource.get_cutout(vol, [0,100], [0,100], [0,10])
+cutout = cv_resource.get_cutout([0,100], [0,100], [0,10])
 
+"""
 for z in range(10):
 	im = Image.fromarray(cutout[:,:,z,0])
 	im.save('cutout_{}.png'.format(z))
+"""
+
+print(CloudVolumeService.get_info(cv_resource))
 
 
 
