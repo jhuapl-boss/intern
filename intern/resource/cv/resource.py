@@ -20,28 +20,13 @@ from os import path
 
 class CloudVolumeResource(Resource):
 
-    """Base class for CloudVolume resources.
+    """
+    Base class for CloudVolume resources.
     """
 
-    def __init__(self):
+    def __init__(self, protocol, path, **params):
         """
-            Initializes intern.Resource parent class
-        """
-        Resource.__init__(self)
-        self.cloudvolume = None
-
-    def valid_volume(self):
-        """Returns True if resource is something that can access the volume service.
-        Args:
-        Returns:
-            (bool) : True if calls to volume service may be made.
-        """
-        return True
-
-    @classmethod
-    def create_CV(self, protocol, path, description = None, owners = None, **params):
-        """
-        Method to spin up a cloudvolume instance.
+        Initializes intern.Resource parent class and creates a cloudvolume object
 
         Args:
             protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
@@ -50,9 +35,9 @@ class CloudVolumeResource(Resource):
             **params () : keyword-value arguments for info object
 
         Returns:
-            CloudVolume : cloudvolume instance with specified parameters   
-
+            CloudVolume : cloudvolume instance with specified parameters 
         """
+        Resource.__init__(self)
         info = CloudVolume.create_new_info(
             num_channels = params.get('num_channels', 1),
             layer_type = params.get('layer_type', None), # 'image' or 'segmentation'
@@ -65,6 +50,7 @@ class CloudVolumeResource(Resource):
         )
 
         owners = params.get('owners', []) # list of contact email addresses
+        description = params.get('description', None)
 
         if description != None and owners != []:
             vol.provenance.description = description
@@ -80,17 +66,24 @@ class CloudVolumeResource(Resource):
 
 
         elif protocol == 's3':
-            pass
+            raise NotImplemented 
             
         else:
             print('Not a valid protocol')
             return
 
         self.cloudvolume = vol
-        return vol
 
-    @classmethod
-    def create_cutout(self, data, xrang, yrang, zrang, volume = None):
+
+    def valid_volume(self):
+        """Returns True if resource is something that can access the volume service.
+        Args:
+        Returns:
+            (bool) : True if calls to volume service may be made.
+        """
+        return True
+
+    def create_cutout(self, data, xrang, yrang, zrang):
         """
             Method to upload a cutout of data
             Args:
@@ -110,7 +103,6 @@ class CloudVolumeResource(Resource):
         volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
         print("Your data is uploading...")
 
-    @classmethod
     def get_cutout(self, volume, xrang, yrang, zrang):
         """
             Method to download a cutout of data
@@ -124,8 +116,3 @@ class CloudVolumeResource(Resource):
         """
         data = volume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
         return data
-
-    def get_volume():
-        return self.cloudvolume
-
-        
