@@ -24,7 +24,7 @@ class CloudVolumeResource(Resource):
     Base class for CloudVolume resources.
     """
 
-    def __init__(self, protocol, path, **params):
+    def __init__(self, protocol, path, new_layer = True , **params):
         """
         Initializes intern.Resource parent class and creates a cloudvolume object
 
@@ -38,40 +38,48 @@ class CloudVolumeResource(Resource):
             CloudVolume : cloudvolume instance with specified parameters 
         """
         Resource.__init__(self)
-        info = CloudVolume.create_new_info(
-            num_channels = params.get('num_channels', 1),
-            layer_type = params.get('layer_type', None), # 'image' or 'segmentation'
-            data_type = params.get('data_type', None), # can pick any popular uint
-            encoding = params.get('encoding', None), # other options: 'jpeg', 'compressed_segmentation' (req. uint32 or uint64)
-            resolution = params.get('resolution', [1,1,1]), # X,Y,Z values in nanometers
-            voxel_offset = params.get('voxel_offset', [0,0,0]), # values X,Y,Z values in voxels
-            chunk_size = params.get('chunk_size', None), # rechunk of image X,Y,Z in voxels
-            volume_size = params.get('volume_size', [1,1,1]), # X,Y,Z size in voxels)
-        )
+        if new_layer:
+		    info = CloudVolume.create_new_info(
+	            num_channels = params.get('num_channels', 1),
+	            layer_type = params.get('layer_type', None), # 'image' or 'segmentation'
+	            data_type = params.get('data_type', None), # can pick any popular uint
+	            encoding = params.get('encoding', None), # other options: 'jpeg', 'compressed_segmentation' (req. uint32 or uint64)
+	            resolution = params.get('resolution', [1,1,1]), # X,Y,Z values in nanometers
+	            voxel_offset = params.get('voxel_offset', [0,0,0]), # values X,Y,Z values in voxels
+	            chunk_size = params.get('chunk_size', None), # rechunk of image X,Y,Z in voxels
+	            volume_size = params.get('volume_size', [1,1,1]), # X,Y,Z size in voxels)
+	        )
+	        owners = params.get('owners', []) # list of contact email addresses
+	        description = params.get('description', None)
+	        
+	        if protocol == 'local':
+	            vol = CloudVolume('file://' + path, info = info)
 
-        owners = params.get('owners', []) # list of contact email addresses
-        description = params.get('description', None)
+	        elif protocol == 'gs':
+	            vol = CloudVolume('gs:/' + path, info = info)
+	          
+	        elif protocol == 's3':
+	            vol = CloudVolume('s3:/' + path, info = info)
+	            
+	        else:
+	            raise Exception("{} is not a valid protocol. Supported protocols: 'local', 'gs', 's3'").format(protocol)
 
-        if description != None and owners != []:
-            vol.provenance.description = description
-            vol.provenance.owners = owners 
-        
-        if protocol == 'local':
-            vol = CloudVolume('file://' + path, info = info)
+	        vol.provenance.description = description if description != None
+	        vol.provenance.owners = owners if owners != []
+	        vol.commit_provenance() # generates protocol://bucket/dataset/layer/provenance json file
+	        vol.commit_info() # generates protocol://bucket/dataset/layer/info json file
+	    else:
+	    	if protocol == 'local':
+	            vol = CloudVolume('file://' + path, info = info)
 
-        elif protocol == 'gs':
-            vol = CloudVolume('gs:/' + path, info = info)
-            vol.commit_info() # generates gs://bucket/dataset/layer/info json file
-            vol.commit_provenance() # generates gs://bucket/dataset/layer/provenance json file
-
-
-        elif protocol == 's3':
-            raise NotImplemented 
-            
-        else:
-            print('Not a valid protocol')
-            return
-
+	        elif protocol == 'gs':
+	            vol = CloudVolume('gs:/' + path, info = info)
+	          
+	        elif protocol == 's3':
+	            vol = CloudVolume('s3:/' + path, info = info)
+	            
+	        else:
+	            raise Exception("{} is not a valid protocol. Supported protocols: 'local', 'gs', 's3'").format(protocol) 
         self.cloudvolume = vol
 
 
@@ -96,7 +104,7 @@ class CloudVolumeResource(Resource):
                 message (str) : Uploading Data... message
         """
         self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
-        print("Your data is uploading...")
+        print("Data uploaded.")
 
     def get_cutout(self, xrang, yrang, zrang):
         """
@@ -111,3 +119,6 @@ class CloudVolumeResource(Resource):
         """
         data = self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
         return data
+
+    def create_layer(self, layer):
+    	self.cloudvolume.layer = layer

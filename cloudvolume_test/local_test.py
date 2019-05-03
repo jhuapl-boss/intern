@@ -46,6 +46,7 @@ for z in range(10):
 """
 
 print(CloudVolumeService.get_info(cv_resource))
+print(CloudVolumeService.get_layer(cv_resource))
 
 
 

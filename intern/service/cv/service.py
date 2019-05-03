@@ -33,3 +33,12 @@ class CloudVolumeService(Service):
 		resource (CloudVolumeResource object)
 		"""
 		return resource.cloudvolume.info
+
+	@classmethod
+	def get_cloudpath(self, resource):
+		"""
+		Returns a string of the cloudpath of the resource.
+
+		PROTOCOL//:BUCKET/../DATASET/LAYER
+		"""
+		return resource.cloudvolume.layer_cloudpath 
