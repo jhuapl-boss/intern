@@ -15,6 +15,8 @@
 from intern.service.service import Service
 from cloudvolume import CloudVolume
 
+import numpy as np
+
 class CloudVolumeService(Service):
 
 	"""
@@ -31,6 +33,9 @@ class CloudVolumeService(Service):
 
 		Args:
 		resource (CloudVolumeResource object)
+
+		Returns:
+		string: JSON format of properties
 		"""
 		return resource.cloudvolume.info
 
@@ -39,6 +44,38 @@ class CloudVolumeService(Service):
 		"""
 		Returns a string of the cloudpath of the resource.
 
-		PROTOCOL//:BUCKET/../DATASET/LAYER
+		Args:
+		resource (CloudVolumeResource object)
+
+		Returns:
+		string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
 		"""
-		return resource.cloudvolume.layer_cloudpath 
+		return resource.cloudvolume.layer_cloudpath
+
+	@classmethod
+	def get_provenance(self, resource):
+		"""
+		Returns the description and owners of the cloudvolume resource.
+
+		Args:
+		resource (CloudVolumeResource object)
+
+		Returns:
+		dict: desciption and owners values
+		"""
+		return resource.cloudvolume.refresh_provenance()
+
+	@classmethod
+	def _chunks_exist(self, resource, xrang, yrang, zrang):
+		"""
+		Get a report on which chunks actually exist.
+
+		"""
+		x1,x2 = xrang
+		y1,y2 = yrang
+		z1,z2 = zrang
+		return resource.cloudvolume.exists( np.s_[x1:x2, y1:y2, z1:z2] ) 
+
+	@classmethod 
+	def delete_data(self, resource, xrang, yrang, zrang):
+		raise NotImplemented 

@@ -30,12 +30,3 @@ for z in range(10):
 	vol.create_cutout(IMarray, [0, width], [0, height], [z,z+1])
 	image.close()
 
-cutout = vol.get_cutout([0,100], [0,100], [0,10])
-
-"""
-for z in range(10):
-	im = Image.fromarray(cutout[:,:,z,0])
-	im.save('cutout_{}.png'.format(z)) 
-"""
-
-print(CloudVolumeService.get_info(vol))
