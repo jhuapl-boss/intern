@@ -70,6 +70,12 @@ class CloudVolumeService(Service):
 		"""
 		Get a report on which chunks actually exist.
 
+		Args:
+		resource (CloudVolumeResource object)
+		xrang,yrang,zrang (Tuples representing the bbox)
+
+		Returns: {chunk_file_name: boolean, ...}
+
 		"""
 		x1,x2 = xrang
 		y1,y2 = yrang
@@ -78,4 +84,15 @@ class CloudVolumeService(Service):
 
 	@classmethod 
 	def delete_data(self, resource, xrang, yrang, zrang):
-		raise NotImplemented 
+		"""
+		Delete the chunks within a bounding box (must be aligned with chunks)
+
+		Args:
+		resource (CloudVolumeResource object)
+		xrang,yrang,zrang (Tuples representing the bbox)
+		"""
+		x1,x2 = xrang
+		y1,y2 = yrang
+		z1,z2 = zrang
+		resource.cloudvolume.delete( np.s_[x1:x2, y1:y2, z1:z2] )
+		print('Files successfully deleted')
