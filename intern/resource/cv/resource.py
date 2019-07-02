@@ -24,7 +24,7 @@ class CloudVolumeResource(Resource):
     Base class for CloudVolume resources.
     """
 
-    def __init__(self, protocol, path, new_layer = True , **params):
+    def __init__(self, protocol, path, new_layer, **params):
         """
         Initializes intern.Resource parent class and creates a cloudvolume object
 
@@ -62,7 +62,7 @@ class CloudVolumeResource(Resource):
                 vol = CloudVolume('s3:/' + path, info = info)
                 
             else:
-                raise Exception("{} is not a valid protocol. Supported protocols: 'local', 'gs', 's3'").format(protocol)
+                raise Exception("{} is not a valid protocol. Supported protocols: 'local', 'gs', 's3'".format(protocol))
 
             vol.provenance.description = description
             vol.provenance.owners = owners
