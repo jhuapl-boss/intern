@@ -31,7 +31,7 @@ class CloudVolumeResource(Resource):
         Args:
             protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
             path (str) : in the form of "/$BUCKET/$DATASET/$LAYER"
-            description (str) : short description of the data
+            new_layer (bool): boolean indicating if new info file is needed
             **params () : keyword-value arguments for info object
 
         Returns:
