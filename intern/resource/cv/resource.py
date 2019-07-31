@@ -103,7 +103,10 @@ class CloudVolumeResource(Resource):
             Retruns:
                 message (str) : Uploading Data... message
         """
-        self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
+        if xrang and yrang and zrang == None:
+            self.cloudvolume[:,:,:] = data
+        else:
+            self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
         print("Data uploaded.")
 
     def get_cutout(self, xrang, yrang, zrang):
@@ -117,5 +120,8 @@ class CloudVolumeResource(Resource):
             Retruns:
                 data (numpy array) : image stack from the cloud or local system
         """
-        data = self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
+        if xrang and yrang and zrang == None:
+            data = self.cloudvolume[:,:,:]
+        else:
+            data = self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
         return data

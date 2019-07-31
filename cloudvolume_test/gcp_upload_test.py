@@ -1,32 +1,57 @@
-import os
-from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
 
-from intern.resource.cv.resource import *
-from intern.service.cv.service import *
+from intern.remote.boss import BossRemote
+from intern.resource.boss.resource import *
+from intern.remote.cv import CloudVolumeRemote
 
+config = {"protocol": "https",
+          "host": "api.bossdb.org",
+          "token": "9feb8eedea069626a7e96336d5dd8229a61cc99a"}
 
+boss_rmt = BossRemote(config)
+
+COLL_NAME = 'Kasthuri'
+EXP_NAME = 'em'
+CHAN_NAME = 'images'
+
+chan = ChannelResource(
+    CHAN_NAME, COLL_NAME, EXP_NAME, 'image', datatype='uint16')
+
+# Ranges use the Python convention where the second number is the stop
+# value.  Thus, x_rng specifies x values where: 0 <= x < 8.
+x_rng = [5990, 7823]
+y_rng = [6059, 7892]
+z_rng = [610, 620]
+
+# Use 1X downsampled resolution.
+res = 1
+
+# Download the cutout from the channel.
+data = rmt.get_cutout(chan, res, x_rng, y_rng, z_rng)
+
+#Intialize CloudVolume Remote 
+cv_rmt = CloudVolumeRemote()
+
+#Define where you want the data to be uploaded in GCP Buckets
 gcp_path = '/kasthuri2015/test_dataset/em'
 
-vol = CloudVolumeResource('gs', gcp_path, 
+#Intialize Resource Object
+vol = cv_rmt.cloudvolume('gs', gcp_path, 
 	num_channels = 1, 
-	data_type = 'uint8',
+	data_type = 'uint16',
 	layer_type = 'image',
 	encoding = 'raw',
-	resolution = [1,1,1],
+	resolution = [6,6,24],
 	voxel_offset = [0,0,0],
-	chunk_size = [1100,700,1],
-	volume_size = [1100,700,10],
+	chunk_size = [1833,1833,1],
+	volume_size = [1833,1833,10],
 	description = 'test with google cloud service')
 
-for z in range(10):
-	path = 'test_dataset/'
-	img_name = 'image_{}.tiff'.format(z)
-	image = Image.open(os.path.join(path, img_name))
-	width, height = image.size
-	IMarray = np.array(list(image.getdata()), dtype=np.uint8)
-	IMarray = IMarray.reshape((1, height, width)).T
-	vol.create_cutout(IMarray, [0, width], [0, height], [z,z+1])
-	image.close()
+#Upload to GCP
+cv_rmt.create_cutout(vol, data)
 
+#Local Mesh Service???
+
+#Segmented Neuron Label
+#label = 1 
+#mesh = vol.mesh.get(label)

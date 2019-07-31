@@ -39,7 +39,7 @@ class CloudVolumeRemote(Remote):
         """
         return CloudVolumeResource(protocol, path, new_layer, **params)
 
-    def create_cutout(self, cv, data, xrang, yrang, zrang):
+    def create_cutout(self, cv, data, xrang= None, yrang = None, zrang = None):
     	"""
             Method to upload a cutout of data
             Args:
@@ -53,7 +53,7 @@ class CloudVolumeRemote(Remote):
         """
         return cv.create_cutout(data, xrang, yrang, zrang)
 
-    def get_cutout(self, cv, xrang, yrang, zrang):
+    def get_cutout(self, cv, xrang = None, yrang = None, zrang = None):
     	"""
             Method to download a cutout of data
             Args:
