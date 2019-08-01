@@ -1,5 +1,15 @@
 # Change Log
 ____________
+## v0.9.12
+intern incorporates the access_mode parameter when grabbing cutouts of small AND large sizes.
+Backwards compatibility with previous versions that make use of the no_cache boolean parameter.
+Whenever a user makes use of the no_cache param intern will return a deprecation warning.  The translation occurs in intern/remote/boss/remote.py and should be removed in future major version upgrades.
+intern now uses an enum class to limit the possibility of cache modes.
+
+* access_mode = CacheMode.cache - Utilizes the cache and checks for dirty keys
+* access_mode = CacheMode.no_cache - Does not check the cache but does check for dirty keys
+* access_mode = CacheMode.raw - Does not check the cache and DOES NOT check for dirty keys
+
 ## v0.9.11
  Convenience functions added: 
   * `BossRemote#get_experiment()`
