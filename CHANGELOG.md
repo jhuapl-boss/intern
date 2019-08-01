@@ -10,6 +10,11 @@ intern now uses an enum class to limit the possibility of cache modes.
 * access_mode = CacheMode.no_cache - Does not check the cache but does check for dirty keys
 * access_mode = CacheMode.raw - Does not check the cache and DOES NOT check for dirty keys
 
+This is for functions:
+* intern.remote.boss.remote.py: BossRemote.get_cutout()
+* intern.serivce.boss.baseversion.py: BaseVersion.get_cutout_request()
+
+
 ## v0.9.11
  Convenience functions added: 
   * `BossRemote#get_experiment()`
