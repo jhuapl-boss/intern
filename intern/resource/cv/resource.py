@@ -47,19 +47,19 @@ class CloudVolumeResource(Resource):
                 resolution = params.get('resolution', [1,1,1]), # X,Y,Z values in nanometers
                 voxel_offset = params.get('voxel_offset', [0,0,0]), # values X,Y,Z values in voxels
                 chunk_size = params.get('chunk_size', None), # rechunk of image X,Y,Z in voxels
-                volume_size = params.get('volume_size', [1,1,1]) # X,Y,Z size in voxels)
+                volume_size = params.get('volume_size', [1,1,1]) # X,Y,Z size in voxels
             )
             owners = params.get('owners', []) # list of contact email addresses
             description = params.get('description', 'No description provided')
             
             if protocol == 'local':
-                vol = CloudVolume('file://' + path, info = info)
+                vol = CloudVolume('file://' + path, mip = params.get('mip', 0), info = info)
 
             elif protocol == 'gs':
-                vol = CloudVolume('gs:/' + path, info = info)
+                vol = CloudVolume('gs:/' + path, mip = params.get('mip', 0), info = info)
               
             elif protocol == 's3':
-                vol = CloudVolume('s3:/' + path, info = info)
+                vol = CloudVolume('s3:/' + path, mip = params.get('mip', 0), info = info)
                 
             else:
                 raise Exception("{} is not a valid protocol. Supported protocols: 'local', 'gs', 's3'".format(protocol))
