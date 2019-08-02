@@ -15,7 +15,6 @@
 from intern.resource import Resource
 from abc import abstractmethod
 
-
 class BossResource(Resource):
     """Base class for Boss resources.
 

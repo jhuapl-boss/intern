@@ -851,6 +851,77 @@ table {
 
   </style>
 
+  <style type="text/css">
+  .codehilite .hll { background-color: #ffffcc }
+.codehilite  { background: #f8f8f8; }
+.codehilite .c { color: #408080; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #FF0000 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666666 } /* Operator */
+.codehilite .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #BC7A00 } /* Comment.Preproc */
+.codehilite .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #408080; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .gr { color: #FF0000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #00A000 } /* Generic.Inserted */
+.codehilite .go { color: #888888 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #0044DD } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #7D9029 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #880000 } /* Name.Constant */
+.codehilite .nd { color: #AA22FF } /* Name.Decorator */
+.codehilite .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #0000FF } /* Name.Function */
+.codehilite .nl { color: #A0A000 } /* Name.Label */
+.codehilite .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite .mb { color: #666666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #BB6688 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #0000FF } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+  </style>
 
   <style type="text/css">
   
@@ -1015,243 +1086,244 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote" class="source">
-    <pre><code>﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-import six
-from abc import ABCMeta
-from six.moves import configparser
-import os
+    <div class="codehilite"><pre><span></span><span class="err">﻿</span><span class="c1"># Copyright 2016 The Johns Hopkins University Applied Physics Laboratory</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1"># http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">configparser</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
-CONFIG_FILE ='~/.intern/intern.cfg'
+<span class="n">CONFIG_FILE</span> <span class="o">=</span><span class="s1">&#39;~/.intern/intern.cfg&#39;</span>
 
 
-@six.add_metaclass(ABCMeta)
-class Remote(object):
-    """Base class for communicating with remote data stores.
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Remote</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for communicating with remote data stores.</span>
 
-    Attributes:
-        _volume (intern.service.Service): Class that communicates with the volume service.
-        _metadata (intern.service.Service): Class that communicates with the metadata service.
-        _project (intern.service.Service): Class that communicates with the project service.
-        _object (intern.service.Service): Class that communicates with the object service.
-    """
+<span class="sd">    Attributes:</span>
+<span class="sd">        _volume (intern.service.Service): Class that communicates with the volume service.</span>
+<span class="sd">        _metadata (intern.service.Service): Class that communicates with the metadata service.</span>
+<span class="sd">        _project (intern.service.Service): Class that communicates with the project service.</span>
+<span class="sd">        _object (intern.service.Service): Class that communicates with the object service.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    def __init__(self, cfg_file_or_dict=None):
-        """Constructor.
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg_file_or_dict</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor.</span>
 
-        Loads credentials in order from user provided dictionary > user provided file > default file > environment vars
+<span class="sd">        Loads credentials in order from user provided dictionary &gt; user provided file &gt; default file &gt; environment vars</span>
 
-        Args:
-            cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.
-        """
+<span class="sd">        Args:</span>
+<span class="sd">            cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        # Service Objects
-        self._volume = None
-        self._metadata = None
-        self._project = None
-        self._object = None
+        <span class="c1"># Service Objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_project</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_object</span> <span class="o">=</span> <span class="bp">None</span>
 
-        # Configuration data loaded from file or passed directly to the constructor
-        # Is available for children Remote classes to use as needed
-        self._config = None
+        <span class="c1"># Configuration data loaded from file or passed directly to the constructor</span>
+        <span class="c1"># Is available for children Remote classes to use as needed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">None</span>
 
-        # Tokens for Services
-        self._token_project = None
-        self._token_metadata = None
-        self._token_volume = None
-        self._token_object = None
+        <span class="c1"># Tokens for Services</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_project</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_metadata</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_volume</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_object</span> <span class="o">=</span> <span class="bp">None</span>
 
-        if cfg_file_or_dict is None:
-            # Default to the config file in the user directory if no config file was provided
-            cfg_file_or_dict = os.path.expanduser(CONFIG_FILE)
+        <span class="k">if</span> <span class="n">cfg_file_or_dict</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># Default to the config file in the user directory if no config file was provided</span>
+            <span class="n">cfg_file_or_dict</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">CONFIG_FILE</span><span class="p">)</span>
 
-        if isinstance(cfg_file_or_dict, dict) is True:
-            # A config dictionary was provided directly. Keep things consistent by creating an INI string.
-            cfg_str = "[Default]\n"
-            for key in cfg_file_or_dict:
-                cfg_str = "{}{} = {}\n".format(cfg_str, key, cfg_file_or_dict[key])
-            self._config = self.load_config_file(six.StringIO(cfg_str))
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="c1"># A config dictionary was provided directly. Keep things consistent by creating an INI string.</span>
+            <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;[Default]</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cfg_file_or_dict</span><span class="p">:</span>
+                <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cfg_file_or_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">))</span>
 
-        else:
-            # A file path was provided by the user
-            if os.path.isfile(cfg_file_or_dict):
-                with open(cfg_file_or_dict, 'r') as cfg_file_handle:
-                    self._config = self.load_config_file(cfg_file_handle)
-            else:
-                # Provided file or default file do not exist.  Try loading from env variables
-                if "INTERN_PROTOCOL" in os.environ and "INTERN_HOST" in os.environ and "INTERN_TOKEN" in os.environ:
-                    cfg_str = "[Default]\n"
-                    cfg_str = "{}{} = {}\n".format(cfg_str, "protocol", os.environ['INTERN_PROTOCOL'])
-                    cfg_str = "{}{} = {}\n".format(cfg_str, "host", os.environ['INTERN_HOST'])
-                    cfg_str = "{}{} = {}\n".format(cfg_str, "token", os.environ['INTERN_TOKEN'])
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># A file path was provided by the user</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">):</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cfg_file_handle</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">cfg_file_handle</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Provided file or default file do not exist.  Try loading from env variables</span>
+                <span class="k">if</span> <span class="s2">&quot;INTERN_PROTOCOL&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="s2">&quot;INTERN_HOST&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="s2">&quot;INTERN_TOKEN&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+                    <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;[Default]</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="s2">&quot;protocol&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;INTERN_PROTOCOL&#39;</span><span class="p">])</span>
+                    <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;INTERN_HOST&#39;</span><span class="p">])</span>
+                    <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="s2">&quot;token&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;INTERN_TOKEN&#39;</span><span class="p">])</span>
 
-                    self._config = self.load_config_file(six.StringIO(cfg_str))
-                else:
-                    raise IOError("Configuration file not found: {}. Please provide credential file or set environment variables".format(cfg_file_or_dict))
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Configuration file not found: {}. Please provide credential file or set environment variables&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">))</span>
 
-    def load_config_file(self, config_handle):
-        """Load config data for the Remote.
+    <span class="k">def</span> <span class="nf">load_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_handle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load config data for the Remote.</span>
 
-        Args:
-            config_handle (io.StringIO): Config data encoded in a string.
+<span class="sd">        Args:</span>
+<span class="sd">            config_handle (io.StringIO): Config data encoded in a string.</span>
 
-        Returns:
-            (configparser.ConfigParser)
-        """
-        cfg_parser = configparser.ConfigParser()
-        cfg_parser.readfp(config_handle)
-        return cfg_parser
+<span class="sd">        Returns:</span>
+<span class="sd">            (configparser.ConfigParser)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cfg_parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">cfg_parser</span><span class="o">.</span><span class="n">readfp</span><span class="p">(</span><span class="n">config_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cfg_parser</span>
 
-    @property
-    def volume_service(self):
-        return self._volume
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">volume_service</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span>
 
-    @property
-    def project_service(self):
-        return self._project
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">project_service</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project</span>
 
-    @property
-    def metadata_service(self):
-        return self._metadata
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">metadata_service</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span>
 
-    @property
-    def object_service(self):
-        return self._object
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">object_service</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object</span>
 
-    def list_project(self, **kwargs):
-        """Perform list operation on the project.
+    <span class="k">def</span> <span class="nf">list_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform list operation on the project.</span>
 
-        What this does is highly dependent on project's data model.
+<span class="sd">        What this does is highly dependent on project&#39;s data model.</span>
 
-        Args:
-            (**kwargs): Args are implementation dependent.
+<span class="sd">        Args:</span>
+<span class="sd">            (**kwargs): Args are implementation dependent.</span>
 
-        Returns:
-            (list)
-        """
-        return self._project.list(**kwargs)
+<span class="sd">        Returns:</span>
+<span class="sd">            (list)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
-        """Get a cutout from the volume service.
+    <span class="k">def</span> <span class="nf">get_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">id_list</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a cutout from the volume service.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with cutout operations.
-            resolution (int): 0 indicates native resolution.
-            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-            id_list (optional [list]): list of object ids to filter the cutout by.
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with cutout operations.</span>
+<span class="sd">            resolution (int): 0 indicates native resolution.</span>
+<span class="sd">            x_range (list[int]): x range such as [10, 20] which means x&gt;=10 and x&lt;20.</span>
+<span class="sd">            y_range (list[int]): y range such as [10, 20] which means y&gt;=10 and y&lt;20.</span>
+<span class="sd">            z_range (list[int]): z range such as [10, 20] which means z&gt;=10 and z&lt;20.</span>
+<span class="sd">            time_range (optional [list[int]]): time range such as [30, 40] which means t&gt;=30 and t&lt;40.</span>
+<span class="sd">            id_list (optional [list]): list of object ids to filter the cutout by.</span>
 
-        Returns:
-            (): Return type depends on volume service's implementation.
+<span class="sd">        Returns:</span>
+<span class="sd">            (): Return type depends on volume service&#39;s implementation.</span>
 
-        Raises:
-            RuntimeError when given invalid resource.
-            Other exceptions may be raised depending on the volume service's implementation.
-        """
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError when given invalid resource.</span>
+<span class="sd">            Other exceptions may be raised depending on the volume service&#39;s implementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        if not resource.valid_volume():
-            raise RuntimeError('Resource incompatible with the volume service.')
-        return self._volume.get_cutout(
-            resource, resolution, x_range, y_range, z_range, time_range, id_list)
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">get_cutout</span><span class="p">(</span>
+            <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="p">,</span> <span class="n">id_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    def create_cutout(self, resource, resolution, x_range, y_range, z_range, data, time_range=None):
-        """Upload a cutout to the volume service.
+    <span class="k">def</span> <span class="nf">create_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time_range</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Upload a cutout to the volume service.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with cutout operations.
-            resolution (int): 0 indicates native resolution.
-            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-            data (object): Type depends on implementation.
-            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with cutout operations.</span>
+<span class="sd">            resolution (int): 0 indicates native resolution.</span>
+<span class="sd">            x_range (list[int]): x range such as [10, 20] which means x&gt;=10 and x&lt;20.</span>
+<span class="sd">            y_range (list[int]): y range such as [10, 20] which means y&gt;=10 and y&lt;20.</span>
+<span class="sd">            z_range (list[int]): z range such as [10, 20] which means z&gt;=10 and z&lt;20.</span>
+<span class="sd">            data (object): Type depends on implementation.</span>
+<span class="sd">            time_range (optional [list[int]]): time range such as [30, 40] which means t&gt;=30 and t&lt;40.</span>
 
-        Returns:
-            (): Return type depends on volume service's implementation.
+<span class="sd">        Returns:</span>
+<span class="sd">            (): Return type depends on volume service&#39;s implementation.</span>
 
-        Raises:
-            RuntimeError when given invalid resource.
-            Other exceptions may be raised depending on the volume service's implementation.
-        """
-        if not resource.valid_volume():
-            raise RuntimeError('Resource incompatible with the volume service.')
-        return self._volume.create_cutout(
-            resource, resolution, x_range, y_range, z_range, data, time_range)
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError when given invalid resource.</span>
+<span class="sd">            Other exceptions may be raised depending on the volume service&#39;s implementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">create_cutout</span><span class="p">(</span>
+            <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time_range</span><span class="p">)</span>
 
-    def reserve_ids(self, resource, num_ids):
-        """Reserve a block of unique, sequential ids for annotations.
+    <span class="k">def</span> <span class="nf">reserve_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">num_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reserve a block of unique, sequential ids for annotations.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with annotation operations.
-            num_ids (int): Number of ids to reserve.
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with annotation operations.</span>
+<span class="sd">            num_ids (int): Number of ids to reserve.</span>
 
-        Returns:
-            (int): First id reserved.
+<span class="sd">        Returns:</span>
+<span class="sd">            (int): First id reserved.</span>
 
-        """
-        if not resource.valid_volume():
-            raise RuntimeError('Resource incompatible with the volume service.')
-        return self._volume.reserve_ids(resource, num_ids)
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">reserve_ids</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">num_ids</span><span class="p">)</span>
 
-    def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
-        """Get bounding box containing object specified by id.
+    <span class="k">def</span> <span class="nf">get_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bb_type</span><span class="o">=</span><span class="s1">&#39;loose&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get bounding box containing object specified by id.</span>
 
-        Currently only supports 'loose' bounding boxes.  The bounding box
-        returned is cuboid aligned.
+<span class="sd">        Currently only supports &#39;loose&#39; bounding boxes.  The bounding box</span>
+<span class="sd">        returned is cuboid aligned.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with annotation operations.
-            resolution (int): 0 indicates native resolution.
-            id (int): Id of object of interest.
-            bb_type (optional[string]): Defaults to 'loose'.
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with annotation operations.</span>
+<span class="sd">            resolution (int): 0 indicates native resolution.</span>
+<span class="sd">            id (int): Id of object of interest.</span>
+<span class="sd">            bb_type (optional[string]): Defaults to &#39;loose&#39;.</span>
 
-        Returns:
-            (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
-        """
-        if not resource.valid_volume():
-            raise RuntimeError('Resource incompatible with the volume service.')
+<span class="sd">        Returns:</span>
+<span class="sd">            (dict): {&#39;x_range&#39;: [0, 10], &#39;y_range&#39;: [0, 10], &#39;z_range&#39;: [0, 10], &#39;t_range&#39;: [0, 10]}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
 
-        if bb_type != 'loose' and bb_type != 'tight':
-            raise RuntimeError("bb_type must be either 'loose' or 'tight'.")
+        <span class="k">if</span> <span class="n">bb_type</span> <span class="o">!=</span> <span class="s1">&#39;loose&#39;</span> <span class="ow">and</span> <span class="n">bb_type</span> <span class="o">!=</span> <span class="s1">&#39;tight&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;bb_type must be either &#39;loose&#39; or &#39;tight&#39;.&quot;</span><span class="p">)</span>
 
-        return self._volume.get_bounding_box(resource, resolution, id, bb_type)
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">get_bounding_box</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bb_type</span><span class="p">)</span>
 
-    def get_ids_in_region(
-            self, resource, resolution,
-            x_range, y_range, z_range, time_range=[0, 1]):
-        """Get all ids in the region defined by x_range, y_range, z_range.
+    <span class="k">def</span> <span class="nf">get_ids_in_region</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span>
+            <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Get all ids in the region defined by x_range, y_range, z_range.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with annotation operations.
-            resolution (int): 0 indicates native resolution.
-            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.  Defaults to [0, 1].
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with annotation operations.</span>
+<span class="sd">            resolution (int): 0 indicates native resolution.</span>
+<span class="sd">            x_range (list[int]): x range such as [10, 20] which means x&gt;=10 and x&lt;20.</span>
+<span class="sd">            y_range (list[int]): y range such as [10, 20] which means y&gt;=10 and y&lt;20.</span>
+<span class="sd">            z_range (list[int]): z range such as [10, 20] which means z&gt;=10 and z&lt;20.</span>
+<span class="sd">            time_range (optional [list[int]]): time range such as [30, 40] which means t&gt;=30 and t&lt;40.  Defaults to [0, 1].</span>
 
-        Returns:
-            (list[int]): Example: [1, 2, 25].
+<span class="sd">        Returns:</span>
+<span class="sd">            (list[int]): Example: [1, 2, 25].</span>
 
-        Raises:
-            requests.HTTPError
-            TypeError: if resource is not an annotation channel.
-        """
-        return self._volume.get_ids_in_region(
-            resource, resolution, x_range, y_range, z_range, time_range)
-</code></pre>
+<span class="sd">        Raises:</span>
+<span class="sd">            requests.HTTPError</span>
+<span class="sd">            TypeError: if resource is not an annotation channel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">get_ids_in_region</span><span class="p">(</span>
+            <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="p">)</span>
+</pre></div>
+
   </div>
 
   </header>
@@ -1283,221 +1355,222 @@ class Remote(object):
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote.Remote', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote.Remote" class="source">
-    <pre><code>class Remote(object):
-    """Base class for communicating with remote data stores.
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Remote</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for communicating with remote data stores.</span>
 
-    Attributes:
-        _volume (intern.service.Service): Class that communicates with the volume service.
-        _metadata (intern.service.Service): Class that communicates with the metadata service.
-        _project (intern.service.Service): Class that communicates with the project service.
-        _object (intern.service.Service): Class that communicates with the object service.
-    """
+<span class="sd">    Attributes:</span>
+<span class="sd">        _volume (intern.service.Service): Class that communicates with the volume service.</span>
+<span class="sd">        _metadata (intern.service.Service): Class that communicates with the metadata service.</span>
+<span class="sd">        _project (intern.service.Service): Class that communicates with the project service.</span>
+<span class="sd">        _object (intern.service.Service): Class that communicates with the object service.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    def __init__(self, cfg_file_or_dict=None):
-        """Constructor.
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg_file_or_dict</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor.</span>
 
-        Loads credentials in order from user provided dictionary > user provided file > default file > environment vars
+<span class="sd">        Loads credentials in order from user provided dictionary &gt; user provided file &gt; default file &gt; environment vars</span>
 
-        Args:
-            cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.
-        """
+<span class="sd">        Args:</span>
+<span class="sd">            cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        # Service Objects
-        self._volume = None
-        self._metadata = None
-        self._project = None
-        self._object = None
+        <span class="c1"># Service Objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_project</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_object</span> <span class="o">=</span> <span class="bp">None</span>
 
-        # Configuration data loaded from file or passed directly to the constructor
-        # Is available for children Remote classes to use as needed
-        self._config = None
+        <span class="c1"># Configuration data loaded from file or passed directly to the constructor</span>
+        <span class="c1"># Is available for children Remote classes to use as needed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">None</span>
 
-        # Tokens for Services
-        self._token_project = None
-        self._token_metadata = None
-        self._token_volume = None
-        self._token_object = None
+        <span class="c1"># Tokens for Services</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_project</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_metadata</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_volume</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_object</span> <span class="o">=</span> <span class="bp">None</span>
 
-        if cfg_file_or_dict is None:
-            # Default to the config file in the user directory if no config file was provided
-            cfg_file_or_dict = os.path.expanduser(CONFIG_FILE)
+        <span class="k">if</span> <span class="n">cfg_file_or_dict</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># Default to the config file in the user directory if no config file was provided</span>
+            <span class="n">cfg_file_or_dict</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">CONFIG_FILE</span><span class="p">)</span>
 
-        if isinstance(cfg_file_or_dict, dict) is True:
-            # A config dictionary was provided directly. Keep things consistent by creating an INI string.
-            cfg_str = "[Default]\n"
-            for key in cfg_file_or_dict:
-                cfg_str = "{}{} = {}\n".format(cfg_str, key, cfg_file_or_dict[key])
-            self._config = self.load_config_file(six.StringIO(cfg_str))
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="c1"># A config dictionary was provided directly. Keep things consistent by creating an INI string.</span>
+            <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;[Default]</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cfg_file_or_dict</span><span class="p">:</span>
+                <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cfg_file_or_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">))</span>
 
-        else:
-            # A file path was provided by the user
-            if os.path.isfile(cfg_file_or_dict):
-                with open(cfg_file_or_dict, 'r') as cfg_file_handle:
-                    self._config = self.load_config_file(cfg_file_handle)
-            else:
-                # Provided file or default file do not exist.  Try loading from env variables
-                if "INTERN_PROTOCOL" in os.environ and "INTERN_HOST" in os.environ and "INTERN_TOKEN" in os.environ:
-                    cfg_str = "[Default]\n"
-                    cfg_str = "{}{} = {}\n".format(cfg_str, "protocol", os.environ['INTERN_PROTOCOL'])
-                    cfg_str = "{}{} = {}\n".format(cfg_str, "host", os.environ['INTERN_HOST'])
-                    cfg_str = "{}{} = {}\n".format(cfg_str, "token", os.environ['INTERN_TOKEN'])
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># A file path was provided by the user</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">):</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cfg_file_handle</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">cfg_file_handle</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Provided file or default file do not exist.  Try loading from env variables</span>
+                <span class="k">if</span> <span class="s2">&quot;INTERN_PROTOCOL&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="s2">&quot;INTERN_HOST&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="s2">&quot;INTERN_TOKEN&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+                    <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;[Default]</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="s2">&quot;protocol&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;INTERN_PROTOCOL&#39;</span><span class="p">])</span>
+                    <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;INTERN_HOST&#39;</span><span class="p">])</span>
+                    <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="s2">&quot;token&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;INTERN_TOKEN&#39;</span><span class="p">])</span>
 
-                    self._config = self.load_config_file(six.StringIO(cfg_str))
-                else:
-                    raise IOError("Configuration file not found: {}. Please provide credential file or set environment variables".format(cfg_file_or_dict))
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Configuration file not found: {}. Please provide credential file or set environment variables&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">))</span>
 
-    def load_config_file(self, config_handle):
-        """Load config data for the Remote.
+    <span class="k">def</span> <span class="nf">load_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_handle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load config data for the Remote.</span>
 
-        Args:
-            config_handle (io.StringIO): Config data encoded in a string.
+<span class="sd">        Args:</span>
+<span class="sd">            config_handle (io.StringIO): Config data encoded in a string.</span>
 
-        Returns:
-            (configparser.ConfigParser)
-        """
-        cfg_parser = configparser.ConfigParser()
-        cfg_parser.readfp(config_handle)
-        return cfg_parser
+<span class="sd">        Returns:</span>
+<span class="sd">            (configparser.ConfigParser)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cfg_parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">cfg_parser</span><span class="o">.</span><span class="n">readfp</span><span class="p">(</span><span class="n">config_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cfg_parser</span>
 
-    @property
-    def volume_service(self):
-        return self._volume
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">volume_service</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span>
 
-    @property
-    def project_service(self):
-        return self._project
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">project_service</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project</span>
 
-    @property
-    def metadata_service(self):
-        return self._metadata
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">metadata_service</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span>
 
-    @property
-    def object_service(self):
-        return self._object
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">object_service</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object</span>
 
-    def list_project(self, **kwargs):
-        """Perform list operation on the project.
+    <span class="k">def</span> <span class="nf">list_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform list operation on the project.</span>
 
-        What this does is highly dependent on project's data model.
+<span class="sd">        What this does is highly dependent on project&#39;s data model.</span>
 
-        Args:
-            (**kwargs): Args are implementation dependent.
+<span class="sd">        Args:</span>
+<span class="sd">            (**kwargs): Args are implementation dependent.</span>
 
-        Returns:
-            (list)
-        """
-        return self._project.list(**kwargs)
+<span class="sd">        Returns:</span>
+<span class="sd">            (list)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
-        """Get a cutout from the volume service.
+    <span class="k">def</span> <span class="nf">get_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">id_list</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a cutout from the volume service.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with cutout operations.
-            resolution (int): 0 indicates native resolution.
-            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-            id_list (optional [list]): list of object ids to filter the cutout by.
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with cutout operations.</span>
+<span class="sd">            resolution (int): 0 indicates native resolution.</span>
+<span class="sd">            x_range (list[int]): x range such as [10, 20] which means x&gt;=10 and x&lt;20.</span>
+<span class="sd">            y_range (list[int]): y range such as [10, 20] which means y&gt;=10 and y&lt;20.</span>
+<span class="sd">            z_range (list[int]): z range such as [10, 20] which means z&gt;=10 and z&lt;20.</span>
+<span class="sd">            time_range (optional [list[int]]): time range such as [30, 40] which means t&gt;=30 and t&lt;40.</span>
+<span class="sd">            id_list (optional [list]): list of object ids to filter the cutout by.</span>
 
-        Returns:
-            (): Return type depends on volume service's implementation.
+<span class="sd">        Returns:</span>
+<span class="sd">            (): Return type depends on volume service&#39;s implementation.</span>
 
-        Raises:
-            RuntimeError when given invalid resource.
-            Other exceptions may be raised depending on the volume service's implementation.
-        """
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError when given invalid resource.</span>
+<span class="sd">            Other exceptions may be raised depending on the volume service&#39;s implementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        if not resource.valid_volume():
-            raise RuntimeError('Resource incompatible with the volume service.')
-        return self._volume.get_cutout(
-            resource, resolution, x_range, y_range, z_range, time_range, id_list)
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">get_cutout</span><span class="p">(</span>
+            <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="p">,</span> <span class="n">id_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    def create_cutout(self, resource, resolution, x_range, y_range, z_range, data, time_range=None):
-        """Upload a cutout to the volume service.
+    <span class="k">def</span> <span class="nf">create_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time_range</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Upload a cutout to the volume service.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with cutout operations.
-            resolution (int): 0 indicates native resolution.
-            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-            data (object): Type depends on implementation.
-            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with cutout operations.</span>
+<span class="sd">            resolution (int): 0 indicates native resolution.</span>
+<span class="sd">            x_range (list[int]): x range such as [10, 20] which means x&gt;=10 and x&lt;20.</span>
+<span class="sd">            y_range (list[int]): y range such as [10, 20] which means y&gt;=10 and y&lt;20.</span>
+<span class="sd">            z_range (list[int]): z range such as [10, 20] which means z&gt;=10 and z&lt;20.</span>
+<span class="sd">            data (object): Type depends on implementation.</span>
+<span class="sd">            time_range (optional [list[int]]): time range such as [30, 40] which means t&gt;=30 and t&lt;40.</span>
 
-        Returns:
-            (): Return type depends on volume service's implementation.
+<span class="sd">        Returns:</span>
+<span class="sd">            (): Return type depends on volume service&#39;s implementation.</span>
 
-        Raises:
-            RuntimeError when given invalid resource.
-            Other exceptions may be raised depending on the volume service's implementation.
-        """
-        if not resource.valid_volume():
-            raise RuntimeError('Resource incompatible with the volume service.')
-        return self._volume.create_cutout(
-            resource, resolution, x_range, y_range, z_range, data, time_range)
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError when given invalid resource.</span>
+<span class="sd">            Other exceptions may be raised depending on the volume service&#39;s implementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">create_cutout</span><span class="p">(</span>
+            <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time_range</span><span class="p">)</span>
 
-    def reserve_ids(self, resource, num_ids):
-        """Reserve a block of unique, sequential ids for annotations.
+    <span class="k">def</span> <span class="nf">reserve_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">num_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reserve a block of unique, sequential ids for annotations.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with annotation operations.
-            num_ids (int): Number of ids to reserve.
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with annotation operations.</span>
+<span class="sd">            num_ids (int): Number of ids to reserve.</span>
 
-        Returns:
-            (int): First id reserved.
+<span class="sd">        Returns:</span>
+<span class="sd">            (int): First id reserved.</span>
 
-        """
-        if not resource.valid_volume():
-            raise RuntimeError('Resource incompatible with the volume service.')
-        return self._volume.reserve_ids(resource, num_ids)
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">reserve_ids</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">num_ids</span><span class="p">)</span>
 
-    def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
-        """Get bounding box containing object specified by id.
+    <span class="k">def</span> <span class="nf">get_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bb_type</span><span class="o">=</span><span class="s1">&#39;loose&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get bounding box containing object specified by id.</span>
 
-        Currently only supports 'loose' bounding boxes.  The bounding box
-        returned is cuboid aligned.
+<span class="sd">        Currently only supports &#39;loose&#39; bounding boxes.  The bounding box</span>
+<span class="sd">        returned is cuboid aligned.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with annotation operations.
-            resolution (int): 0 indicates native resolution.
-            id (int): Id of object of interest.
-            bb_type (optional[string]): Defaults to 'loose'.
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with annotation operations.</span>
+<span class="sd">            resolution (int): 0 indicates native resolution.</span>
+<span class="sd">            id (int): Id of object of interest.</span>
+<span class="sd">            bb_type (optional[string]): Defaults to &#39;loose&#39;.</span>
 
-        Returns:
-            (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
-        """
-        if not resource.valid_volume():
-            raise RuntimeError('Resource incompatible with the volume service.')
+<span class="sd">        Returns:</span>
+<span class="sd">            (dict): {&#39;x_range&#39;: [0, 10], &#39;y_range&#39;: [0, 10], &#39;z_range&#39;: [0, 10], &#39;t_range&#39;: [0, 10]}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
 
-        if bb_type != 'loose' and bb_type != 'tight':
-            raise RuntimeError("bb_type must be either 'loose' or 'tight'.")
+        <span class="k">if</span> <span class="n">bb_type</span> <span class="o">!=</span> <span class="s1">&#39;loose&#39;</span> <span class="ow">and</span> <span class="n">bb_type</span> <span class="o">!=</span> <span class="s1">&#39;tight&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;bb_type must be either &#39;loose&#39; or &#39;tight&#39;.&quot;</span><span class="p">)</span>
 
-        return self._volume.get_bounding_box(resource, resolution, id, bb_type)
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">get_bounding_box</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bb_type</span><span class="p">)</span>
 
-    def get_ids_in_region(
-            self, resource, resolution,
-            x_range, y_range, z_range, time_range=[0, 1]):
-        """Get all ids in the region defined by x_range, y_range, z_range.
+    <span class="k">def</span> <span class="nf">get_ids_in_region</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span>
+            <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Get all ids in the region defined by x_range, y_range, z_range.</span>
 
-        Args:
-            resource (intern.resource.Resource): Resource compatible with annotation operations.
-            resolution (int): 0 indicates native resolution.
-            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.  Defaults to [0, 1].
+<span class="sd">        Args:</span>
+<span class="sd">            resource (intern.resource.Resource): Resource compatible with annotation operations.</span>
+<span class="sd">            resolution (int): 0 indicates native resolution.</span>
+<span class="sd">            x_range (list[int]): x range such as [10, 20] which means x&gt;=10 and x&lt;20.</span>
+<span class="sd">            y_range (list[int]): y range such as [10, 20] which means y&gt;=10 and y&lt;20.</span>
+<span class="sd">            z_range (list[int]): z range such as [10, 20] which means z&gt;=10 and z&lt;20.</span>
+<span class="sd">            time_range (optional [list[int]]): time range such as [30, 40] which means t&gt;=30 and t&lt;40.  Defaults to [0, 1].</span>
 
-        Returns:
-            (list[int]): Example: [1, 2, 25].
+<span class="sd">        Returns:</span>
+<span class="sd">            (list[int]): Example: [1, 2, 25].</span>
 
-        Raises:
-            requests.HTTPError
-            TypeError: if resource is not an annotation channel.
-        """
-        return self._volume.get_ids_in_region(
-            resource, resolution, x_range, y_range, z_range, time_range)
-</code></pre>
+<span class="sd">        Raises:</span>
+<span class="sd">            requests.HTTPError</span>
+<span class="sd">            TypeError: if resource is not an annotation channel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">get_ids_in_region</span><span class="p">(</span>
+            <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="p">)</span>
+</pre></div>
+
   </div>
 </div>
 
@@ -1566,50 +1639,51 @@ class Remote(object):
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote.Remote.__init__', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote.Remote.__init__" class="source">
-    <pre><code>def __init__(self, cfg_file_or_dict=None):
-    """Constructor.
-    Loads credentials in order from user provided dictionary > user provided file > default file > environment vars
-    Args:
-        cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.
-    """
-    # Service Objects
-    self._volume = None
-    self._metadata = None
-    self._project = None
-    self._object = None
-    # Configuration data loaded from file or passed directly to the constructor
-    # Is available for children Remote classes to use as needed
-    self._config = None
-    # Tokens for Services
-    self._token_project = None
-    self._token_metadata = None
-    self._token_volume = None
-    self._token_object = None
-    if cfg_file_or_dict is None:
-        # Default to the config file in the user directory if no config file was provided
-        cfg_file_or_dict = os.path.expanduser(CONFIG_FILE)
-    if isinstance(cfg_file_or_dict, dict) is True:
-        # A config dictionary was provided directly. Keep things consistent by creating an INI string.
-        cfg_str = "[Default]\n"
-        for key in cfg_file_or_dict:
-            cfg_str = "{}{} = {}\n".format(cfg_str, key, cfg_file_or_dict[key])
-        self._config = self.load_config_file(six.StringIO(cfg_str))
-    else:
-        # A file path was provided by the user
-        if os.path.isfile(cfg_file_or_dict):
-            with open(cfg_file_or_dict, 'r') as cfg_file_handle:
-                self._config = self.load_config_file(cfg_file_handle)
-        else:
-            # Provided file or default file do not exist.  Try loading from env variables
-            if "INTERN_PROTOCOL" in os.environ and "INTERN_HOST" in os.environ and "INTERN_TOKEN" in os.environ:
-                cfg_str = "[Default]\n"
-                cfg_str = "{}{} = {}\n".format(cfg_str, "protocol", os.environ['INTERN_PROTOCOL'])
-                cfg_str = "{}{} = {}\n".format(cfg_str, "host", os.environ['INTERN_HOST'])
-                cfg_str = "{}{} = {}\n".format(cfg_str, "token", os.environ['INTERN_TOKEN'])
-                self._config = self.load_config_file(six.StringIO(cfg_str))
-            else:
-                raise IOError("Configuration file not found: {}. Please provide credential file or set environment variables".format(cfg_file_or_dict))
-</code></pre>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg_file_or_dict</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Constructor.</span>
+<span class="sd">    Loads credentials in order from user provided dictionary &gt; user provided file &gt; default file &gt; environment vars</span>
+<span class="sd">    Args:</span>
+<span class="sd">        cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Service Objects</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_project</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_object</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="c1"># Configuration data loaded from file or passed directly to the constructor</span>
+    <span class="c1"># Is available for children Remote classes to use as needed</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="c1"># Tokens for Services</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_token_project</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_token_metadata</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_token_volume</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_token_object</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="n">cfg_file_or_dict</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="c1"># Default to the config file in the user directory if no config file was provided</span>
+        <span class="n">cfg_file_or_dict</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">CONFIG_FILE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="c1"># A config dictionary was provided directly. Keep things consistent by creating an INI string.</span>
+        <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;[Default]</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cfg_file_or_dict</span><span class="p">:</span>
+            <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cfg_file_or_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># A file path was provided by the user</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cfg_file_handle</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">cfg_file_handle</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Provided file or default file do not exist.  Try loading from env variables</span>
+            <span class="k">if</span> <span class="s2">&quot;INTERN_PROTOCOL&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="s2">&quot;INTERN_HOST&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="s2">&quot;INTERN_TOKEN&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+                <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;[Default]</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="s2">&quot;protocol&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;INTERN_PROTOCOL&#39;</span><span class="p">])</span>
+                <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;INTERN_HOST&#39;</span><span class="p">])</span>
+                <span class="n">cfg_str</span> <span class="o">=</span> <span class="s2">&quot;{}{} = {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">,</span> <span class="s2">&quot;token&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;INTERN_TOKEN&#39;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">cfg_str</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Configuration file not found: {}. Please provide credential file or set environment variables&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfg_file_or_dict</span><span class="p">))</span>
+</pre></div>
+
   </div>
 </div>
 
@@ -1638,33 +1712,34 @@ class Remote(object):
 <p>&emsp;&emsp;&emsp;&emsp;<b>()</b>: Return type depends on volume service's implementation.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>RuntimeError when given invalid resource.
-Other exceptions may be raised depending on the volume service's implementation.
-</code></pre></div>
+<div class="codehilite"><pre><span></span>RuntimeError when given invalid resource.
+Other exceptions may be raised depending on the volume service&#39;s implementation.
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote.Remote.create_cutout', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote.Remote.create_cutout" class="source">
-    <pre><code>def create_cutout(self, resource, resolution, x_range, y_range, z_range, data, time_range=None):
-    """Upload a cutout to the volume service.
-    Args:
-        resource (intern.resource.Resource): Resource compatible with cutout operations.
-        resolution (int): 0 indicates native resolution.
-        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-        data (object): Type depends on implementation.
-        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-    Returns:
-        (): Return type depends on volume service's implementation.
-    Raises:
-        RuntimeError when given invalid resource.
-        Other exceptions may be raised depending on the volume service's implementation.
-    """
-    if not resource.valid_volume():
-        raise RuntimeError('Resource incompatible with the volume service.')
-    return self._volume.create_cutout(
-        resource, resolution, x_range, y_range, z_range, data, time_range)
-</code></pre>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">create_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time_range</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Upload a cutout to the volume service.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        resource (intern.resource.Resource): Resource compatible with cutout operations.</span>
+<span class="sd">        resolution (int): 0 indicates native resolution.</span>
+<span class="sd">        x_range (list[int]): x range such as [10, 20] which means x&gt;=10 and x&lt;20.</span>
+<span class="sd">        y_range (list[int]): y range such as [10, 20] which means y&gt;=10 and y&lt;20.</span>
+<span class="sd">        z_range (list[int]): z range such as [10, 20] which means z&gt;=10 and z&lt;20.</span>
+<span class="sd">        data (object): Type depends on implementation.</span>
+<span class="sd">        time_range (optional [list[int]]): time range such as [30, 40] which means t&gt;=30 and t&lt;40.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (): Return type depends on volume service&#39;s implementation.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError when given invalid resource.</span>
+<span class="sd">        Other exceptions may be raised depending on the volume service&#39;s implementation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">create_cutout</span><span class="p">(</span>
+        <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time_range</span><span class="p">)</span>
+</pre></div>
+
   </div>
 </div>
 
@@ -1693,24 +1768,25 @@ returned is cuboid aligned.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote.Remote.get_bounding_box', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote.Remote.get_bounding_box" class="source">
-    <pre><code>def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
-    """Get bounding box containing object specified by id.
-    Currently only supports 'loose' bounding boxes.  The bounding box
-    returned is cuboid aligned.
-    Args:
-        resource (intern.resource.Resource): Resource compatible with annotation operations.
-        resolution (int): 0 indicates native resolution.
-        id (int): Id of object of interest.
-        bb_type (optional[string]): Defaults to 'loose'.
-    Returns:
-        (dict): {'x_range': [0, 10], 'y_range': [0, 10], 'z_range': [0, 10], 't_range': [0, 10]}
-    """
-    if not resource.valid_volume():
-        raise RuntimeError('Resource incompatible with the volume service.')
-    if bb_type != 'loose' and bb_type != 'tight':
-        raise RuntimeError("bb_type must be either 'loose' or 'tight'.")
-    return self._volume.get_bounding_box(resource, resolution, id, bb_type)
-</code></pre>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bb_type</span><span class="o">=</span><span class="s1">&#39;loose&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get bounding box containing object specified by id.</span>
+<span class="sd">    Currently only supports &#39;loose&#39; bounding boxes.  The bounding box</span>
+<span class="sd">    returned is cuboid aligned.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        resource (intern.resource.Resource): Resource compatible with annotation operations.</span>
+<span class="sd">        resolution (int): 0 indicates native resolution.</span>
+<span class="sd">        id (int): Id of object of interest.</span>
+<span class="sd">        bb_type (optional[string]): Defaults to &#39;loose&#39;.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (dict): {&#39;x_range&#39;: [0, 10], &#39;y_range&#39;: [0, 10], &#39;z_range&#39;: [0, 10], &#39;t_range&#39;: [0, 10]}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bb_type</span> <span class="o">!=</span> <span class="s1">&#39;loose&#39;</span> <span class="ow">and</span> <span class="n">bb_type</span> <span class="o">!=</span> <span class="s1">&#39;tight&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;bb_type must be either &#39;loose&#39; or &#39;tight&#39;.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">get_bounding_box</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bb_type</span><span class="p">)</span>
+</pre></div>
+
   </div>
 </div>
 
@@ -1719,7 +1795,7 @@ returned is cuboid aligned.</p>
             
   <div class="item">
     <div class="name def" id="intern.remote.remote.Remote.get_cutout">
-    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[])</p>
+    <p>def <span class="ident">get_cutout</span>(</p><p>self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], **kwargs)</p>
     </div>
     
 
@@ -1739,33 +1815,34 @@ returned is cuboid aligned.</p>
 <p>&emsp;&emsp;&emsp;&emsp;<b>()</b>: Return type depends on volume service's implementation.</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>RuntimeError when given invalid resource.
-Other exceptions may be raised depending on the volume service's implementation.
-</code></pre></div>
+<div class="codehilite"><pre><span></span>RuntimeError when given invalid resource.
+Other exceptions may be raised depending on the volume service&#39;s implementation.
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote.Remote.get_cutout', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote.Remote.get_cutout" class="source">
-    <pre><code>def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
-    """Get a cutout from the volume service.
-    Args:
-        resource (intern.resource.Resource): Resource compatible with cutout operations.
-        resolution (int): 0 indicates native resolution.
-        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-        id_list (optional [list]): list of object ids to filter the cutout by.
-    Returns:
-        (): Return type depends on volume service's implementation.
-    Raises:
-        RuntimeError when given invalid resource.
-        Other exceptions may be raised depending on the volume service's implementation.
-    """
-    if not resource.valid_volume():
-        raise RuntimeError('Resource incompatible with the volume service.')
-    return self._volume.get_cutout(
-        resource, resolution, x_range, y_range, z_range, time_range, id_list)
-</code></pre>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">id_list</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a cutout from the volume service.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        resource (intern.resource.Resource): Resource compatible with cutout operations.</span>
+<span class="sd">        resolution (int): 0 indicates native resolution.</span>
+<span class="sd">        x_range (list[int]): x range such as [10, 20] which means x&gt;=10 and x&lt;20.</span>
+<span class="sd">        y_range (list[int]): y range such as [10, 20] which means y&gt;=10 and y&lt;20.</span>
+<span class="sd">        z_range (list[int]): z range such as [10, 20] which means z&gt;=10 and z&lt;20.</span>
+<span class="sd">        time_range (optional [list[int]]): time range such as [30, 40] which means t&gt;=30 and t&lt;40.</span>
+<span class="sd">        id_list (optional [list]): list of object ids to filter the cutout by.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (): Return type depends on volume service&#39;s implementation.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError when given invalid resource.</span>
+<span class="sd">        Other exceptions may be raised depending on the volume service&#39;s implementation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">get_cutout</span><span class="p">(</span>
+        <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="p">,</span> <span class="n">id_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
   </div>
 </div>
 
@@ -1793,32 +1870,35 @@ Other exceptions may be raised depending on the volume service's implementation.
 <p>&emsp;&emsp;&emsp;&emsp;<b>(list[int]): Example</b>: [1, 2, 25].</p>
 <h2 style='font-size:125% !important'>Raises</h2>
 
-<pre><code>requests.HTTPError
-</code></pre>
+<div class="codehilite"><pre><span></span>requests.HTTPError
+</pre></div>
+
+
 <p>&emsp;&emsp;&emsp;&emsp;<b>TypeError</b>: if resource is not an annotation channel.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote.Remote.get_ids_in_region', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote.Remote.get_ids_in_region" class="source">
-    <pre><code>def get_ids_in_region(
-        self, resource, resolution,
-        x_range, y_range, z_range, time_range=[0, 1]):
-    """Get all ids in the region defined by x_range, y_range, z_range.
-    Args:
-        resource (intern.resource.Resource): Resource compatible with annotation operations.
-        resolution (int): 0 indicates native resolution.
-        x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
-        y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
-        z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
-        time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.  Defaults to [0, 1].
-    Returns:
-        (list[int]): Example: [1, 2, 25].
-    Raises:
-        requests.HTTPError
-        TypeError: if resource is not an annotation channel.
-    """
-    return self._volume.get_ids_in_region(
-        resource, resolution, x_range, y_range, z_range, time_range)
-</code></pre>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_ids_in_region</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span>
+        <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;Get all ids in the region defined by x_range, y_range, z_range.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        resource (intern.resource.Resource): Resource compatible with annotation operations.</span>
+<span class="sd">        resolution (int): 0 indicates native resolution.</span>
+<span class="sd">        x_range (list[int]): x range such as [10, 20] which means x&gt;=10 and x&lt;20.</span>
+<span class="sd">        y_range (list[int]): y range such as [10, 20] which means y&gt;=10 and y&lt;20.</span>
+<span class="sd">        z_range (list[int]): z range such as [10, 20] which means z&gt;=10 and z&lt;20.</span>
+<span class="sd">        time_range (optional [list[int]]): time range such as [30, 40] which means t&gt;=30 and t&lt;40.  Defaults to [0, 1].</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (list[int]): Example: [1, 2, 25].</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        requests.HTTPError</span>
+<span class="sd">        TypeError: if resource is not an annotation channel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">get_ids_in_region</span><span class="p">(</span>
+        <span class="n">resource</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">z_range</span><span class="p">,</span> <span class="n">time_range</span><span class="p">)</span>
+</pre></div>
+
   </div>
 </div>
 
@@ -1839,21 +1919,22 @@ Other exceptions may be raised depending on the volume service's implementation.
 &emsp;&emsp;&emsp;&emsp;<b>(**kwargs)</b>: Args are implementation dependent.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<pre><code>(list)
-</code></pre></div>
+<div class="codehilite"><pre><span></span>(list)
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote.Remote.list_project', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote.Remote.list_project" class="source">
-    <pre><code>def list_project(self, **kwargs):
-    """Perform list operation on the project.
-    What this does is highly dependent on project's data model.
-    Args:
-        (**kwargs): Args are implementation dependent.
-    Returns:
-        (list)
-    """
-    return self._project.list(**kwargs)
-</code></pre>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">list_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform list operation on the project.</span>
+<span class="sd">    What this does is highly dependent on project&#39;s data model.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        (**kwargs): Args are implementation dependent.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (list)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
   </div>
 </div>
 
@@ -1873,22 +1954,23 @@ Other exceptions may be raised depending on the volume service's implementation.
 &emsp;&emsp;&emsp;&emsp;<b>config_handle (io.StringIO)</b>: Config data encoded in a string.</p>
 <h2 style='font-size:125% !important'>Returns</h2>
 
-<pre><code>(configparser.ConfigParser)
-</code></pre></div>
+<div class="codehilite"><pre><span></span>(configparser.ConfigParser)
+</pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote.Remote.load_config_file', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote.Remote.load_config_file" class="source">
-    <pre><code>def load_config_file(self, config_handle):
-    """Load config data for the Remote.
-    Args:
-        config_handle (io.StringIO): Config data encoded in a string.
-    Returns:
-        (configparser.ConfigParser)
-    """
-    cfg_parser = configparser.ConfigParser()
-    cfg_parser.readfp(config_handle)
-    return cfg_parser
-</code></pre>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">load_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_handle</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load config data for the Remote.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        config_handle (io.StringIO): Config data encoded in a string.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (configparser.ConfigParser)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg_parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="n">cfg_parser</span><span class="o">.</span><span class="n">readfp</span><span class="p">(</span><span class="n">config_handle</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfg_parser</span>
+</pre></div>
+
   </div>
 </div>
 
@@ -1913,18 +1995,19 @@ Other exceptions may be raised depending on the volume service's implementation.
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-intern.remote.remote.Remote.reserve_ids', this);">Show source &equiv;</a></p>
   <div id="source-intern.remote.remote.Remote.reserve_ids" class="source">
-    <pre><code>def reserve_ids(self, resource, num_ids):
-    """Reserve a block of unique, sequential ids for annotations.
-    Args:
-        resource (intern.resource.Resource): Resource compatible with annotation operations.
-        num_ids (int): Number of ids to reserve.
-    Returns:
-        (int): First id reserved.
-    """
-    if not resource.valid_volume():
-        raise RuntimeError('Resource incompatible with the volume service.')
-    return self._volume.reserve_ids(resource, num_ids)
-</code></pre>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">reserve_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">num_ids</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reserve a block of unique, sequential ids for annotations.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        resource (intern.resource.Resource): Resource compatible with annotation operations.</span>
+<span class="sd">        num_ids (int): Number of ids to reserve.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (int): First id reserved.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="o">.</span><span class="n">valid_volume</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource incompatible with the volume service.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume</span><span class="o">.</span><span class="n">reserve_ids</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">num_ids</span><span class="p">)</span>
+</pre></div>
+
   </div>
 </div>
 
