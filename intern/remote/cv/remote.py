@@ -25,13 +25,13 @@ class CloudVolumeRemote(Remote):
             version = LATEST_VERSION
 
     def cloudvolume(self, protocol, path, new_layer = True, **params):
-    	"""
-    	Creates a cloudvolume object
+        """
+        Creates a cloudvolume object
 
         Args:
             protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
             path (str) : in the form of "/$BUCKET/$DATASET/$LAYER"
-			new_layer (bool): boolean indicating if new info file is needed
+            new_layer (bool): boolean indicating if new info file is needed
             **params () : keyword-value arguments for info object
 
         Returns:
@@ -39,8 +39,8 @@ class CloudVolumeRemote(Remote):
         """
         return CloudVolumeResource(protocol, path, new_layer, **params)
 
-    def create_cutout(self, cv, data, xrang= None, yrang = None, zrang = None):
-    	"""
+    def create_cutout(self, cv, data, xrang= [], yrang = [], zrang = []):
+        """
             Method to upload a cutout of data
             Args:
                 data (str) : Path to the data
@@ -53,8 +53,8 @@ class CloudVolumeRemote(Remote):
         """
         return cv.create_cutout(data, xrang, yrang, zrang)
 
-    def get_cutout(self, cv, xrang = None, yrang = None, zrang = None):
-    	"""
+    def get_cutout(self, cv, xrang = [], yrang = [], zrang = []):
+        """
             Method to download a cutout of data
             Args:
                 vol (CloudVolume) : Existing non-empty cloudvolume instance 
@@ -67,47 +67,47 @@ class CloudVolumeRemote(Remote):
         return cv.get_cutout(data, xrang, yrang, zrang)
 
     def get_info(self, cv):
-    	"""
-		Returns a JSON of the resource properties.
+        """
+        Returns a JSON of the resource properties.
 
-		Args:
-		resource (CloudVolumeResource object)
+        Args:
+        resource (CloudVolumeResource object)
 
-		Returns:
-		string: JSON format of properties
-		"""
+        Returns:
+        string: JSON format of properties
+        """
         return CloudVolumeService.get_info(cv)
 
     def get_cloudpath(self, cv):
-    	"""
-		Returns a string of the cloudpath of the resource.
+        """
+        Returns a string of the cloudpath of the resource.
 
-		Args:
-		resource (CloudVolumeResource object)
+        Args:
+        resource (CloudVolumeResource object)
 
-		Returns:
-		string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
-		"""
+        Returns:
+        string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
+        """
         return CloudVolumeService.get_cloudpath(cv)
 
     def get_provenance(self, cv):
-    	"""
-		Returns the description and owners of the cloudvolume resource.
+        """
+        Returns the description and owners of the cloudvolume resource.
 
-		Args:
-		resource (CloudVolumeResource object)
+        Args:
+        resource (CloudVolumeResource object)
 
-		Returns:
-		dict: desciption and owners values
-		"""
+        Returns:
+        dict: desciption and owners values
+        """
         return CloudVolumeService.get_provenance(cv)
 
     def delete_data(self, cv, xrang, yrang, zrang):
-    	"""
-		Delete the chunks within a bounding box (must be aligned with chunks)
+        """
+        Delete the chunks within a bounding box (must be aligned with chunks)
 
-		Args:
-		resource (CloudVolumeResource object)
-		xrang,yrang,zrang (Tuples representing the bbox)
-		"""
+        Args:
+        resource (CloudVolumeResource object)
+        xrang,yrang,zrang (Tuples representing the bbox)
+        """
         return CloudVolumeService.deleta_data(cv)

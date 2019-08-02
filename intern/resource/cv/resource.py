@@ -103,7 +103,7 @@ class CloudVolumeResource(Resource):
             Retruns:
                 message (str) : Uploading Data... message
         """
-        if xrang and yrang and zrang == None:
+        if xrang== [] and yrang== [] and zrang == []:
             self.cloudvolume[:,:,:] = data
         else:
             self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
@@ -120,7 +120,7 @@ class CloudVolumeResource(Resource):
             Retruns:
                 data (numpy array) : image stack from the cloud or local system
         """
-        if xrang and yrang and zrang == None:
+        if xrang== [] and yrang== [] and zrang == []:
             data = self.cloudvolume[:,:,:]
         else:
             data = self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
