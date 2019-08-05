@@ -107,34 +107,49 @@ class CloudVolumeService(Service):
 
 		Returns: (list) list of ints denoting mip levels
 		"""
-		return resource.available_mips
+		return resource.cloudvolume.mip
 
 	@classmethod
 	def get_channel(self, resource, channel):
 		"""
 		Which data layer (e.g. image, segmentation) on S3, GS, or FS you're reading and writing to. 
 		Known as a "channel" in BOSS terminology. Writing to this property triggers an info refresh.
-		"""
+		
+		Args:
+		resource (CloudVolume Resource Object)
+		channel (str): can be 'image' or 'segmentation'
+
+		Returns:
+		str: the resource channel 
+
+		"""	
 
 		if channel == None:
-			return resource.layer
+			return resource.cloudvolume.layer
 		else:
-			if channel not in ['image', 'segmentation', 'annotation']:
+			if channel not in ['image', 'segmentation']:
 				raise ValueError('{} is not a valid layer'.format(channel))
 			else:
 				resource.layer = channel
-				return resource.layer
+				return resource.cloudvolume.layer
 
 	@classmethod
 	def get_experiment(self, resource, experiment):
 		"""
 		Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
 		Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
+		
+		Args: 
+		resource (CloudVolume Resource Object)
+		experiment (str): experiment name 
+
+		Returns:
+		str: current resource experiment
 		"""
 		if experiment == None:
-			return resource.dataset_name
+			return resource.cloudvolume.dataset_name
 		else:
 			resource.dataset_name = experiment
-			return resource.dataset_name
+			return resource.cloudvolume.dataset_name
 
 

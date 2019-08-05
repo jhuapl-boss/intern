@@ -17,14 +17,14 @@ from intern.remote import Remote
 from intern.resource.cv.resource import *
 from intern.service.cv.service import *
 
-LATEST_VERSION = 'v1'
+LATEST_VERSION = 'v0.1'
 
 class CloudVolumeRemote(Remote):
     def __init__(self, version=None):
         if version is None:
             version = LATEST_VERSION
 
-    def cloudvolume(self, protocol, path, new_layer = True, **params):
+    def cloudvolume(self, protocol, path, new_layer=True, **params):
         """
         Creates a cloudvolume object
 
@@ -39,7 +39,7 @@ class CloudVolumeRemote(Remote):
         """
         return CloudVolumeResource(protocol, path, new_layer, **params)
 
-    def create_cutout(self, cv, data, xrang= [], yrang = [], zrang = []):
+    def create_cutout(self, cv, data, xrang=[], yrang=[], zrang=[]):
         """
             Method to upload a cutout of data
             Args:
@@ -53,7 +53,7 @@ class CloudVolumeRemote(Remote):
         """
         return cv.create_cutout(data, xrang, yrang, zrang)
 
-    def get_cutout(self, cv, xrang = [], yrang = [], zrang = []):
+    def get_cutout(self, cv, xrang=[], yrang=[], zrang=[]):
         """
             Method to download a cutout of data
             Args:
@@ -110,4 +110,43 @@ class CloudVolumeRemote(Remote):
         resource (CloudVolumeResource object)
         xrang,yrang,zrang (Tuples representing the bbox)
         """
-        return CloudVolumeService.deleta_data(cv)
+        return CloudVolumeService.deleta_data(cv, xrang, yrang, zrang)
+
+    def which_res(self, cv):
+        """
+        What resolution(s) are available to read and write to in the current resource. 
+
+        Args:
+        resource (CloudVolume Resource Object)
+
+        Returns: (list) list of ints denoting mip levels
+        """
+        return CloudVolumeService.which_res(cv)
+
+    def get_channel(self, cv, channel = None):
+        """
+        Which data layer (e.g. image, segmentation) on S3, GS, or FS you're reading and writing to. 
+        Known as a "channel" in BOSS terminology. Writing to this property triggers an info refresh.
+        
+        Args:
+        resource (CloudVolume Resource Object)
+        channel (str): can be 'image' or 'segmentation'
+
+        Returns:
+        str: current resource channel
+        """ 
+        return CloudVolumeService.get_channel(cv, channel)
+
+    def get_experiment(self, cv, experiment = None):
+        """
+        Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
+        Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
+        
+        Args: 
+        resource (CloudVolume Resource Object)
+        experiment (str): experiment name 
+
+        Returns:
+        str: current resource experiment
+        """
+        return CloudVolumeService.get_experiment(cv, experiment)
