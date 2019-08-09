@@ -14,11 +14,11 @@
 
 from intern.resource import Resource
 from io import BytesIO
-from subprocess import call
 import numpy as np
 import requests
 import json
 import ast
+import docker
 
 class DvidResource(Resource):
 
@@ -51,11 +51,19 @@ class DvidResource(Resource):
 
             Returns:
                 Str : all outputs from the command prompt
-        """
+
         call(["docker", "pull", "flyem/dvid"])
         call(["docker", "run", "-v", imagePath + ":/dataLoad/", "--name", repoName, "-d", "flyem/dvid"])
         print("Running your container...")
         call(["docker", "run", "--volumes-from", repoName, "-p", port + ":" + port, "--name", portName, "-t", "flyem/dvid"])
+        """
+        volume = {imagePath:{'bind':'/dataLoad/', 'mode':'rw'}}
+        p = port + ':' + port
+        client = docker.from_env()
+        client.images.pull("flyem/dvid")
+        client.containers.run(image = 'flyem/dvid', name = repoName, detach = True, volumes = volume)
+        print("Running your container...")
+        client.containers.run(image = 'flyem/dvid', port = p, name = portName, tty = True, volumes_from = [repoName])
 
     @classmethod
     def get_UUID(self, ID, repos):
@@ -175,7 +183,11 @@ class DvidResource(Resource):
         xrang = str(xrang)
         yrang = str(yrang)
         zrang = str(zrang)
-        call(["docker", "exec", portName, "dvid", "node", UUID, instanceName, "load", xrang + "," + yrang + "," + zrang, "/dataLoad/" + volume])
+        #call(["docker", "exec", portName, "dvid", "node", UUID, instanceName, "load", xrang + "," + yrang + "," + zrang, "/dataLoad/" + volume])
+        client = docker.from_env()
+        port = client.containers.get(portName)
+        cmd = 'dvid node {} {} load {},{},{} /dataload/{}'.format(UUID, instanceName, xrang, yrang, zrang, volume)
+        port.exec_run(cmd)
         return "Your data is uploading..."
 
     @classmethod

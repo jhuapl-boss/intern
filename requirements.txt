@@ -6,3 +6,5 @@ mock
 nose2
 #ast
 h5py
+cloud-volume
+docker

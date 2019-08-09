@@ -42,10 +42,10 @@ class CloudVolumeResource(Resource):
             info = CloudVolume.create_new_info(
                 num_channels = params.get('num_channels', 1),
                 layer_type = params.get('layer_type', None), # 'image' or 'segmentation'
-                data_type = params.get('data_type', None), # can pick any popular uint
+                data_type = params.get('data_type', 'uint8'), # can pick any popular uint, defaults to unit8
                 encoding = params.get('encoding', None), # other options: 'jpeg', 'compressed_segmentation' (req. uint32 or uint64)
                 resolution = params.get('resolution', [1,1,1]), # X,Y,Z values in nanometers
-                voxel_offset = params.get('voxel_offset', [0,0,0]), # values X,Y,Z values in voxels
+                voxel_offset = params.get('voxel_offset', [0,0,0]), # offset in X,Y,Z voxels
                 chunk_size = params.get('chunk_size', None), # rechunk of image X,Y,Z in voxels
                 volume_size = params.get('volume_size', [1,1,1]) # X,Y,Z size in voxels
             )

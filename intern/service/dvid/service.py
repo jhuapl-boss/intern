@@ -13,7 +13,8 @@
 # limitations under the License.
 
 from intern.service.service import Service
-from subprocess import call
+#from subprocess import call
+import docker
 import requests
 
 
@@ -205,8 +206,13 @@ class DvidService(Service):
 			Returns:
 				Confirmation message (str)
 		"""
-		call(["docker", "stop", repoName])
-		call(["docker", "stop", portName])
+		#call(["docker", "stop", repoName])
+		#call(["docker", "stop", portName])
+		client = docker.from_env()
+		repo = client.containers.get(repo)
+		port = client.containers.get(portName)
+		repo.stop()
+		port.stop()
 		return "Your Dvid instance is no longer running."
 
 	@classmethod
