@@ -1,6 +1,11 @@
 numpy
+<<<<<<< HEAD
 requests==2.11.1
 blosc==1.4.4
+=======
+requests>=2.11.1
+blosc>=1.4.4
+>>>>>>> master
 six
 mock
 nose2
