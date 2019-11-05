@@ -16,7 +16,6 @@ from abc import ABCMeta, abstractmethod
 from intern.resource.boss.resource import CoordinateFrameResource
 from requests import Request
 
-
 @six.add_metaclass(ABCMeta)
 class BaseVersion(object):
     """BaseVersion is the base class for all versioned interfaces to the
@@ -147,7 +146,7 @@ class BaseVersion(object):
         return urlWithKey + '&value=' + str(value)
 
     def build_cutout_url(
-        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[]):
+        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None, id_list=[], access_mode=None):
         """Build the url to access the cutout function of the Boss' volume service.
 
         Args:
@@ -158,6 +157,11 @@ class BaseVersion(object):
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
             id_list (optional [list[int]]): list of object ids to filter the cutout by.
+            access_mode (optional [Enum]): Identifies one of three cache access options:
+                cache = Will check both cache and for dirty keys
+                no_cache = Will skip cache check but check for dirty keys
+                raw = Will skip both the cache and dirty keys check
+                NOTE: No default here since when building a cutout url to create_cutout there is no need for access_mode
 
         Returns:
             (string): Full URL to access API.
@@ -178,9 +182,31 @@ class BaseVersion(object):
             t_rng_lst = self.convert_int_list_range_to_str(time_range)
             urlWithParams += t_rng_lst + '/'
 
+        queryParamDict = {}
         if len(id_list) > 0:
-            urlWithParams += '?filter=' + self.convert_int_list_to_comma_sep_str(id_list)
-
+            queryParamDict['filter'] = self.convert_int_list_to_comma_sep_str(id_list)
+    
+        # If creating a cutout, the url will not include the access_mode otherwise it will
+        if access_mode is not None:
+            queryParamDict['access-mode'] = access_mode.value 
+        """
+        TODO: LMR
+        The following could be done using urlib.urlencode(urlWithParams += '?' + urllib.parse.urlencode(queryParamDict,safe=",")),
+        however urllib's python2 version of this function does not take in the 'safe' parameter and thus we can not use the 
+        function interchangable for python2/3. In order to keep our python2/3 compatability, we do not use urllib. 
+        """
+        if queryParamDict:
+            # The first time include '?'
+            urlWithParams += '?'
+            for k, v in queryParamDict.items():
+                # if this is the first run through, last char in str will be ?, so don't include '&'
+                if urlWithParams[len(urlWithParams)-1] == '?':
+                    pass
+                # otherwise use '&'
+                else:
+                    urlWithParams += '&'
+                # Add key and value members
+                urlWithParams += '{}={}'.format(k,v)
         return urlWithParams
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
@@ -250,7 +276,7 @@ class BaseVersion(object):
 
     def get_cutout_request(
         self, resource, method, content, url_prefix, token,
-        resolution, x_range, y_range, z_range, time_range, numpyVolume=None, id_list=[]):
+        resolution, x_range, y_range, z_range, time_range,  numpyVolume=None, id_list=[], access_mode=None,):
 
         """Create a request for working with cutouts (part of the Boss' volume service).
 
@@ -267,6 +293,10 @@ class BaseVersion(object):
             time_range (list[int]): time range such as [30, 40] which means t>=30 and t<40.
             numpyVolume (optional numpy array): The data volume encoded in a numpy array.
             id_list (optional [list[int]]): list of object ids to filter the cutout by.
+            access_mode (optional [Enum]): Identifies one of three cache access options:
+                cache = Will check both cache and for dirty keys
+                no_cache = Will skip cache check but check for dirty keys
+                raw = Will skip both the cache and dirty keys check
 
         Returns:
             (requests.Request): A newly constructed Request object.
@@ -275,7 +305,7 @@ class BaseVersion(object):
             RuntimeError if url_prefix is None or an empty string.
         """
         url = self.build_cutout_url(
-            resource, url_prefix, resolution, x_range, y_range, z_range, time_range, id_list)
+            resource, url_prefix, resolution, x_range, y_range, z_range,  time_range, id_list, access_mode)
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = numpyVolume)
 
@@ -581,4 +611,3 @@ class BaseVersion(object):
             resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
         headers = self.get_headers(content, token)
         return Request(method, url, headers=headers)
-

@@ -157,6 +157,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
             expected_msg_prefix = 'Reserve ids failed'
             self.assertTrue(err.message.startwswith(expected_msg_prefix))
 
+    @unittest.skip('Skipping - currently indexing disabled')
     def test_get_bounding_box_spans_cuboids_in_x(self):
         x_rng = [511, 515]
         y_rng = [0, 8]
@@ -190,6 +191,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    @unittest.skip('Skipping - currently indexing disabled')
     def test_get_bounding_box_spans_cuboids_in_y(self):
         x_rng = [0, 8]
         y_rng = [511, 515]
@@ -223,6 +225,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    @unittest.skip('Skipping - currently indexing disabled')
     def test_get_bounding_box_spans_cuboids_in_z(self):
         x_rng = [0, 8]
         y_rng = [0, 4]
@@ -256,6 +259,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    @unittest.skip('Skipping - currently indexing disabled')
     def test_tight_bounding_box_x_axis(self):
         """Test tight bounding box with ids that span three cuboids along the x axis."""
         resolution = 0
@@ -294,6 +298,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
         actual = self.rmt.get_bounding_box(
             self.ann_bounding_chan, resolution, x_id, bb_type='tight')
 
+    @unittest.skip('Skipping - currently indexing disabled')
     def test_tight_bounding_box_y_axis(self):
         """Test tight bounding box with ids that span three cuboids along the x axis."""
         resolution = 0
@@ -332,6 +337,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
         actual = self.rmt.get_bounding_box(
             self.ann_bounding_chan, resolution, y_id, bb_type='tight')
 
+    @unittest.skip('Skipping - currently indexing disabled')
     def test_tight_bounding_box_z_axis(self):
         """Test tight bounding box with ids that span three cuboids along the x axis."""
         resolution = 0
@@ -454,6 +460,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
         numpy.testing.assert_array_equal(
             expected_data_123_55555, filtered_data_123_55555)
 
+    @unittest.skip('Skipping - currently indexing disabled')
     def test_get_ids_in_region_x_axis(self):
         """Test using a region that's cuboid aligned except for the x axis."""
         resolution = 0
@@ -488,6 +495,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    @unittest.skip('Skipping - currently indexing disabled')
     def test_get_ids_in_region_y_axis(self):
         """Test using a region that's cuboid aligned except for the y axis."""
         resolution = 0
@@ -523,6 +531,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    @unittest.skip('Skipping - currently indexing disabled')
     def test_get_ids_in_region_z_axis(self):
         """Test using a region that's cuboid aligned except for the z axis."""
         resolution = 0
