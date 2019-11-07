@@ -1,4 +1,4 @@
-# Copyright 2017 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,4 +17,5 @@
 Author:
     Luis Rodriguez
 """
-from intern.resource.dvid.resource import DvidResource
+from intern.resource.dvid.resource import DVIDResource
+from intern.resource.dvid.resource import ChannelResource

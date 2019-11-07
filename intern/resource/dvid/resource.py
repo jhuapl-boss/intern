@@ -13,190 +13,140 @@
 # limitations under the License.
 
 from intern.resource import Resource
-from io import BytesIO
-from subprocess import call
-import numpy as np
-import requests
-import json
-import ast
+from abc import abstractmethod
 
-class DvidResource(Resource):
+class DVIDResource(Resource):
 
-    """Base class for Dvid resources.
+    """Base class for DVID resources.
 
     Attributes:
         name (string): Name of resource.  Used as identifier when talking to
-        the Dvid API.
+        the DVID API.
         description (string): Text description of resource.
-        creator (string): Resource creator.
-        raw (dictionary): Holds JSON data returned by DVID on a POST (create) or GET operation.
+    """
+    def __init__(self, name, description):
+        """Constructor.
+
+        Args:
+            name (string): Name of resource.
+            description (string): Description of resource.        """
+
+        self.name = name
+        self.description = description
+
+    def valid_volume(self):
+        return False
+
+class CollectionResource(DVIDResource):
+    """
+        CollectionResource is not a valid DVID Resource.
+        # TODO: Should this be a warning message at the parent level?
+    """
+    NotImplemented
+
+class ExperimentResource(DVIDResource):
+    """Top level container for DVID projects.
+    """
+    def __init__(self, name, UUID, description='', sync="", version="0"):
+        """Constructor.
+
+        Args:
+            name (string): Parent experiment name.
+            UUID (string): UUID of collection
+            description (optional[string]): Layer description.  Defaults to empty.
+        """
+        DVIDResource.__init__(self, name, description)
+
+        self.UUID, self.sync, self.version  = UUID, sync, version
+        self.exp_name = name
+
+class ChannelResource(DVIDResource):
+    """Holds channel data.
+
+    Attributes:
+        UUID (string): UUID of resource.
+        exp_name (string): Name of experiment containing this resource.
+        description (string): Description of channel or layer.
+        _valid_datatypes (list[string]): Allowed data type values (static variable).
+        _valid_types (list[string]): Allowed types
+        _datatype (string):
+        _cutout_ready (bool): True if datatype specified during instantiation.
     """
 
-    def __init__(self):
-        """
-            Initializes intern.Resource parent class
-        """
-        Resource.__init__(self)
+    _valid_datatypes = ['uint8', 'uint16', 'uint64']
+    _valid_types = ['image', 'imagetile', 'googlevoxels', 'keyvalue', 'roi','uint8blk','labelblk', 'labelvol', 'annotation', 'labelgraph', 'multichan16', 'rgba8blk']
 
-    @classmethod
-    def StartLocalDvid(self, repoName, portName, port, imagePath):
-        """
-            Method to spin up a local version of Dvid
+    def __init__(self, name, UUID, experiment_name, type='uint8blk', description='', datatype='uint8', sync="", version="0"):
+        """Constructor.
 
-            Args:
-                repoName (str) : name of the repository docker container
-                portName (str) : name of the port where dvid will be Running
-                port (str) : Port where dvid will be Running
-                imagePath(str) : name of the path where data is located
-
-            Returns:
-                Str : all outputs from the command prompt
+        Args:
+            name (string): Channel name.
+            UUID (string): UUID of collection.
+            experiment_name (string): Parent experiment name.
+            type (optional[string]): check _valid_types defaults to uint8blk
+            description (optional[string]): Layer description.  Defaults to empty.
+            datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
+            sync (string): related channel name
+            version (string): version of channel if not 0
         """
-        call(["docker", "pull", "flyem/dvid"])
-        call(["docker", "run", "-v", imagePath + ":/dataLoad/", "--name", repoName, "-d", "flyem/dvid"])
-        print("Running your container...")
-        call(["docker", "run", "--volumes-from", repoName, "-p", port + ":" + port, "--name", portName, "-t", "flyem/dvid"])
 
-    @classmethod
-    def get_UUID(self, ID, repos):
+        DVIDResource.__init__(self, name, description)
+        self.UUID, self.sync, self.version  = UUID, sync, version
+        self.exp_name = experiment_name
+        self._type = self.validate_type(type)
 
-        """
-            obtains ID and repos and converts the input into a touple
-        """
-        if ID is '':
-            raise ValueError('The UUID was not specified')
-        elif repos is '':
-            raise ValueError('The repository name was not specified')
+        # Class is considered fully initialized if datatype set during
+        # initialization.
+        if datatype == '':
+            self._cutout_ready = False
+            # Default to uint8.
+            datatype = 'uint8'
         else:
-            IDrepos = (ID, repos)
-            return IDrepos
+            self._cutout_ready = True
+        self._datatype = self.validate_datatype(datatype)
 
-    @classmethod
-    def get_channel(self, UUID_coll_exp):
+    def valid_volume(self):
+        """Channels and layers are valid resources for interacting with the volume service.
         """
-            Method to input all channel hierarchy requirememnts, works as a dummy
-            for BossRemote Parallelism.
+        return True
 
-            Args:
-                UUID (str) : Root UUID of the repository
-                col (str) : Name of collection
-                exp (str) : Name of experiment
+    @property
+    def cutout_ready(self):
+        """Is this channel fully configured for doing cutouts?
 
-            Returns:
-                chan (str) : String of UUID/col/exp
+        Returns:
+            (bool) True if the datatype was explicitly set by the user.
         """
+        return self._cutout_ready
 
-        return UUID_coll_exp
+    @property
+    def datatype(self):
+        """Channel bit depth.
 
-    @classmethod
-    def get_cutout(self, api, chan, res, xspan, yspan, zspan):
-
+        Returns:
+            (string)
         """
-            ID MUST BE STRING ""
-            xpix = "x" how many pixels traveled in x
-            ypix = "y" how many pixels traveled in y
-            zpix = "z" how many pixels traveled in z
-            xo, yo, zo (x,y,z offsets)
-            type = "raw"
-            scale = "grayscale"
+        return self._datatype
+
+    @datatype.setter
+    def datatype(self, value):
         """
-        #Defining used variables
-        chan = chan.split("/")
-        UUID = chan[0]
-        exp = chan[1]
-
-        xpix = xspan[1]-xspan[0]
-        xo = xspan[0]
-        ypix = yspan[1]-yspan[0]
-        yo = yspan[0]
-        zpix = zspan[1]-zspan[0]
-        zo = zspan[0]
-
-        size = str(xpix) + "_" + str(ypix) + "_" + str(zpix)
-        offset = str(xo) + "_" + str(yo) + "_" + str(zo)
-
-        #User entered IP address with added octet-stream line to obtain data from api in octet-stream form
-        #0_1_2 specifies a 3 dimensional octet-stream "xy" "xz" "yz"
-        address = api + "/api/node/" + UUID + "/" + exp + "/raw/0_1_2/" + size + "/" + offset + "/octet-stream"
-        r = requests.get(address)
-        octet_stream = r.content
-        print("Grabbing your cutout...")
-
-         #Converts obtained octet-stream into a numpy array of specified type uint8
-        block = np.fromstring(octet_stream, dtype = np.uint8)
-        try:
-            #Specifies the 3 dimensional shape of the numpy array of the size given by the user
-            volumeOut =  block.reshape(zpix,ypix,xpix)
-        except ValueError:
-            print("There is no data currently loaded on your specified host.")
-        #Returns a 3-dimensional numpy array to the user
-        return volumeOut
-
-    @classmethod
-    def create_project(self, api, coll, des):
+        Args:
+            value (string): 'uint8', 'uint16', 'uint64'
+        Raises:
+            ValueError
         """
-            Creates a repository for the data to be placed in.
-            Returns randomly generated 32 character long UUID
-        """
+        self._datatype = self.validate_datatype(value)
+        self._cutout_ready = True
 
-        r = requests.post(api + "/api/repos",
-            data = json.dumps({"Alias" : coll,
-                "Description" : des}
-                )
-        )
-        r = str(r.content)
-        r = r.split("'")
-        r = r[1]
-        cont = ast.literal_eval(r)
-        UUID = cont["root"]
-        return UUID
+    def validate_type(self, value):
+        if value not in self._valid_types:
+            raise ValueError('{} is not a valid type in DVID.'.format(value))
+        else:
+            return value
 
-    @classmethod
-    def create_cutout(self, chan, portName, xrang, yrang, zrang, volume):
-        """
-            Method to upload a cutout of data
-
-            Args:
-                chan (str) : Project string which carries UUID, and channel name information
-                portName (str) : Name of the docker port from which the local dvid instance is running
-                xrang (str) : Start x value within the 3D space
-                yrang (str) : Start y value within the 3D space
-                zrang (str) : Start z value witinn the 3D space
-                volume (str) : Path to the data within the mounted docker file
-
-            Retruns:
-                message (str) : Uploading Data... message
-
-        """
-        chan = chan.split("/")
-        UUID = str(chan[0])
-        print("Your data is uploading onto the UUID, please ignore the next timeout message!")
-        instanceName = str(chan[1])
-        xrang = str(xrang)
-        yrang = str(yrang)
-        zrang = str(zrang)
-        call(["docker", "exec", portName, "dvid", "node", UUID, instanceName, "load", xrang + "," + yrang + "," + zrang, "/dataLoad/" + volume])
-        return "Your data is uploading..."
-
-    @classmethod
-    def ChannelResource(self, api, UUID, exp, datatype):
-        """
-		Method to create a channel within specified collection, experiment and of a known datatype
-
-		Args:
-			Coll (str) : Alias of the UUID
-			exp (str) : Name of the instance of data that will be created
-			des (str) : Description of what is saved under the given UUID
-			datatype (str) : Type of data that will be uploaded. Deafaults to uint8blk
-
-		Returns:
-			chan (str) : composed of UUID, exp and chan for use in create_cutout function
-        """
-
-        dat1 = requests.post(api + "/api/repo/" + UUID + "/instance" ,
-            data=json.dumps({"typename" : datatype,
-                "dataname" : exp,
-                "versioned" : "0"
-            }))
-        chan = str(UUID) + "/" + str(exp)
-        return chan
+    def validate_datatype(self, value):
+        lowered = value.lower()
+        if lowered in ChannelResource._valid_datatypes:
+            return lowered
+        raise ValueError('{} is not a valid data type.'.format(value))

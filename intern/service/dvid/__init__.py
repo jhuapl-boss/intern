@@ -17,5 +17,4 @@
 Author:
     Luis Rodriguez
 """
-from intern.service.dvid.service import DvidService
-
+from intern.service.dvid.service import DVIDService

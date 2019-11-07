@@ -1,5 +1,5 @@
 """
-# Copyright 2017 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,17 +15,25 @@
 """
 from intern.remote import Remote
 from intern.resource.dvid.resource import *
-from intern.service.dvid.service import *
+from intern.service.dvid.project import ProjectService
+from intern.service.dvid.metadata import MetadataService
+from intern.service.dvid.volume import VolumeService
+from intern.service.dvid.versioning import VersioningService
 
-LATEST_VERSION = 'v0'
+CONFIG_METADATA_SECTION = 'Metadata Service'
+CONFIG_VERSIONING_SECTION = 'Versioning Service'
+CONFIG_PROJECT_SECTION = 'Project Service'
+CONFIG_VOLUME_SECTION = 'Volume Service'
 CONFIG_PROTOCOL = 'protocol'
 CONFIG_HOST = 'host'
-api = ""
-
 
 class DVIDRemote(Remote):
 
-	def __init__(self, specs, version=None):
+	"""
+	Remote provides an SDK to the DVID API.
+	"""
+
+	def __init__(self, cfg_file_or_dict=None,):
 		"""
 			Constructor.
 
@@ -33,51 +41,142 @@ class DVIDRemote(Remote):
 			Protocol and host specifications are taken in as keys -values of dictionary.
 			global api variable is named and used for every command that requires api.
 		"""
+		Remote.__init__(self, cfg_file_or_dict)
 
-		if version is None:
-			version = LATEST_VERSION
+		# Init the services
+		self._init_project_service()
+		self._init_metadata_service()
+		self._init_volume_service()
+		self._init_versioning_service()
 
-		protocol = specs[CONFIG_HOST]
-		host = specs[CONFIG_PROTOCOL]
-
-		global api
-		api = host + "://" + protocol
-
-	def StartLocalDvid(self, repoName, portName, port, imagePath):
+	def _init_project_service(self):
 		"""
-            Method to spin up a local version of Dvid
+		Method to initialize the Volume Service from the config data
 
-            Args:
-                repoName (str) : name of the repository docker container
-                portName (str) : name of the port where dvid will be Running
-                port (str) : Port where dvid will be Running
-                imagePath(str) : name of the path where data is located
+		Args:
+			None
 
-            Returns:
-                Str : all outputs from the command prompt
+		Returns:
+			None
+
+		Raises:
+			(KeyError): if given invalid version.
 		"""
-		return DvidResource.StartLocalDvid(repoName,portName,port,imagePath)
+		project_cfg = self._load_config_section(CONFIG_PROJECT_SECTION)
+		proto = project_cfg[CONFIG_PROTOCOL]
+		host = project_cfg[CONFIG_HOST]
+		api = proto + "://" + host
 
-	def get_UUID(self, ID, repos):
+		self._project = ProjectService(api)
+		self._project.base_protocol = proto
+
+	def _init_metadata_service(self):
 		"""
-			Method to obtain requested channel
+		Method to initialize the Volume Service from the config data
 
-			Args:
-				ID (string): UUID assigned to DVID repository
-				repos (string): name of the repository assigned by the user when instance was created
+		Args:
+			None
 
-			Returns:
-				(String touple)
+		Returns:
+			None
 
-			Raises:
-				(KeyError): if given invalid version.
+		Raises:
+			(KeyError): if given invalid version.
 		"""
-		return DvidResource.get_UUID(ID,repos)
+		metadata_cfg = self._load_config_section(CONFIG_METADATA_SECTION)
+		proto = metadata_cfg[CONFIG_PROTOCOL]
+		host = metadata_cfg[CONFIG_HOST]
+		api = proto + "://" + host
 
-	def get_channel(self, UUID_coll_exp):
+		self._metadata = MetadataService(api)
+		self._metadata.base_protocol = proto
+
+	def _init_volume_service(self):
+		"""
+		Method to initialize the Volume Service from the config data
+
+		Args:
+			None
+
+		Returns:
+			None
+
+		Raises:
+			(KeyError): if given invalid version.
+		"""
+		volume_cfg = self._load_config_section(CONFIG_VOLUME_SECTION)
+		proto = volume_cfg[CONFIG_PROTOCOL]
+		host = volume_cfg[CONFIG_HOST]
+		api = proto + "://" + host
+
+		self._volume = VolumeService(api)
+		self._volume.base_protocol = proto
+
+	def _init_versioning_service(self):
+		"""
+		Method to initialize the Volume Service from the config data
+
+		Args:
+			None
+
+		Returns:
+			None
+
+		Raises:
+			(KeyError): if given invalid version.
+		"""
+		versioning_cfg = self._load_config_section(CONFIG_VERSIONING_SECTION)
+		proto = versioning_cfg[CONFIG_PROTOCOL]
+		host = versioning_cfg[CONFIG_HOST]
+		api = proto + "://" + host
+
+		self._versioning = VersioningService(api)
+		self._versioning.base_protocol = proto
+
+	def __repr__(self):
+		"""
+		Stringify the Remote.
+
+		Returns a representation of the DVIDRemote that lists the host.
+		"""
+		return "<intern.remote.DVIDRemote [" + self._config['Default']['host'] + "]>"
+
+	def _load_config_section(self, section_name):
+		"""
+		Method to load the specific Service section from the config file if it
+		exists, or fall back to the default
+
+		Args:
+			section_name (str): The desired service section name
+
+		Returns:
+			(dict): the section parameters
+		"""
+		if self._config.has_section(section_name):
+			# Load specific section
+			section = dict(self._config.items(section_name))
+		elif self._config.has_section("Default"):
+			# Load Default section
+			section = dict(self._config.items("Default"))
+		else:
+			raise KeyError((
+				"'{}' was not found in the configuration file and no default " +
+				"configuration was provided."
+			).format(section_name))
+
+		# Make sure section is valid
+		if "protocol" in section and "host" in section:
+			return section
+		else:
+			raise KeyError(
+				"Missing values in configuration data. " +
+				"Must contain: protocol, host"
+			)
+
+	def get_channel(self, chan_name, UUID, exp_name):
 		"""
             Method to input all channel hierarchy requirememnts, works as a dummy
-            for BossRemote Parallelism.
+            for DVIDRemote Parallelism.
 
             Args:
                 UUID_coll_exp (str) : Root UUID of the repository along with collection and experiment
@@ -85,17 +184,17 @@ class DVIDRemote(Remote):
             Returns:
                 chan (str) : String of UUID/col/exp
 		"""
-		return DvidResource.get_channel(UUID_coll_exp)
+		return ChannelResource(chan_name, UUID, exp_name)
 
-	def get_cutout(self, chan, res, xspan, yspan, zspan):
+	def get_cutout(self, chan, res, xrange, yrange, zrange):
 		"""
-			Method to request a volume of data from dvid server uploaded through command window
+			Method to request a volume of data from DVID server uploaded through command window
 
 			Args:
 				IDrepos (string) : UUID assigned to DVID repository and repository name
-				xspan (int) : range of pixels in x axis ([1000:1500])
-				yspan (int) : range of pixels in y axis ([1000:1500])
-				zspan (int) : range of pixels in z axis ([1000:1010])
+				xrange (int) : range of pixels in x axis ([1000:1500])
+				yrange (int) : range of pixels in y axis ([1000:1500])
+				zrange (int) : range of pixels in z axis ([1000:1010])
 
 			Returns:
 				array: numpy array representation of the requested volume
@@ -103,11 +202,28 @@ class DVIDRemote(Remote):
 			Raises:
 				(KeyError): if given invalid version.
 		"""
-		return DvidResource.get_cutout(api, chan, res, xspan, yspan, zspan)
-
-	def create_project(self, coll, des):
+		return self._volume.get_cutout(chan, res, xrange, yrange, zrange)
+    
+	def get_project(self, resource):
 		"""
-			Method to create a project space in the dvid server
+		Get attributes of the data model object named by the given resource.
+
+		Args:
+			resource (intern.resource.dvid.DVIDResource): resource.name as well
+				as any parents must be identified to succeed.
+
+		Returns:
+			(intern.resource.dvid.DVIDResource): Returns resource of type
+				requested on success.
+
+		Raises:
+			requests.HTTPError on failure.
+		"""
+		return self._project.get(resource)
+
+	def create_project(self, resource):
+		"""
+			Method to create a project space in the DVID server
 
 			Args:
 				coll (str) : Name of collection
@@ -119,27 +235,20 @@ class DVIDRemote(Remote):
 			Raises:
 				(KeyError): if given invalid version.
 		"""
-		return DvidResource.create_project(api, coll, des)
+		return self._project.create(resource)
 
-	def create_cutout(self, chan, portName, xrang, yrang, zrang, volume):
+	def delete_project(self, resource):
 		"""
-			Method to upload data onto the dvid server.
+        Method to delete a project
 
-			Args:
-                chan (str) : Project string which carries UUID, and channel name information
-                portName (str) : Name of the docker port from which the local dvid instance is running
-                xrang (str) : Start x value within the 3D space
-                yrang (str) : Start y value within the 3D space
-                zrang (str) : Start z value witinn the 3D space
-                volume (str) : Path to the data within the mounted docker file
+        Args:
+            UUID (str) : hexadecimal character long string characterizing the project
 
-			Returns:
-				string: Confirmation message
-
-			Raises:
-				(KeyError): if given invalid version.
+        Returns:
+            (str) : Confirmation message
 		"""
-		return DvidResource.create_cutout(chan, portName, xrang, yrang, zrang, volume)
+
+		return self._project.delete(resource)
 
 	def ChannelResource(self, UUID, exp, datatype =  "uint8blk"):
 		"""
@@ -154,7 +263,7 @@ class DVIDRemote(Remote):
 			chan (str) : composed of UUID, exp and chan for use in create_cutout function
 		"""
 
-		return DvidResource.ChannelResource(api, UUID, exp, datatype)
+		return ChannelResource(UUID, exp, datatype)
 
 	def get_info(self, UUID):
 		"""
@@ -169,38 +278,39 @@ class DVIDRemote(Remote):
 			Raises:
 				(KeyError): if given invalid version.
 		"""
-		return DvidService.get_info(api,UUID)
+		return self._metadata.get_info(UUID)
 
 	def get_log(self, UUID):
 		"""
-		Method to obtain log of all previous messages related to the repository
+			The log is a list of strings that will be appended to the repo's log.  They should be
+			descriptions for the entire repo and not just one node.
 
-		Args:
-		    UUID (string): UUID of the DVID repository (str)
+			Args:
+				UUID (string): UUID of the DVID repository (str)
 
-		Returns:
-		    string: list of all log recordings related to the DVID repository
+			Returns:
+				string: list of all log recordings related to the DVID repository
 
-		Raises:
-		    (KeyError): if given invalid version.
+			Raises:
+				(ValueError): if given invalid UUID.
 		"""
-		return DvidService.get_log(api,UUID)
+		return self._versioning.get_log(UUID)
 
 	def post_log(self, UUID,log1):
 		"""
-		Method to post new log information to the repository
+			Allows the user to write a short description of the content in the repository
+			{ "log": [ "provenance data...", "provenance data...", ...] }
+			Args:
+				UUID (string): UUID of the DVID repository (str)
+				log_m (string): Message to record on the repositories history log (str)
 
-		Args:
-		    UUID (string): UUID of the DVID repository (str)
-		    log1 (string): Message to record on the repositories history log (str)
+			Returns:
+				HTTP Response
 
-		Returns:
-		    string: Confirmation message
-
-		Raises:
-		    (KeyError): if given invalid version.
+			Raises:
+				(ValueError): if given invalid UUID or log.
 		"""
-		return DvidService.post_log(api,UUID,log1)
+		return self._versioning.post_log(UUID,log1)
 
 	def get_server_info(self):
 		"""
@@ -215,121 +325,76 @@ class DVIDRemote(Remote):
 		Raises:
 		    (KeyError): if given invalid version.
 		"""
-		return DvidService.get_server_info(api)
+		return self._metadata.get_server_info()
 
-	def create_project_addon(self, UUID, typename, dataname, sync, version=0):
+	def merge(self, UUID, parents, mergeType="conflict-free", note=""):
 		"""
-		Method create a project add-on
-
-		Args:
-		    UUID (string): UUID of Dvid repository
-		    typename (string): type of add on:
-		    	labelblk
-		    	labelvol
-		    	imagetile
-		    dataname (string): name of addon
-		    sync (string): name of instance (dataname) to which this addon is related
-		    version (int): version of repository (dafaults to 1)
-
-		Returns:
-		    string: Server information
-
-		Raises:
-		    (KeyError): if given invalid version.
-		"""
-
-		return DvidService.create_project_addon(api,UUID,typename,dataname,sync,version)
-
-	def merge(self, UUID, parents, note):
-		"""
-			Method to obtain information about the server
+			Creates a conflict-free merge of a set of committed parent UUIDs into a child.  Note
+			the merge will not necessarily create an error immediately
 
 			Args:
-			    UUID (string): UUID of Dvid repository
-			    parents (string array) : a list of the parent UUIDs to be merged
-				note (string) : any note the user wants to identify the merger
+				mergeType (string) = "conflict-free"
+				parents (array) = [ "parent-uuid1", "parent-uuid2", ... ]
+				note (string) = this is a description of what I did on this commit
 
 			Returns:
-			    string: Merger information
+				merge_child_uuid (string): child generated uuid after merge
 
 			Raises:
-			    (Runtime error)
+				HTTPError: On non 200 status code
 		"""
-		return DvidService.merge(api, UUID, mergeType, parents, note)
+		return self._versioning.merge(UUID, parents,mergeType, note)
 
-	def resolve(self, UUID, data, parents, note):
+	def resolve(self, UUID, data, parents, note=""):
 		"""
-			Method to obtain information about the server
+			Forces a merge of a set of committed parent UUIDs into a child by specifying a
+			UUID order that establishes priorities in case of conflicts
 
 			Args:
-			    UUID (string): UUID of Dvid repository
-				data (string array) : a list of the data instance names to be scanned for possible conflicts
-				parents (string array) : a list of the parent UUIDs to be merged in order of priority
-				note (string) : any note the user wants to identify the merger
+				data (array) = [ "instance-name-1", "instance-name2", ... ],
+				parents (array): [ "parent-uuid1", "parent-uuid2", ... ],
+				note (string): this is a description of what I did on this commit
 
 			Returns:
-			    string: Resolution information
+				resolve_child_uuid (string): child generated uuid after resolution
 
 			Raises:
-			    (Runtime error)
+				HTTPError: On non 200 status code
 		"""
 
-		return DvidService.resolve(api, UUID, data, parents, note)
+		return self._versioning.resolve(UUID, data, parents, note)
 
-	def delete_project(self, UUID):
+	def commit(self, UUID, note='', log_m=''):
 		"""
-        Method to delete a project
-
-        Args:
-            UUID (str) : hexadecimal character long string characterizing the project
-
-        Returns:
-            (str) : Confirmation message
-		"""
-
-		return DvidService.delete_project(api, UUID)
-
-	def delete_data(self, api, UUID,dataname):
-		"""
-			Method to obtain information about the server
+			Allows the user to write a short description of the content in the repository
 
 			Args:
-			    UUID (string): UUID of Dvid repository
+				UUID (string): UUID of the DVID repository (str)
+				note (string): human-readable commit message
+				log_m (string): Message to record on the repositories history log (str)
 
 			Returns:
-			    string: Server information
+				commit_uuid (string): commit hash
 
 			Raises:
-			    (Runtime error)
+				(ValueError): if given invalid UUID.
 		"""
 
-		return DvidService.delete_data(api, UUID, dataname)
+		return self._versioning.commit(UUID, note, log_m)
 
-	def StopLocalDvid(self, repoName, portName):
+	def branch(self, UUID, note=''):
 		"""
-			Method to stop local Dvid repository
-
+			Allows the user to write a short description of the content in the repository
+			
 			Args:
-				repoName (str) :
-				portName (str) :
+				UUID (string): UUID of the DVID repository (str)
+				note (string): Message to record when branching
 
 			Returns:
-				Confirmation message (str)
+				branch_uuid (string): The child branch UUID
+
+			Raises:
+				(KeyError): if given invalid version.
 		"""
-		return DvidService.StopLocalDvid(repoName, portName)
 
-	def change_server_setting(self,gc1,throt1):
-		"""
-		NOT IMPLEMENTED
-		Method to change the server settings
-
-		Args:
-		    version (string): Version of Boss API to use.
-
-		Returns:
-		    None
-
-		Raises:
-		    (KeyError): if given invalid version.
-		"""
-		return DvidService.change_server_setting(api,gc1,throt1)
+		return self._versioning.branch(UUID, note)
