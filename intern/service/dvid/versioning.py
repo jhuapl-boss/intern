@@ -113,8 +113,8 @@ class VersioningService(DVIDService):
             log_resp = requests.get("{}/api/node/{}/log".format(self.base_url, UUID))
             if log_resp.status_code != 200:
                 raise requests.HTTPError(log_resp.content)
-            logM = log_resp.content
-            return(logM)
+            log_m = log_resp.content
+            return(log_m)
 
     def post_log(self, UUID,log_m):
         """

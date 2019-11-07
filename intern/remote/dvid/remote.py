@@ -36,10 +36,7 @@ class DVIDRemote(Remote):
 	def __init__(self, cfg_file_or_dict=None,):
 		"""
 			Constructor.
-
-			Checks for latest version. If no version is given, assigns version as none
 			Protocol and host specifications are taken in as keys -values of dictionary.
-			global api variable is named and used for every command that requires api.
 		"""
 		Remote.__init__(self, cfg_file_or_dict)
 
@@ -249,21 +246,6 @@ class DVIDRemote(Remote):
 		"""
 
 		return self._project.delete(resource)
-
-	def ChannelResource(self, UUID, exp, datatype =  "uint8blk"):
-		"""
-		Method to create a channel within specified collection, experiment and of a known datatype
-
-		Args:
-			UUID (str) : UUID
-			exp (str) : Name of the instance of data that will be created
-			datatype (str) : Type of data that will be uploaded. Deafaults to uint8blk
-
-		Returns:
-			chan (str) : composed of UUID, exp and chan for use in create_cutout function
-		"""
-
-		return ChannelResource(UUID, exp, datatype)
 
 	def get_info(self, UUID):
 		"""

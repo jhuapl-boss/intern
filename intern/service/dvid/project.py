@@ -60,25 +60,25 @@ class ProjectService(DVIDService):
         if isinstance(resource, ChannelResource):
             exp_name = resource.exp_name
             chan_name = resource.name
-            r = requests.post("{}/api/repos".format(self.base_url),
+            exp_create_resp = requests.post("{}/api/repos".format(self.base_url),
                 data = json.dumps({"Alias" : resource.UUID,
                     "Description" : exp_name}
                     )
             )
-            r_cont = str(r.content)
-            if r.status_code != 200:
-                raise requests.HTTPError(r.content)
-            UUID = ast.literal_eval(r_cont.split("'")[0])["root"]
+            exp_create_resp_cont = str(exp_create_resp.content)
+            if exp_create_resp.status_code != 200:
+                raise requests.HTTPError(exp_create_resp.content)
+            UUID = ast.literal_eval(exp_create_resp_cont.split("'")[0])["root"]
 
-            r = requests.post("{}/api/repo/{}/instance".format(self.base_url, UUID),
+            chan_create_resp_cont = requests.post("{}/api/repo/{}/instance".format(self.base_url, UUID),
                 data=json.dumps({"typename" : resource._type,
                     "dataname" : chan_name,
                     "versioned" : resource.version,
                     "sync": resource.sync
                 }))
 
-            if r.status_code != 200:
-                raise requests.HTTPError(r.content)
+            if chan_create_resp_cont.status_code != 200:
+                raise requests.HTTPError(chan_create_resp_cont.content)
             return UUID
 
     def get(self, resource):
