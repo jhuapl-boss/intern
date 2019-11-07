@@ -24,14 +24,19 @@ class CloudVolumeResource(Resource):
     Base class for CloudVolume resources.
     """
 
-    def __init__(self, protocol, path, new_layer, **params):
+    def __init__(self, protocol, path, new_layer, parallel, **params):
         """
         Initializes intern.Resource parent class and creates a cloudvolume object
 
         Args:
             protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
             path (str) : in the form of "/$BUCKET/$DATASET/$LAYER"
-            new_layer (bool): boolean indicating if new info file is needed
+            new_layer (bool): True indicates a new info file and therefore a new layer, is needed
+            parallel (int: 1, bool): Number of extra processes to launch, 1 means only 
+                    use the main process. If parallel is True use the number of CPUs 
+                    returned by multiprocessing.cpu_count(). When parallel > 1, shared
+                    memory (Linux) or emulated shared memory via files (other platforms) 
+                    is used by the underlying download.
             **params () : keyword-value arguments for info object
 
         Returns:
@@ -52,34 +57,24 @@ class CloudVolumeResource(Resource):
             owners = params.get('owners', []) # list of contact email addresses
             description = params.get('description', 'No description provided')
             
-            if protocol == 'local':
-                vol = CloudVolume('file://' + path, mip = params.get('mip', 0), info = info)
-
-            elif protocol == 'gs':
-                vol = CloudVolume('gs:/' + path, mip = params.get('mip', 0), info = info)
-              
-            elif protocol == 's3':
-                vol = CloudVolume('s3:/' + path, mip = params.get('mip', 0), info = info)
-                
-            else:
-                raise Exception("{} is not a valid protocol. Supported protocols: 'local', 'gs', 's3'".format(protocol))
-
-            vol.provenance.description = description
-            vol.provenance.owners = owners
-            vol.commit_provenance() # generates protocol://bucket/dataset/layer/provenance json file
-            vol.commit_info() # generates protocol://bucket/dataset/layer/info json file
         else:
-            if protocol == 'local':
-                vol = CloudVolume('file://' + path)
+            info = None
+        if protocol == 'local':
+            vol = CloudVolume('file://' + path, mip = params.get('mip', 0), info = info, parallel = parallel)
 
-            elif protocol == 'gs':
-                vol = CloudVolume('gs:/' + path)
-              
-            elif protocol == 's3':
-                vol = CloudVolume('s3:/' + path)
-                
-            else:
-                raise Exception("{} is not a valid protocol. Supported protocols: 'local', 'gs', 's3'").format(protocol) 
+        elif protocol == 'gs':
+            vol = CloudVolume('gs:/' + path, mip = params.get('mip', 0), info = info, parallel = parallel)
+            
+        elif protocol == 's3':
+            vol = CloudVolume('s3:/' + path, mip = params.get('mip', 0), info = info, parallel = parallel)
+            
+        else:
+            raise Exception("{} is not a valid protocol. Supported protocols: 'local', 'gs', 's3'".format(protocol))
+
+        vol.provenance.description = description
+        vol.provenance.owners = owners
+        vol.commit_provenance() # generates protocol://bucket/dataset/layer/provenance json file
+        vol.commit_info() # generates protocol://bucket/dataset/layer/info json file
         self.cloudvolume = vol
 
 
@@ -91,37 +86,37 @@ class CloudVolumeResource(Resource):
         """
         return True
 
-    def create_cutout(self, data, xrang, yrang, zrang):
+    def create_cutout(self, data, x_range, y_range, z_range):
         """
             Method to upload a cutout of data
             Args:
                 data (str) : Path to the data
                 vol (CloudVolume) : Existing cloudvolume instance 
-                xrang (list) : x range within the 3D space
-                yrang (list) : y range within the 3D space
-                zrang (list) : z range witinn the 3D space
+                x_range (list) : x range within the 3D space
+                y_range (list) : y range within the 3D space
+                z_range (list) : z range witinn the 3D space
             Retruns:
                 message (str) : Uploading Data... message
         """
-        if xrang== [] and yrang== [] and zrang == []:
+        if x_range==[] and y_range==[] and z_range==[]:
             self.cloudvolume[:,:,:] = data
         else:
-            self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]] = data
+            self.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]] = data
         print("Data uploaded.")
 
-    def get_cutout(self, xrang, yrang, zrang):
+    def get_cutout(self, x_range, y_range, z_range):
         """
             Method to download a cutout of data
             Args:
                 vol (CloudVolume) : Existing non-empty cloudvolume instance 
-                xrang (list) : x range within the 3D space
-                yrang (list) : y range within the 3D space
-                zrang (list) : z range within the 3D space
+                x_range (list) : x range within the 3D space
+                y_range (list) : y range within the 3D space
+                z_range (list) : z range within the 3D space
             Retruns:
                 data (numpy array) : image stack from the cloud or local system
         """
-        if xrang== [] and yrang== [] and zrang == []:
+        if x_range== [] and y_range== [] and z_range == []:
             data = self.cloudvolume[:,:,:]
         else:
-            data = self.cloudvolume[xrang[0]:xrang[1], yrang[0]:yrang[1], zrang[0]:zrang[1]]
+            data = self.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]]
         return data

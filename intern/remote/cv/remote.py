@@ -24,7 +24,7 @@ class CloudVolumeRemote(Remote):
         if version is None:
             version = LATEST_VERSION
 
-    def cloudvolume(self, protocol, path, new_layer=True, **params):
+    def cloudvolume(self, protocol, path, new_layer=True, parallel = 1, **params):
         """
         Creates a cloudvolume object
 
@@ -37,34 +37,34 @@ class CloudVolumeRemote(Remote):
         Returns:
             CloudVolume : cloudvolume instance with specified parameters 
         """
-        return CloudVolumeResource(protocol, path, new_layer, **params)
+        return CloudVolumeResource(protocol, path, new_layer, parallel, **params)
 
-    def create_cutout(self, cv, data, xrang=[], yrang=[], zrang=[]):
+    def create_cutout(self, cv, data, x_range=[], y_range=[], z_range=[]):
         """
             Method to upload a cutout of data
             Args:
                 data (str) : Path to the data
                 vol (CloudVolume) : Existing cloudvolume instance 
-                xrang (list) : x range within the 3D space
-                yrang (list) : y range within the 3D space
-                zrang (list) : z range witinn the 3D space
+                x_range (list) : x range within the 3D space
+                y_range (list) : y range within the 3D space
+                z_range (list) : z range witinn the 3D space
             Retruns:
                 message (str) : Uploading Data... message
         """
-        return cv.create_cutout(data, xrang, yrang, zrang)
+        return cv.create_cutout(data, x_range, y_range, z_range)
 
-    def get_cutout(self, cv, xrang=[], yrang=[], zrang=[]):
+    def get_cutout(self, cv, x_range=[], y_range=[], z_range=[]):
         """
             Method to download a cutout of data
             Args:
                 vol (CloudVolume) : Existing non-empty cloudvolume instance 
-                xrang (list) : x range within the 3D space
-                yrang (list) : y range within the 3D space
-                zrang (list) : z range within the 3D space
+                x_range (list) : x range within the 3D space
+                y_range (list) : y range within the 3D space
+                z_range (list) : z range within the 3D space
             Retruns:
                 data (numpy array) : image stack from the cloud or local system
         """
-        return cv.get_cutout(data, xrang, yrang, zrang)
+        return cv.get_cutout(data, x_range, y_range, z_range)
 
     def get_info(self, cv):
         """
@@ -102,15 +102,15 @@ class CloudVolumeRemote(Remote):
         """
         return CloudVolumeService.get_provenance(cv)
 
-    def delete_data(self, cv, xrang, yrang, zrang):
+    def delete_data(self, cv, x_range, y_range, z_range):
         """
         Delete the chunks within a bounding box (must be aligned with chunks)
 
         Args:
         resource (CloudVolumeResource object)
-        xrang,yrang,zrang (Tuples representing the bbox)
+        x_range,y_range,z_range (Tuples representing the bbox)
         """
-        return CloudVolumeService.deleta_data(cv, xrang, yrang, zrang)
+        return CloudVolumeService.deleta_data(cv, x_range, y_range, z_range)
 
     def which_res(self, cv):
         """

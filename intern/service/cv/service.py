@@ -66,34 +66,34 @@ class CloudVolumeService(Service):
 		return resource.cloudvolume.refresh_provenance()
 
 	@classmethod
-	def _chunks_exist(self, resource, xrang, yrang, zrang):
+	def _chunks_exist(self, resource, x_range, y_range, z_range):
 		"""
 		Get a report on which chunks actually exist.
 
 		Args:
 		resource (CloudVolumeResource object)
-		xrang,yrang,zrang (Tuples representing the bbox)
+		x_range,y_range,z_range (Tuples representing the bbox)
 
 		Returns: {chunk_file_name: boolean, ...}
 
 		"""
-		x1,x2 = xrang
-		y1,y2 = yrang
-		z1,z2 = zrang
+		x1,x2 = x_range
+		y1,y2 = y_range
+		z1,z2 = z_range
 		return resource.cloudvolume.exists( np.s_[x1:x2, y1:y2, z1:z2] ) 
 
 	@classmethod 
-	def delete_data(self, resource, xrang, yrang, zrang):
+	def delete_data(self, resource, x_range, y_range, z_range):
 		"""
 		Delete the chunks within a bounding box (must be aligned with chunks)
 
 		Args:
 		resource (CloudVolumeResource object)
-		xrang,yrang,zrang (Tuples representing the bbox)
+		x_range,y_range,z_range (Tuples representing the bbox)
 		"""
-		x1,x2 = xrang
-		y1,y2 = yrang
-		z1,z2 = zrang
+		x1,x2 = x_range
+		y1,y2 = y_range
+		z1,z2 = z_range
 		resource.cloudvolume.delete( np.s_[x1:x2, y1:y2, z1:z2] )
 		print('Files successfully deleted')
 
