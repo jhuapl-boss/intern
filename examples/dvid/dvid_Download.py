@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 #DVID Data fetch:
 dvid = DVIDRemote({
 	"protocol": "http",
-	"host": "localhost:8000",
+	"host": "localhost:8001",
 	})
 
-chan = "UUID/ChannelName"
+chan = "e40eecdd01074320b829da1255c4b4a5/Test_channel"
 volumeD = dvid.get_cutout(
 	dvid.get_channel(chan),0,
 	[0,2560],[0,2560],[390,392]
