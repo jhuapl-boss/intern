@@ -170,25 +170,27 @@ class DVIDRemote(Remote):
 				"Must contain: protocol, host"
 			)
 
-	def get_channel(self, chan_name, UUID, exp_name):
+	def get_instance(self, UUID, data_instance):
 		"""
             Method to input all channel hierarchy requirememnts, works as a dummy
             for DVIDRemote Parallelism.
 
             Args:
-                UUID_coll_exp (str) : Root UUID of the repository along with collection and experiment
-
+                UUID (str) : Root UUID of the repository along with collection and experiment
+				data_instance (str): Name of data instance within repository
             Returns:
-                chan (str) : String of UUID/col/exp
+                resource (intern.resource.boss.BossResource)
 		"""
-		return ChannelResource(chan_name, UUID, exp_name)
+		return DataInstanceResource(data_instance, UUID)
 
-	def get_cutout(self, chan, res, xrange, yrange, zrange):
+	def get_cutout(self, resource, res, xrange, yrange, zrange):
 		"""
 			Method to request a volume of data from DVID server uploaded through command window
 
 			Args:
-				IDrepos (string) : UUID assigned to DVID repository and repository name
+				resource (intern.resource.dvid.resource.DataInstanceResource | str): Data Instance Resource. If a 
+                    string is provided instead, BossRemote.parse_dvidURI is called instead on a URI-formatted 
+                    string of the form `dvid://UUID/data_instance`.
 				xrange (int) : range of pixels in x axis ([1000:1500])
 				yrange (int) : range of pixels in y axis ([1000:1500])
 				zrange (int) : range of pixels in z axis ([1000:1010])
@@ -199,8 +201,24 @@ class DVIDRemote(Remote):
 			Raises:
 				(KeyError): if given invalid version.
 		"""
-		return self._volume.get_cutout(chan, res, xrange, yrange, zrange)
-    
+		return self._volume.get_cutout(resource, res, xrange, yrange, zrange)
+
+	def parse_dvidURI(self, uri): # type: (str) -> Resource
+		"""
+		Parse a DVID URI and handle malform errors.
+
+		Arguments:
+			uri (str): URI of the form dvid://<UUID>/<DataInstance>
+
+		Returns:
+			Resource
+
+		"""
+		t = uri.split("://")[1].split("/")
+		if len(t) is 3:
+			return self.get_instance(t[0], t[1])
+		raise ValueError("Cannot parse URI " + uri + ".")
+
 	def get_project(self, resource):
 		"""
 		Get attributes of the data model object named by the given resource.
@@ -252,13 +270,13 @@ class DVIDRemote(Remote):
 			Method to obtain information on the requested repository
 
 			Args:
-				UUID (string): UUID of the DVID repository (str)
+				UUID (str): UUID of the DVID repository
 
 			Returns:
 				string: History information of the repository
 
 			Raises:
-				(KeyError): if given invalid version.
+				HTTPError if request status code is not 200
 		"""
 		return self._metadata.get_info(UUID)
 
@@ -268,7 +286,7 @@ class DVIDRemote(Remote):
 			descriptions for the entire repo and not just one node.
 
 			Args:
-				UUID (string): UUID of the DVID repository (str)
+				UUID (str): UUID of the DVID repository
 
 			Returns:
 				string: list of all log recordings related to the DVID repository
@@ -294,6 +312,51 @@ class DVIDRemote(Remote):
 		"""
 		return self._versioning.post_log(UUID,log1)
 
+	def get_server_types(self):
+		"""
+		Method to obtain information about the server
+
+		Args:
+		    none
+
+		Returns:
+		    JSON with datatypes of currently stored data instances
+
+		Raises:
+		    HTTPError if request status code is not 200
+		"""
+		return self._metadata.get_server_types()
+
+	def get_server_compiled_types(self):
+		"""
+		Method to obtain information about the server
+
+		Args:
+		    none
+
+		Returns:
+		    JSON of all possible datatypes for this server
+
+		Raises:
+		    HTTPError if request status code is not 200
+		"""
+		return self._metadata.get_server_compiled_types()
+
+	def server_reload_metadata(self):
+		"""
+		Method to reload metadat from storage
+
+		Args:
+		    none
+
+		Returns:
+		    HTTTP Response
+
+		Raises:
+		    HTTPError if request status code is not 200
+		"""
+		return self._metadata.server_reload_metadata()
+
 	def get_server_info(self):
 		"""
 		Method to obtain information about the server
@@ -302,10 +365,10 @@ class DVIDRemote(Remote):
 		    none
 
 		Returns:
-		    string: Server information
+		    JSON for server properties
 
 		Raises:
-		    (KeyError): if given invalid version.
+		    HTTPError if request status code is not 200
 		"""
 		return self._metadata.get_server_info()
 

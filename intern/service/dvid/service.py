@@ -29,6 +29,6 @@ class DVIDService(Service):
 
 	def set_auth(self):
 		"""
-			Set the token for authentication/authorization.
+			Not auth for DVID
 		"""
 		self._auth = None

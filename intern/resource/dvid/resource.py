@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from intern.resource import Resource
-from abc import abstractmethod
 
 class DVIDResource(Resource):
 
@@ -37,36 +36,33 @@ class DVIDResource(Resource):
     def valid_volume(self):
         return False
 
-class CollectionResource(DVIDResource):
-    """
-        CollectionResource is not a valid DVID Resource.
-        # TODO: Should this be a warning message at the parent level?
-    """
-    NotImplemented
-
-class ExperimentResource(DVIDResource):
+class RepositoryResource(DVIDResource):
     """Top level container for DVID projects.
     """
-    def __init__(self, name, UUID, description='', sync="", version="0"):
+    def __init__(self, UUID=None, alias='', description='', sync="", version="0"):
         """Constructor.
 
         Args:
-            name (string): Parent experiment name.
-            UUID (string): UUID of collection
+            UUID (string): UUID of repository (necessary during deletions, not necessary during creation)
+            alias (string): alias for the UUID Repository 
             description (optional[string]): Layer description.  Defaults to empty.
+            sync(string): data instance related to this one
+            version(string) : version of data instance
         """
-        DVIDResource.__init__(self, name, description)
+        DVIDResource.__init__(self, alias, description)
 
-        self.UUID, self.sync, self.version  = UUID, sync, version
-        self.exp_name = name
+        self.UUID, self.alias, self.sync, self.version = UUID, alias, sync, version
 
-class ChannelResource(DVIDResource):
+class DataInstanceResource(DVIDResource):
     """Holds channel data.
 
     Attributes:
+        name (string): Name of data instance containing this resource.
         UUID (string): UUID of resource.
-        exp_name (string): Name of experiment containing this resource.
+        alias (string): alias for the UUID Repository 
         description (string): Description of channel or layer.
+        sync (string): related channel name
+        version (string): version of channel if not 0
         _valid_datatypes (list[string]): Allowed data type values (static variable).
         _valid_types (list[string]): Allowed types
         _datatype (string):
@@ -76,13 +72,13 @@ class ChannelResource(DVIDResource):
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
     _valid_types = ['image', 'imagetile', 'googlevoxels', 'keyvalue', 'roi','uint8blk','labelblk', 'labelvol', 'annotation', 'labelgraph', 'multichan16', 'rgba8blk']
 
-    def __init__(self, name, UUID, experiment_name, type='uint8blk', description='', datatype='uint8', sync="", version="0"):
+    def __init__(self, name, UUID=None, type='uint8blk', alias='', description='', datatype='', sync="", version="0"):
         """Constructor.
 
         Args:
-            name (string): Channel name.
-            UUID (string): UUID of collection.
-            experiment_name (string): Parent experiment name.
+            name (string): Data instance name.
+            UUID (string): UUID of Repository where this DataInstance lives. If None it will create one
+            alias (string): alias for the UUID Repository 
             type (optional[string]): check _valid_types defaults to uint8blk
             description (optional[string]): Layer description.  Defaults to empty.
             datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
@@ -91,8 +87,8 @@ class ChannelResource(DVIDResource):
         """
 
         DVIDResource.__init__(self, name, description)
-        self.UUID, self.sync, self.version  = UUID, sync, version
-        self.exp_name = experiment_name
+        self.UUID, self.alias, self.sync, self.version = UUID, alias, sync, version
+        self.name = name
         self._type = self.validate_type(type)
 
         # Class is considered fully initialized if datatype set during
@@ -147,6 +143,6 @@ class ChannelResource(DVIDResource):
 
     def validate_datatype(self, value):
         lowered = value.lower()
-        if lowered in ChannelResource._valid_datatypes:
+        if lowered in DataInstanceResource._valid_datatypes:
             return lowered
         raise ValueError('{} is not a valid data type.'.format(value))

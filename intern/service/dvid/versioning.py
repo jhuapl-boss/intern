@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from intern.resource.dvid import ChannelResource
 from intern.service.dvid import DVIDService
 import requests
 import numpy as np

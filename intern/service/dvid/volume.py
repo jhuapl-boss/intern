@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from intern.resource.dvid import ChannelResource
 from intern.service.dvid import DVIDService
 import requests
 import numpy as np
@@ -34,10 +33,30 @@ class VolumeService(DVIDService):
         DVIDService.__init__(self)
         self.base_url = base_url
 
-    def get_cutout(self, chan, res, xrange, yrange, zrange):
+    def get_cutout(self, resource, res, xrange, yrange, zrange):
 
         """
-            ID MUST BE STRING ""
+        Upload a cutout to the Boss data store.
+
+        Args:
+            resource (intern.resource.resource.Resource): Resource compatible
+                with cutout operations
+            resolution (int): 0 (not applicable on DVID Resource).
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+
+        Returns:
+            (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
+
+        Raises:
+            requests.HTTPError
+        """
+        #Defining used variables
+        UUID = resource.UUID
+        data_instance = resource.name
+
+        """
             xpix = "x" how many pixels traveled in x
             ypix = "y" how many pixels traveled in y
             zpix = "z" how many pixels traveled in z
@@ -45,11 +64,6 @@ class VolumeService(DVIDService):
             type = "raw"
             scale = "grayscale"
         """
-        #Defining used variables
-        chan = chan.split("/")
-        UUID = chan[0]
-        exp = chan[1]
-
         xpix = xrange[1]-xrange[0]
         xo = xrange[0]
         ypix = yrange[1]-yrange[0]
@@ -62,7 +76,7 @@ class VolumeService(DVIDService):
 
         #User entered IP address with added octet-stream line to obtain data from api in octet-stream form
         #0_1_2 specifies a 3 dimensional octet-stream "xy" "xz" "yz"
-        address = self.base_url + "/api/node/" + UUID + "/" + exp + "/raw/0_1_2/" + size + "/" + offset + "/octet-stream"
+        address = self.base_url + "/api/node/" + UUID + "/" + data_instance + "/raw/0_1_2/" + size + "/" + offset + "/octet-stream"
         r = requests.get(address)
         octet_stream = r.content
 

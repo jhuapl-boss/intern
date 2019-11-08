@@ -18,4 +18,3 @@ Author:
     Luis Rodriguez
 """
 from intern.resource.dvid.resource import DVIDResource
-from intern.resource.dvid.resource import ChannelResource

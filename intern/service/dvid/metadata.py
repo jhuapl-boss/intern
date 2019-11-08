@@ -53,13 +53,40 @@ class MetadataService(DVIDService):
         response = requests.get("{}/api/repo/{}/info".format(self.base_url, resource.UUID))
         if response.status_code != 200:
             raise requests.HTTPError(response.content)
-        return response.content
+        return response.json()
         
     def get_server_info(self):
         """
             Returns JSON for server properties
         """
-        info = requests.get("{}/api/server".format(self.base_url))
+        info = requests.get("{}/api/server/info".format(self.base_url))
         if info.status_code != 200:
             raise requests.HTTPError(info.content)
-        return info.content
+        return info.json()
+
+    def get_server_types(self):
+        """
+            Returns JSON with datatypes of currently stored data instances
+        """
+        info = requests.get("{}/api/server/types".format(self.base_url))
+        if info.status_code != 200:
+            raise requests.HTTPError(info.content)
+        return info.json()
+
+    def get_server_compiled_types(self):
+        """
+            Returns JSON of all possible datatypes for this server
+        """
+        info = requests.get("{}/api/server/compiled-types".format(self.base_url))
+        if info.status_code != 200:
+            raise requests.HTTPError(info.content)
+        return info.json()
+
+    def server_reload_metadata(self):
+        """
+            Reloads the metadata from storage
+        """
+        info = requests.post("{}/api/server/reload-metadata".format(self.base_url))
+        if info.status_code != 200:
+            raise requests.HTTPError(info.content)
+        return info
