@@ -2,6 +2,9 @@ import intern
 from intern.remote.dvid import DVIDRemote
 from intern.resource.dvid.resource import DataInstanceResource
 from intern.resource.dvid.resource import RepositoryResource
+import numpy as np
+from PIL import Image
+import matplotlib.pyplot as plt
 
 #DVID Data fetch:
 dvid = DVIDRemote({
@@ -61,10 +64,30 @@ print("Created branches {} and {} from Parent1".format(branch_1, branch_2))
 print(dvid.get_info(instance_setup_merge))
 print(dvid.get_server_info())
 print(dvid.get_server_compiled_types())
-print(dvid.server_reload_metadata())
+dvid.server_reload_metadata()
 
 ########### Test Voluming API ###########
 # 
 
-# Uploading data
-# dataU = dvid.create_cutout(chan_setup,"xbrain_port9",0,0,390,"/*.tif")
+# Prepare the data
+img = Image.open("/Users/rodrilm2/Desktop/humans/0.png")
+data_tile = np.asarray(img)
+print(data_tile.shape)
+data_tile = np.expand_dims(data_tile,axis=0)
+data_tile = data_tile.copy(order="C")
+
+# Create the project
+instance_setup_up = DataInstanceResource(
+	DATA_INSTANCE+"_the_second" , None, 'imagetile', "Upload Test", 'Example channel.', datatype='uint8')
+chan_actual_up = dvid.create_project(instance_setup_up)
+
+# Create the cutout
+dvid.create_cutout(instance_setup_up, 0, [0,454],[0,480],[0,1], data_tile)
+print("Create cutout successful")
+
+# Get the cutout
+got_cutout = dvid.get_cutout(instance_setup_up, 0, [0,454],[0,480],[0,1])
+
+# Check for equality
+if (got_cutout == data_tile).all():
+	print("Both tiles equate")

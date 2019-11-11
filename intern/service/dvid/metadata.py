@@ -49,12 +49,18 @@ class MetadataService(DVIDService):
             Raises:
                 (HTTPError): on invalid HTTP request.
         """
+        if isinstance(resource, DataInstanceResource):
+            response = requests.get("{}/api/node/{}/{}/info".format(self.base_url, resource.UUID, resource.name))
+            if response.status_code != 200:
+                raise requests.HTTPError(response.content)
+            return response.json()
 
-        response = requests.get("{}/api/repo/{}/info".format(self.base_url, resource.UUID))
-        if response.status_code != 200:
-            raise requests.HTTPError(response.content)
-        return response.json()
-        
+        if isinstance(resource, RepositoryResource):
+            response = requests.get("{}/api/repo/{}/info".format(self.base_url, resource.UUID))
+            if response.status_code != 200:
+                raise requests.HTTPError(response.content)
+            return response.json()
+
     def get_server_info(self):
         """
             Returns JSON for server properties
@@ -89,4 +95,56 @@ class MetadataService(DVIDService):
         info = requests.post("{}/api/server/reload-metadata".format(self.base_url))
         if info.status_code != 200:
             raise requests.HTTPError(info.content)
-        return info
+        return
+
+    def create_metadata(self, resource, metadata):
+        """
+            Posts metadata to a specific DataInstance resource
+
+            Args:
+                resource : DatInstance resource to which to relate metadata
+                metadata (JSON) : JSON format metadata to post
+                    Example: 
+                    {
+                        "MinTileCoord": [0, 0, 0],
+                        "MaxTileCoord": [5, 5, 4],
+                        "Levels": {
+                            "0": {  "Resolution": [10.0, 10.0, 10.0], "TileSize": [512, 512, 512] },
+                            "1": {  "Resolution": [20.0, 20.0, 20.0], "TileSize": [512, 512, 512] },
+                            "2": {  "Resolution": [40.0, 40.0, 40.0], "TileSize": [512, 512, 512] },
+                            "3": {  "Resolution": [80.0, 80.0, 80.0], "TileSize": [512, 512, 512] }
+                        }
+                    }
+        """
+        resp = requests.post("{}/api/node/{}/{}/metadata".format(self.base_url, resource.UUID, resource.name), 
+        data = metadata)
+        if resp.status_code != 200:
+            raise requests.HTTPError(resp.content)
+        return
+
+    def get_metadata(self, resource):
+        """
+            Gets metadata to a specific DataInstance resource
+
+            Args:
+                resource : DatInstance resource to which to relate metadata
+
+            Returns:
+                metaddata (JSON): Metadata of specified resource in JSON format
+        """
+        resp = requests.post("{}/api/node/{}/{}/metadata".format(self.base_url, resource.UUID, resource.name))
+        if resp.status_code != 200:
+            raise requests.HTTPError(resp.content)
+        return resp.json()
+
+    def create_default_metadata(self, resource):
+        meta_data = json.dumps({
+            "MinTileCoord": [0, 0, 0],
+            "MaxTileCoord": [128, 128, 128],
+            "Levels": {
+                "0": {  
+                    "Resolution": [0, 0, 0], 
+                    "TileSize": [128, 128, 1] }
+                }
+            })
+        return self.create_metadata(resource, meta_data)

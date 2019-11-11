@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from intern.service.dvid import DVIDService
+from intern.service.dvid.metadata import MetadataService
 from intern.resource.dvid.resource import *
 import requests
 import json
@@ -32,6 +33,7 @@ class ProjectService(DVIDService):
         """
         DVIDService.__init__(self)
         self.base_url = base_url
+        self._metadata = MetadataService(base_url)
 
     def create(self, resource):
         """
@@ -86,6 +88,11 @@ class ProjectService(DVIDService):
                     "versioned" : resource.version,
                     "sync": resource.sync
                 }))
+
+            # Imagetile type Data instances MUST have metadata otherwise create_cutouts will fail
+            # This metadata can be overwritten by the user if desired.
+            if resource._type == 'imagetile':
+                self._metadata.create_default_metadata(resource)
 
             if data_instance_create_resp.status_code != 200:
                 raise requests.HTTPError(data_instance_create_resp.content)
