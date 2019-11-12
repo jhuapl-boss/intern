@@ -17,27 +17,27 @@ from intern.resource.cv.resource import *
 
 
 class MetadataService(CloudVolumeService):
-    """
-    MetadataService for cloud-volume service.
-    """
+	"""
+	MetadataService for cloud-volume service.
+	"""
 
-    def __init__(self):
-        """
-        Constructor.
-        """
-        CloudVolumeService.__init__(self)	
-    
-    def get_info(self, resource):
-        """
-        Returns a JSON of the resource properties.
+	def __init__(self):
+		"""
+		Constructor.
+		"""
+		CloudVolumeService.__init__(self)	
+	
+	def get_info(self, resource):
+		"""
+		Returns a JSON of the resource properties.
 
-        Args:
-        resource (CloudVolumeResource object)
+		Args:
+		resource (CloudVolumeResource object)
 
-        Returns:
-        string: JSON format of properties
-        """
-    	return resource.cloudvolume.info
+		Returns:
+		string: JSON format of properties
+		"""
+		return resource.cloudvolume.info
 
 	def get_cloudpath(self, resource):
 		"""
@@ -51,6 +51,24 @@ class MetadataService(CloudVolumeService):
 		"""
 		return resource.cloudvolume.layer_cloudpath
 
+	def create_provenance(self, resource, **kwargs):
+		"""
+		Sets the description and owners of the cloudvolume resource.
+
+		Args:
+		resource (CloudVolumeResource object)
+		owners (list): list of authorship names and emails
+		description (str): description of dataset
+
+		Returns:
+			None
+		"""
+		if kwargs.get('owners') != None:
+			resource.cloudvolume = kwargs.get('owners')
+		if kwargs.get('description') != None:
+			resource.cloudvolume = kwargs.get('description')
+		resource.cloudvolume.commit_provenance()
+	
 	def get_provenance(self, resource):
 		"""
 		Returns the description and owners of the cloudvolume resource.
