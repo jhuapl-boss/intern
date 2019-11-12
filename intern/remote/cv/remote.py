@@ -14,32 +14,39 @@
 # limitations under the License.
 """
 from intern.remote import Remote
-from intern.resource.cv.resource import *
-from intern.service.cv.service import *
+from intern.resource.cv.resource import CloudVolumeResource
+from intern.service.cv.volume import VolumeService
+from intern.service.cv.metadata import MetadataService
 
-LATEST_VERSION = 'v0.1'
 
 class CloudVolumeRemote(Remote):
-    def __init__(self, version=None):
-        if version is None:
-            version = LATEST_VERSION
+	
+    def __init__(self, cfg_file_or_dict=None,):
+    	"""Constructor.
+		Protocol and host specifications are taken in as keys -values of dictionary.
+		"""
+    	Remote.__init__(self, cfg_file_or_dict)
 
-    def cloudvolume(self, protocol, path, new_layer=True, parallel = 1, **params):
-        """
-        Creates a cloudvolume object
+		# Init the services
+    	self._metadata = MetadataService()
+        self._volume = VolumeService()
 
-        Args:
-            protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
-            path (str) : in the form of "/$BUCKET/$DATASET/$LAYER"
-            new_layer (bool): boolean indicating if new info file is needed
-            **params () : keyword-value arguments for info object
+    # def cloudvolume(self, protocol, path, new_layer=True, parallel = 1, **params):
+    #     """
+    #     Creates a cloudvolume object
 
-        Returns:
-            CloudVolume : cloudvolume instance with specified parameters 
-        """
-        return CloudVolumeResource(protocol, path, new_layer, parallel, **params)
+    #     Args:
+    #         protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
+    #         path (str) : in the form of "/$BUCKET/$DATASET/$LAYER"
+    #         new_layer (bool): boolean indicating if new info file is needed
+    #         **params () : keyword-value arguments for info object
 
-    def create_cutout(self, cv, data, x_range=[], y_range=[], z_range=[]):
+    #     Returns:
+    #         CloudVolume : cloudvolume instance with specified parameters 
+    #     """
+    #     return CloudVolumeResource(protocol, path, new_layer, parallel, **params)
+
+    def create_cutout(self, resource, resolution, x_range=[], y_range=[], z_range=[], data):
         """
             Method to upload a cutout of data
             Args:
@@ -51,9 +58,9 @@ class CloudVolumeRemote(Remote):
             Retruns:
                 message (str) : Uploading Data... message
         """
-        return cv.create_cutout(data, x_range, y_range, z_range)
+        return self._volume.create_cutout(resource, res, x_range, y_range, z_range, data)
 
-    def get_cutout(self, cv, x_range=[], y_range=[], z_range=[]):
+    def get_cutout(self, resource, x_range=[], y_range=[], z_range=[]):
         """
             Method to download a cutout of data
             Args:
@@ -64,9 +71,9 @@ class CloudVolumeRemote(Remote):
             Retruns:
                 data (numpy array) : image stack from the cloud or local system
         """
-        return cv.get_cutout(data, x_range, y_range, z_range)
+        return self._volume.get_cutout(resource, res, x_range, y_range, z_range)
 
-    def get_info(self, cv):
+    def get_info(self, resource):
         """
         Returns a JSON of the resource properties.
 
@@ -76,9 +83,9 @@ class CloudVolumeRemote(Remote):
         Returns:
         string: JSON format of properties
         """
-        return CloudVolumeService.get_info(cv)
+        return self._metadata.get_info(resource)
 
-    def get_cloudpath(self, cv):
+    def get_cloudpath(self, resource):
         """
         Returns a string of the cloudpath of the resource.
 
@@ -88,9 +95,9 @@ class CloudVolumeRemote(Remote):
         Returns:
         string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
         """
-        return CloudVolumeService.get_cloudpath(cv)
+        return self._metadata.get_cloudpath(resource)
 
-    def get_provenance(self, cv):
+    def get_provenance(self, resource):
         """
         Returns the description and owners of the cloudvolume resource.
 
@@ -100,9 +107,9 @@ class CloudVolumeRemote(Remote):
         Returns:
         dict: desciption and owners values
         """
-        return CloudVolumeService.get_provenance(cv)
+        return self._metadata.get_provenance(resource)
 
-    def delete_data(self, cv, x_range, y_range, z_range):
+    def delete_data(self, resource, x_range, y_range, z_range):
         """
         Delete the chunks within a bounding box (must be aligned with chunks)
 
@@ -110,9 +117,9 @@ class CloudVolumeRemote(Remote):
         resource (CloudVolumeResource object)
         x_range,y_range,z_range (Tuples representing the bbox)
         """
-        return CloudVolumeService.deleta_data(cv, x_range, y_range, z_range)
+        return self._volume.deleta_data(resource, x_range, y_range, z_range)
 
-    def which_res(self, cv):
+    def which_res(self, resource):
         """
         What resolution(s) are available to read and write to in the current resource. 
 
@@ -121,9 +128,9 @@ class CloudVolumeRemote(Remote):
 
         Returns: (list) list of ints denoting mip levels
         """
-        return CloudVolumeService.which_res(cv)
+        return self._metadata.which_res(resource)
 
-    def get_channel(self, cv, channel = None):
+    def get_channel(self, resource, channel = None):
         """
         Which data layer (e.g. image, segmentation) on S3, GS, or FS you're reading and writing to. 
         Known as a "channel" in BOSS terminology. Writing to this property triggers an info refresh.
@@ -135,9 +142,9 @@ class CloudVolumeRemote(Remote):
         Returns:
         str: current resource channel
         """ 
-        return CloudVolumeService.get_channel(cv, channel)
+        return self._metadata.get_channel(resource, channel)
 
-    def get_experiment(self, cv, experiment = None):
+    def get_experiment(self, resource, experiment = None):
         """
         Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
@@ -149,4 +156,4 @@ class CloudVolumeRemote(Remote):
         Returns:
         str: current resource experiment
         """
-        return CloudVolumeService.get_experiment(cv, experiment)
+        return self._metadata.get_experiment(resource, experiment)
