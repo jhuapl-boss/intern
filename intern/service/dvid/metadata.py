@@ -19,8 +19,7 @@ import json
 
 
 class MetadataService(DVIDService):
-    """
-        MetadataService for DVID service.
+    """MetadataService for DVID service.
     """
 
     def __init__(self, base_url):
@@ -36,18 +35,18 @@ class MetadataService(DVIDService):
         self.base_url = base_url
 
     def get_info(self, resource):
-        """
-            Returns JSON for just the repository with given root UUID.  The UUID str can be
+        """Returns JSON for just the repository with given root UUID.  The UUID str can be
             shortened as long as it is uniquely identifiable across the managed repositories.
 
-            Args:
-                UUID (str): UUID of the DVID repository (str)
+        Args:
+            UUID (str): UUID of the DVID repository (str)
 
-            Returns:
-                str: History information of the repository
+        Returns:
+            str: History information of the repository
 
-            Raises:
-                (HTTPError): on invalid HTTP request.
+        Raises:
+            (HTTPError): on invalid HTTP request.
+
         """
         if isinstance(resource, DataInstanceResource):
             response = requests.get("{}/api/node/{}/{}/info".format(self.base_url, resource.UUID, resource.name))
@@ -62,8 +61,7 @@ class MetadataService(DVIDService):
             return response.json()
 
     def get_server_info(self):
-        """
-            Returns JSON for server properties
+        """Returns JSON for server properties
         """
         info = requests.get("{}/api/server/info".format(self.base_url))
         if info.status_code != 200:
@@ -71,8 +69,7 @@ class MetadataService(DVIDService):
         return info.json()
 
     def get_server_types(self):
-        """
-            Returns JSON with datatypes of currently stored data instances
+        """Returns JSON with datatypes of currently stored data instances
         """
         info = requests.get("{}/api/server/types".format(self.base_url))
         if info.status_code != 200:
@@ -80,8 +77,7 @@ class MetadataService(DVIDService):
         return info.json()
 
     def get_server_compiled_types(self):
-        """
-            Returns JSON of all possible datatypes for this server
+        """Returns JSON of all possible datatypes for this server
         """
         info = requests.get("{}/api/server/compiled-types".format(self.base_url))
         if info.status_code != 200:
@@ -89,8 +85,7 @@ class MetadataService(DVIDService):
         return info.json()
 
     def server_reload_metadata(self):
-        """
-            Reloads the metadata from storage
+        """Reloads the metadata from storage
         """
         info = requests.post("{}/api/server/reload-metadata".format(self.base_url))
         if info.status_code != 200:
@@ -98,23 +93,22 @@ class MetadataService(DVIDService):
         return
 
     def create_metadata(self, resource, metadata):
-        """
-            Posts metadata to a specific DataInstance resource
+        """Posts metadata to a specific DataInstance resource
 
-            Args:
-                resource : DatInstance resource to which to relate metadata
-                metadata (JSON) : JSON format metadata to post
-                    Example: 
-                    {
-                        "MinTileCoord": [0, 0, 0],
-                        "MaxTileCoord": [5, 5, 4],
-                        "Levels": {
-                            "0": {  "Resolution": [10.0, 10.0, 10.0], "TileSize": [512, 512, 512] },
-                            "1": {  "Resolution": [20.0, 20.0, 20.0], "TileSize": [512, 512, 512] },
-                            "2": {  "Resolution": [40.0, 40.0, 40.0], "TileSize": [512, 512, 512] },
-                            "3": {  "Resolution": [80.0, 80.0, 80.0], "TileSize": [512, 512, 512] }
-                        }
+        Args:
+            resource : DatInstance resource to which to relate metadata
+            metadata (JSON) : JSON format metadata to post
+                Example: 
+                {
+                    "MinTileCoord": [0, 0, 0],
+                    "MaxTileCoord": [5, 5, 4],
+                    "Levels": {
+                        "0": {  "Resolution": [10.0, 10.0, 10.0], "TileSize": [512, 512, 512] },
+                        "1": {  "Resolution": [20.0, 20.0, 20.0], "TileSize": [512, 512, 512] },
+                        "2": {  "Resolution": [40.0, 40.0, 40.0], "TileSize": [512, 512, 512] },
+                        "3": {  "Resolution": [80.0, 80.0, 80.0], "TileSize": [512, 512, 512] }
                     }
+                }
         """
         resp = requests.post("{}/api/node/{}/{}/metadata".format(self.base_url, resource.UUID, resource.name), 
         data = metadata)
@@ -123,14 +117,13 @@ class MetadataService(DVIDService):
         return
 
     def get_metadata(self, resource):
-        """
-            Gets metadata to a specific DataInstance resource
+        """Gets metadata to a specific DataInstance resource
 
-            Args:
-                resource : DatInstance resource to which to relate metadata
+        Args:
+            resource : DatInstance resource to which to relate metadata
 
-            Returns:
-                metaddata (JSON): Metadata of specified resource in JSON format
+        Returns:
+            metaddata (JSON): Metadata of specified resource in JSON format
         """
         resp = requests.post("{}/api/node/{}/{}/metadata".format(self.base_url, resource.UUID, resource.name))
         if resp.status_code != 200:
@@ -138,6 +131,11 @@ class MetadataService(DVIDService):
         return resp.json()
 
     def create_default_metadata(self, resource):
+        """Method to create default metadata on a DataInstance Resource. 
+
+        Args:
+            resource : DatInstance resource to which to relate metadata
+        """
         meta_data = json.dumps({
             "MinTileCoord": [0, 0, 0],
             "MaxTileCoord": [128, 128, 128],

@@ -20,8 +20,7 @@ import json
 import ast
 
 class ProjectService(DVIDService):
-    """
-        ProjectService for DVID service.
+    """ProjectService for DVID service.
     """
 
     def __init__(self, base_url):
@@ -36,8 +35,8 @@ class ProjectService(DVIDService):
         self._metadata = MetadataService(base_url)
 
     def create(self, resource):
-        """
-            Creates a repository for the data to be placed in.
+        """Creates a repository for the data to be placed in.
+
         Args:
             resource (intern.resource.dvid.DVIDResource): Data model object with attributes matching those of the resource.
 
@@ -110,8 +109,7 @@ class ProjectService(DVIDService):
         return resource.UUID, resource.exp_name
 
     def delete(self, resource):
-        """
-        Method to delete a project
+        """ Method to delete a project
 
         Args:
             resource (intern.resource.dvid.DVIDResource): Data model object with attributes matching those of the resource.

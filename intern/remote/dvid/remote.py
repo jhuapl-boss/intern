@@ -28,15 +28,12 @@ CONFIG_PROTOCOL = 'protocol'
 CONFIG_HOST = 'host'
 
 class DVIDRemote(Remote):
-
-	"""
-	Remote provides an SDK to the DVID API.
+	"""Remote provides an SDK to the DVID API.
 	"""
 
 	def __init__(self, cfg_file_or_dict=None,):
-		"""
-			Constructor.
-			Protocol and host specifications are taken in as keys -values of dictionary.
+		"""Constructor.
+		Protocol and host specifications are taken in as keys -values of dictionary.
 		"""
 		Remote.__init__(self, cfg_file_or_dict)
 
@@ -47,8 +44,7 @@ class DVIDRemote(Remote):
 		self._init_versioning_service()
 
 	def _init_project_service(self):
-		"""
-		Method to initialize the Volume Service from the config data
+		"""Method to initialize the Volume Service from the config data
 
 		Args:
 			None
@@ -68,8 +64,7 @@ class DVIDRemote(Remote):
 		self._project.base_protocol = proto
 
 	def _init_metadata_service(self):
-		"""
-		Method to initialize the Volume Service from the config data
+		"""Method to initialize the Volume Service from the config data
 
 		Args:
 			None
@@ -89,8 +84,7 @@ class DVIDRemote(Remote):
 		self._metadata.base_protocol = proto
 
 	def _init_volume_service(self):
-		"""
-		Method to initialize the Volume Service from the config data
+		"""Method to initialize the Volume Service from the config data
 
 		Args:
 			None
@@ -110,8 +104,7 @@ class DVIDRemote(Remote):
 		self._volume.base_protocol = proto
 
 	def _init_versioning_service(self):
-		"""
-		Method to initialize the Volume Service from the config data
+		"""Method to initialize the Volume Service from the config data
 
 		Args:
 			None
@@ -131,16 +124,14 @@ class DVIDRemote(Remote):
 		self._versioning.base_protocol = proto
 
 	def __repr__(self):
-		"""
-		Stringify the Remote.
+		"""Stringify the Remote.
 
 		Returns a representation of the DVIDRemote that lists the host.
 		"""
 		return "<intern.remote.DVIDRemote [" + self._config['Default']['host'] + "]>"
 
 	def _load_config_section(self, section_name):
-		"""
-		Method to load the specific Service section from the config file if it
+		"""Method to load the specific Service section from the config file if it
 		exists, or fall back to the default
 
 		Args:
@@ -171,41 +162,38 @@ class DVIDRemote(Remote):
 			)
 
 	def get_instance(self, UUID, data_instance):
-		"""
-            Method to input all channel hierarchy requirememnts, works as a dummy
-            for DVIDRemote Parallelism.
+		"""Method to input all data instance hierarchy requirememnts, works as a dummy
+        for DVIDRemote Parallelism.
 
-            Args:
-                UUID (str) : Root UUID of the repository along with collection and experiment
-				data_instance (str): Name of data instance within repository
-            Returns:
-                resource (intern.resource.boss.BossResource)
+		Args:
+			UUID (str) : Root UUID of the repository
+			data_instance (str): Name of data instance within repository
+		Returns:
+			resource (intern.resource.dvid.DvidResource)
 		"""
 		return DataInstanceResource(data_instance, UUID)
 
 	def get_cutout(self, resource, res, xrange, yrange, zrange):
-		"""
-			Method to request a volume of data from DVID server uploaded through command window
+		"""Method to request a volume of data from DVID server uploaded through command window
 
-			Args:
-				resource (intern.resource.dvid.resource.DataInstanceResource | str): Data Instance Resource. If a 
-                    string is provided instead, BossRemote.parse_dvidURI is called instead on a URI-formatted 
-                    string of the form `dvid://UUID/data_instance`.
-				xrange (int) : range of pixels in x axis ([1000:1500])
-				yrange (int) : range of pixels in y axis ([1000:1500])
-				zrange (int) : range of pixels in z axis ([1000:1010])
+		Args:
+			resource (intern.resource.dvid.resource.DataInstanceResource | str): Data Instance Resource. If a 
+				string is provided instead, DvidRemote.parse_dvidURI is called instead on a URI-formatted 
+				string of the form `dvid://UUID/data_instance`.
+			xrange (int) : range of pixels in x axis ([1000:1500])
+			yrange (int) : range of pixels in y axis ([1000:1500])
+			zrange (int) : range of pixels in z axis ([1000:1010])
 
-			Returns:
-				array: numpy array representation of the requested volume
+		Returns:
+			array: numpy array representation of the requested volume
 
-			Raises:
-				(KeyError): if given invalid version.
+		Raises:
+			(KeyError): if given invalid version.
 		"""
 		return self._volume.get_cutout(resource, res, xrange, yrange, zrange)
 
 	def parse_dvidURI(self, uri): # type: (str) -> Resource
-		"""
-		Parse a DVID URI and handle malform errors.
+		"""Parse a DVID URI and handle malform errors.
 
 		Arguments:
 			uri (str): URI of the form dvid://<UUID>/<DataInstance>
@@ -220,8 +208,7 @@ class DVIDRemote(Remote):
 		raise ValueError("Cannot parse URI " + uri + ".")
 
 	def get_project(self, resource):
-		"""
-		Get attributes of the data model object named by the given resource.
+		"""Get attributes of the data model object named by the given resource.
 
 		Args:
 			resource (intern.resource.dvid.DVIDResource): resource.name as well
@@ -237,24 +224,21 @@ class DVIDRemote(Remote):
 		return self._project.get(resource)
 
 	def create_project(self, resource):
-		"""
-			Method to create a project space in the DVID server
+		"""Method to create a project space in the DVID server
 
-			Args:
-				coll (str) : Name of collection
-				des (str) : Description of collection
+		Args:
+			resource (intern.resource.dvid.DVIDResource): dvid resource for which to create a project
 
-			Returns:
-				str: Confirmation message
+		Returns:
+			str: Confirmation message
 
-			Raises:
-				(KeyError): if given invalid version.
+		Raises:
+			(KeyError): if given invalid version.
 		"""
 		return self._project.create(resource)
 
 	def delete_project(self, resource):
-		"""
-        Method to delete a project
+		"""Method to delete a project
 
         Args:
             UUID (str) : hexadecimal character long string characterizing the project
@@ -266,55 +250,52 @@ class DVIDRemote(Remote):
 		return self._project.delete(resource)
 
 	def get_info(self, UUID):
-		"""
-			Method to obtain information on the requested repository
+		"""Method to obtain information on the requested repository
 
-			Args:
-				UUID (str): UUID of the DVID repository
+		Args:
+			UUID (str): UUID of the DVID repository
 
-			Returns:
-				str: History information of the repository
+		Returns:
+			str: History information of the repository
 
-			Raises:
-				HTTPError if request status code is not 200
+		Raises:
+			HTTPError if request status code is not 200
 		"""
 		return self._metadata.get_info(UUID)
 
 	def get_log(self, UUID):
-		"""
-			The log is a list of strings that will be appended to the repo's log.  They should be
-			descriptions for the entire repo and not just one node.
+		"""The log is a list of strings that will be appended to the repo's log.  They should be
+		descriptions for the entire repo and not just one node.
 
-			Args:
-				UUID (str): UUID of the DVID repository
+		Args:
+			UUID (str): UUID of the DVID repository
 
-			Returns:
-				str: list of all log recordings related to the DVID repository
+		Returns:
+			str: list of all log recordings related to the DVID repository
 
-			Raises:
-				(ValueError): if given invalid UUID.
+		Raises:
+			(ValueError): if given invalid UUID.
 		"""
 		return self._versioning.get_log(UUID)
 
 	def post_log(self, UUID,log1):
-		"""
-			Allows the user to write a short description of the content in the repository
-			{ "log": [ "provenance data...", "provenance data...", ...] }
-			Args:
-				UUID (str): UUID of the DVID repository (str)
-				log_m (str): Message to record on the repositories history log (str)
+		"""Allows the user to write a short description of the content in the repository
+		{ "log": [ "provenance data...", "provenance data...", ...] }
 
-			Returns:
-				HTTP Response
+		Args:
+			UUID (str): UUID of the DVID repository (str)
+			log_m (str): Message to record on the repositories history log (str)
 
-			Raises:
-				(ValueError): if given invalid UUID or log.
+		Returns:
+			HTTP Response
+
+		Raises:
+			(ValueError): if given invalid UUID or log.
 		"""
 		return self._versioning.post_log(UUID,log1)
 
 	def get_server_types(self):
-		"""
-		Method to obtain information about the server
+		"""Method to obtain information about the server
 
 		Args:
 		    none
@@ -328,8 +309,7 @@ class DVIDRemote(Remote):
 		return self._metadata.get_server_types()
 
 	def get_server_compiled_types(self):
-		"""
-		Method to obtain information about the server
+		"""Method to obtain information about the server
 
 		Args:
 		    none
@@ -343,8 +323,7 @@ class DVIDRemote(Remote):
 		return self._metadata.get_server_compiled_types()
 
 	def server_reload_metadata(self):
-		"""
-		Method to reload metadat from storage
+		"""Method to reload metadat from storage
 
 		Args:
 		    none
@@ -358,8 +337,7 @@ class DVIDRemote(Remote):
 		return self._metadata.server_reload_metadata()
 
 	def get_server_info(self):
-		"""
-		Method to obtain information about the server
+		"""Method to obtain information about the server
 
 		Args:
 		    none
@@ -373,73 +351,69 @@ class DVIDRemote(Remote):
 		return self._metadata.get_server_info()
 
 	def merge(self, UUID, parents, mergeType="conflict-free", note=""):
-		"""
-			Creates a conflict-free merge of a set of committed parent UUIDs into a child.  Note
-			the merge will not necessarily create an error immediately
+		"""Creates a conflict-free merge of a set of committed parent UUIDs into a child.  Note
+		the merge will not necessarily create an error immediately
 
-			Args:
-				mergeType (str) = "conflict-free"
-				parents (array) = [ "parent-uuid1", "parent-uuid2", ... ]
-				note (str) = this is a description of what I did on this commit
+		Args:
+			mergeType (str) = "conflict-free"
+			parents (array) = [ "parent-uuid1", "parent-uuid2", ... ]
+			note (str) = this is a description of what I did on this commit
 
-			Returns:
-				merge_child_uuid (str): child generated uuid after merge
+		Returns:
+			merge_child_uuid (str): child generated uuid after merge
 
-			Raises:
-				HTTPError: On non 200 status code
+		Raises:
+			HTTPError: On non 200 status code
 		"""
 		return self._versioning.merge(UUID, parents,mergeType, note)
 
 	def resolve(self, UUID, data, parents, note=""):
-		"""
-			Forces a merge of a set of committed parent UUIDs into a child by specifying a
-			UUID order that establishes priorities in case of conflicts
+		"""Forces a merge of a set of committed parent UUIDs into a child by specifying a
+		UUID order that establishes priorities in case of conflicts
 
-			Args:
-				data (array) = [ "instance-name-1", "instance-name2", ... ],
-				parents (array): [ "parent-uuid1", "parent-uuid2", ... ],
-				note (str): this is a description of what I did on this commit
+		Args:
+			data (array) = [ "instance-name-1", "instance-name2", ... ],
+			parents (array): [ "parent-uuid1", "parent-uuid2", ... ],
+			note (str): this is a description of what I did on this commit
 
-			Returns:
-				resolve_child_uuid (str): child generated uuid after resolution
+		Returns:
+			resolve_child_uuid (str): child generated uuid after resolution
 
-			Raises:
-				HTTPError: On non 200 status code
+		Raises:
+			HTTPError: On non 200 status code
 		"""
 
 		return self._versioning.resolve(UUID, data, parents, note)
 
 	def commit(self, UUID, note='', log_m=''):
-		"""
-			Allows the user to write a short description of the content in the repository
+		"""Allows the user to write a short description of the content in the repository
 
-			Args:
-				UUID (str): UUID of the DVID repository (str)
-				note (str): human-readable commit message
-				log_m (str): Message to record on the repositories history log (str)
+		Args:
+			UUID (str): UUID of the DVID repository (str)
+			note (str): human-readable commit message
+			log_m (str): Message to record on the repositories history log (str)
 
-			Returns:
-				commit_uuid (str): commit hash
+		Returns:
+			commit_uuid (str): commit hash
 
-			Raises:
-				(ValueError): if given invalid UUID.
+		Raises:
+			(ValueError): if given invalid UUID.
 		"""
 
 		return self._versioning.commit(UUID, note, log_m)
 
 	def branch(self, UUID, note=''):
-		"""
-			Allows the user to write a short description of the content in the repository
+		"""Allows the user to write a short description of the content in the repository
 			
-			Args:
-				UUID (str): UUID of the DVID repository (str)
-				note (str): Message to record when branching
+		Args:
+			UUID (str): UUID of the DVID repository (str)
+			note (str): Message to record when branching
 
-			Returns:
-				branch_uuid (str): The child branch UUID
+		Returns:
+			branch_uuid (str): The child branch UUID
 
-			Raises:
-				(KeyError): if given invalid version.
+		Raises:
+			(KeyError): if given invalid version.
 		"""
 
 		return self._versioning.branch(UUID, note)

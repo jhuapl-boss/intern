@@ -21,26 +21,25 @@ import numpy as np
 import json
 import blosc
 
-def check_channel(fcn):
-    """Decorator that ensures a valid channel passed in.
+def check_data_instance(fcn):
+    """Decorator that ensures a valid data instance is passed in.
 
     Args:
-        fcn (function): Function that has a ChannelResource as its second argument.
+        fcn (function): Function that has a DataInstanceResource as its second argument.
 
     Returns:
-        (function): Wraps given function with one that checks for a valid channel.
+        (function): Wraps given function with one that checks for a valid data instance.
     """
 
     def wrapper(*args, **kwargs):
         if not isinstance(args[1], DataInstanceResource):
-            raise RuntimeError('resource must be an instance of intern.resource.intern.ChannelResource.')
+            raise RuntimeError('resource must be an instance of intern.resource.intern.DataInstanceResource.')
         return fcn(*args, **kwargs)
 
     return wrapper
 
 class VolumeService(DVIDService):
-    """
-        VolumeService for DVID service.
+    """VolumeService for DVID service.
     """
     def __init__(self, base_url):
         """Constructor.
@@ -54,11 +53,10 @@ class VolumeService(DVIDService):
         DVIDService.__init__(self)
         self.base_url = base_url
 
-    @check_channel
+    @check_data_instance
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, **kwargs):
 
-        """
-        Upload a cutout to the Boss data store.
+        """Download a cutout from DVID data store.
 
         Args:
             resource (intern.resource.resource.Resource): Resource compatible
@@ -132,10 +130,10 @@ class VolumeService(DVIDService):
         cutout = blosc.unpack_array(resp.content)
         return cutout
 
-    @check_channel
+    @check_data_instance
     def create_cutout(self, resource, resolution, x_range, y_range, z_range, numpyVolume, send_opts):
         """Upload a cutout to the volume service.
-            NOTE: This method will fail if no metadata has been added to the channel. 
+            NOTE: This method will fail if no metadata has been added to the data instance. 
 
         Args:
             resource (intern.resource.Resource): Resource compatible with cutout operations.

@@ -54,15 +54,15 @@ class RepositoryResource(DVIDResource):
         self.UUID, self.alias, self.sync, self.version = UUID, alias, sync, version
 
 class DataInstanceResource(DVIDResource):
-    """Holds channel data.
+    """Holds data instance data.
 
     Attributes:
         name (str): Name of data instance containing this resource.
         UUID (str): UUID of resource.
         alias (str): alias for the UUID Repository 
-        description (str): Description of channel or layer.
-        sync (str): related channel name
-        version (str): version of channel if not 0
+        description (str): Description of data instance or layer.
+        sync (str): related data instance name
+        version (str): version of data instance if not 0
         _valid_datatypes (list[str]): Allowed data type values (static variable).
         _valid_types (list[str]): Allowed types
         _datatype (str):
@@ -82,8 +82,8 @@ class DataInstanceResource(DVIDResource):
             type (optional[str]): check _valid_types defaults to uint8blk
             description (optional[str]): Layer description.  Defaults to empty.
             datatype (optional[str]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
-            sync (str): related channel name
-            version (str): version of channel if not 0
+            sync (str): related data instance name
+            version (str): version of data instance if not 0
         """
 
         DVIDResource.__init__(self, name, description)
@@ -102,13 +102,13 @@ class DataInstanceResource(DVIDResource):
         self._datatype = self.validate_datatype(datatype)
 
     def valid_volume(self):
-        """Channels and layers are valid resources for interacting with the volume service.
+        """data instances and layers are valid resources for interacting with the volume service.
         """
         return True
 
     @property
     def cutout_ready(self):
-        """Is this channel fully configured for doing cutouts?
+        """Is this data instance fully configured for doing cutouts?
 
         Returns:
             (bool) True if the datatype was explicitly set by the user.
@@ -117,7 +117,7 @@ class DataInstanceResource(DVIDResource):
 
     @property
     def datatype(self):
-        """Channel bit depth.
+        """Data instance bit depth.
 
         Returns:
             (str)
