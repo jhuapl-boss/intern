@@ -28,7 +28,7 @@ class ProjectService(DVIDService):
         """Constructor.
 
         Args:
-            base_url (string): Base url to project service.
+            base_url (str): Base url to project service.
 
         """
         DVIDService.__init__(self)

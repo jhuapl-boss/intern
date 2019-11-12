@@ -27,7 +27,7 @@ class MetadataService(DVIDService):
         """Constructor.
 
         Attributes:
-            base_url (string): Base url to project service.
+            base_url (str): Base url to project service.
 
         Raises:
             (KeyError): if given invalid version.
@@ -37,14 +37,14 @@ class MetadataService(DVIDService):
 
     def get_info(self, resource):
         """
-            Returns JSON for just the repository with given root UUID.  The UUID string can be
+            Returns JSON for just the repository with given root UUID.  The UUID str can be
             shortened as long as it is uniquely identifiable across the managed repositories.
 
             Args:
-                UUID (string): UUID of the DVID repository (str)
+                UUID (str): UUID of the DVID repository (str)
 
             Returns:
-                string: History information of the repository
+                str: History information of the repository
 
             Raises:
                 (HTTPError): on invalid HTTP request.

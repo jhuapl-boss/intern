@@ -19,16 +19,16 @@ class DVIDResource(Resource):
     """Base class for DVID resources.
 
     Attributes:
-        name (string): Name of resource.  Used as identifier when talking to
+        name (str): Name of resource.  Used as identifier when talking to
         the DVID API.
-        description (string): Text description of resource.
+        description (str): Text description of resource.
     """
     def __init__(self, name, description):
         """Constructor.
 
         Args:
-            name (string): Name of resource.
-            description (string): Description of resource.        """
+            name (str): Name of resource.
+            description (str): Description of resource.        """
 
         self.name = name
         self.description = description
@@ -43,11 +43,11 @@ class RepositoryResource(DVIDResource):
         """Constructor.
 
         Args:
-            UUID (string): UUID of repository (necessary during deletions, not necessary during creation)
-            alias (string): alias for the UUID Repository 
-            description (optional[string]): Layer description.  Defaults to empty.
-            sync(string): data instance related to this one
-            version(string) : version of data instance
+            UUID (str): UUID of repository (necessary during deletions, not necessary during creation)
+            alias (str): alias for the UUID Repository 
+            description (optional[str]): Layer description.  Defaults to empty.
+            sync(str): data instance related to this one
+            version(str) : version of data instance
         """
         DVIDResource.__init__(self, alias, description)
 
@@ -57,15 +57,15 @@ class DataInstanceResource(DVIDResource):
     """Holds channel data.
 
     Attributes:
-        name (string): Name of data instance containing this resource.
-        UUID (string): UUID of resource.
-        alias (string): alias for the UUID Repository 
-        description (string): Description of channel or layer.
-        sync (string): related channel name
-        version (string): version of channel if not 0
-        _valid_datatypes (list[string]): Allowed data type values (static variable).
-        _valid_types (list[string]): Allowed types
-        _datatype (string):
+        name (str): Name of data instance containing this resource.
+        UUID (str): UUID of resource.
+        alias (str): alias for the UUID Repository 
+        description (str): Description of channel or layer.
+        sync (str): related channel name
+        version (str): version of channel if not 0
+        _valid_datatypes (list[str]): Allowed data type values (static variable).
+        _valid_types (list[str]): Allowed types
+        _datatype (str):
         _cutout_ready (bool): True if datatype specified during instantiation.
     """
 
@@ -76,14 +76,14 @@ class DataInstanceResource(DVIDResource):
         """Constructor.
 
         Args:
-            name (string): Data instance name.
-            UUID (string): UUID of Repository where this DataInstance lives. If None it will create one
-            alias (string): alias for the UUID Repository 
-            type (optional[string]): check _valid_types defaults to uint8blk
-            description (optional[string]): Layer description.  Defaults to empty.
-            datatype (optional[string]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
-            sync (string): related channel name
-            version (string): version of channel if not 0
+            name (str): Data instance name.
+            UUID (str): UUID of Repository where this DataInstance lives. If None it will create one
+            alias (str): alias for the UUID Repository 
+            type (optional[str]): check _valid_types defaults to uint8blk
+            description (optional[str]): Layer description.  Defaults to empty.
+            datatype (optional[str]): 'uint8', 'uint16', 'uint64'  Defaults to 'uint8'.
+            sync (str): related channel name
+            version (str): version of channel if not 0
         """
 
         DVIDResource.__init__(self, name, description)
@@ -120,7 +120,7 @@ class DataInstanceResource(DVIDResource):
         """Channel bit depth.
 
         Returns:
-            (string)
+            (str)
         """
         return self._datatype
 
@@ -128,7 +128,7 @@ class DataInstanceResource(DVIDResource):
     def datatype(self, value):
         """
         Args:
-            value (string): 'uint8', 'uint16', 'uint64'
+            value (str): 'uint8', 'uint16', 'uint64'
         Raises:
             ValueError
         """

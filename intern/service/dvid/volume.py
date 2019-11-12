@@ -46,7 +46,7 @@ class VolumeService(DVIDService):
         """Constructor.
 
         Args:
-            base_url (string): Base url (host) of project service.
+            base_url (str): Base url (host) of project service.
 
         Raises:
             (KeyError): if given invalid version.
