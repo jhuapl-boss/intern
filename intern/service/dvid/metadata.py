@@ -97,7 +97,7 @@ class MetadataService(DVIDService):
 
         Args:
             resource : DatInstance resource to which to relate metadata
-            metadata (JSON) : JSON format metadata to post
+            metadata (dict) : JSON format metadata to post
                 Example: 
                 {
                     "MinTileCoord": [0, 0, 0],

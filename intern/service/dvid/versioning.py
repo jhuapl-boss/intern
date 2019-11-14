@@ -25,7 +25,7 @@ class VersioningService(DVIDService):
         """ Constructor.
 
         Args:
-            base_url (string): Base url (host) of project service.
+            base_url (str): Base url (host) of project service.
 
         Raises:
             (KeyError): if given invalid version.
@@ -38,12 +38,12 @@ class VersioningService(DVIDService):
             the merge will not necessarily create an error immediately
 
         Args:
-            mergeType (string) = "conflict-free"
+            mergeType (str) = "conflict-free"
             parents (array) = [ "parent-uuid1", "parent-uuid2", ... ]
-            note (string) = this is a description of what I did on this commit
+            note (str) = this is a description of what I did on this commit
 
         Returns:
-            merge_child_uuid (string): child generated uuid after merge
+            merge_child_uuid (str): child generated uuid after merge
 
         Raises:
             HTTPError: On non 200 status code
@@ -68,10 +68,10 @@ class VersioningService(DVIDService):
         Args:
             data (array) = [ "instance-name-1", "instance-name2", ... ],
             parents (array): [ "parent-uuid1", "parent-uuid2", ... ],
-            note (string): this is a description of what I did on this commit
+            note (str): this is a description of what I did on this commit
 
         Returns:
-            resolve_child_uuid (string): child generated uuid after resolution
+            resolve_child_uuid (str): child generated uuid after resolution
 
         Raises:
             HTTPError: On non 200 status code
@@ -94,10 +94,10 @@ class VersioningService(DVIDService):
             descriptions for the entire repo and not just one node.
 
         Args:
-            UUID (string): UUID of the DVID repository (str)
+            UUID (str): UUID of the DVID repository
 
         Returns:
-            string: list of all log recordings related to the DVID repository
+            str: list of all log recordings related to the DVID repository
 
         Raises:
             (ValueError): if given invalid UUID.
@@ -115,8 +115,8 @@ class VersioningService(DVIDService):
         """Allows the user to write a short description of the content in the repository
             { "log": [ "provenance data...", "provenance data...", ...] }
         Args:
-            UUID (string): UUID of the DVID repository (str)
-            log_m (string): Message to record on the repositories history log (str)
+            UUID (str): UUID of the DVID repository (str)
+            log_m (str): Message to record on the repositories history log (str)
 
         Returns:
             HTTP Response
@@ -140,12 +140,12 @@ class VersioningService(DVIDService):
         """Allows the user to write a short description of the content in the repository
 
         Args:
-            UUID (string): UUID of the DVID repository (str)
-            note (string): human-readable commit message
-            log_m (string): Message to record on the repositories history log (str)
+            UUID (str): UUID of the DVID repository
+            note (str): human-readable commit message
+            log_m (str): Message to record on the repositories history log
 
         Returns:
-            commit_uuid (string): commit hash
+            commit_uuid (str): commit hash
 
         Raises:
             (ValueError): if given invalid UUID.
@@ -169,11 +169,11 @@ class VersioningService(DVIDService):
         """Allows the user to write a short description of the content in the repository
             
         Args:
-            UUID (string): UUID of the DVID repository (str)
-            note (string): Message to record when branching
+            UUID (str): UUID of the DVID repository
+            note (str): Message to record when branching
 
         Returns:
-            branch_uuid (string): The child branch UUID
+            branch_uuid (str): The child branch UUID
 
         Raises:
             (KeyError): if given invalid version.

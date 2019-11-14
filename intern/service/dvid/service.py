@@ -26,6 +26,6 @@ class DVIDService(Service):
 		Service.__init__(self)
 
 	def set_auth(self):
-		""" Not auth for DVID
+		""" No auth for DVID
 		"""
 		self._auth = None
