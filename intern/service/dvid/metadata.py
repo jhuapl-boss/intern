@@ -145,4 +145,5 @@ class MetadataService(DVIDService):
                     "TileSize": [128, 128, 1] }
                 }
             })
-        return self.create_metadata(resource, meta_data)
+        self.create_metadata(resource, meta_data)
+        return

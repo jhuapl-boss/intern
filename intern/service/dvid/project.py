@@ -103,10 +103,14 @@ class ProjectService(DVIDService):
         Args:
             resource (intern.resource.dvid.DVIDResource): Data model object with attributes matching those of the resource.
 
+        Returns:
+            (str): UUID corresponding to resource
+            (str): Resource name
+
         Raises:
             (HTTPError): On invalid request
         """
-        return resource.UUID, resource.exp_name
+        return resource.UUID, resource.name
 
     def delete(self, resource):
         """ Method to delete a project

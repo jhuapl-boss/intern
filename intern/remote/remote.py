@@ -36,7 +36,7 @@ class Remote(object):
         Loads credentials in order from user provided dictionary > user provided file > default file > environment vars
 
         Args:
-            cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.
+            cfg_file_or_dict (optional[str|dict]): Path to config file in INI format or a dict of config parameters.
         """
 
         # Service Objects
