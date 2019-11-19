@@ -23,20 +23,22 @@ class ProjectService(CloudVolumeService):
     ProjectService for cloudvolume service.
     """
 
-    def __init__(self):
+    def __init__(self, protocol, cloudpath):
         """Constructor.
         Args:
             base_url (str): Base url to project service.
         """
         CloudVolumeService.__init__(self)
+        self.protocol = protocol
+        self.cloudpath = cloudpath
 
-    def create_volume(self, protocol, cloudpath, **params):
+    def cloudvolume(self, **params):
         """
         Creates resource
         """
-        return CloudVolumeResource(protocol, cloudpath, **params)
+        return CloudVolumeResource(self.protocol, self.cloudpath, **params)
 
-    def create_info(self, **params):
+    def create_new_info(self, **params):
         return CloudVolume.create_new_info(
                 num_channels = params.get('num_channels'), # (int) 1 for grayscale, 3 for RGB 
                 layer_type = params.get('layer_type'), # (str)'image' or 'segmentation'

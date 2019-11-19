@@ -21,7 +21,7 @@ class VolumeService(CloudVolumeService):
     """
     VolumeService for cloudvolume service.
     """
-    def __init__(self, base_url):
+    def __init__(self):
         """Constructor.
 
         Args:
@@ -44,10 +44,7 @@ class VolumeService(CloudVolumeService):
             Retruns:
                 message (str) : Uploading Data... message
         """
-        if x_range==[] and y_range==[] and z_range==[]:
-            resource.cloudvolume[:,:,:] = data
-        else:
-            resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]] = data
+        resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]] = data
         print("Data uploaded.")
     
     def get_cutout(self, resource, res, x_range, y_range, z_range):
@@ -61,13 +58,11 @@ class VolumeService(CloudVolumeService):
             Retruns:
                 data (numpy array) : image stack from the cloud or local system
         """
-        if x_range== [] and y_range== [] and z_range == []:
-            data = resource.cloudvolume[:,:,:]
-        else:
-            data = resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]]
+
+        data = resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]]
         return data
 	
-    def delete_data(self, resource, x_range, y_range, z_range):
+    def delete_data(self, resource, res, x_range, y_range, z_range):
         """
         Delete the chunks within a bounding box (must be aligned with chunks)
 

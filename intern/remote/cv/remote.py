@@ -17,36 +17,30 @@ from intern.remote import Remote
 from intern.resource.cv.resource import CloudVolumeResource
 from intern.service.cv.volume import VolumeService
 from intern.service.cv.metadata import MetadataService
+from intern.service.cv.project import ProjectService
 
 
 class CloudVolumeRemote(Remote):
-	
+    
     def __init__(self, cfg_file_or_dict=None,):
-    	"""Constructor.
-		Protocol and host specifications are taken in as keys -values of dictionary.
-		"""
-    	Remote.__init__(self, cfg_file_or_dict)
-
-		# Init the services
-    	self._metadata = MetadataService()
+        """Constructor.
+        Protocol and host specifications are taken in as keys -values of dictionary.
+        """
+        Remote.__init__(self, cfg_file_or_dict)
+        self.protocol = self._config['Default']['protocol']
+        self.cloudpath = self._config['Default']['cloudpath']
+        # Init the services
         self._volume = VolumeService()
+        self._metadata = MetadataService()
+        self._project = ProjectService(self.protocol, self.cloudpath)
+    
+    def cloudvolume(self, **params):
+        return self._project.cloudvolume(**params)
+    
+    def create_new_info(self, **params):
+        return self._project.create_new_info(**params)
 
-    # def cloudvolume(self, protocol, path, new_layer=True, parallel = 1, **params):
-    #     """
-    #     Creates a cloudvolume object
-
-    #     Args:
-    #         protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
-    #         path (str) : in the form of "/$BUCKET/$DATASET/$LAYER"
-    #         new_layer (bool): boolean indicating if new info file is needed
-    #         **params () : keyword-value arguments for info object
-
-    #     Returns:
-    #         CloudVolume : cloudvolume instance with specified parameters 
-    #     """
-    #     return CloudVolumeResource(protocol, path, new_layer, parallel, **params)
-
-    def create_cutout(self, resource, resolution, x_range=[], y_range=[], z_range=[], data):
+    def create_cutout(self, resource, res, x_range, y_range, z_range, data):
         """
             Method to upload a cutout of data
             Args:
@@ -60,7 +54,7 @@ class CloudVolumeRemote(Remote):
         """
         return self._volume.create_cutout(resource, res, x_range, y_range, z_range, data)
 
-    def get_cutout(self, resource, x_range=[], y_range=[], z_range=[]):
+    def get_cutout(self, resource, res, x_range, y_range, z_range):
         """
             Method to download a cutout of data
             Args:
@@ -117,7 +111,7 @@ class CloudVolumeRemote(Remote):
         resource (CloudVolumeResource object)
         x_range,y_range,z_range (Tuples representing the bbox)
         """
-        return self._volume.deleta_data(resource, x_range, y_range, z_range)
+        return self._volume.delete_data(resource, x_range, y_range, z_range)
 
     def which_res(self, resource):
         """
