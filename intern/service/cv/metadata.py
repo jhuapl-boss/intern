@@ -51,7 +51,7 @@ class MetadataService(CloudVolumeService):
 		"""
 		return resource.cloudvolume.layer_cloudpath
 
-	def create_provenance(self, resource, **kwargs):
+	def set_provenance(self, resource, **kwargs):
 		"""
 		Sets the description and owners of the cloudvolume resource.
 
@@ -97,7 +97,7 @@ class MetadataService(CloudVolumeService):
 		z1,z2 = z_range
 		return resource.cloudvolume.exists( np.s_[x1:x2, y1:y2, z1:z2] ) 
 
-	def which_res(self, resource):
+	def list_res(self, resource):
 		"""
 		What resolution(s) are available to read and write to in the current resource. 
 
@@ -106,32 +106,49 @@ class MetadataService(CloudVolumeService):
 
 		Returns: (list) list of ints denoting mip levels
 		"""
-		return resource.cloudvolume.mip
+		return resource.cloudvolume.available_mips
 
-	def get_channel(self, resource, channel):
+	def get_layer(self, resource):
 		"""
 		Which data layer (e.g. image, segmentation) on S3, GS, or FS you're reading and writing to. 
-		Known as a "channel" in BOSS terminology. Writing to this property triggers an info refresh.
+		Known as a "channel" in BOSS terminology.
 		
 		Args:
 		resource (CloudVolume Resource Object)
-		channel (str): can be 'image' or 'segmentation'
 
 		Returns:
 		str: the resource channel 
 
 		"""	
+		return resource.cloudvolume.layer
+	
+	def set_layer(self, resource, layer):
+		"""
+		Set a new layer and commits it to the info file.
+		
+		Args:
+		resource (CloudVolume Resource Object)
+		layer (string)
 
-		if channel == None:
-			return resource.cloudvolume.layer
-		else:
-			if channel not in ['image', 'segmentation']:
-				raise ValueError('{} is not a valid layer'.format(channel))
-			else:
-				resource.layer = channel
-				return resource.cloudvolume.layer
+		Returns:
+		None
+		"""
+		resource.cloudvolume.layer = str(layer)
 
-	def get_experiment(self, resource, experiment):
+	def get_dataset_name(self, resource):
+		"""
+		Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
+		Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
+		
+		Args: 
+		resource (CloudVolume Resource Object) 
+
+		Returns:
+		str: current resource experiment
+		"""
+		return resource.cloudvolume.dataset_name
+
+	def set_dataset_name(self, resource, experiment):
 		"""
 		Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
 		Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
@@ -141,10 +158,6 @@ class MetadataService(CloudVolumeService):
 		experiment (str): experiment name 
 
 		Returns:
-		str: current resource experiment
+		None
 		"""
-		if experiment == None:
-			return resource.cloudvolume.dataset_name
-		else:
-			resource.dataset_name = experiment
-			return resource.cloudvolume.dataset_name
+		resource.cloudvolume.dataset_name = str(experiment)

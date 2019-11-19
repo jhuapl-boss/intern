@@ -44,6 +44,7 @@ class VolumeService(CloudVolumeService):
             Retruns:
                 message (str) : Uploading Data... message
         """
+        resource.cloudvoume.mip = res
         resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]] = data
         print("Data uploaded.")
     
@@ -58,9 +59,9 @@ class VolumeService(CloudVolumeService):
             Retruns:
                 data (numpy array) : image stack from the cloud or local system
         """
-
-        data = resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]]
-        return data
+        resource.cloudvoume.mip = res
+        return resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]]
+         
 	
     def delete_data(self, resource, res, x_range, y_range, z_range):
         """
@@ -70,6 +71,7 @@ class VolumeService(CloudVolumeService):
         resource (CloudVolumeResource object)
         x_range,y_range,z_range (Tuples representing the bbox)
         """
+        resource.cloudvoume.mip = res
         x1,x2 = x_range
         y1,y2 = y_range
         z1,z2 = z_range

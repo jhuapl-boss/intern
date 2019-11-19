@@ -102,8 +102,22 @@ class CloudVolumeRemote(Remote):
         dict: desciption and owners values
         """
         return self._metadata.get_provenance(resource)
+    
+    def set_provenance(self, resource, **kwargs):
+        """
+        Sets the description and owners of the cloudvolume resource.
 
-    def delete_data(self, resource, x_range, y_range, z_range):
+        Args:
+        resource (CloudVolumeResource object)
+        owners (list): list of authorship names and emails
+        description (str): description of dataset
+
+        Returns:
+            None
+        """
+        return self._metadata.set_provenance(resource, **kwargs)
+
+    def delete_data(self, resource, res, x_range, y_range, z_range):
         """
         Delete the chunks within a bounding box (must be aligned with chunks)
 
@@ -111,9 +125,9 @@ class CloudVolumeRemote(Remote):
         resource (CloudVolumeResource object)
         x_range,y_range,z_range (Tuples representing the bbox)
         """
-        return self._volume.delete_data(resource, x_range, y_range, z_range)
+        return self._volume.delete_data(resource, res, x_range, y_range, z_range)
 
-    def which_res(self, resource):
+    def list_res(self, resource):
         """
         What resolution(s) are available to read and write to in the current resource. 
 
@@ -122,23 +136,48 @@ class CloudVolumeRemote(Remote):
 
         Returns: (list) list of ints denoting mip levels
         """
-        return self._metadata.which_res(resource)
+        return self._metadata.list_res(resource)
 
-    def get_channel(self, resource, channel = None):
+    def get_layer(self, resource):
         """
         Which data layer (e.g. image, segmentation) on S3, GS, or FS you're reading and writing to. 
         Known as a "channel" in BOSS terminology. Writing to this property triggers an info refresh.
         
         Args:
         resource (CloudVolume Resource Object)
-        channel (str): can be 'image' or 'segmentation'
 
         Returns:
         str: current resource channel
         """ 
-        return self._metadata.get_channel(resource, channel)
+        return self._metadata.get_layer(resource)
+    
+    def set_layer(self, resource, layer):
+        """
+        Set a new layer and commits it to the info file.
+        
+        Args:
+        resource (CloudVolume Resource Object)
+        layer (string)
 
-    def get_experiment(self, resource, experiment = None):
+        Returns:
+        None
+        """
+        return self._metadata.set_layer(resource, layer)
+
+    def get_dataset_name(self, resource):
+        """
+        Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
+        Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
+        
+        Args: 
+        resource (CloudVolume Resource Object)
+
+        Returns:
+        str: current resource experiment
+        """
+        return self._metadata.get_dataset_name(resource)
+    
+    def set_dataset_name(self, resource, experiment):
         """
         Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
@@ -148,6 +187,6 @@ class CloudVolumeRemote(Remote):
         experiment (str): experiment name 
 
         Returns:
-        str: current resource experiment
+        None
         """
-        return self._metadata.get_experiment(resource, experiment)
+        return self._metadata.set_dataset_name(resource, experiment)
