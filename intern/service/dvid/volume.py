@@ -114,11 +114,11 @@ class VolumeService(DVIDService):
         y_size = y_range[1] - y_range[0]
         z_size = z_range[1] - z_range[0]
         # Make the request
-        resp = requests.get('{}/api/node/{}/{}/tile/xy/{}/{}_{}_{}'.format(
+        resp = requests.get('{}/api/node/{}/{}/raw/0_1_2/{}_{}_{}/{}_{}_{}/octet-stream'.format(
             self.base_url,
             resource.UUID,
             resource.name,
-            resolution,
+            x_size,y_size,z_size,
             x_range[0], y_range[0], z_range[0]
         ))
 
@@ -127,7 +127,8 @@ class VolumeService(DVIDService):
                 resource.name, resp.status_code, resp.text))
             raise HTTPError(msg, response=resp)
         
-        cutout = blosc.unpack_array(resp.content)
+        block = np.fromstring(resp.content, dtype = kwargs.get("dtype", np.uint8))
+        cutout =  block.reshape(z_size,y_size,x_size)
         return cutout
 
     @check_data_instance

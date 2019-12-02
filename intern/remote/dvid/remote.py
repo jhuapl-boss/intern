@@ -173,7 +173,7 @@ class DVIDRemote(Remote):
 		"""
 		return DataInstanceResource(data_instance, UUID)
 
-	def get_cutout(self, resource, res, xrange, yrange, zrange):
+	def get_cutout(self, resource, res, xrange, yrange, zrange, **kwargs):
 		"""Method to request a volume of data from DVID server uploaded through command window
 
 		Args:
@@ -190,7 +190,7 @@ class DVIDRemote(Remote):
 		Raises:
 			(KeyError): if given invalid version.
 		"""
-		return self._volume.get_cutout(resource, res, xrange, yrange, zrange)
+		return self._volume.get_cutout(resource, res, xrange, yrange, zrange, **kwargs)
 
 	def parse_dvidURI(self, uri): # type: (str) -> Resource
 		"""Parse a DVID URI and handle malform errors.
