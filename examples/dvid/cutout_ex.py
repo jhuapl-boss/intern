@@ -14,14 +14,14 @@ annos_name = "groundtruth"
 
 # get cutout from actual dataset
 volumeD = dvid.get_cutout(
-    dvid.get_instance(uuid, name),0,
-    [3000,3250],[3000,3250],[2000,2250], dtype = np.uint8
+    dvid.get_instance(uuid, name, datatype='uint8'),0,
+    [3000,3150],[3000,3150],[2000,2010]
 )
 
 # get annotations from dataset
 annosD = dvid.get_cutout(
-    dvid.get_instance(uuid, annos_name),0,
-    [3000,3250],[3000,3250],[2000,2250], dtype = np.uint64
+    dvid.get_instance(uuid, annos_name, datatype='uint64'),0,
+    [3000,3150],[3000,3150],[2000,2010]
 )
 
 # overlay the data
