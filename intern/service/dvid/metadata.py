@@ -90,7 +90,6 @@ class MetadataService(DVIDService):
         info = requests.post("{}/api/server/reload-metadata".format(self.base_url))
         if info.status_code != 200:
             raise requests.HTTPError(info.content)
-        return
 
     def create_metadata(self, resource, metadata):
         """Posts metadata to a specific DataInstance resource
@@ -114,7 +113,6 @@ class MetadataService(DVIDService):
         data = metadata)
         if resp.status_code != 200:
             raise requests.HTTPError(resp.content)
-        return
 
     def get_metadata(self, resource):
         """Gets metadata to a specific DataInstance resource
@@ -146,4 +144,3 @@ class MetadataService(DVIDService):
                 }
             })
         self.create_metadata(resource, meta_data)
-        return
