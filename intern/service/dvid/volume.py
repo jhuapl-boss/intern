@@ -148,9 +148,6 @@ class VolumeService(DVIDService):
         # Check that the data array is C Contiguous
         if not numpyVolume.flags['C_CONTIGUOUS']:
             raise ValueError('Expected data to be C_CONTINUGOUS but it was not')
-        # Define resolution if not passed
-        if resolution is None:
-            resolution = 0
 
         # Check to see if this volume is larger than 1GB. If so, chunk it into
         # several smaller bites:
