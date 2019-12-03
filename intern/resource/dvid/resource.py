@@ -70,7 +70,7 @@ class DataInstanceResource(DVIDResource):
     """
 
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
-    _valid_types = ['image', 'imagetile', 'googlevoxels', 'keyvalue', 'roi','uint8blk','labelblk', 'labelvol', 'annotation', 'labelgraph', 'multichan16', 'rgba8blk']
+    _valid_types = ['image', 'imagetile', 'googlevoxels', 'keyvalue', 'roi','uint8blk','uint16blk', 'uint64blk','labelblk', 'labelvol', 'annotation', 'labelgraph', 'multichan16', 'rgba8blk']
 
     def __init__(self, name, UUID=None, type='uint8blk', alias='', description='', datatype='', sync="", version="0"):
         """Constructor.

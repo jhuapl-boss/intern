@@ -161,17 +161,18 @@ class DVIDRemote(Remote):
 				"Must contain: protocol, host"
 			)
 
-	def get_instance(self, UUID, data_instance):
+	def get_instance(self, UUID, data_instance, datatype=''):
 		"""Method to input all data instance hierarchy requirememnts, works as a dummy
         for DVIDRemote Parallelism.
 
 		Args:
 			UUID (str) : Root UUID of the repository
 			data_instance (str): Name of data instance within repository
+			datatype (str): data type of the instance (uint8, uint16, uint64) defaults to uint8
 		Returns:
 			resource (intern.resource.dvid.DvidResource)
 		"""
-		return DataInstanceResource(data_instance, UUID)
+		return DataInstanceResource(data_instance, UUID, datatype=datatype)
 
 	def get_cutout(self, resource, res, xrange, yrange, zrange, **kwargs):
 		"""Method to request a volume of data from DVID server uploaded through command window
