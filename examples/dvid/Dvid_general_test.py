@@ -6,6 +6,9 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 
+########### NOTE ###########
+# This test requires an accessible DVID instance
+
 #DVID Data fetch:
 dvid = DVIDRemote({
 	"protocol": "http",
