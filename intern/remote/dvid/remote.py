@@ -175,7 +175,7 @@ class DVIDRemote(Remote):
 		return DataInstanceResource(data_instance, UUID, datatype=datatype)
 
 	def get_cutout(self, resource, res, xrange, yrange, zrange, **kwargs):
-		"""Method to request a volume of data from DVID server uploaded through command window
+		"""Method to request a volume of data from DVID server
 
 		Args:
 			resource (intern.resource.dvid.resource.DataInstanceResource | str): Data Instance Resource. If a 
