@@ -79,43 +79,6 @@ class VolumeService(DVIDService):
         Raises:
             requests.HTTPError
         """
-        chunk_size = kwargs.pop("chunk_size", (512, 512, 16 * 8))
-        # TODO: magic number
-        chunk_limit = (chunk_size[0] * chunk_size[1] * chunk_size[2]) * 1.2
-
-        cutout_size = (
-                (x_range[1] - x_range[0]) *
-                (y_range[1] - y_range[0]) *
-                (z_range[1] - z_range[0])
-            )
-        
-        if cutout_size > chunk_limit:
-            blocks = block_compute(
-                x_range[0], x_range[1],
-                y_range[0], y_range[1],
-                z_range[0], z_range[1],
-                block_size=chunk_size
-            )
-
-            result = np.ndarray((
-                z_range[1] - z_range[0],
-                y_range[1] - y_range[0],
-                x_range[1] - x_range[0]
-            ), dtype=resource.datatype)
-
-            for b in blocks:
-                _data = self.get_cutout(
-                    resource, resolution, b[0], b[1], b[2], **kwargs
-                )
-
-                result[
-                    b[2][0] - z_range[0] : b[2][1] - z_range[0],
-                    b[1][0] - y_range[0] : b[1][1] - y_range[0],
-                    b[0][0] - x_range[0] : b[0][1] - x_range[0]
-                ] = _data
-
-            return result
-        
         x_size = x_range[1] - x_range[0]
         y_size = y_range[1] - y_range[0]
         z_size = z_range[1] - z_range[0]
@@ -154,33 +117,6 @@ class VolumeService(DVIDService):
         # Check that the data array is C Contiguous
         if not numpyVolume.flags['C_CONTIGUOUS']:
             raise ValueError('Expected data to be C_CONTINUGOUS but it was not')
-
-        # Check to see if this volume is larger than 1GB. If so, chunk it into
-        # several smaller bites:
-        if (
-                (x_range[1] - x_range[0]) *
-                (y_range[1] - y_range[0]) *
-                (z_range[1] - z_range[0])
-        ) > 1024 * 1024 * 32 * 2:
-            blocks = block_compute(
-                x_range[0], x_range[1],
-                y_range[0], y_range[1],
-                z_range[0], z_range[1],
-                block_size=(1024, 1024, 32)
-            )
-
-            for b in blocks:
-                _data = np.ascontiguousarray(
-                    numpyVolume[
-                        b[2][0] - z_range[0]: b[2][1] - z_range[0],
-                        b[1][0] - y_range[0]: b[1][1] - y_range[0],
-                        b[0][0] - x_range[0]: b[0][1] - x_range[0]
-                    ],
-                    dtype=numpyVolume.dtype
-                )
-                self.create_cutout(
-                    resource, resolution, b[0], b[1], b[2] ,_data, None)
-            return
 
         # Compress the data
         # NOTE: This is a convenient way for compressing/decompressing NumPy arrays, however
