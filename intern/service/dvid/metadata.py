@@ -123,10 +123,25 @@ class MetadataService(DVIDService):
         Returns:
             metaddata (JSON): Metadata of specified resource in JSON format
         """
-        resp = requests.post("{}/api/node/{}/{}/metadata".format(self.base_url, resource.UUID, resource.name))
+        resp = requests.get("{}/api/node/{}/{}/metadata".format(self.base_url, resource.UUID, resource.name))
         if resp.status_code != 200:
             raise requests.HTTPError(resp.content)
         return resp.json()
+
+    def get_extents(self, resource):
+        """Gets extents to a specific DataInstance resource
+
+        Args:
+            resource : DatInstance resource to which to relate metadata
+
+        Returns:
+            extents (dict): Extents of specified resource in dict format {"MinPoint": [0,0,0], "MaxPoint": [300,400,500]}
+        """
+        metadata = self.get_metadata(resource)
+        minPoint = metadata['Properties']['MinPoint']
+        maxPoint = metadata['Properties']['MaxPoint']
+        extents = {'MinPoint': minPoint, 'MaxPoint': maxPoint}
+        return extents
 
     def create_default_metadata(self, resource):
         """Method to create default metadata on a DataInstance Resource. 

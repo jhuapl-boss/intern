@@ -189,6 +189,17 @@ class Remote(object):
             raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.reserve_ids(resource, num_ids)
 
+    def get_extents(self, resource):
+        """Get extents of data volume
+
+        Args:
+            resource (intern.resource.Resource): Data platform resource.
+
+        Returns:
+            (dict): {"MinPoint": [0,0,0], "MaxPoint": [300,400,500]}
+        """ 
+        return self._metadata.get_extents(resource)
+
     def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
         """Get bounding box containing object specified by id.
 

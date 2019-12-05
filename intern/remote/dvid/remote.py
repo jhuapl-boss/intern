@@ -250,6 +250,36 @@ class DVIDRemote(Remote):
 
 		return self._project.delete(resource)
 
+	def get_extents(self, resource):
+		"""Get extents of the reource
+
+		Args:
+			resource (intern.resource.dvid.DVIDResource): resource.name as well
+				as any parents must be identified to succeed.
+
+		Returns:
+			(dict): returns json of like {"MinPoint":q [0,0,0], "MaxPoint": [300,400,500]}
+
+		Raises:
+			requests.HTTPError on failure.
+		"""
+		return self._metadata.get_extents(resource)
+
+	def get_metadata(self, resource):
+		"""Get metadata of the reource
+
+		Args:
+			resource (intern.resource.dvid.DVIDResource): resource.name as well
+				as any parents must be identified to succeed.
+
+		Returns:
+			(JSON): returns json containing data instance metadata
+
+		Raises:
+			requests.HTTPError on failure.
+		"""
+		return self._metadata.get_metadata(resource)
+
 	def get_info(self, UUID):
 		"""Method to obtain information on the requested repository
 
