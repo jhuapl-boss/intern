@@ -26,8 +26,8 @@ annosD = dvid.get_cutout(
     [3000,3150],[3000,3150],[2000,2010]
 )
 
-# # overlay the data
-# plt.imshow(volumeD[0,:,:], cmap = "gray")
-# plt.imshow(annosD[0,:,:], cmap = "gray", alpha=0.5)
+# overlay the data
+plt.imshow(volumeD[0,:,:], cmap = "gray")
+plt.imshow(annosD[0,:,:], cmap = "gray", alpha=0.5)
 
-# plt.show()
+plt.show()
