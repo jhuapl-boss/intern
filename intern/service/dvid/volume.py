@@ -115,23 +115,39 @@ class VolumeService(DVIDService):
             send_opts (dictionary): Additional arguments to pass to session.send().
         """
         # Check that the data array is C Contiguous
+        blktypes = ['uint8blk', 'labelblk', 'rgba8blk']
+
         if not numpyVolume.flags['C_CONTIGUOUS']:
             raise ValueError('Expected data to be C_CONTINUGOUS but it was not')
 
-        # Compress the data
-        # NOTE: This is a convenient way for compressing/decompressing NumPy arrays, however
-        # this method uses pickle/unpickle which means we make additional copies that consume
-        # a bit of extra memory and time. 
-        compressed = blosc.pack_array(numpyVolume)
-
-        # Make the request
-        resp = requests.post('{}/api/node/{}/{}/tile/xy/{}/{}_{}_{}'.format(
+        if (resource._type == 'tile'):
+            # Compress the data
+            # NOTE: This is a convenient way for compressing/decompressing NumPy arrays, however
+            # this method uses pickle/unpickle which means we make additional copies that consume
+            # a bit of extra memory and time. 
+            compressed = blosc.pack_array(numpyVolume)
+            url_req = '{}/api/node/{}/{}/tile/xy/{}/{}_{}_{}'.format(
             self.base_url,
             resource.UUID,
             resource.name,
             resolution,
-            x_range[0], y_range[0], z_range[0],
-            data = compressed))
+            x_range[0], y_range[0], z_range[0])
+            out_data = compressed
+
+        # Make the request
+        elif (resource._type in blktypes):
+            numpyVolume = numpyVolume.tobytes(order='C')
+            url_req = '{}/api/node/{}/{}/raw/0_1_2/{}_{}_{}/{}_{}_{}'.format(
+            self.base_url,
+            resource.UUID,
+            resource.name,
+            x_range[1]-x_range[0], y_range[1]-y_range[0], z_range[1]-z_range[0],
+            x_range[0], y_range[0], z_range[0])
+            out_data = numpyVolume
+        else:
+            raise NotImplementedError('{} type is not yet implemented in create_cutout'.format(resource._type))
+
+        resp = requests.post(url_req, data = out_data)
 
         if resp.status_code != 200 or resp.status_code == 201:
             msg = ('Create cutout failed on {}, got HTTP response: ({}) - {}'.format(
