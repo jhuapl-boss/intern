@@ -242,7 +242,7 @@ class DVIDRemote(Remote):
 		"""Method to delete a project
 
         Args:
-            UUID (str) : hexadecimal character long string characterizing the project
+			resource (intern.resource.dvid.DVIDResource)
 
         Returns:
             (str) : Confirmation message
@@ -258,7 +258,7 @@ class DVIDRemote(Remote):
 				as any parents must be identified to succeed.
 
 		Returns:
-			(dict): returns json of like {"MinPoint":q [0,0,0], "MaxPoint": [300,400,500]}
+			(dict): returns json of like {"MinPoint":[0,0,0], "MaxPoint": [300,400,500]}
 
 		Raises:
 			requests.HTTPError on failure.

@@ -21,12 +21,6 @@ import numpy as np
 import json
 import blosc
 
-np_types = {
-    'uint64': np.uint64,
-    'uint16': np.uint16,
-    'uint8': np.uint8,
-}
-
 def check_data_instance(fcn):
     """Decorator that ensures a valid data instance is passed in.
 
@@ -96,7 +90,7 @@ class VolumeService(DVIDService):
                 resource.name, resp.status_code, resp.text))
             raise HTTPError(msg, response=resp)
         
-        block = np.fromstring(resp.content, dtype=np_types[resource.datatype])
+        block = np.fromstring(resp.content, dtype=resource.datatype)
         cutout =  block.reshape(z_size,y_size,x_size)
         return cutout
 

@@ -976,7 +976,7 @@ class BossRemote(Remote):
                 resource (intern.resource.boss.BossResource.ExperimentResource)
 
             Returns:
-                (dict): returns json of like {"MinPoint":q [0,0,0], "MaxPoint": [300,400,500]}
+                (dict): returns json of like {"MinPoint":[0,0,0], "MaxPoint": [300,400,500]}
 
             Raises:
                 requests.HTTPError on failure.

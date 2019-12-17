@@ -73,7 +73,7 @@ class ProjectService(DVIDService):
                 exp_create_resp_cont = str(exp_create_resp.content)
                 if exp_create_resp.status_code != 200:
                     raise requests.HTTPError(exp_create_resp.content)
-                UUID = ast.literal_eval(exp_create_resp_cont.split("'")[0])["root"]
+                UUID = ast.literal_eval(exp_create_resp_cont.split("'")[1])["root"]
                 # Define resource's UUID if it was created
                 resource.UUID = UUID
             # Otherwise we use the given UUID. 
