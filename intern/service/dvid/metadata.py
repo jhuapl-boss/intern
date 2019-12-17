@@ -1,4 +1,4 @@
-# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -135,12 +135,12 @@ class MetadataService(DVIDService):
             resource : DatInstance resource to which to relate metadata
 
         Returns:
-            extents (dict): Extents of specified resource in dict format {"MinPoint": [0,0,0], "MaxPoint": [300,400,500]}
+            extents (array): [[x-min, max-x], [y-min, max-y], [z-min, max-z]]
         """
         metadata = self.get_metadata(resource)
-        minPoint = metadata['Properties']['MinPoint']
-        maxPoint = metadata['Properties']['MaxPoint']
-        extents = {'MinPoint': minPoint, 'MaxPoint': maxPoint}
+        min_point = metadata['Properties']['MinPoint']
+        max_point = metadata['Properties']['MaxPoint']
+        extents = [[min_point[0],max_point[0]],[min_point[1],max_point[1]],[min_point[2],max_point[2]]]
         return extents
 
     def create_default_metadata(self, resource):

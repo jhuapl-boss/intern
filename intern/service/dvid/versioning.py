@@ -102,7 +102,7 @@ class VersioningService(DVIDService):
         Raises:
             (ValueError): if given invalid UUID.
         """
-        if UUID is '':
+        if UUID == '':
             raise ValueError('The UUID was not specified')
         else:
             log_resp = requests.get("{}/api/node/{}/log".format(self.base_url, UUID))
@@ -125,9 +125,9 @@ class VersioningService(DVIDService):
             (ValueError): if given invalid UUID or log.
         """
 
-        if  UUID is '':
+        if  UUID == '':
             raise ValueError('The UUID was not specified')
-        elif log_m is '':
+        elif log_m == '':
             raise ValueError('Your log submission cannot be empty')
         else:
             log_resp = requests.post("{}/api/node/{}/log".format(self.base_url, UUID),
@@ -151,7 +151,7 @@ class VersioningService(DVIDService):
             (ValueError): if given invalid UUID.
         """
 
-        if  UUID is '':
+        if  UUID == '':
             raise ValueError('The UUID was not specified')
         else:
             committed = requests.post("{}/api/node/{}/commit".format(self.base_url, UUID),
@@ -179,7 +179,7 @@ class VersioningService(DVIDService):
             (KeyError): if given invalid version.
         """
 
-        if  UUID is '':
+        if  UUID == '':
             raise ValueError('The UUID was not specified')
         else:
             branch = requests.post("{}/api/node/{}/branch".format(self.base_url, UUID),

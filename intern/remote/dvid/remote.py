@@ -1,5 +1,5 @@
 """
-# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,18 +20,18 @@ from intern.service.dvid.metadata import MetadataService
 from intern.service.dvid.volume import VolumeService
 from intern.service.dvid.versioning import VersioningService
 
-CONFIG_METADATA_SECTION = 'Metadata Service'
-CONFIG_VERSIONING_SECTION = 'Versioning Service'
-CONFIG_PROJECT_SECTION = 'Project Service'
-CONFIG_VOLUME_SECTION = 'Volume Service'
-CONFIG_PROTOCOL = 'protocol'
-CONFIG_HOST = 'host'
+CONFIG_METADATA_SECTION = "Metadata Service"
+CONFIG_VERSIONING_SECTION = "Versioning Service"
+CONFIG_PROJECT_SECTION = "Project Service"
+CONFIG_VOLUME_SECTION = "Volume Service"
+CONFIG_PROTOCOL = "protocol"
+CONFIG_HOST = "host"
 
 class DVIDRemote(Remote):
 	"""Remote provides an SDK to the DVID API.
 	"""
 
-	def __init__(self, cfg_file_or_dict=None,):
+	def __init__(self, cfg_file_or_dict=None):
 		"""Constructor.
 		Protocol and host specifications are taken in as keys -values of dictionary.
 		"""
@@ -128,7 +128,7 @@ class DVIDRemote(Remote):
 
 		Returns a representation of the DVIDRemote that lists the host.
 		"""
-		return "<intern.remote.DVIDRemote [" + self._config['Default']['host'] + "]>"
+		return "<intern.remote.DVIDRemote [" + self._config["Default"]["host"] + "]>"
 
 	def _load_config_section(self, section_name):
 		"""Method to load the specific Service section from the config file if it
@@ -161,7 +161,7 @@ class DVIDRemote(Remote):
 				"Must contain: protocol, host"
 			)
 
-	def get_instance(self, UUID, data_instance, datatype=''):
+	def get_instance(self, UUID, data_instance, datatype=""):
 		"""Method to input all data instance hierarchy requirememnts, works as a dummy
         for DVIDRemote Parallelism.
 
@@ -258,7 +258,7 @@ class DVIDRemote(Remote):
 				as any parents must be identified to succeed.
 
 		Returns:
-			(dict): returns json of like {"MinPoint":[0,0,0], "MaxPoint": [300,400,500]}
+			extents (array): [[x-min, max-x], [y-min, max-y], [z-min, max-z]]
 
 		Raises:
 			requests.HTTPError on failure.
@@ -416,7 +416,7 @@ class DVIDRemote(Remote):
 
 		return self._versioning.resolve(UUID, data, parents, note)
 
-	def commit(self, UUID, note='', log_m=''):
+	def commit(self, UUID, note="", log_m=""):
 		"""Allows the user to write a short description of the content in the repository
 
 		Args:
@@ -433,7 +433,7 @@ class DVIDRemote(Remote):
 
 		return self._versioning.commit(UUID, note, log_m)
 
-	def branch(self, UUID, note=''):
+	def branch(self, UUID, note=""):
 		"""Allows the user to write a short description of the content in the repository
 			
 		Args:

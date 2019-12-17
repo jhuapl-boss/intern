@@ -1,4 +1,4 @@
-# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ class VolumeService(DVIDService):
         blktypes = ['uint8blk', 'labelblk', 'rgba8blk']
 
         if not numpyVolume.flags['C_CONTIGUOUS']:
-            raise ValueError('Expected data to be C_CONTINUGOUS but it was not')
+            numpyVolume = np.ascontiguousarray(numpyVolume)
 
         if (resource._type == 'tile'):
             # Compress the data

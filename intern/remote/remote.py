@@ -196,7 +196,7 @@ class Remote(object):
             resource (intern.resource.Resource): Data platform resource.
 
         Returns:
-            (dict): {"MinPoint": [0,0,0], "MaxPoint": [300,400,500]}
+            extents (array): [[x-min, max-x], [y-min, max-y], [z-min, max-z]]
         """ 
         return self._metadata.get_extents(resource)
 
