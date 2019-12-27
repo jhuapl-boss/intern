@@ -29,7 +29,7 @@ class BossService(Service):
         Service.__init__(self)
         self._versions = {}
         self._session = Session()
-        self._session_send_opts = {}
+        self._session_send_opts = self._session.merge_environment_settings(None, {}, None, None, None)
 
     def __del__(self):
         if self._session is not None:
