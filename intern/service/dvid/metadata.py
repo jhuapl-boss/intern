@@ -135,7 +135,7 @@ class MetadataService(DVIDService):
             resource : DatInstance resource to which to relate metadata
 
         Returns:
-            extents (array): [[x-min, max-x], [y-min, max-y], [z-min, max-z]]
+            extents (array): [[x-min, x-max], [y-min, y-max], [z-min, z-max]]
         """
         metadata = self.get_metadata(resource)
         min_point = metadata['Properties']['MinPoint']
