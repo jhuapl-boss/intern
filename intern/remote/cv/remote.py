@@ -190,3 +190,13 @@ class CloudVolumeRemote(Remote):
         None
         """
         return self._metadata.set_dataset_name(resource, experiment)
+
+    def get_extents(self, resource):
+        """
+        Gets extents to a specific cloudvolume resource
+        Args:
+            resource : cloudvolume resource to which to relate metadata
+        Returns:
+             extents (array): [[x-min, x-max], [y-min, y-max], [z-min, z-max]]
+        """
+        return self._metadata.get_extents(resource)
