@@ -15,7 +15,7 @@
 from intern.service.cv import CloudVolumeService
 from intern.resource.cv.resource import *
 import json
-
+import numpy as np
 class MetadataService(CloudVolumeService):
     """
     MetadataService for cloud-volume service.

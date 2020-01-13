@@ -14,5 +14,5 @@ cv_remote = CloudVolumeRemote({
 
 cv_resource = cv_remote.cloudvolume()
 
-cutout = cv_remote.get_cutout(cv_resource, [0,100], [0,100], [0,10])
+cutout = cv_remote.get_cutout(cv_resource, 0, [0,100], [0,100], [0,10])
 print(cutout.shape, cutout.dtype)

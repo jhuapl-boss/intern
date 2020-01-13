@@ -44,7 +44,7 @@ class VolumeService(CloudVolumeService):
             Retruns:
                 message (str) : Uploading Data... message
         """
-        resource.cloudvoume.mip = res
+        resource.cloudvolume.mip = res
         resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]] = data
         print("Data uploaded.")
     
@@ -59,7 +59,7 @@ class VolumeService(CloudVolumeService):
             Retruns:
                 data (numpy array) : image stack from the cloud or local system
         """
-        resource.cloudvoume.mip = res
+        resource.cloudvolume.mip = res
         return resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]]
          
 	

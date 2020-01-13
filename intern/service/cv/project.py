@@ -39,6 +39,10 @@ class ProjectService(CloudVolumeService):
         return CloudVolumeResource(self.protocol, self.cloudpath, **params)
 
     def create_new_info(self, **params):
+        """
+        Creates the info JSON necessary for a new cloudvolume resource. 
+
+        """
         return CloudVolume.create_new_info(
                 num_channels = params.get('num_channels'), # (int) 1 for grayscale, 3 for RGB 
                 layer_type = params.get('layer_type'), # (str)'image' or 'segmentation'
