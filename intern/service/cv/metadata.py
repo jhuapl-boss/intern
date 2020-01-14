@@ -57,16 +57,19 @@ class MetadataService(CloudVolumeService):
 
         Args:
             resource (CloudVolumeResource object)
-            owners (list): list of authorship names and emails
-            description (str): description of dataset
+            
+            key-word arguments for:
+                owners (list): list of authorship names and emails
+                description (str): description of dataset
+                sources (list): data source
+                processing (list): any previous processing done on data
 
         Returns:
             None
         """
-        if kwargs.get('owners') is not None:
-            resource.cloudvolume = kwargs.get('owners')
-        if kwargs.get('description') is not None:
-            resource.cloudvolume = kwargs.get('description')
+        for arg in kwargs.keys():
+            if arg in ["owners", "description", "sources", "processing"] and kwargs.get(arg) is not None:
+                resource.cloudvolume = kwargs.get(arg)
         resource.cloudvolume.commit_provenance()
     
     def get_provenance(self, resource):
