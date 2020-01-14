@@ -63,9 +63,9 @@ class MetadataService(CloudVolumeService):
         Returns:
             None
         """
-        if kwargs.get('owners') != None:
+        if kwargs.get('owners') is not None:
             resource.cloudvolume = kwargs.get('owners')
-        if kwargs.get('description') != None:
+        if kwargs.get('description') is not None:
             resource.cloudvolume = kwargs.get('description')
         resource.cloudvolume.commit_provenance()
     
@@ -150,19 +150,19 @@ class MetadataService(CloudVolumeService):
         """
         return resource.cloudvolume.dataset_name
 
-    def set_dataset_name(self, resource, experiment):
+    def set_dataset_name(self, resource, name):
         """
         Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
         
         Args: 
             resource (CloudVolume Resource Object)
-            experiment (str): experiment name 
+            name (str): dataset name 
 
         Returns:
             None
         """
-        resource.cloudvolume.dataset_name = str(experiment)
+        resource.cloudvolume.dataset_name = str(name)
     
     def get_extents(self, resource):
         """

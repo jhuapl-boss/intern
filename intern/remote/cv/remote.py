@@ -34,17 +34,54 @@ class CloudVolumeRemote(Remote):
         self._metadata = MetadataService()
         self._project = ProjectService(self.protocol, self.cloudpath)
     
-    def cloudvolume(self, **params):
+    def cloudvolume(self, mip=1, info=None, parallel=1, cache=False, **kwargs):
         """
-        TODO: Create doc string
+        Args:
+            mip (int): which mip layer to access 
+            parallel (int: 1, bool): Number of extra processes to launch, 1 means only 
+                use the main process. If parallel is True use the number of CPUs 
+                returned by multiprocessing.cpu_count(). When parallel > 1, shared
+                memory (Linux) or emulated shared memory via files (other platforms) 
+                is used by the underlying download.
+            cache (bool or str) Store downs and uploads in a cache on disk
+                and preferentially read from it before redownloading.
+                - False: no caching will occur.
+                - True: cache will be located in a standard location.
+                - non-empty string: cache is located at this file path
+            kwargs: optional arguments (https://github.com/seung-lab/cloud-volume#cloudvolume-constructor)
+
+        Returns:
+            CloudVolume : cloudvolume instance with specified parameters 
         """
-        return self._project.cloudvolume(**params)
+        return self._project.cloudvolume(mip, info, parallel, cache, **kwargs)
     
-    def create_new_info(self, **params):
+    def create_new_info(self, num_channels=None, layer_type=None, data_type='uint8', encoding='raw', resolution=None, 
+        voxel_offset=(0,0,0), volume_size=None, chunk_size=(64,64,64), mesh=None, skeletons=None, 
+        compressed_segmentation_block_size=(8,8,8), max_mip=0, factor=(2,2,1)):
         """
-        TODO: Create doc string 
+        Creates the info JSON necessary for a new cloudvolume resource. 
+        Required:
+            num_channels: (int) 1 for grayscale, 3 for RGB 
+            layer_type: (str) typically "image" or "segmentation"
+            data_type: (str) e.g. "uint8", "uint16", "uint32", "float32"
+            encoding: (str) "raw" for binaries like numpy arrays, "jpeg"
+            resolution: int (x,y,z), x,y,z voxel dimensions in nanometers
+            voxel_offset: int (x,y,z), beginning of dataset in positive cartesian space
+            volume_size: int (x,y,z), extent of dataset in cartesian space from voxel_offset
+            
+        Optional:
+            mesh: (str) name of mesh directory, typically "mesh"
+            skeletons: (str) name of skeletons directory, typically "skeletons"
+            chunk_size: int (x,y,z), dimensions of each downloadable 3D image chunk in voxels
+            compressed_segmentation_block_size: (x,y,z) dimensions of each compressed sub-block
+                (only used when encoding is 'compressed_segmentation')
+            max_mip: (int), the maximum mip level id.
+            factor: (tuple), the downsampling factor for each mip level
+        
+        Returns: dict representing a single mip level that's JSON encodable
         """
-        return self._project.create_new_info(**params)
+        return self._project.create_new_info(num_channels, layer_type, data_type, encoding, resolution, voxel_offset, volume_size,
+            mesh, skeletons, chunk_size, compressed_segmentation_block_size, max_mip, factor)
 
     def create_cutout(self, resource, res, x_range, y_range, z_range, data):
         """
@@ -186,19 +223,19 @@ class CloudVolumeRemote(Remote):
         """
         return self._metadata.get_dataset_name(resource)
     
-    def set_dataset_name(self, resource, experiment):
+    def set_dataset_name(self, resource, name):
         """
         Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
         
         Args: 
             resource (CloudVolume Resource Object)
-            experiment (str): experiment name 
+            name (str): dataset name 
 
         Returns:
             None
         """
-        return self._metadata.set_dataset_name(resource, experiment)
+        return self._metadata.set_dataset_name(resource, name)
 
     def get_extents(self, resource):
         """

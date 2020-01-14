@@ -33,29 +33,40 @@ class ProjectService(CloudVolumeService):
         self.protocol = protocol
         self.cloudpath = cloudpath
 
-    def cloudvolume(self, **params):
+    def cloudvolume(self, mip, info, parallel, cache, **kwargs):
         """
-        Creates resource
-        """
-        return CloudVolumeResource(self.protocol, self.cloudpath, **params)
+        Creates cloud-volume resource
 
-    def create_new_info(self, **params):
+        Arguments
+        Returns
+        """
+        return CloudVolumeResource(self.protocol, self.cloudpath, mip = mip,
+        info = info, parallel = parallel, cache = cache, **kwargs)
+    
+    def create_new_info(self, num_channels, layer_type, data_type, encoding, resolution, voxel_offset, 
+        volume_size, chunk_size, mesh, skeletons, compressed_segmentation_block_size, max_mip, factor):
         """
         Creates the info JSON necessary for a new cloudvolume resource. 
-
+        Required:
+            num_channels: (int) 1 for grayscale, 3 for RGB 
+            layer_type: (str) typically "image" or "segmentation"
+            data_type: (str) e.g. "uint8", "uint16", "uint32", "float32"
+            encoding: (str) "raw" for binaries like numpy arrays, "jpeg"
+            resolution: int (x,y,z), x,y,z voxel dimensions in nanometers
+            voxel_offset: int (x,y,z), beginning of dataset in positive cartesian space
+            volume_size: int (x,y,z), extent of dataset in cartesian space from voxel_offset
+            
+        Optional:
+            mesh: (str) name of mesh directory, typically "mesh"
+            skeletons: (str) name of skeletons directory, typically "skeletons"
+            chunk_size: int (x,y,z), dimensions of each downloadable 3D image chunk in voxels
+            compressed_segmentation_block_size: (x,y,z) dimensions of each compressed sub-block
+                (only used when encoding is 'compressed_segmentation')
+            max_mip: (int), the maximum mip level id.
+            factor: (tuple), the downsampling factor for each mip level
+        
+        Returns: dict representing a single mip level that's JSON encodable
         """
-        return CloudVolume.create_new_info(
-                num_channels = params.get('num_channels'), # (int) 1 for grayscale, 3 for RGB 
-                layer_type = params.get('layer_type'), # (str)'image' or 'segmentation'
-                data_type = params.get('data_type'), # (str) e.g. 'uint8', 'uint16', 'uint32', 'float32'
-                encoding = params.get('encoding'), # (str) default is precomputed. other options: 'jpeg', 'compressed_segmentation' (req. uint32 or uint64)
-                resolution = params.get('resolution'), # (x,y,z) X,Y,Z voxel dimensions in nanometers
-                voxel_offset = params.get('voxel_offset', (0,0,0)), # (x,y,z) voxel offset
-                volume_size = params.get('volume_size'), # (x,y,z) extent of dataset from voxel offset
-                chunk_size = params.get('chunk_size', (64,64,64)), # rechunk of image X,Y,Z in voxels
-                mesh = params.get('mesh'), # (str) name of mesh directory, typically "mesh"
-                skeletons = params.get('skeletons'), # (str) name of skeletons directory, typically "skeletons"
-                compressed_segmentation_block_size = params.get('compressed_segmentation_block_size', (8,8,8)), #dimensions of each compressed sub-block (only used when encoding is 'compressed_segmentation')
-                max_mip = params.get('max_mip', 0), #(int)the maximum mip level id
-                factor = params.get('factor', Vec(2,2,1)) # (Vec)the downsampling factor for each mip level
-            )
+        factor = Vec(*factor)
+        return CloudVolume.create_new_info(num_channels, layer_type, data_type, encoding, resolution, voxel_offset, volume_size,
+            mesh, skeletons, chunk_size, compressed_segmentation_block_size, max_mip, factor)

@@ -24,20 +24,25 @@ class CloudVolumeResource(Resource):
     Base class for CloudVolume resources.
     """
 
-    def __init__(self, protocol, cloudpath, **params):
+    def __init__(self, protocol, cloudpath, mip, info, parallel, cache, **kwargs):
         """
         Initializes intern.Resource parent class and creates a cloudvolume object
 
         Args:
             protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
             cloudpath (str) : in the form of "$BUCKET/$DATASET/$LAYER"
-            new_layer (bool): True indicates a new info file and therefore a new layer, is needed
+            mip (int): which mip layer to access 
             parallel (int: 1, bool): Number of extra processes to launch, 1 means only 
-                    use the main process. If parallel is True use the number of CPUs 
-                    returned by multiprocessing.cpu_count(). When parallel > 1, shared
-                    memory (Linux) or emulated shared memory via files (other platforms) 
-                    is used by the underlying download.
-            **params () : keyword-value arguments for info object --> dict representing single mip level thats JSON encodable 
+                use the main process. If parallel is True use the number of CPUs 
+                returned by multiprocessing.cpu_count(). When parallel > 1, shared
+                memory (Linux) or emulated shared memory via files (other platforms) 
+                is used by the underlying download.
+            cache (bool or str) Store downs and uploads in a cache on disk
+                and preferentially read from it before redownloading.
+                - False: no caching will occur.
+                - True: cache will be located in a standard location.
+                - non-empty string: cache is located at this file path
+            kwargs: optional arguments (https://github.com/seung-lab/cloud-volume#cloudvolume-constructor)
 
         Returns:
             CloudVolume : cloudvolume instance with specified parameters 
@@ -56,17 +61,10 @@ class CloudVolumeResource(Resource):
             raise KeyError("{} is not a valid protocol. Supported protocols: 'local', 'gcp',  and 's3'".format(protocol))
         
         self.url = protokey+cloudpath
-        self.mip = params.get('mip', 0)
-        self.parallel = params.get('parallel', 1)
-        self.info = params.get('info')
+        self.cloudvolume = CloudVolume(self.url, mip=mip, info=info, parallel=parallel, cache=cache, **kwargs)
         
-        if self.info == None:
-            # Layer already exists 
-            self.cloudvolume = CloudVolume(self.url, mip=self.mip, parallel=self.parallel)
-        else:
-            # Info file provided by user
-            self.cloudvolume = CloudVolume(self.url, mip=self.mip, info=self.info, parallel=self.parallel)
-            self.cloudvolume.commit_info() # generates protocol://bucket/dataset/layer/info json file
+        if info is not None:
+            self.cloudvolume.commit_info()
 
     def valid_volume(self):
         """Returns True if resource is something that can access the volume service.
