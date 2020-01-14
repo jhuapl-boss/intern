@@ -1,4 +1,4 @@
-# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ from intern.service.service import Service
 class CloudVolumeService(Service):
 
 	"""
-		Partial implementation of intern.service.service.Service for the CloudVolume services.
+	Partial implementation of intern.service.service.Service for the CloudVolume services.
 	"""
 
 	def __init__(self):

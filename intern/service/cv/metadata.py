@@ -1,4 +1,4 @@
-# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ class MetadataService(CloudVolumeService):
         Returns a JSON of the resource properties.
 
         Args:
-        resource (CloudVolumeResource object)
+            resource (CloudVolumeResource object)
 
         Returns:
-        string: JSON format of properties
+            string: JSON format of properties
         """
         return resource.cloudvolume.info
 
@@ -44,10 +44,10 @@ class MetadataService(CloudVolumeService):
         Returns a string of the cloudpath of the resource.
 
         Args:
-        resource (CloudVolumeResource object)
+            resource (CloudVolumeResource object)
 
         Returns:
-        string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
+            string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
         """
         return resource.cloudvolume.layer_cloudpath
 
@@ -56,9 +56,9 @@ class MetadataService(CloudVolumeService):
         Sets the description and owners of the cloudvolume resource.
 
         Args:
-        resource (CloudVolumeResource object)
-        owners (list): list of authorship names and emails
-        description (str): description of dataset
+            resource (CloudVolumeResource object)
+            owners (list): list of authorship names and emails
+            description (str): description of dataset
 
         Returns:
             None
@@ -74,10 +74,10 @@ class MetadataService(CloudVolumeService):
         Returns the description and owners of the cloudvolume resource.
 
         Args:
-        resource (CloudVolumeResource object)
+            resource (CloudVolumeResource object)
 
         Returns:
-        dict: desciption and owners values
+            dict: desciption and owners values
         """
         return resource.cloudvolume.refresh_provenance()
 
@@ -86,10 +86,11 @@ class MetadataService(CloudVolumeService):
         Get a report on which chunks actually exist.
 
         Args:
-        resource (CloudVolumeResource object)
-        x_range,y_range,z_range (Tuples representing the bbox)
+            resource (CloudVolumeResource object)
+            x_range,y_range,z_range (Tuples representing the bbox)
 
-        Returns: {chunk_file_name: boolean, ...}
+        Returns: 
+            dict: {chunk_file_name: boolean, ...}
 
         """
         x1,x2 = x_range
@@ -102,9 +103,10 @@ class MetadataService(CloudVolumeService):
         What resolution(s) are available to read and write to in the current resource. 
 
         Args:
-        resource (CloudVolume Resource Object)
+            resource (CloudVolume Resource Object)
 
-        Returns: (list) list of ints denoting mip levels
+        Returns: 
+            (list) list of ints denoting mip levels
         """
         return resource.cloudvolume.available_mips
 
@@ -114,10 +116,10 @@ class MetadataService(CloudVolumeService):
         Known as a "channel" in BOSS terminology.
         
         Args:
-        resource (CloudVolume Resource Object)
+            resource (CloudVolume Resource Object)
 
         Returns:
-        str: the resource channel 
+            str: the resource channel 
 
         """	
         return resource.cloudvolume.layer
@@ -127,11 +129,11 @@ class MetadataService(CloudVolumeService):
         Set a new layer and commits it to the info file.
         
         Args:
-        resource (CloudVolume Resource Object)
-        layer (string)
+            resource (CloudVolume Resource Object)
+            layer (string)
 
         Returns:
-        None
+            None
         """
         resource.cloudvolume.layer = str(layer)
 
@@ -141,10 +143,10 @@ class MetadataService(CloudVolumeService):
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
         
         Args: 
-        resource (CloudVolume Resource Object) 
+            resource (CloudVolume Resource Object) 
 
         Returns:
-        str: current resource experiment
+            str: current resource experiment
         """
         return resource.cloudvolume.dataset_name
 
@@ -154,20 +156,21 @@ class MetadataService(CloudVolumeService):
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
         
         Args: 
-        resource (CloudVolume Resource Object)
-        experiment (str): experiment name 
+            resource (CloudVolume Resource Object)
+            experiment (str): experiment name 
 
         Returns:
-        None
+            None
         """
         resource.cloudvolume.dataset_name = str(experiment)
     
     def get_extents(self, resource):
-        """Gets extents to a specific cloudvolume resource
+        """
+        Gets extents to a specific cloudvolume resource
         Args:
             resource : cloudvolume resource to which to relate metadata
         Returns:
-             extents (array): [[x-min, x-max], [y-min, y-max], [z-min, z-max]]
+             extents (list): [[x-min, x-max], [y-min, y-max], [z-min, z-max]]
         """
         info_json = json.loads(resource.cloudvolume.info)
         min_point = info_json["voxel_offset"]

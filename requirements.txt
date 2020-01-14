@@ -4,7 +4,4 @@ blosc>=1.4.4
 six
 mock
 nose2
-#ast
-h5py
 cloud-volume
-docker

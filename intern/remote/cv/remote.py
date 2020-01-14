@@ -1,5 +1,5 @@
 ﻿"""
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,35 +35,41 @@ class CloudVolumeRemote(Remote):
         self._project = ProjectService(self.protocol, self.cloudpath)
     
     def cloudvolume(self, **params):
+        """
+        TODO: Create doc string
+        """
         return self._project.cloudvolume(**params)
     
     def create_new_info(self, **params):
+        """
+        TODO: Create doc string 
+        """
         return self._project.create_new_info(**params)
 
     def create_cutout(self, resource, res, x_range, y_range, z_range, data):
         """
-            Method to upload a cutout of data
-            Args:
-                data (str) : Path to the data
-                vol (CloudVolume) : Existing cloudvolume instance 
-                x_range (list) : x range within the 3D space
-                y_range (list) : y range within the 3D space
-                z_range (list) : z range witinn the 3D space
-            Retruns:
-                message (str) : Uploading Data... message
+        Method to upload a cutout of data
+        Args:
+            data (str) : Path to the data
+            vol (CloudVolume) : Existing cloudvolume instance 
+            x_range (list) : x range within the 3D space
+            y_range (list) : y range within the 3D space
+            z_range (list) : z range witinn the 3D space
+        Retruns:
+            message (str) : Uploading Data... message
         """
         return self._volume.create_cutout(resource, res, x_range, y_range, z_range, data)
 
     def get_cutout(self, resource, res, x_range, y_range, z_range):
         """
-            Method to download a cutout of data
-            Args:
-                vol (CloudVolume) : Existing non-empty cloudvolume instance 
-                x_range (list) : x range within the 3D space
-                y_range (list) : y range within the 3D space
-                z_range (list) : z range within the 3D space
-            Retruns:
-                data (numpy array) : image stack from the cloud or local system
+        Method to download a cutout of data
+        Args:
+            vol (CloudVolume) : Existing non-empty cloudvolume instance 
+            x_range (list) : x range within the 3D space
+            y_range (list) : y range within the 3D space
+            z_range (list) : z range within the 3D space
+        Retruns:
+            data (numpy array) : image stack from the cloud or local system
         """
         return self._volume.get_cutout(resource, res, x_range, y_range, z_range)
 
@@ -72,10 +78,10 @@ class CloudVolumeRemote(Remote):
         Returns a JSON of the resource properties.
 
         Args:
-        resource (CloudVolumeResource object)
+            resource (CloudVolumeResource object)
 
         Returns:
-        string: JSON format of properties
+            string: JSON format of properties
         """
         return self._metadata.get_info(resource)
 
@@ -84,10 +90,10 @@ class CloudVolumeRemote(Remote):
         Returns a string of the cloudpath of the resource.
 
         Args:
-        resource (CloudVolumeResource object)
+            resource (CloudVolumeResource object)
 
         Returns:
-        string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
+            string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
         """
         return self._metadata.get_cloudpath(resource)
 
@@ -96,10 +102,10 @@ class CloudVolumeRemote(Remote):
         Returns the description and owners of the cloudvolume resource.
 
         Args:
-        resource (CloudVolumeResource object)
+            resource (CloudVolumeResource object)
 
         Returns:
-        dict: desciption and owners values
+            dict: desciption and owners values
         """
         return self._metadata.get_provenance(resource)
     
@@ -108,9 +114,9 @@ class CloudVolumeRemote(Remote):
         Sets the description and owners of the cloudvolume resource.
 
         Args:
-        resource (CloudVolumeResource object)
-        owners (list): list of authorship names and emails
-        description (str): description of dataset
+            resource (CloudVolumeResource object)
+            owners (list): list of authorship names and emails
+            description (str): description of dataset
 
         Returns:
             None
@@ -122,8 +128,10 @@ class CloudVolumeRemote(Remote):
         Delete the chunks within a bounding box (must be aligned with chunks)
 
         Args:
-        resource (CloudVolumeResource object)
-        x_range,y_range,z_range (Tuples representing the bbox)
+            resource (CloudVolumeResource object)
+            x_range,y_range,z_range (Tuples representing the bbox)
+        Returns:
+            None 
         """
         return self._volume.delete_data(resource, res, x_range, y_range, z_range)
 
@@ -132,9 +140,10 @@ class CloudVolumeRemote(Remote):
         What resolution(s) are available to read and write to in the current resource. 
 
         Args:
-        resource (CloudVolume Resource Object)
+            resource (CloudVolume Resource Object)
 
-        Returns: (list) list of ints denoting mip levels
+        Returns: 
+            list: list of ints denoting mip levels
         """
         return self._metadata.list_res(resource)
 
@@ -144,10 +153,10 @@ class CloudVolumeRemote(Remote):
         Known as a "channel" in BOSS terminology. Writing to this property triggers an info refresh.
         
         Args:
-        resource (CloudVolume Resource Object)
+            resource (CloudVolume Resource Object)
 
         Returns:
-        str: current resource channel
+            str: current resource channel
         """ 
         return self._metadata.get_layer(resource)
     
@@ -156,11 +165,11 @@ class CloudVolumeRemote(Remote):
         Set a new layer and commits it to the info file.
         
         Args:
-        resource (CloudVolume Resource Object)
-        layer (string)
+            resource (CloudVolume Resource Object)
+            layer (string)
 
         Returns:
-        None
+            None
         """
         return self._metadata.set_layer(resource, layer)
 
@@ -170,10 +179,10 @@ class CloudVolumeRemote(Remote):
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
         
         Args: 
-        resource (CloudVolume Resource Object)
+            resource (CloudVolume Resource Object)
 
         Returns:
-        str: current resource experiment
+            str: current resource experiment
         """
         return self._metadata.get_dataset_name(resource)
     
@@ -183,11 +192,11 @@ class CloudVolumeRemote(Remote):
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
         
         Args: 
-        resource (CloudVolume Resource Object)
-        experiment (str): experiment name 
+            resource (CloudVolume Resource Object)
+            experiment (str): experiment name 
 
         Returns:
-        None
+            None
         """
         return self._metadata.set_dataset_name(resource, experiment)
 
@@ -195,8 +204,8 @@ class CloudVolumeRemote(Remote):
         """
         Gets extents to a specific cloudvolume resource
         Args:
-            resource : cloudvolume resource to which to relate metadata
+            resource (CloudVolume Resource Object)
         Returns:
-             extents (array): [[x-min, x-max], [y-min, y-max], [z-min, z-max]]
+            extents (list): [[x-min, x-max], [y-min, y-max], [z-min, z-max]]
         """
         return self._metadata.get_extents(resource)

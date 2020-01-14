@@ -1,4 +1,4 @@
-# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ class ProjectService(CloudVolumeService):
     """
 
     def __init__(self, protocol, cloudpath):
-        """Constructor.
+        """
+        Constructor.
         Args:
             base_url (str): Base url to project service.
         """
