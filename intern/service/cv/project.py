@@ -37,8 +37,24 @@ class ProjectService(CloudVolumeService):
         """
         Creates cloud-volume resource
 
-        Arguments
-        Returns
+        Args:
+            mip (int): which mip layer to access
+            info (dict) : json-encodable dictionary of layer parameters. Necessary for creating a 
+                new cloudvolume instance.  
+            parallel (int: 1, bool): Number of extra processes to launch, 1 means only 
+                use the main process. If parallel is True use the number of CPUs 
+                returned by multiprocessing.cpu_count(). When parallel > 1, shared
+                memory (Linux) or emulated shared memory via files (other platforms) 
+                is used by the underlying download.
+            cache (bool or str) Store downs and uploads in a cache on disk
+                and preferentially read from it before redownloading.
+                - False: no caching will occur.
+                - True: cache will be located in a standard location.
+                - non-empty string: cache is located at this file path
+            kwargs: optional arguments (https://github.com/seung-lab/cloud-volume#cloudvolume-constructor)
+        
+        Returns:
+            CloudVolume Object
         """
         return CloudVolumeResource(self.protocol, self.cloudpath, mip = mip,
         info = info, parallel = parallel, cache = cache, **kwargs)
@@ -46,24 +62,25 @@ class ProjectService(CloudVolumeService):
     def create_new_info(self, num_channels, layer_type, data_type, encoding, resolution, voxel_offset, 
         volume_size, chunk_size, mesh, skeletons, compressed_segmentation_block_size, max_mip, factor):
         """
-        Creates the info JSON necessary for a new cloudvolume resource. 
-        Required:
-            num_channels: (int) 1 for grayscale, 3 for RGB 
-            layer_type: (str) typically "image" or "segmentation"
-            data_type: (str) e.g. "uint8", "uint16", "uint32", "float32"
-            encoding: (str) "raw" for binaries like numpy arrays, "jpeg"
-            resolution: int (x,y,z), x,y,z voxel dimensions in nanometers
-            voxel_offset: int (x,y,z), beginning of dataset in positive cartesian space
-            volume_size: int (x,y,z), extent of dataset in cartesian space from voxel_offset
-            
-        Optional:
-            mesh: (str) name of mesh directory, typically "mesh"
-            skeletons: (str) name of skeletons directory, typically "skeletons"
-            chunk_size: int (x,y,z), dimensions of each downloadable 3D image chunk in voxels
-            compressed_segmentation_block_size: (x,y,z) dimensions of each compressed sub-block
-                (only used when encoding is 'compressed_segmentation')
-            max_mip: (int), the maximum mip level id.
-            factor: (tuple), the downsampling factor for each mip level
+        Creates the info JSON necessary for a new cloudvolume resource.
+        Args: 
+            Required:
+                num_channels: (int) 1 for grayscale, 3 for RGB 
+                layer_type: (str) typically "image" or "segmentation"
+                data_type: (str) e.g. "uint8", "uint16", "uint32", "float32"
+                encoding: (str) "raw" for binaries like numpy arrays, "jpeg"
+                resolution: int (x,y,z), x,y,z voxel dimensions in nanometers
+                voxel_offset: int (x,y,z), beginning of dataset in positive cartesian space
+                volume_size: int (x,y,z), extent of dataset in cartesian space from voxel_offset
+                
+            Optional:
+                mesh: (str) name of mesh directory, typically "mesh"
+                skeletons: (str) name of skeletons directory, typically "skeletons"
+                chunk_size: int (x,y,z), dimensions of each downloadable 3D image chunk in voxels
+                compressed_segmentation_block_size: (x,y,z) dimensions of each compressed sub-block
+                    (only used when encoding is 'compressed_segmentation')
+                max_mip: (int), the maximum mip level id.
+                factor: (tuple), the downsampling factor for each mip level
         
         Returns: dict representing a single mip level that's JSON encodable
         """

@@ -34,7 +34,7 @@ class CloudVolumeRemote(Remote):
         self._metadata = MetadataService()
         self._project = ProjectService(self.protocol, self.cloudpath)
     
-    def cloudvolume(self, mip=1, info=None, parallel=1, cache=False, **kwargs):
+    def cloudvolume(self, mip=0, info=None, parallel=1, cache=False, **kwargs):
         """
         Args:
             mip (int): which mip layer to access 
@@ -130,7 +130,7 @@ class CloudVolumeRemote(Remote):
             resource (CloudVolumeResource object)
 
         Returns:
-            string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
+            string: in the form of 'PROTOCOL://BUCKET/../DATASET/LAYER'
         """
         return self._metadata.get_cloudpath(resource)
 

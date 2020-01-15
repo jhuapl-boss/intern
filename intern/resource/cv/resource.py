@@ -30,7 +30,9 @@ class CloudVolumeResource(Resource):
 
         Args:
             protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
-            cloudpath (str) : in the form of "$BUCKET/$DATASET/$LAYER"
+            cloudpath (str) : in the form of "$BUCKET/../$DATASET/$LAYER"
+            info (dict) : json-encodable dictionary of layer parameters. Necessary for creating a 
+                new cloudvolume instance. 
             mip (int): which mip layer to access 
             parallel (int: 1, bool): Number of extra processes to launch, 1 means only 
                 use the main process. If parallel is True use the number of CPUs 

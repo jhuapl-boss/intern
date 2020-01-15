@@ -47,7 +47,7 @@ class MetadataService(CloudVolumeService):
             resource (CloudVolumeResource object)
 
         Returns:
-            string: in the form of 'PROTOCOL//:BUCKET/../DATASET/LAYER'
+            string: in the form of 'PROTOCOL://BUCKET/../DATASET/LAYER'
         """
         return resource.cloudvolume.layer_cloudpath
 
@@ -61,15 +61,16 @@ class MetadataService(CloudVolumeService):
             key-word arguments for:
                 owners (list): list of authorship names and emails
                 description (str): description of dataset
-                sources (list): data source
-                processing (list): any previous processing done on data
+                sources (list): list of data source
+                processing (list of dicts): any previous processing done on data
+                    e.g [{ 'method': 'meshing', 'by': 'example2@princeton.edu', 'description': '512x512x512 mip 3 simplification factor 30' }]
 
         Returns:
             None
         """
         for arg in kwargs.keys():
             if arg in ["owners", "description", "sources", "processing"] and kwargs.get(arg) is not None:
-                resource.cloudvolume = kwargs.get(arg)
+                resource.cloudvolume.provenance[arg] = kwargs.get(arg)
         resource.cloudvolume.commit_provenance()
     
     def get_provenance(self, resource):
