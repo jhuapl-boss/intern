@@ -55,7 +55,6 @@ class CloudVolumeResource(Resource):
             'local':'file://', 
             'gcp': 'gs://', 
             's3':'s3://',
-            'boss':'boss://'
             }
         try:
             protokey = protocol_map[protocol]

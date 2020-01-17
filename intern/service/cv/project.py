@@ -27,7 +27,8 @@ class ProjectService(CloudVolumeService):
         """
         Constructor.
         Args:
-            base_url (str): Base url to project service.
+            protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
+            cloudpath (str) : in the form of "$BUCKET/../$DATASET/$LAYER"
         """
         CloudVolumeService.__init__(self)
         self.protocol = protocol
@@ -59,8 +60,9 @@ class ProjectService(CloudVolumeService):
         return CloudVolumeResource(self.protocol, self.cloudpath, mip = mip,
         info = info, parallel = parallel, cache = cache, **kwargs)
     
-    def create_new_info(self, num_channels, layer_type, data_type, encoding, resolution, voxel_offset, 
-        volume_size, chunk_size, mesh, skeletons, compressed_segmentation_block_size, max_mip, factor):
+    def create_new_info(self, num_channels=None, layer_type=None, data_type='uint8', encoding='raw', resolution=None, 
+        voxel_offset=(0,0,0), volume_size=None, chunk_size=(64,64,64), mesh=None, skeletons=None, 
+        compressed_segmentation_block_size=(8,8,8), max_mip=0, factor=(2,2,1)):
         """
         Creates the info JSON necessary for a new cloudvolume resource.
         Args: 
@@ -84,6 +86,5 @@ class ProjectService(CloudVolumeService):
         
         Returns: dict representing a single mip level that's JSON encodable
         """
-        factor = Vec(*factor)
         return CloudVolume.create_new_info(num_channels, layer_type, data_type, encoding, resolution, voxel_offset, volume_size,
             mesh, skeletons, chunk_size, compressed_segmentation_block_size, max_mip, factor)

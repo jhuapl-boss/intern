@@ -81,7 +81,7 @@ class CloudVolumeRemote(Remote):
         Returns: dict representing a single mip level that's JSON encodable
         """
         return self._project.create_new_info(num_channels, layer_type, data_type, encoding, resolution, voxel_offset, volume_size,
-            mesh, skeletons, chunk_size, compressed_segmentation_block_size, max_mip, factor)
+            chunk_size, mesh, skeletons, compressed_segmentation_block_size, max_mip, factor)
 
     def create_cutout(self, resource, res, x_range, y_range, z_range, data):
         """
