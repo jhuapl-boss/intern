@@ -32,7 +32,7 @@ class TestCloudVolumeRemote(unittest.TestCase):
         self.cv_remote.create_cutout(resource, 0, [0,128], [0,128], [0,128], data)
 
         # Download cutout and check for equivalence 
-        cutout = self.cv_remote.get_cutout(resource, 0, [32,96], [32,96], [32,96])[:,:,:,0]
+        cutout = self.cv_remote.get_cutout(resource, 0, [32,96], [32,96], [32,96])
         np.testing.assert_array_equal(data[32:96, 32:96, 32:96], cutout)
 
     def test_cutout_uint16(self):
@@ -53,7 +53,7 @@ class TestCloudVolumeRemote(unittest.TestCase):
         self.cv_remote.create_cutout(resource, 0, [0,128], [0,128], [0,128], data)
 
         # Download cutout and check for equivalence 
-        cutout = self.cv_remote.get_cutout(resource, 0, [32,96], [32,96], [32,96])[:,:,:,0]
+        cutout = self.cv_remote.get_cutout(resource, 0, [32,96], [32,96], [32,96])
         np.testing.assert_array_equal(data[32:96, 32:96, 32:96], cutout)
     
     def test_cutout_float64(self):
@@ -74,7 +74,7 @@ class TestCloudVolumeRemote(unittest.TestCase):
         self.cv_remote.create_cutout(resource, 0, [0,128], [0,128], [0,128], data)
 
         # Download cutout and check for equivalence 
-        cutout = self.cv_remote.get_cutout(resource, 0, [32,96], [32,96], [32,96])[:,:,:,0]
+        cutout = self.cv_remote.get_cutout(resource, 0, [32,96], [32,96], [32,96])
         np.testing.assert_array_equal(data[32:96, 32:96, 32:96], cutout)
     
     def test_metadata(self):

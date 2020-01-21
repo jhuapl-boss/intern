@@ -59,7 +59,11 @@ class VolumeService(CloudVolumeService):
             data (numpy array) : image stack from the cloud or local system
         """
         resource.cloudvolume.mip = res
-        return resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]]
+        data = resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]]
+
+        # Remove channel dimension if num_channel = 1
+        data = np.squeeze(data)
+        return data
          
 	
     def delete_data(self, resource, res, x_range, y_range, z_range):
@@ -72,7 +76,7 @@ class VolumeService(CloudVolumeService):
         Returns:
             None
         """
-        resource.cloudvoume.mip = res
+        resource.cloudvolume.mip = res
         x1,x2 = x_range
         y1,y2 = y_range
         z1,z2 = z_range
