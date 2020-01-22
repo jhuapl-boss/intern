@@ -55,8 +55,8 @@ class CloudVolumeRemote(Remote):
         """
         return self._project.cloudvolume(mip, info, parallel, cache, **kwargs)
     
-    def create_new_info(self, num_channels=None, layer_type=None, data_type='uint8', encoding='raw', resolution=None, 
-        voxel_offset=(0,0,0), volume_size=None, chunk_size=(64,64,64), mesh=None, skeletons=None, 
+    def create_new_info(self, num_channels, layer_type, data_type,  resolution, volume_size, 
+        voxel_offset=(0,0,0), encoding='raw', chunk_size=(64,64,64), mesh=None, skeletons=None, 
         compressed_segmentation_block_size=(8,8,8), max_mip=0, factor=(2,2,1)):
         """
         Creates the info JSON necessary for a new cloudvolume resource. 
@@ -64,12 +64,13 @@ class CloudVolumeRemote(Remote):
             num_channels: (int) 1 for grayscale, 3 for RGB 
             layer_type: (str) typically "image" or "segmentation"
             data_type: (str) e.g. "uint8", "uint16", "uint32", "float32"
-            encoding: (str) "raw" for binaries like numpy arrays, "jpeg"
             resolution: int (x,y,z), x,y,z voxel dimensions in nanometers
-            voxel_offset: int (x,y,z), beginning of dataset in positive cartesian space
+            
             volume_size: int (x,y,z), extent of dataset in cartesian space from voxel_offset
             
         Optional:
+            voxel_offset: int (x,y,z), beginning of dataset in positive cartesian space
+            encoding: (str) "raw" for binaries like numpy arrays, "jpeg", "png"
             mesh: (str) name of mesh directory, typically "mesh"
             skeletons: (str) name of skeletons directory, typically "skeletons"
             chunk_size: int (x,y,z), dimensions of each downloadable 3D image chunk in voxels
@@ -80,8 +81,8 @@ class CloudVolumeRemote(Remote):
         
         Returns: dict representing a single mip level that's JSON encodable
         """
-        return self._project.create_new_info(num_channels, layer_type, data_type, encoding, resolution, voxel_offset, volume_size,
-            chunk_size, mesh, skeletons, compressed_segmentation_block_size, max_mip, factor)
+        return self._project.create_new_info(num_channels, layer_type, data_type,  resolution, volume_size, 
+        voxel_offset, encoding, chunk_size, mesh, skeletons, compressed_segmentation_block_size, max_mip, factor)
 
     def create_cutout(self, resource, res, x_range, y_range, z_range, data):
         """
