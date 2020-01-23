@@ -6,7 +6,7 @@ from intern.remote.cv import CloudVolumeRemote
 
 config = {"protocol": "https",
           "host": "api.bossdb.io",
-          "token": "82789c99fa9f5746a584c8bf5401a2704ccb536b"}
+          "token": "public"}
 
 boss_rmt = BossRemote(config)
 
