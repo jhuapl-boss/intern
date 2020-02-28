@@ -68,8 +68,8 @@ class Remote(object):
 
         else:
             # A file path was provided by the user
-            if os.path.isfile(cfg_file_or_dict):
-                with open(cfg_file_or_dict, 'r') as cfg_file_handle:
+            if os.path.isfile(os.path.expanduser(cfg_file_or_dict)):
+                with open(os.path.expanduser(cfg_file_or_dict), 'r') as cfg_file_handle:
                     self._config = self.load_config_file(cfg_file_handle)
             else:
                 # Provided file or default file do not exist.  Try loading from env variables
