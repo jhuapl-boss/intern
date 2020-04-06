@@ -1,5 +1,10 @@
 # Change Log
-____________
+
+-----
+
+## v0.9.13
+* Allow the "~" character in config-file path pointers when creating a new `BossRemote`
+
 ## v0.9.12
 intern incorporates the access_mode parameter when grabbing cutouts of small AND large sizes.
 Backwards compatibility with previous versions that make use of the no_cache boolean parameter.
@@ -11,28 +16,28 @@ intern now uses an enum class to limit the possibility of cache modes.
 * access_mode = CacheMode.raw - Does not check the cache and DOES NOT check for dirty keys
 
 This is for functions:
-* intern.remote.boss.remote.py: BossRemote.get_cutout()
-* intern.serivce.boss.baseversion.py: BaseVersion.get_cutout_request()
+* intern.remote.boss.remote.py: `BossRemote.get_cutout()`
+* intern.serivce.boss.baseversion.py: `BaseVersion.get_cutout_request()`
 
 
 ## v0.9.11
- Convenience functions added: 
+ Convenience functions added:
   * `BossRemote#get_experiment()`
   * `BossRemote#get_coordinate_frame()`
-  * `BossRemote#get_neuroglancer_link()` get a neuroglancer URL from cutout arguments 
+  * `BossRemote#get_neuroglancer_link()` get a neuroglancer URL from cutout arguments
 * `create_cutout` will now chunk large cutouts into smaller components to eliminate HTTP size limitation and timeout errors.
 
 ## v0.9.10
 *  Intern now forwards no_cache option when breaking apart large cutouts.
 
 ## v0.9.9
-* Modified the intern get_cutout() no_cache option to default to true instead of false
+* Modified the intern `get_cutout()` `no_cache` option to default to true instead of false
 
 ## v0.9.8
 * BugFix: Removed extra slash after no-cache option on URL that was causing issues.
 
 ## v0.9.7
-* Added new no-cache option to the get_cutout(... no_cache=True)  This option will pull directly from the S3.  It should be used when reading large amounts of data at once.  Using this option can also increase throughput as the cache can become a bottleneck if a large amount of data is cycled through the cache
+* Added new no-cache option to the `get_cutout(... no_cache=True)`  This option will pull directly from the S3.  It should be used when reading large amounts of data at once.  Using this option can also increase throughput as the cache can become a bottleneck if a large amount of data is cycled through the cache
 
 ## v0.9.6
 * Merged PR #14 from ben_dev - correctly populate downsample_status of ChannelResource.
