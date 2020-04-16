@@ -2,9 +2,13 @@
 
 ---
 
+## v?.?.?
+
+> This build switches `intern` to GitHub actions, and now tests both 3.6 as well as 3.7. Python 2.7 testing is no longer supported.
+
 ## v0.10.0 — April 16, 2020
 
-v0.10.0 is the _last_ version of `intern` that support Python 2.x. If you need Python 2 support, you must run `pip install intern==0.10.0`. The development team does not anticipate further development for Python 2, and support for Python 2 environments will be discontinued. In future versions of `intern`, it will be assumed that the user is on Python 3 (3.6 or above).
+> v0.10.0 is the _last_ version of `intern` that support Python 2.x. If you need Python 2 support, you must run `pip install intern==0.10.0`. The development team does not anticipate further development for Python 2, and support for Python 2 environments will be discontinued. In future versions of `intern`, it will be assumed that the user is on Python 3 (3.6 or above).
 
 -   Allow the "~" character in config-file path pointers when creating a new `BossRemote`
 -   `BossRemote#get_channel` now supports a single string argument of the form `bossdb://[collection]/[experiment]/[channel]`. Likewise, you can pass this string directly to, e.g., `BossRemote#get_cutout` as the first argument.
