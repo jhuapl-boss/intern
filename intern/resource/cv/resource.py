@@ -18,6 +18,7 @@ from cloudvolume import CloudVolume, Vec
 import numpy as np
 from os import path
 
+
 class CloudVolumeResource(Resource):
 
     """
@@ -31,13 +32,13 @@ class CloudVolumeResource(Resource):
         Args:
             protocol (str) : protocol to use. Currently supports 'local', 'gs', and 's3'
             cloudpath (str) : in the form of "$BUCKET/../$DATASET/$LAYER"
-            info (dict) : json-encodable dictionary of layer parameters. Necessary for creating a 
-                new cloudvolume instance. 
-            mip (int): which mip layer to access 
-            parallel (int: 1, bool): Number of extra processes to launch, 1 means only 
-                use the main process. If parallel is True use the number of CPUs 
+            info (dict) : json-encodable dictionary of layer parameters. Necessary for creating a
+                new cloudvolume instance.
+            mip (int): which mip layer to access
+            parallel (int: 1, bool): Number of extra processes to launch, 1 means only
+                use the main process. If parallel is True use the number of CPUs
                 returned by multiprocessing.cpu_count(). When parallel > 1, shared
-                memory (Linux) or emulated shared memory via files (other platforms) 
+                memory (Linux) or emulated shared memory via files (other platforms)
                 is used by the underlying download.
             cache (bool or str) Store downs and uploads in a cache on disk
                 and preferentially read from it before redownloading.
@@ -47,23 +48,29 @@ class CloudVolumeResource(Resource):
             kwargs: optional arguments (https://github.com/seung-lab/cloud-volume#cloudvolume-constructor)
 
         Returns:
-            CloudVolume : cloudvolume instance with specified parameters 
+            CloudVolume : cloudvolume instance with specified parameters
         """
         Resource.__init__(self)
-        
+
         protocol_map = {
-            'local':'file://', 
-            'gcp': 'gs://', 
-            's3':'s3://',
-            }
+            "local": "file://",
+            "gcp": "gs://",
+            "s3": "s3://",
+        }
         try:
             protokey = protocol_map[protocol]
         except KeyError:
-            raise KeyError("{} is not a valid protocol. Supported protocols: 'local', 'gcp',  and 's3'".format(protocol))
-        
-        self.url = protokey+cloudpath
-        self.cloudvolume = CloudVolume(self.url, mip=mip, info=info, parallel=parallel, cache=cache, **kwargs)
-        
+            raise KeyError(
+                "{} is not a valid protocol. Supported protocols: 'local', 'gcp',  and 's3'".format(
+                    protocol
+                )
+            )
+
+        self.url = protokey + cloudpath
+        self.cloudvolume = CloudVolume(
+            self.url, mip=mip, info=info, parallel=parallel, cache=cache, **kwargs
+        )
+
         if info is not None:
             self.cloudvolume.commit_info()
 
@@ -74,4 +81,3 @@ class CloudVolumeResource(Resource):
             (bool) : True if calls to volume service may be made.
         """
         return True
-

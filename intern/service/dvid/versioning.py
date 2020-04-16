@@ -18,9 +18,11 @@ import numpy as np
 import json
 import ast
 
+
 class VersioningService(DVIDService):
     """ VersioningService for DVID service.
     """
+
     def __init__(self, base_url):
         """ Constructor.
 
@@ -49,12 +51,10 @@ class VersioningService(DVIDService):
             HTTPError: On non 200 status code
         """
 
-        merge_resp = requests.post("{}/api/repo/{}/merge".format(self.base_url, UUID),
-            json = {
-                "mergeType" : "conflict-free",
-                "parents" : parents,
-                "note" : note
-                })
+        merge_resp = requests.post(
+            "{}/api/repo/{}/merge".format(self.base_url, UUID),
+            json={"mergeType": "conflict-free", "parents": parents, "note": note},
+        )
         if merge_resp.status_code != 200:
             raise requests.HTTPError(merge_resp.content)
 
@@ -77,12 +77,10 @@ class VersioningService(DVIDService):
             HTTPError: On non 200 status code
         """
 
-        resolve_resp = requests.post("{}/api/repo/{}/resolve".format(self.base_url, UUID),
-            json = {
-                "data" : data,
-                "parents" : parents,
-                "note" : note
-            })
+        resolve_resp = requests.post(
+            "{}/api/repo/{}/resolve".format(self.base_url, UUID),
+            json={"data": data, "parents": parents, "note": note},
+        )
         if resolve_resp.status_code != 200:
             raise requests.HTTPError(resolve_resp.content)
 
@@ -102,16 +100,16 @@ class VersioningService(DVIDService):
         Raises:
             (ValueError): if given invalid UUID.
         """
-        if UUID == '':
-            raise ValueError('The UUID was not specified')
+        if UUID == "":
+            raise ValueError("The UUID was not specified")
         else:
             log_resp = requests.get("{}/api/node/{}/log".format(self.base_url, UUID))
             if log_resp.status_code != 200:
                 raise requests.HTTPError(log_resp.content)
             log_m = log_resp.content
-            return(log_m)
+            return log_m
 
-    def post_log(self, UUID,log_m):
+    def post_log(self, UUID, log_m):
         """Allows the user to write a short description of the content in the repository
             { "log": [ "provenance data...", "provenance data...", ...] }
         Args:
@@ -125,18 +123,19 @@ class VersioningService(DVIDService):
             (ValueError): if given invalid UUID or log.
         """
 
-        if  UUID == '':
-            raise ValueError('The UUID was not specified')
-        elif log_m == '':
-            raise ValueError('Your log submission cannot be empty')
+        if UUID == "":
+            raise ValueError("The UUID was not specified")
+        elif log_m == "":
+            raise ValueError("Your log submission cannot be empty")
         else:
-            log_resp = requests.post("{}/api/node/{}/log".format(self.base_url, UUID),
-                json = {"log" : [log_m] })
+            log_resp = requests.post(
+                "{}/api/node/{}/log".format(self.base_url, UUID), json={"log": [log_m]}
+            )
             if log_resp.status_code != 200:
                 raise requests.HTTPError(log_resp.content)
             return log_resp
 
-    def commit(self, UUID, note='', log_m=''):
+    def commit(self, UUID, note="", log_m=""):
         """Allows the user to write a short description of the content in the repository
 
         Args:
@@ -151,23 +150,22 @@ class VersioningService(DVIDService):
             (ValueError): if given invalid UUID.
         """
 
-        if  UUID == '':
-            raise ValueError('The UUID was not specified')
+        if UUID == "":
+            raise ValueError("The UUID was not specified")
         else:
-            committed = requests.post("{}/api/node/{}/commit".format(self.base_url, UUID),
-                json = {
-                        "note" : note,
-                        "log": [log_m]
-                        })
+            committed = requests.post(
+                "{}/api/node/{}/commit".format(self.base_url, UUID),
+                json={"note": note, "log": [log_m]},
+            )
             if committed.status_code != 200:
                 raise requests.HTTPError(committed.content)
 
             commit_uuid = committed.json()["committed"]
             return commit_uuid
 
-    def branch(self, UUID, note=''):
+    def branch(self, UUID, note=""):
         """Allows the user to write a short description of the content in the repository
-            
+
         Args:
             UUID (str): UUID of the DVID repository
             note (str): Message to record when branching
@@ -179,11 +177,12 @@ class VersioningService(DVIDService):
             (KeyError): if given invalid version.
         """
 
-        if  UUID == '':
-            raise ValueError('The UUID was not specified')
+        if UUID == "":
+            raise ValueError("The UUID was not specified")
         else:
-            branch = requests.post("{}/api/node/{}/branch".format(self.base_url, UUID),
-                json = {"note" : note })
+            branch = requests.post(
+                "{}/api/node/{}/branch".format(self.base_url, UUID), json={"note": note}
+            )
             if branch.status_code != 200:
                 raise requests.HTTPError(branch.content)
 

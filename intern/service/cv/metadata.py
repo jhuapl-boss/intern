@@ -16,6 +16,8 @@ from intern.service.cv import CloudVolumeService
 from intern.resource.cv.resource import *
 import json
 import numpy as np
+
+
 class MetadataService(CloudVolumeService):
     """
     MetadataService for cloud-volume service.
@@ -25,8 +27,8 @@ class MetadataService(CloudVolumeService):
         """
         Constructor.
         """
-        CloudVolumeService.__init__(self)	
-    
+        CloudVolumeService.__init__(self)
+
     def get_info(self, resource):
         """
         Returns a JSON of the resource properties.
@@ -57,7 +59,7 @@ class MetadataService(CloudVolumeService):
 
         Args:
             resource (CloudVolumeResource object)
-            
+
             key-word arguments for:
                 owners (list): list of authorship names and emails
                 description (str): description of dataset
@@ -69,10 +71,13 @@ class MetadataService(CloudVolumeService):
             None
         """
         for arg in kwargs.keys():
-            if arg in ["owners", "description", "sources", "processing"] and kwargs.get(arg) is not None:
+            if (
+                arg in ["owners", "description", "sources", "processing"]
+                and kwargs.get(arg) is not None
+            ):
                 resource.cloudvolume.provenance[arg] = kwargs.get(arg)
         resource.cloudvolume.commit_provenance()
-    
+
     def get_provenance(self, resource):
         """
         Returns the description and owners of the cloudvolume resource.
@@ -93,45 +98,45 @@ class MetadataService(CloudVolumeService):
             resource (CloudVolumeResource object)
             x_range,y_range,z_range (Tuples representing the bbox)
 
-        Returns: 
+        Returns:
             dict: {chunk_file_name: boolean, ...}
 
         """
-        x1,x2 = x_range
-        y1,y2 = y_range
-        z1,z2 = z_range
-        return resource.cloudvolume.exists( np.s_[x1:x2, y1:y2, z1:z2] ) 
+        x1, x2 = x_range
+        y1, y2 = y_range
+        z1, z2 = z_range
+        return resource.cloudvolume.exists(np.s_[x1:x2, y1:y2, z1:z2])
 
     def list_res(self, resource):
         """
-        What resolution(s) are available to read and write to in the current resource. 
+        What resolution(s) are available to read and write to in the current resource.
 
         Args:
             resource (CloudVolume Resource Object)
 
-        Returns: 
+        Returns:
             (list) list of ints denoting mip levels
         """
         return resource.cloudvolume.available_mips
 
     def get_layer(self, resource):
         """
-        Which data layer (e.g. image, segmentation) on S3, GS, or FS you're reading and writing to. 
+        Which data layer (e.g. image, segmentation) on S3, GS, or FS you're reading and writing to.
         Known as a "channel" in BOSS terminology.
-        
+
         Args:
             resource (CloudVolume Resource Object)
 
         Returns:
-            str: the resource channel 
+            str: the resource channel
 
-        """	
+        """
         return resource.cloudvolume.layer
-    
+
     def set_layer(self, resource, layer):
         """
         Set a new layer and commits it to the info file.
-        
+
         Args:
             resource (CloudVolume Resource Object)
             layer (string)
@@ -143,11 +148,11 @@ class MetadataService(CloudVolumeService):
 
     def get_dataset_name(self, resource):
         """
-        Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
+        Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to.
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
-        
-        Args: 
-            resource (CloudVolume Resource Object) 
+
+        Args:
+            resource (CloudVolume Resource Object)
 
         Returns:
             str: current resource experiment
@@ -156,18 +161,18 @@ class MetadataService(CloudVolumeService):
 
     def set_dataset_name(self, resource, name):
         """
-        Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to. 
+        Which dataset (e.g. test_v0, snemi3d_v0) on S3, GS, or FS you're reading and writing to.
         Known as an "experiment" in BOSS terminology. Writing to this property triggers an info refresh.
-        
-        Args: 
+
+        Args:
             resource (CloudVolume Resource Object)
-            name (str): dataset name 
+            name (str): dataset name
 
         Returns:
             None
         """
         resource.cloudvolume.dataset_name = str(name)
-    
+
     def get_extents(self, resource):
         """
         Gets extents to a specific cloudvolume resource
@@ -181,7 +186,7 @@ class MetadataService(CloudVolumeService):
         max_point = info_json["volume_size"]
         extents = [
             [min_point[0], max_point[0]],
-            [min_point[1], max_point[1]], 
-            [min_point[2], max_point[2]]
+            [min_point[1], max_point[1]],
+            [min_point[2], max_point[2]],
         ]
         return extents

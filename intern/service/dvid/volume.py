@@ -21,6 +21,7 @@ import numpy as np
 import json
 import blosc
 
+
 def check_data_instance(fcn):
     """Decorator that ensures a valid data instance is passed in.
 
@@ -33,14 +34,18 @@ def check_data_instance(fcn):
 
     def wrapper(*args, **kwargs):
         if not isinstance(args[1], DataInstanceResource):
-            raise RuntimeError('resource must be an instance of intern.resource.intern.DataInstanceResource.')
+            raise RuntimeError(
+                "resource must be an instance of intern.resource.intern.DataInstanceResource."
+            )
         return fcn(*args, **kwargs)
 
     return wrapper
 
+
 class VolumeService(DVIDService):
     """VolumeService for DVID service.
     """
+
     def __init__(self, base_url):
         """Constructor.
 
@@ -77,27 +82,36 @@ class VolumeService(DVIDService):
         y_size = y_range[1] - y_range[0]
         z_size = z_range[1] - z_range[0]
         # Make the request
-        resp = requests.get('{}/api/node/{}/{}/raw/0_1_2/{}_{}_{}/{}_{}_{}/octet-stream'.format(
-            self.base_url,
-            resource.UUID,
-            resource.name,
-            x_size,y_size,z_size,
-            x_range[0], y_range[0], z_range[0]
-        ))
+        resp = requests.get(
+            "{}/api/node/{}/{}/raw/0_1_2/{}_{}_{}/{}_{}_{}/octet-stream".format(
+                self.base_url,
+                resource.UUID,
+                resource.name,
+                x_size,
+                y_size,
+                z_size,
+                x_range[0],
+                y_range[0],
+                z_range[0],
+            )
+        )
 
         if resp.status_code != 200 or resp.status_code == 201:
-            msg = ('Get cutout failed on {}, got HTTP response: ({}) - {}'.format(
-                resource.name, resp.status_code, resp.text))
+            msg = "Get cutout failed on {}, got HTTP response: ({}) - {}".format(
+                resource.name, resp.status_code, resp.text
+            )
             raise HTTPError(msg, response=resp)
-        
+
         block = np.fromstring(resp.content, dtype=resource.datatype)
-        cutout =  block.reshape(z_size,y_size,x_size)
+        cutout = block.reshape(z_size, y_size, x_size)
         return cutout
 
     @check_data_instance
-    def create_cutout(self, resource, resolution, x_range, y_range, z_range, numpyVolume, send_opts):
+    def create_cutout(
+        self, resource, resolution, x_range, y_range, z_range, numpyVolume, send_opts
+    ):
         """Upload a cutout to the volume service.
-            NOTE: This method will fail if no metadata has been added to the data instance. 
+            NOTE: This method will fail if no metadata has been added to the data instance.
 
         Args:
             resource (intern.resource.Resource): Resource compatible with cutout operations.
@@ -109,42 +123,53 @@ class VolumeService(DVIDService):
             send_opts (dictionary): Additional arguments to pass to session.send().
         """
         # Check that the data array is C Contiguous
-        blktypes = ['uint8blk', 'labelblk', 'rgba8blk']
+        blktypes = ["uint8blk", "labelblk", "rgba8blk"]
 
-        if not numpyVolume.flags['C_CONTIGUOUS']:
+        if not numpyVolume.flags["C_CONTIGUOUS"]:
             numpyVolume = np.ascontiguousarray(numpyVolume)
 
-        if (resource._type == 'tile'):
+        if resource._type == "tile":
             # Compress the data
             # NOTE: This is a convenient way for compressing/decompressing NumPy arrays, however
             # this method uses pickle/unpickle which means we make additional copies that consume
-            # a bit of extra memory and time. 
+            # a bit of extra memory and time.
             compressed = blosc.pack_array(numpyVolume)
-            url_req = '{}/api/node/{}/{}/tile/xy/{}/{}_{}_{}'.format(
-            self.base_url,
-            resource.UUID,
-            resource.name,
-            resolution,
-            x_range[0], y_range[0], z_range[0])
+            url_req = "{}/api/node/{}/{}/tile/xy/{}/{}_{}_{}".format(
+                self.base_url,
+                resource.UUID,
+                resource.name,
+                resolution,
+                x_range[0],
+                y_range[0],
+                z_range[0],
+            )
             out_data = compressed
 
         # Make the request
-        elif (resource._type in blktypes):
-            numpyVolume = numpyVolume.tobytes(order='C')
-            url_req = '{}/api/node/{}/{}/raw/0_1_2/{}_{}_{}/{}_{}_{}'.format(
-            self.base_url,
-            resource.UUID,
-            resource.name,
-            x_range[1]-x_range[0], y_range[1]-y_range[0], z_range[1]-z_range[0],
-            x_range[0], y_range[0], z_range[0])
+        elif resource._type in blktypes:
+            numpyVolume = numpyVolume.tobytes(order="C")
+            url_req = "{}/api/node/{}/{}/raw/0_1_2/{}_{}_{}/{}_{}_{}".format(
+                self.base_url,
+                resource.UUID,
+                resource.name,
+                x_range[1] - x_range[0],
+                y_range[1] - y_range[0],
+                z_range[1] - z_range[0],
+                x_range[0],
+                y_range[0],
+                z_range[0],
+            )
             out_data = numpyVolume
         else:
-            raise NotImplementedError('{} type is not yet implemented in create_cutout'.format(resource._type))
+            raise NotImplementedError(
+                "{} type is not yet implemented in create_cutout".format(resource._type)
+            )
 
-        resp = requests.post(url_req, data = out_data)
+        resp = requests.post(url_req, data=out_data)
 
         if resp.status_code != 200 or resp.status_code == 201:
-            msg = ('Create cutout failed on {}, got HTTP response: ({}) - {}'.format(
-                resource.name, resp.status_code, resp.text))
+            msg = "Create cutout failed on {}, got HTTP response: ({}) - {}".format(
+                resource.name, resp.status_code, resp.text
+            )
             raise HTTPError(msg, response=resp)
         return

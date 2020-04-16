@@ -49,13 +49,19 @@ class MetadataService(DVIDService):
 
         """
         if isinstance(resource, DataInstanceResource):
-            response = requests.get("{}/api/node/{}/{}/info".format(self.base_url, resource.UUID, resource.name))
+            response = requests.get(
+                "{}/api/node/{}/{}/info".format(
+                    self.base_url, resource.UUID, resource.name
+                )
+            )
             if response.status_code != 200:
                 raise requests.HTTPError(response.content)
             return response.json()
 
         if isinstance(resource, RepositoryResource):
-            response = requests.get("{}/api/repo/{}/info".format(self.base_url, resource.UUID))
+            response = requests.get(
+                "{}/api/repo/{}/info".format(self.base_url, resource.UUID)
+            )
             if response.status_code != 200:
                 raise requests.HTTPError(response.content)
             return response.json()
@@ -97,7 +103,7 @@ class MetadataService(DVIDService):
         Args:
             resource : DatInstance resource to which to relate metadata
             metadata (dict) : JSON format metadata to post
-                Example: 
+                Example:
                 {
                     "MinTileCoord": [0, 0, 0],
                     "MaxTileCoord": [5, 5, 4],
@@ -109,8 +115,12 @@ class MetadataService(DVIDService):
                     }
                 }
         """
-        resp = requests.post("{}/api/node/{}/{}/metadata".format(self.base_url, resource.UUID, resource.name), 
-        data = metadata)
+        resp = requests.post(
+            "{}/api/node/{}/{}/metadata".format(
+                self.base_url, resource.UUID, resource.name
+            ),
+            data=metadata,
+        )
         if resp.status_code != 200:
             raise requests.HTTPError(resp.content)
 
@@ -123,7 +133,11 @@ class MetadataService(DVIDService):
         Returns:
             metaddata (JSON): Metadata of specified resource in JSON format
         """
-        resp = requests.get("{}/api/node/{}/{}/metadata".format(self.base_url, resource.UUID, resource.name))
+        resp = requests.get(
+            "{}/api/node/{}/{}/metadata".format(
+                self.base_url, resource.UUID, resource.name
+            )
+        )
         if resp.status_code != 200:
             raise requests.HTTPError(resp.content)
         return resp.json()
@@ -138,24 +152,26 @@ class MetadataService(DVIDService):
             extents (array): [[x-min, x-max], [y-min, y-max], [z-min, z-max]]
         """
         metadata = self.get_metadata(resource)
-        min_point = metadata['Properties']['MinPoint']
-        max_point = metadata['Properties']['MaxPoint']
-        extents = [[min_point[0],max_point[0]],[min_point[1],max_point[1]],[min_point[2],max_point[2]]]
+        min_point = metadata["Properties"]["MinPoint"]
+        max_point = metadata["Properties"]["MaxPoint"]
+        extents = [
+            [min_point[0], max_point[0]],
+            [min_point[1], max_point[1]],
+            [min_point[2], max_point[2]],
+        ]
         return extents
 
     def create_default_metadata(self, resource):
-        """Method to create default metadata on a DataInstance Resource. 
+        """Method to create default metadata on a DataInstance Resource.
 
         Args:
             resource : DatInstance resource to which to relate metadata
         """
-        meta_data = json.dumps({
-            "MinTileCoord": [0, 0, 0],
-            "MaxTileCoord": [128, 128, 128],
-            "Levels": {
-                "0": {  
-                    "Resolution": [0, 0, 0], 
-                    "TileSize": [128, 128, 1] }
-                }
-            })
+        meta_data = json.dumps(
+            {
+                "MinTileCoord": [0, 0, 0],
+                "MaxTileCoord": [128, 128, 128],
+                "Levels": {"0": {"Resolution": [0, 0, 0], "TileSize": [128, 128, 1]}},
+            }
+        )
         self.create_metadata(resource, meta_data)

@@ -17,10 +17,12 @@ from intern.service.cv.service import CloudVolumeService
 
 import numpy as np
 
+
 class VolumeService(CloudVolumeService):
     """
     VolumeService for cloudvolume service.
     """
+
     def __init__(self):
         """Constructor.
 
@@ -31,13 +33,13 @@ class VolumeService(CloudVolumeService):
             (KeyError): if given invalid version.
         """
         CloudVolumeService.__init__(self)
-    
+
     def create_cutout(self, resource, res, x_range, y_range, z_range, data):
         """
         Method to upload a cutout of data
         Args:
             data (str) : Path to the data
-            vol (CloudVolume) : Existing cloudvolume instance 
+            vol (CloudVolume) : Existing cloudvolume instance
             x_range (list) : x range within the 3D space
             y_range (list) : y range within the 3D space
             z_range (list) : z range witinn the 3D space
@@ -45,13 +47,15 @@ class VolumeService(CloudVolumeService):
             None
         """
         resource.cloudvolume.mip = res
-        resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]] = data
-    
+        resource.cloudvolume[
+            x_range[0] : x_range[1], y_range[0] : y_range[1], z_range[0] : z_range[1]
+        ] = data
+
     def get_cutout(self, resource, res, x_range, y_range, z_range):
         """
         Method to download a cutout of data
         Args:
-            vol (CloudVolume) : Existing non-empty cloudvolume instance 
+            vol (CloudVolume) : Existing non-empty cloudvolume instance
             x_range (list) : x range within the 3D space
             y_range (list) : y range within the 3D space
             z_range (list) : z range within the 3D space
@@ -59,13 +63,14 @@ class VolumeService(CloudVolumeService):
             data (numpy array) : image stack from the cloud or local system
         """
         resource.cloudvolume.mip = res
-        data = resource.cloudvolume[x_range[0]:x_range[1], y_range[0]:y_range[1], z_range[0]:z_range[1]]
+        data = resource.cloudvolume[
+            x_range[0] : x_range[1], y_range[0] : y_range[1], z_range[0] : z_range[1]
+        ]
 
         # Remove channel dimension if num_channel = 1
         data = np.squeeze(data)
         return data
-         
-	
+
     def delete_data(self, resource, res, x_range, y_range, z_range):
         """
         Delete the chunks within a bounding box (must be aligned with chunks)
@@ -77,7 +82,8 @@ class VolumeService(CloudVolumeService):
             None
         """
         resource.cloudvolume.mip = res
-        x1,x2 = x_range
-        y1,y2 = y_range
-        z1,z2 = z_range
-        resource.cloudvolume.delete( np.s_[x1:x2, y1:y2, z1:z2] )
+        x1, x2 = x_range
+        y1, y2 = y_range
+        z1, z2 = z_range
+        resource.cloudvolume.delete(np.s_[x1:x2, y1:y2, z1:z2])
+

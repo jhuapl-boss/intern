@@ -14,14 +14,16 @@
 
 from intern.service.service import Service
 
+
 class CloudVolumeService(Service):
 
-	"""
+    """
 	Partial implementation of intern.service.service.Service for the CloudVolume services.
 	"""
 
-	def __init__(self):
-		Service.__init__(self)
-	
-	def set_auth(self):
-		self._auth = None
+    def __init__(self):
+        Service.__init__(self)
+
+    def set_auth(self):
+        self._auth = None
+

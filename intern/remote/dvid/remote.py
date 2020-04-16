@@ -27,44 +27,25 @@ CONFIG_VOLUME_SECTION = "Volume Service"
 CONFIG_PROTOCOL = "protocol"
 CONFIG_HOST = "host"
 
+
 class DVIDRemote(Remote):
-	"""Remote provides an SDK to the DVID API.
+    """Remote provides an SDK to the DVID API.
 	"""
 
-	def __init__(self, cfg_file_or_dict=None):
-		"""Constructor.
+    def __init__(self, cfg_file_or_dict=None):
+        """Constructor.
 		Protocol and host specifications are taken in as keys -values of dictionary.
 		"""
-		Remote.__init__(self, cfg_file_or_dict)
+        Remote.__init__(self, cfg_file_or_dict)
 
-		# Init the services
-		self._init_project_service()
-		self._init_metadata_service()
-		self._init_volume_service()
-		self._init_versioning_service()
+        # Init the services
+        self._init_project_service()
+        self._init_metadata_service()
+        self._init_volume_service()
+        self._init_versioning_service()
 
-	def _init_project_service(self):
-		"""Method to initialize the Volume Service from the config data
-
-		Args:
-			None
-
-		Returns:
-			None
-
-		Raises:
-			(KeyError): if given invalid version.
-		"""
-		project_cfg = self._load_config_section(CONFIG_PROJECT_SECTION)
-		proto = project_cfg[CONFIG_PROTOCOL]
-		host = project_cfg[CONFIG_HOST]
-		api = proto + "://" + host
-
-		self._project = ProjectService(api)
-		self._project.base_protocol = proto
-
-	def _init_metadata_service(self):
-		"""Method to initialize the Volume Service from the config data
+    def _init_project_service(self):
+        """Method to initialize the Volume Service from the config data
 
 		Args:
 			None
@@ -75,36 +56,16 @@ class DVIDRemote(Remote):
 		Raises:
 			(KeyError): if given invalid version.
 		"""
-		metadata_cfg = self._load_config_section(CONFIG_METADATA_SECTION)
-		proto = metadata_cfg[CONFIG_PROTOCOL]
-		host = metadata_cfg[CONFIG_HOST]
-		api = proto + "://" + host
+        project_cfg = self._load_config_section(CONFIG_PROJECT_SECTION)
+        proto = project_cfg[CONFIG_PROTOCOL]
+        host = project_cfg[CONFIG_HOST]
+        api = proto + "://" + host
 
-		self._metadata = MetadataService(api)
-		self._metadata.base_protocol = proto
+        self._project = ProjectService(api)
+        self._project.base_protocol = proto
 
-	def _init_volume_service(self):
-		"""Method to initialize the Volume Service from the config data
-
-		Args:
-			None
-
-		Returns:
-			None
-
-		Raises:
-			(KeyError): if given invalid version.
-		"""
-		volume_cfg = self._load_config_section(CONFIG_VOLUME_SECTION)
-		proto = volume_cfg[CONFIG_PROTOCOL]
-		host = volume_cfg[CONFIG_HOST]
-		api = proto + "://" + host
-
-		self._volume = VolumeService(api)
-		self._volume.base_protocol = proto
-
-	def _init_versioning_service(self):
-		"""Method to initialize the Volume Service from the config data
+    def _init_metadata_service(self):
+        """Method to initialize the Volume Service from the config data
 
 		Args:
 			None
@@ -115,23 +76,63 @@ class DVIDRemote(Remote):
 		Raises:
 			(KeyError): if given invalid version.
 		"""
-		versioning_cfg = self._load_config_section(CONFIG_VERSIONING_SECTION)
-		proto = versioning_cfg[CONFIG_PROTOCOL]
-		host = versioning_cfg[CONFIG_HOST]
-		api = proto + "://" + host
+        metadata_cfg = self._load_config_section(CONFIG_METADATA_SECTION)
+        proto = metadata_cfg[CONFIG_PROTOCOL]
+        host = metadata_cfg[CONFIG_HOST]
+        api = proto + "://" + host
 
-		self._versioning = VersioningService(api)
-		self._versioning.base_protocol = proto
+        self._metadata = MetadataService(api)
+        self._metadata.base_protocol = proto
 
-	def __repr__(self):
-		"""Stringify the Remote.
+    def _init_volume_service(self):
+        """Method to initialize the Volume Service from the config data
+
+		Args:
+			None
+
+		Returns:
+			None
+
+		Raises:
+			(KeyError): if given invalid version.
+		"""
+        volume_cfg = self._load_config_section(CONFIG_VOLUME_SECTION)
+        proto = volume_cfg[CONFIG_PROTOCOL]
+        host = volume_cfg[CONFIG_HOST]
+        api = proto + "://" + host
+
+        self._volume = VolumeService(api)
+        self._volume.base_protocol = proto
+
+    def _init_versioning_service(self):
+        """Method to initialize the Volume Service from the config data
+
+		Args:
+			None
+
+		Returns:
+			None
+
+		Raises:
+			(KeyError): if given invalid version.
+		"""
+        versioning_cfg = self._load_config_section(CONFIG_VERSIONING_SECTION)
+        proto = versioning_cfg[CONFIG_PROTOCOL]
+        host = versioning_cfg[CONFIG_HOST]
+        api = proto + "://" + host
+
+        self._versioning = VersioningService(api)
+        self._versioning.base_protocol = proto
+
+    def __repr__(self):
+        """Stringify the Remote.
 
 		Returns a representation of the DVIDRemote that lists the host.
 		"""
-		return "<intern.remote.DVIDRemote [" + self._config["Default"]["host"] + "]>"
+        return "<intern.remote.DVIDRemote [" + self._config["Default"]["host"] + "]>"
 
-	def _load_config_section(self, section_name):
-		"""Method to load the specific Service section from the config file if it
+    def _load_config_section(self, section_name):
+        """Method to load the specific Service section from the config file if it
 		exists, or fall back to the default
 
 		Args:
@@ -140,29 +141,31 @@ class DVIDRemote(Remote):
 		Returns:
 			(dict): the section parameters
 		"""
-		if self._config.has_section(section_name):
-			# Load specific section
-			section = dict(self._config.items(section_name))
-		elif self._config.has_section("Default"):
-			# Load Default section
-			section = dict(self._config.items("Default"))
-		else:
-			raise KeyError((
-				"'{}' was not found in the configuration file and no default " +
-				"configuration was provided."
-			).format(section_name))
+        if self._config.has_section(section_name):
+            # Load specific section
+            section = dict(self._config.items(section_name))
+        elif self._config.has_section("Default"):
+            # Load Default section
+            section = dict(self._config.items("Default"))
+        else:
+            raise KeyError(
+                (
+                    "'{}' was not found in the configuration file and no default "
+                    + "configuration was provided."
+                ).format(section_name)
+            )
 
-		# Make sure section is valid
-		if "protocol" in section and "host" in section:
-			return section
-		else:
-			raise KeyError(
-				"Missing values in configuration data. " +
-				"Must contain: protocol, host"
-			)
+        # Make sure section is valid
+        if "protocol" in section and "host" in section:
+            return section
+        else:
+            raise KeyError(
+                "Missing values in configuration data. "
+                + "Must contain: protocol, host"
+            )
 
-	def get_instance(self, UUID, data_instance, datatype=""):
-		"""Method to input all data instance hierarchy requirememnts, works as a dummy
+    def get_instance(self, UUID, data_instance, datatype=""):
+        """Method to input all data instance hierarchy requirememnts, works as a dummy
         for DVIDRemote Parallelism.
 
 		Args:
@@ -172,14 +175,14 @@ class DVIDRemote(Remote):
 		Returns:
 			resource (intern.resource.dvid.DvidResource)
 		"""
-		return DataInstanceResource(data_instance, UUID, datatype=datatype)
+        return DataInstanceResource(data_instance, UUID, datatype=datatype)
 
-	def get_cutout(self, resource, res, xrange, yrange, zrange, **kwargs):
-		"""Method to request a volume of data from DVID server
+    def get_cutout(self, resource, res, xrange, yrange, zrange, **kwargs):
+        """Method to request a volume of data from DVID server
 
 		Args:
-			resource (intern.resource.dvid.resource.DataInstanceResource | str): Data Instance Resource. If a 
-				string is provided instead, DvidRemote.parse_dvidURI is called instead on a URI-formatted 
+			resource (intern.resource.dvid.resource.DataInstanceResource | str): Data Instance Resource. If a
+				string is provided instead, DvidRemote.parse_dvidURI is called instead on a URI-formatted
 				string of the form `dvid://UUID/data_instance`.
 			xrange (int) : range of pixels in x axis ([1000:1500])
 			yrange (int) : range of pixels in y axis ([1000:1500])
@@ -191,10 +194,10 @@ class DVIDRemote(Remote):
 		Raises:
 			(KeyError): if given invalid version.
 		"""
-		return self._volume.get_cutout(resource, res, xrange, yrange, zrange, **kwargs)
+        return self._volume.get_cutout(resource, res, xrange, yrange, zrange, **kwargs)
 
-	def parse_dvidURI(self, uri): # type: (str) -> Resource
-		"""Parse a DVID URI and handle malform errors.
+    def parse_dvidURI(self, uri):  # type: (str) -> Resource
+        """Parse a DVID URI and handle malform errors.
 
 		Arguments:
 			uri (str): URI of the form dvid://<UUID>/<DataInstance>
@@ -203,13 +206,13 @@ class DVIDRemote(Remote):
 			Resource
 
 		"""
-		t = uri.split("://")[1].split("/")
-		if len(t) is 3:
-			return self.get_instance(t[0], t[1])
-		raise ValueError("Cannot parse URI " + uri + ".")
+        t = uri.split("://")[1].split("/")
+        if len(t) is 3:
+            return self.get_instance(t[0], t[1])
+        raise ValueError("Cannot parse URI " + uri + ".")
 
-	def get_project(self, resource):
-		"""Get attributes of the data model object named by the given resource.
+    def get_project(self, resource):
+        """Get attributes of the data model object named by the given resource.
 
 		Args:
 			resource (intern.resource.dvid.DVIDResource): resource.name as well
@@ -222,10 +225,10 @@ class DVIDRemote(Remote):
 		Raises:
 			requests.HTTPError on failure.
 		"""
-		return self._project.get(resource)
+        return self._project.get(resource)
 
-	def create_project(self, resource):
-		"""Method to create a project space in the DVID server
+    def create_project(self, resource):
+        """Method to create a project space in the DVID server
 
 		Args:
 			resource (intern.resource.dvid.DVIDResource): dvid resource for which to create a project
@@ -236,10 +239,10 @@ class DVIDRemote(Remote):
 		Raises:
 			(KeyError): if given invalid version.
 		"""
-		return self._project.create(resource)
+        return self._project.create(resource)
 
-	def delete_project(self, resource):
-		"""Method to delete a project
+    def delete_project(self, resource):
+        """Method to delete a project
 
         Args:
 			resource (intern.resource.dvid.DVIDResource)
@@ -248,10 +251,10 @@ class DVIDRemote(Remote):
             (str) : Confirmation message
 		"""
 
-		return self._project.delete(resource)
+        return self._project.delete(resource)
 
-	def get_extents(self, resource):
-		"""Get extents of the reource
+    def get_extents(self, resource):
+        """Get extents of the reource
 
 		Args:
 			resource (intern.resource.dvid.DVIDResource): resource.name as well
@@ -263,10 +266,10 @@ class DVIDRemote(Remote):
 		Raises:
 			requests.HTTPError on failure.
 		"""
-		return self._metadata.get_extents(resource)
+        return self._metadata.get_extents(resource)
 
-	def get_metadata(self, resource):
-		"""Get metadata of the reource
+    def get_metadata(self, resource):
+        """Get metadata of the reource
 
 		Args:
 			resource (intern.resource.dvid.DVIDResource): resource.name as well
@@ -278,10 +281,10 @@ class DVIDRemote(Remote):
 		Raises:
 			requests.HTTPError on failure.
 		"""
-		return self._metadata.get_metadata(resource)
+        return self._metadata.get_metadata(resource)
 
-	def get_info(self, UUID):
-		"""Method to obtain information on the requested repository
+    def get_info(self, UUID):
+        """Method to obtain information on the requested repository
 
 		Args:
 			UUID (str): UUID of the DVID repository
@@ -292,10 +295,10 @@ class DVIDRemote(Remote):
 		Raises:
 			HTTPError if request status code is not 200
 		"""
-		return self._metadata.get_info(UUID)
+        return self._metadata.get_info(UUID)
 
-	def get_log(self, UUID):
-		"""The log is a list of strings that will be appended to the repo's log.  They should be
+    def get_log(self, UUID):
+        """The log is a list of strings that will be appended to the repo's log.  They should be
 		descriptions for the entire repo and not just one node.
 
 		Args:
@@ -307,10 +310,10 @@ class DVIDRemote(Remote):
 		Raises:
 			(ValueError): if given invalid UUID.
 		"""
-		return self._versioning.get_log(UUID)
+        return self._versioning.get_log(UUID)
 
-	def post_log(self, UUID,log1):
-		"""Allows the user to write a short description of the content in the repository
+    def post_log(self, UUID, log1):
+        """Allows the user to write a short description of the content in the repository
 		{ "log": [ "provenance data...", "provenance data...", ...] }
 
 		Args:
@@ -323,10 +326,10 @@ class DVIDRemote(Remote):
 		Raises:
 			(ValueError): if given invalid UUID or log.
 		"""
-		return self._versioning.post_log(UUID,log1)
+        return self._versioning.post_log(UUID, log1)
 
-	def get_server_types(self):
-		"""Method to obtain information about the server
+    def get_server_types(self):
+        """Method to obtain information about the server
 
 		Args:
 		    none
@@ -337,10 +340,10 @@ class DVIDRemote(Remote):
 		Raises:
 		    HTTPError if request status code is not 200
 		"""
-		return self._metadata.get_server_types()
+        return self._metadata.get_server_types()
 
-	def get_server_compiled_types(self):
-		"""Method to obtain information about the server
+    def get_server_compiled_types(self):
+        """Method to obtain information about the server
 
 		Args:
 		    none
@@ -351,10 +354,10 @@ class DVIDRemote(Remote):
 		Raises:
 		    HTTPError if request status code is not 200
 		"""
-		return self._metadata.get_server_compiled_types()
+        return self._metadata.get_server_compiled_types()
 
-	def server_reload_metadata(self):
-		"""Method to reload metadat from storage
+    def server_reload_metadata(self):
+        """Method to reload metadat from storage
 
 		Args:
 		    none
@@ -365,10 +368,10 @@ class DVIDRemote(Remote):
 		Raises:
 		    HTTPError if request status code is not 200
 		"""
-		return self._metadata.server_reload_metadata()
+        return self._metadata.server_reload_metadata()
 
-	def get_server_info(self):
-		"""Method to obtain information about the server
+    def get_server_info(self):
+        """Method to obtain information about the server
 
 		Args:
 		    none
@@ -379,10 +382,10 @@ class DVIDRemote(Remote):
 		Raises:
 		    HTTPError if request status code is not 200
 		"""
-		return self._metadata.get_server_info()
+        return self._metadata.get_server_info()
 
-	def merge(self, UUID, parents, mergeType="conflict-free", note=""):
-		"""Creates a conflict-free merge of a set of committed parent UUIDs into a child.  Note
+    def merge(self, UUID, parents, mergeType="conflict-free", note=""):
+        """Creates a conflict-free merge of a set of committed parent UUIDs into a child.  Note
 		the merge will not necessarily create an error immediately
 
 		Args:
@@ -396,10 +399,10 @@ class DVIDRemote(Remote):
 		Raises:
 			HTTPError: On non 200 status code
 		"""
-		return self._versioning.merge(UUID, parents,mergeType, note)
+        return self._versioning.merge(UUID, parents, mergeType, note)
 
-	def resolve(self, UUID, data, parents, note=""):
-		"""Forces a merge of a set of committed parent UUIDs into a child by specifying a
+    def resolve(self, UUID, data, parents, note=""):
+        """Forces a merge of a set of committed parent UUIDs into a child by specifying a
 		UUID order that establishes priorities in case of conflicts
 
 		Args:
@@ -414,10 +417,10 @@ class DVIDRemote(Remote):
 			HTTPError: On non 200 status code
 		"""
 
-		return self._versioning.resolve(UUID, data, parents, note)
+        return self._versioning.resolve(UUID, data, parents, note)
 
-	def commit(self, UUID, note="", log_m=""):
-		"""Allows the user to write a short description of the content in the repository
+    def commit(self, UUID, note="", log_m=""):
+        """Allows the user to write a short description of the content in the repository
 
 		Args:
 			UUID (str): UUID of the DVID repository (str)
@@ -431,11 +434,11 @@ class DVIDRemote(Remote):
 			(ValueError): if given invalid UUID.
 		"""
 
-		return self._versioning.commit(UUID, note, log_m)
+        return self._versioning.commit(UUID, note, log_m)
 
-	def branch(self, UUID, note=""):
-		"""Allows the user to write a short description of the content in the repository
-			
+    def branch(self, UUID, note=""):
+        """Allows the user to write a short description of the content in the repository
+
 		Args:
 			UUID (str): UUID of the DVID repository (str)
 			note (str): Message to record when branching
@@ -447,4 +450,5 @@ class DVIDRemote(Remote):
 			(KeyError): if given invalid version.
 		"""
 
-		return self._versioning.branch(UUID, note)
+        return self._versioning.branch(UUID, note)
+

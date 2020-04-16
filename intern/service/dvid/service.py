@@ -19,13 +19,13 @@ import json
 
 
 class DVIDService(Service):
-	""" Partial implementation of intern.service.service.Service for the DVID' services.
+    """ Partial implementation of intern.service.service.Service for the DVID' services.
 	"""
 
-	def __init__(self):
-		Service.__init__(self)
+    def __init__(self):
+        Service.__init__(self)
 
-	def set_auth(self):
-		""" No auth for DVID
+    def set_auth(self):
+        """ No auth for DVID
 		"""
-		self._auth = None
+        self._auth = None
