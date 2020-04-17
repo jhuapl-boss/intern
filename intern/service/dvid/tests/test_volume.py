@@ -21,7 +21,7 @@ from mock import patch, ANY
 import mock
 
 
-class TestVolume_v1(unittest.TestCase):
+class TestVolume(unittest.TestCase):
     def setUp(self):
 
         UUID = "822524777d3048b8bd520043f90c1d28"
