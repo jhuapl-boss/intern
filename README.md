@@ -1,7 +1,7 @@
 # intern
 
 [![PyPI version](https://badge.fury.io/py/intern.svg)](https://badge.fury.io/py/intern)
-[![CircleCI](https://circleci.com/gh/jhuapl-boss/intern.svg?style=svg)](https://circleci.com/gh/jhuapl-boss/intern)
+![Python 3.6/3.7 Tests](https://github.com/jhuapl-boss/intern/workflows/Test%20Python%20Package/badge.svg?branch=master&event=push)
 
 **intern** (Integrated Toolkit for Extensible and Reproducible Neuroscience) is
 a Python 2/3 module that enables big-data neuroscience. Currently, it provides
