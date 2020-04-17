@@ -36,7 +36,7 @@ class Remote(object):
         Loads credentials in order from user provided dictionary > user provided file > default file > environment vars
 
         Args:
-            cfg_file_or_dict (optional[string|dict]): Path to config file in INI format or a dict of config parameters.
+            cfg_file_or_dict (optional[str|dict]): Path to config file in INI format or a dict of config parameters.
         """
 
         # Service Objects
@@ -188,6 +188,17 @@ class Remote(object):
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.reserve_ids(resource, num_ids)
+
+    def get_extents(self, resource):
+        """Get extents of data volume
+
+        Args:
+            resource (intern.resource.Resource): Data platform resource.
+
+        Returns:
+            extents (array): [[x-min, max-x], [y-min, max-y], [z-min, max-z]]
+        """ 
+        return self._metadata.get_extents(resource)
 
     def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
         """Get bounding box containing object specified by id.

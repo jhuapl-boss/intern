@@ -968,3 +968,22 @@ class BossRemote(Remote):
                 Other exceptions may be raised depending on the volume service's implementation.
             """
             return self._volume.get_neuroglancer_link(resource, resolution, x_range, y_range, z_range, **kwargs)
+    
+    def get_extents(self, resource):
+            """Get extents of the reource
+
+            Args:
+                resource (intern.resource.boss.BossResource.ExperimentResource)
+
+            Returns:
+                extents (array): [[x-min, max-x], [y-min, max-y], [z-min, max-z]]
+
+            Raises:
+                requests.HTTPError on failure.
+            """
+            coord_frame = self.get_coordinate_frame(resource.coord_frame)
+            min_point = [coord_frame.x_start, coord_frame.y_start, coord_frame.z_start]
+            max_point = [coord_frame.x_stop, coord_frame.y_stop, coord_frame.z_stop]
+            extents = [[min_point[0],max_point[0]],[min_point[1],max_point[1]],[min_point[2],max_point[2]]]
+
+            return extents

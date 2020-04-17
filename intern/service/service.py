@@ -19,8 +19,8 @@ from abc import ABCMeta, abstractmethod
 class Service(object):
     def __init__(self):
         self._auth = None
-        self._base_url = ''
-        self._base_protocol = 'https'
+        self._base_url = ""
+        self._base_protocol = "https"
 
     @abstractmethod
     def set_auth(self, **kwargs):
