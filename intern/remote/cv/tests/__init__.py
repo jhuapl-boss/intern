@@ -13,8 +13,8 @@
 # limitations under the License.
 
 """
-Tests of the DVID remote classes.
+Tests of the CV remote classes.
 
 Author: 
-    Luis Rodriguez
+    Daniel Xenes
 """
