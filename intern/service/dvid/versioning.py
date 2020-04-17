@@ -53,7 +53,7 @@ class VersioningService(DVIDService):
 
         merge_resp = requests.post(
             "{}/api/repo/{}/merge".format(self.base_url, UUID),
-            json={"mergeType": "conflict-free", "parents": parents, "note": note},
+            json={"mergeType": mergeType, "parents": parents, "note": note},
         )
         if merge_resp.status_code != 200:
             raise requests.HTTPError(merge_resp.content)

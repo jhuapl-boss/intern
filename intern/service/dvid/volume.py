@@ -102,7 +102,7 @@ class VolumeService(DVIDService):
             )
             raise HTTPError(msg, response=resp)
 
-        block = np.fromstring(resp.content, dtype=resource.datatype)
+        block = np.frombuffer(resp.content, dtype=resource.datatype)
         cutout = block.reshape(z_size, y_size, x_size)
         return cutout
 
