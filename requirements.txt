@@ -4,4 +4,7 @@ blosc>=1.4.4
 six
 mock
 nose2
+
+# cloud-volume
+brotli
 cloud-volume>=1.6.0
