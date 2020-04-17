@@ -88,7 +88,7 @@ dvid.server_reload_metadata()
 #
 
 # Prepare the data
-img = Image.open("/Users/rodrilm2/Desktop/humans/0.png")
+img = Image.open("<somedir>/*.png")
 data_tile = np.asarray(img)
 print(data_tile.shape)
 data_tile = np.expand_dims(data_tile, axis=0)
