@@ -6,6 +6,10 @@
 
 > This build switches `intern` to GitHub actions, and now tests both 3.6 as well as 3.7. Python 2.7 testing is no longer supported.
 
+### Features
+
+-   Add support for DVID and cloud-volume hosted data with `DVIDRemote` and `CloudVolumeRemote`. (#46)
+
 ## v0.10.0 — April 16, 2020
 
 > v0.10.0 is the _last_ version of `intern` that support Python 2.x. If you need Python 2 support, you must run `pip install intern==0.10.0`. The development team does not anticipate further development for Python 2, and support for Python 2 environments will be discontinued. In future versions of `intern`, it will be assumed that the user is on Python 3 (3.6 or above).
