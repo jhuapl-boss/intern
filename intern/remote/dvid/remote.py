@@ -35,6 +35,10 @@ class DVIDRemote(Remote):
     def __init__(self, cfg_file_or_dict=None):
         """Constructor.
 		Protocol and host specifications are taken in as keys -values of dictionary.
+		
+        Args:
+            cfg_file_or_dict (optional[string|dict]): Path to config file in
+                INI format or a dict of config parameters.
 		"""
         Remote.__init__(self, cfg_file_or_dict)
 

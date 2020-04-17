@@ -37,7 +37,7 @@ class MetadataService(CloudVolumeService):
             resource (CloudVolumeResource object)
 
         Returns:
-            string: JSON format of properties
+            (str): JSON format of properties
         """
         return resource.cloudvolume.info
 
@@ -49,7 +49,7 @@ class MetadataService(CloudVolumeService):
             resource (CloudVolumeResource object)
 
         Returns:
-            string: in the form of 'PROTOCOL://BUCKET/../DATASET/LAYER'
+            (str): in the form of 'PROTOCOL://BUCKET/../DATASET/LAYER'
         """
         return resource.cloudvolume.layer_cloudpath
 

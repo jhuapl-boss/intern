@@ -26,6 +26,10 @@ class CloudVolumeRemote(Remote):
     ):
         """Constructor.
         Protocol and host specifications are taken in as keys -values of dictionary.
+
+        Args:
+            cfg_file_or_dict (optional[string|dict]): Path to config file in
+                INI format or a dict of config parameters.
         """
         Remote.__init__(self, cfg_file_or_dict)
         self.protocol = self._config["Default"]["protocol"]
@@ -79,7 +83,6 @@ class CloudVolumeRemote(Remote):
             layer_type: (str) typically "image" or "segmentation"
             data_type: (str) e.g. "uint8", "uint16", "uint32", "float32"
             resolution: int (x,y,z), x,y,z voxel dimensions in nanometers
-
             volume_size: int (x,y,z), extent of dataset in cartesian space from voxel_offset
 
         Optional:
@@ -148,7 +151,7 @@ class CloudVolumeRemote(Remote):
             resource (CloudVolumeResource object)
 
         Returns:
-            string: JSON format of properties
+            (str): JSON format of properties
         """
         return self._metadata.get_info(resource)
 
@@ -160,7 +163,7 @@ class CloudVolumeRemote(Remote):
             resource (CloudVolumeResource object)
 
         Returns:
-            string: in the form of 'PROTOCOL://BUCKET/../DATASET/LAYER'
+            (str): in the form of 'PROTOCOL://BUCKET/../DATASET/LAYER'
         """
         return self._metadata.get_cloudpath(resource)
 
