@@ -171,7 +171,7 @@ class TestVolume_v1(unittest.TestCase):
 
         with patch.object(
                 BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
-            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range,
                 time_range, id_list, url_prefix, auth, mock_session, send_opts)
             req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
                 x_range, y_range, z_range, time_range, id_list=[], access_mode=CacheMode.no_cache)
@@ -203,7 +203,7 @@ class TestVolume_v1(unittest.TestCase):
 
         with patch.object(
                 BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
-            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range,
                 time_range, id_list, url_prefix, auth, mock_session, send_opts)
             req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
                 ANY, ANY, ANY, ANY, id_list=[], access_mode=CacheMode.no_cache)
@@ -235,7 +235,7 @@ class TestVolume_v1(unittest.TestCase):
 
         with patch.object(
                 BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
-            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range,
                 time_range, id_list, url_prefix, auth, mock_session, send_opts, access_mode=CacheMode.raw)
             req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
                 x_range, y_range, z_range, time_range, id_list=[], access_mode=CacheMode.raw)
@@ -266,7 +266,7 @@ class TestVolume_v1(unittest.TestCase):
 
         with patch.object(
                 BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
-            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range,
                 time_range, id_list, url_prefix, auth, mock_session, send_opts, access_mode=CacheMode.raw)
             req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
                 x_range, y_range, z_range, time_range, id_list=[], access_mode=CacheMode.raw)
@@ -297,7 +297,7 @@ class TestVolume_v1(unittest.TestCase):
 
         with patch.object(
                 BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
-            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range,
                 time_range, id_list, url_prefix, auth, mock_session, send_opts, access_mode=CacheMode.cache)
             req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
                 x_range, y_range, z_range, time_range, id_list=[], access_mode=CacheMode.cache)
@@ -328,10 +328,10 @@ class TestVolume_v1(unittest.TestCase):
 
         with patch.object(
                 BaseVersion, 'get_cutout_request', autospec=True, wraps=BaseVersion.get_cutout_request) as req_spy:
-            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range, 
+            self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range,
                 time_range, id_list, url_prefix, auth, mock_session, send_opts, access_mode=CacheMode.cache)
             req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
-                x_range, y_range, z_range, time_range, id_list=[], access_mode=CacheMode.cache)
+                x_range, y_range, z_range, time_range, id_list=[], access_mode=CacheMode.cache, ANY)
             self.assertEqual(1, req_spy.call_count)
 
     @patch('requests.Response', autospec=True)
