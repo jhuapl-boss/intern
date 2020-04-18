@@ -125,7 +125,7 @@ class Remote(object):
         """
         return self._project.list(**kwargs)
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], parallel: bool= True, **kwargs):
         """Get a cutout from the volume service.
 
         Args:
@@ -136,6 +136,7 @@ class Remote(object):
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
             id_list (optional [list]): list of object ids to filter the cutout by.
+            parallel (bool: True): Whether downloads should be parallelized using multiprocessing
 
         Returns:
             (): Return type depends on volume service's implementation.
@@ -148,7 +149,10 @@ class Remote(object):
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.get_cutout(
-            resource, resolution, x_range, y_range, z_range, time_range, id_list, **kwargs)
+            resource, resolution,
+            x_range, y_range, z_range, time_range,
+            id_list, parallel = parallel, **kwargs
+        )
 
     def create_cutout(self, resource, resolution, x_range, y_range, z_range, data, time_range=None):
         """Upload a cutout to the volume service.
@@ -197,7 +201,7 @@ class Remote(object):
 
         Returns:
             extents (array): [[x-min, max-x], [y-min, max-y], [z-min, max-z]]
-        """ 
+        """
         return self._metadata.get_extents(resource)
 
     def get_bounding_box(self, resource, resolution, id, bb_type='loose'):
