@@ -9,6 +9,7 @@
 ### Features
 
 -   Add support for DVID and cloud-volume hosted data with `DVIDRemote` and `CloudVolumeRemote`. (#46)
+-   Add parallelism to `BossRemote#get_cutout` calls by passing `parallel=True` or `parallel=<int # of jobs>` as an argument.
 
 ## v0.10.0 — April 16, 2020
 
