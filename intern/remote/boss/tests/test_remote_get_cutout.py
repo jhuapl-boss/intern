@@ -41,7 +41,7 @@ class TestRemoteGetCutout(unittest.TestCase):
         self.remote.get_cutout(chan, resolution, x_range, y_range, z_range)
         fake_volume.assert_called_with(
             ANY, chan, resolution, x_range, y_range, z_range, ANY, ANY,
-            CacheMode.no_cache)   # This should be the no_cache argument.
+            CacheMode.no_cache, parallel=True)   # This should be the no_cache argument.
 
     @patch.object(VolumeService, 'get_cutout', autospec=True)
     def test_get_cutout_access_mode_raw(self, fake_volume):
@@ -57,7 +57,7 @@ class TestRemoteGetCutout(unittest.TestCase):
         self.remote.get_cutout(chan, resolution, x_range, y_range, z_range, access_mode=CacheMode.raw)
         fake_volume.assert_called_with(
             ANY, chan, resolution, x_range, y_range, z_range, ANY, ANY,
-            CacheMode.raw)   # This should be the no_cache argument.
+            CacheMode.raw, parallel=True)   # This should be the no_cache argument.
 
     @patch.object(VolumeService, 'get_cutout', autospec=True)
     def test_get_cutout_access_mode_cache(self, fake_volume):
@@ -73,9 +73,9 @@ class TestRemoteGetCutout(unittest.TestCase):
         self.remote.get_cutout(chan, resolution, x_range, y_range, z_range, access_mode=CacheMode.cache)
         fake_volume.assert_called_with(
             ANY, chan, resolution, x_range, y_range, z_range, ANY, ANY,
-            CacheMode.cache)   # This should be the no_cache argument.
+            CacheMode.cache, parallel=True)   # This should be the no_cache argument.
 
-    
+
     ##REMOVE IN THE FUTURE, TESTS BACKWARDS COMPATABILITY
     @patch.object(VolumeService, 'get_cutout', autospec=True)
     def test_get_cutout_no_cache_True_backwards_compatability(self, fake_volume):
@@ -91,7 +91,7 @@ class TestRemoteGetCutout(unittest.TestCase):
         self.remote.get_cutout(chan, resolution, x_range, y_range, z_range, no_cache=True)
         fake_volume.assert_called_with(
             ANY, chan, resolution, x_range, y_range, z_range, ANY, ANY,
-            CacheMode.no_cache)   # This should be the no_cache argument.
+            CacheMode.no_cache, parallel=True)   # This should be the no_cache argument.
 
     @patch.object(VolumeService, 'get_cutout', autospec=True)
     def test_get_cutout_no_cache_False_backwards_compatability(self, fake_volume):
@@ -107,6 +107,6 @@ class TestRemoteGetCutout(unittest.TestCase):
         self.remote.get_cutout(chan, resolution, x_range, y_range, z_range, no_cache=False)
         fake_volume.assert_called_with(
             ANY, chan, resolution, x_range, y_range, z_range, ANY, ANY,
-            CacheMode.cache)   # This should be the no_cache argument.
+            CacheMode.cache, parallel=True)   # This should be the no_cache argument.
 if __name__ == '__main__':
     unittest.main()

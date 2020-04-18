@@ -16,6 +16,7 @@ from intern.service.boss.v1 import BOSS_API_VERSION
 from intern.resource.boss.resource import *
 from intern.utils.parallel import *
 from requests import HTTPError
+import multiprocessing
 import blosc
 import numpy as np
 from enum import Enum
@@ -129,7 +130,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts, access_mode=CacheMode.no_cache, **kwargs
+            url_prefix, auth, session, send_opts, access_mode=CacheMode.no_cache, parallel: bool = True, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -152,6 +153,7 @@ class VolumeService_1(BaseVersion):
                 no_cache = Will skip cache check but check for dirty keys
                 raw = Will skip both the cache and dirty keys check
             chunk_size (optional Tuple[int, int, int]): The chunk size to request
+            parallel (bool: True): Whether downloads should be parallelized using multiprocessing
 
 
         Returns:
@@ -194,18 +196,36 @@ class VolumeService_1(BaseVersion):
                 x_range[1] - x_range[0]
             ), dtype=resource.datatype)
 
-            for b in blocks:
-                _data = self.get_cutout(
-                    resource, resolution, b[0], b[1], b[2],
-                    time_range, id_list, url_prefix, auth, session, send_opts, 
-                    access_mode, **kwargs
-                )
+            if parallel:
+                pool = multiprocessing.Pool(processes=parallel if isinstance(parallel, int) and parallel > 0 else multiprocessing.cpu_count())
+                chunks = pool.starmap(self.get_cutout, [
+                    (
+                        resource, resolution, b[0], b[1], b[2],
+                        time_range, id_list, url_prefix, auth, session, send_opts,
+                        access_mode
+                        # TODO: kwargs
+                    )
+                 for b in blocks])
 
-                result[
-                    b[2][0] - z_range[0] : b[2][1] - z_range[0],
-                    b[1][0] - y_range[0] : b[1][1] - y_range[0],
-                    b[0][0] - x_range[0] : b[0][1] - x_range[0]
-                ] = _data
+                for b, data in zip(blocks, chunks):
+                    result[
+                        b[2][0] - z_range[0] : b[2][1] - z_range[0],
+                        b[1][0] - y_range[0] : b[1][1] - y_range[0],
+                        b[0][0] - x_range[0] : b[0][1] - x_range[0]
+                    ] = data
+            else:
+                for b in blocks:
+                    _data = self.get_cutout(
+                        resource, resolution, b[0], b[1], b[2],
+                        time_range, id_list, url_prefix, auth, session, send_opts,
+                        access_mode, **kwargs
+                    )
+
+                    result[
+                        b[2][0] - z_range[0] : b[2][1] - z_range[0],
+                        b[1][0] - y_range[0] : b[1][1] - y_range[0],
+                        b[0][0] - x_range[0] : b[0][1] - x_range[0]
+                    ] = _data
 
             return result
 

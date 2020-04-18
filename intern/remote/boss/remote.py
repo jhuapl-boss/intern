@@ -875,7 +875,7 @@ class BossRemote(Remote):
             return self.get_channel(t[2], t[0], t[1])
         raise ValueError("Cannot parse URI " + uri + ".")
 
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=None, access_mode=CacheMode.no_cache, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], no_cache=None, access_mode=CacheMode.no_cache, parallel: bool = True, **kwargs):
             """Get a cutout from the volume service.
 
             Note that access_mode=no_cache is desirable when reading large amounts of
@@ -884,8 +884,8 @@ class BossRemote(Remote):
             requester.
 
             Args:
-                resource (intern.resource.boss.resource.ChannelResource | str): Channel or layer Resource. If a 
-                    string is provided instead, BossRemote.parse_bossURI is called instead on a URI-formatted 
+                resource (intern.resource.boss.resource.ChannelResource | str): Channel or layer Resource. If a
+                    string is provided instead, BossRemote.parse_bossURI is called instead on a URI-formatted
                     string of the form `bossdb://collection/experiment/channel`.
                 resolution (int): 0 indicates native resolution.
                 x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
@@ -899,6 +899,7 @@ class BossRemote(Remote):
                     cache = Will check both cache and for dirty keys
                     no_cache = Will skip cache check but check for dirty keys
                     raw = Will skip both the cache and dirty keys check
+                parallel (bool: True): Whether downloads should be parallelized using multiprocessing
 
                 TODO: Add mode to documentation
 
@@ -915,17 +916,22 @@ class BossRemote(Remote):
             if no_cache and access_mode != CacheMode.no_cache:
                 warnings.warn("Both no_cache and access_mode were used, please use access_mode only. As no_cache has been deprecated. ")
                 warnings.warn("Your request will be made using the default mode no_cache.")
-                access_mode=CacheMode.no_cache    
+                access_mode=CacheMode.no_cache
             if no_cache:
                 access_mode=CacheMode.no_cache
             elif no_cache == False:
                 access_mode=CacheMode.cache
-            return self._volume.get_cutout(resource, resolution, x_range, y_range, z_range, time_range, id_list, access_mode, **kwargs)
+            return self._volume.get_cutout(
+                resource, resolution,
+                x_range, y_range, z_range, time_range,
+                id_list, access_mode,
+                parallel=parallel, **kwargs
+            )
 
     def get_experiment(self, coll_name, exp_name):
         """
         Convenience method that gets experiment resource.
-        
+
         Args:
             coll_name (str): Collection name
             exp_name (str): Experiment name
@@ -942,7 +948,7 @@ class BossRemote(Remote):
 
         Args:
             name (str): Name of the coordinate frame
-        
+
         Returns:
             (CoordinateFrameResource)
         """
@@ -951,7 +957,7 @@ class BossRemote(Remote):
 
     def get_neuroglancer_link(self, resource, resolution, x_range, y_range, z_range, **kwargs):
             """
-            Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step. 
+            Get a neuroglancer link of the cutout specified from the host specified in the remote configuration step.
 
             Args:
                 resource (intern.resource.Resource): Resource compatible with cutout operations.
@@ -968,7 +974,7 @@ class BossRemote(Remote):
                 Other exceptions may be raised depending on the volume service's implementation.
             """
             return self._volume.get_neuroglancer_link(resource, resolution, x_range, y_range, z_range, **kwargs)
-    
+
     def get_extents(self, resource):
             """Get extents of the reource
 
