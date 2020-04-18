@@ -73,7 +73,7 @@ class TestRemoteGetCutout(unittest.TestCase):
         self.remote.get_cutout(chan, resolution, x_range, y_range, z_range, access_mode=CacheMode.cache)
         fake_volume.assert_called_with(
             ANY, chan, resolution, x_range, y_range, z_range, ANY, ANY,
-            CacheMode.cache, ANY)   # This should be the no_cache argument.
+            CacheMode.cache, parallel=ANY)   # This should be the no_cache argument.
 
 
     ##REMOVE IN THE FUTURE, TESTS BACKWARDS COMPATABILITY

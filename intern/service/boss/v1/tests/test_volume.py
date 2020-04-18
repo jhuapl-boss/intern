@@ -331,7 +331,7 @@ class TestVolume_v1(unittest.TestCase):
             self.vol.get_cutout(self.chan, resolution, x_range, y_range, z_range,
                 time_range, id_list, url_prefix, auth, mock_session, send_opts, access_mode=CacheMode.cache)
             req_spy.assert_called_with(ANY, ANY, 'GET', ANY, url_prefix, auth, resolution,
-                x_range, y_range, z_range, time_range, id_list=[], access_mode=CacheMode.cache, ANY)
+                x_range, y_range, z_range, time_range, id_list=[], access_mode=CacheMode.cache, parallel=ANY)
             self.assertEqual(1, req_spy.call_count)
 
     @patch('requests.Response', autospec=True)
