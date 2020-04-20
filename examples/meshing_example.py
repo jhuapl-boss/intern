@@ -5,7 +5,7 @@ import numpy as np
 rmt = BossRemote({
 "protocol": "https",
 "host": "api.bossdb.io",
-"token": "9d063f6427289ddffca8adb59588b72458f5e012",
+"token": "<token>",
 })
 
 COLL = "kharris15"
