@@ -297,7 +297,7 @@ class Remote(object):
             normals (bool): if true will calculate normals
 
         Returns:
-            (): Return type depends on volume service's implementation.
+            mesh (intern.service.mesh.Mesh): mesh class
 
         Raises:
             RuntimeError when given invalid resource.
@@ -312,28 +312,4 @@ class Remote(object):
         mesh = self._mesh.create(
             volume, x_range, y_range, z_range, time_range, id_list, voxel_unit, voxel_size,
             simp_fact, max_simplification_error, normals)
-        return [volume, mesh]
-
-    def obj_mesh(self, mesh):
-        """Convert mesh to obj
-
-        Args:
-            mesh: mesh to convert.
-
-        Returns:
-            (): Returns mesh obj format
-
-        """
-        return self._mesh.obj_mesh(mesh)
-
-    def ng_mesh(self, mesh):
-        """Convert mesh to precompute format for Neuroglancer visualization
-
-        Args:
-            mesh: mesh to convert.
-
-        Returns:
-            (): Returns mesh precompute format
-
-        """
-        return self._mesh.obj_mesh(mesh)
+        return mesh

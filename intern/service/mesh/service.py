@@ -1,4 +1,4 @@
-# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,8 +25,12 @@ class MeshService(Service):
 	"""
 
     def __init__(self):
+        """Constructor
+        """
+
         Service.__init__(self)
 
+        # Valid voxel units list
         self._valid_voxel_units = [
             "nanometers", "nm",
             "micrometers", "um",
@@ -39,7 +43,7 @@ class MeshService(Service):
 		"""
         self._auth = None
 
-    def create(self, volume, 
+    def create(self, volume,
             x_range, y_range, z_range, time_range=None, 
             id_list=[], voxel_unit="nanometers", 
             voxel_size=[4,4,40], simp_fact=0, max_simplification_error=60,
@@ -97,7 +101,7 @@ class MeshService(Service):
                 )
             mesh.vertices += [x_range[0]*conv_factor, y_range[0]*conv_factor, z_range[0]*conv_factor]
 
-        return mesh
+        return Mesh([volume, mesh])
 
     def validate_voxel_unit(self, value):
         """Validate the voxel unit type and derive conversion factor from it if valid
@@ -124,7 +128,17 @@ class MeshService(Service):
                 conv_factor = 10000000
             return conv_factor
 
-    def ng_mesh(self, mesh):
+class Mesh:
+    def __init__(self, data):
+        """Constructor.
+
+        Args:
+            data (touple[raw_volume, mesh]): Touple containing the raw data and the mesh data
+        """
+        self._raw_vol = data[0]
+        self._mesh = data[1]
+
+    def ng_mesh(self):
         """Convert mesh to precompute format for Neuroglancer visualization
 
         Args:
@@ -134,9 +148,9 @@ class MeshService(Service):
             (): Returns mesh precompute format
 
         """
-        return mesh.to_precomputed()
-
-    def obj_mesh(self, mesh):
+        return self._mesh.to_precomputed()
+        
+    def obj_mesh(self):
         """Convert mesh to obj
 
         Args:
@@ -146,4 +160,4 @@ class MeshService(Service):
             (): Returns mesh obj format
 
         """
-        return mesh.to_obj()
+        return self._mesh.to_obj()
