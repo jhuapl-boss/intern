@@ -22,11 +22,11 @@ class VoxelUnits(IntEnum):
     """
     nm = 1,
     um = 1000,
-    mm = 100000,
+    mm = 1000000,
     cm = 10000000,
     nanometers = 1, 
     micrometers = 1000, 
-    millimeters = 100000, 
+    millimeters = 1000000, 
     centimeters = 10000000,
 
 class MeshService(Service):

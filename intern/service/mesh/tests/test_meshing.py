@@ -29,7 +29,7 @@ class TestMesh(unittest.TestCase):
         self.volume = numpy.random.randint(0, 2, (10, 200, 150), numpy.uint64)
         self.x_rng = [4500, 5500]
         self.y_rng = [3600, 4600]
-        self.z_rng = [0, 162]
+        self.z_rng = [0, 162] 
 
     def test_invalid_voxel_unit(self):
         voxel_unit = "something_wrong"
