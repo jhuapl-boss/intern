@@ -289,12 +289,13 @@ class Remote(object):
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
             simp_fact (int): mesh simplification factor
-            id_list (optional [list]): list of object ids to filter the cutout by.
-            voxel_unit (str): voxel unit of measurement to derive conversion factor. 
-            voxel_size (option [list]): list in form [x,y,z] of voxel size. Defaults to 4x4x40nm
-            simp_fact (int): mesh simplification factor, reduces triangles by given factor
-            max_simplification_error (int): Max tolerable error in physical distance
-            normals (bool): if true will calculate normals
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            id_list (optional [list]): list of object ids to filter the volume by.
+            voxel_unit (optional VoxelUnit): voxel unit of measurement to derive conversion factor. 
+            voxel_size (optional [list]): list in form [x,y,z] of voxel size. Defaults to 4x4x40nm
+            simp_fact (optional int): mesh simplification factor, reduces triangles by given factor
+            max_simplification_error (optional int): Max tolerable error in physical distance
+            normals (optional bool): if true will calculate normals
 
         Returns:
             mesh (intern.service.mesh.Mesh): mesh class
