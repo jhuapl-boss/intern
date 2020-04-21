@@ -47,11 +47,11 @@ class MeshService(Service):
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
             id_list (optional [list]): list of object ids to filter the volume by.
-            voxel_unit (str): voxel unit of measurement to derive conversion factor. 
-            voxel_size (option [list]): list in form [x,y,z] of voxel size. Defaults to 4x4x40nm
-            simp_fact (int): mesh simplification factor, reduces triangles by given factor
-            max_simplification_error (int): Max tolerable error in physical distance
-            normals (bool): if true will calculate normals
+            voxel_unit (optional VoxelUnit): voxel unit of measurement to derive conversion factor. 
+            voxel_size (optional [list]): list in form [x,y,z] of voxel size. Defaults to 4x4x40nm
+            simp_fact (optional int): mesh simplification factor, reduces triangles by given factor
+            max_simplification_error (optional int): Max tolerable error in physical distance
+            normals (optional bool): if true will calculate normals
 
         Returns:
             (): Return type depends on volume service's implementation.
@@ -65,7 +65,7 @@ class MeshService(Service):
         if np.unique(volume).shape[0] == 1:
             raise ValueError("The volume provided only has one unique ID (0). ID 0 is considered background.")
 
-        conv_factor = self.validate_voxel_unit(voxel_unit)
+        conv_factor = self._get_conversion_factor(voxel_unit)
         
         # Get voxel_sizes
         x_voxel_size = float(voxel_size[0]) * conv_factor
@@ -92,7 +92,7 @@ class MeshService(Service):
 
         return Mesh([volume, mesh])
 
-    def validate_voxel_unit(self, voxel_unit):
+    def _get_conversion_factor(self, voxel_unit):
         """Validate the voxel unit type and derive conversion factor from it if valid
 
         Args:
