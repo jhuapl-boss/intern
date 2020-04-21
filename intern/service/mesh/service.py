@@ -14,11 +14,8 @@
 
 from intern.service.service import Service
 from zmesh import Mesher
+from enum import IntEnum
 import numpy as np
-from subprocess import call
-import requests
-import json
-
 
 class MeshService(Service):
     """ Partial implementation of intern.service.service.Service for the Meshing' services.
@@ -57,7 +54,7 @@ class MeshService(Service):
             y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
-            id_list (optional [list]): list of object ids to filter the cutout by.
+            id_list (optional [list]): list of object ids to filter the volume by.
             voxel_unit (str): voxel unit of measurement to derive conversion factor. 
             voxel_size (option [list]): list in form [x,y,z] of voxel size. Defaults to 4x4x40nm
             simp_fact (int): mesh simplification factor, reduces triangles by given factor
@@ -103,11 +100,11 @@ class MeshService(Service):
 
         return Mesh([volume, mesh])
 
-    def validate_voxel_unit(self, value):
+    def validate_voxel_unit(self, voxel_unit):
         """Validate the voxel unit type and derive conversion factor from it if valid
 
         Args:
-            value (str): 'nanometers', 'millimeters', <etc>
+            voxel_unit (str): 'nanometers', 'millimeters', <etc>
 
         Returns:
             conv_factor(int): conversion factor to use by meshing service
@@ -115,25 +112,17 @@ class MeshService(Service):
         Raises:
             ValueError
         """
-        if value not in self._valid_voxel_units:
-            raise ValueError("{} is not a valid voxel unit".format(value))
+        if not isinstance(VoxelUnits[voxel_unit], VoxelUnits):
+            raise ValueError("{} is not a valid voxel unit".format(voxel_unit))
         else:
-            if value == self._valid_voxel_units[0] or value == self._valid_voxel_units[1]:
-                conv_factor = 1
-            elif value == self._valid_voxel_units[2] or value == self._valid_voxel_units[3]:
-                conv_factor = 1000
-            elif value == self._valid_voxel_units[4] or value == self._valid_voxel_units[5]:
-                conv_factor = 1000000
-            elif value == self._valid_voxel_units[6] or value == self._valid_voxel_units[7]:
-                conv_factor = 10000000
-            return conv_factor
+            return VoxelUnits[voxel_unit].value
 
 class Mesh:
     def __init__(self, data):
         """Constructor.
 
         Args:
-            data (touple[raw_volume, mesh]): Touple containing the raw data and the mesh data
+            data (tuple[raw_volume, mesh]): tuple containing the raw data and the mesh data
         """
         self._raw_vol = data[0]
         self._mesh = data[1]
@@ -161,3 +150,15 @@ class Mesh:
 
         """
         return self._mesh.to_obj()
+
+class VoxelUnits(IntEnum):
+    """Enum with valid VoxelUnits
+    """
+    nm = 1,
+    um = 1000,
+    mm = 100000,
+    cm = 10000000,
+    nanometers = 1, 
+    micrometers = 1000, 
+    millimeters = 100000, 
+    centimeters = 10000000

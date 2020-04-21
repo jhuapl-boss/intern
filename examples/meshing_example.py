@@ -21,7 +21,7 @@ ann_chan = rmt.get_channel(CHAN, COLL, EXP)
 
 # Use resource to generate mesh from the Segmentation ID specified
 # and the specified cutout volume ranges
-# Save the output in a touple, raw_data and mesh_data will be returned.
+# Save the output in a tuple, raw_data and mesh_data will be returned.
 mesh = rmt.mesh(
     ann_chan,
     res,

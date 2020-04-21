@@ -5,6 +5,7 @@ six
 mock
 nose2
 zmesh
+enum34
 
 # cloud-volume
 brotli
