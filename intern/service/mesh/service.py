@@ -17,6 +17,18 @@ from zmesh import Mesher
 from enum import IntEnum
 import numpy as np
 
+class VoxelUnits(IntEnum):
+    """Enum with valid VoxelUnits
+    """
+    nm = 1,
+    um = 1000,
+    mm = 100000,
+    cm = 10000000,
+    nanometers = 1, 
+    micrometers = 1000, 
+    millimeters = 100000, 
+    centimeters = 10000000,
+
 class MeshService(Service):
     """ Partial implementation of intern.service.service.Service for the Meshing' services.
 	"""
@@ -34,7 +46,7 @@ class MeshService(Service):
 
     def create(self, volume,
             x_range, y_range, z_range, time_range=None, 
-            id_list=[], voxel_unit=None, 
+            id_list=[], voxel_unit=VoxelUnits.nm, 
             voxel_size=[4,4,40], simp_fact=0, max_simplification_error=60,
             normals=False, **kwargs):
         """Generate a mesh of the specified IDs
@@ -104,8 +116,6 @@ class MeshService(Service):
         Raises:
             ValueError
         """
-        if not voxel_unit:
-            voxel_unit = VoxelUnits.nm
         if not isinstance(voxel_unit, VoxelUnits):
             raise ValueError("{} is not a valid voxel unit".format(voxel_unit))
         else:
@@ -144,15 +154,3 @@ class Mesh:
 
         """
         return self._mesh.to_obj()
-
-class VoxelUnits(IntEnum):
-    """Enum with valid VoxelUnits
-    """
-    nm = 1,
-    um = 1000,
-    mm = 100000,
-    cm = 10000000,
-    nanometers = 1, 
-    micrometers = 1000, 
-    millimeters = 100000, 
-    centimeters = 10000000,
