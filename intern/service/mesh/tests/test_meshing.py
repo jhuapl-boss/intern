@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from intern.service.mesh.service import MeshService
+from intern.service.mesh.service import VoxelUnits
 import numpy
 import unittest
 from mock import patch, ANY
@@ -36,27 +37,27 @@ class TestMesh(unittest.TestCase):
             self.mesh.create(self.volume, self.x_rng, self.y_rng, self.z_rng, voxel_unit=voxel_unit)
  
     def test_valid_voxel_units(self):
-        voxel_unit = "nanometers"
+        voxel_unit = VoxelUnits.micrometers
         voxel_conv = 1
         self.assertEqual(voxel_conv, self.mesh.validate_voxel_unit(voxel_unit))
-        voxel_unit = "micrometers"
+        voxel_unit = VoxelUnits.nanometers
         voxel_conv = 1000
         self.assertEqual(voxel_conv, self.mesh.validate_voxel_unit(voxel_unit))
-        voxel_unit = "millimeters"
+        voxel_unit = VoxelUnits.millimeters
         voxel_conv = 1000000
         self.assertEqual(voxel_conv, self.mesh.validate_voxel_unit(voxel_unit))
-        voxel_unit = "centimeters"
+        voxel_unit = VoxelUnits.centimeters
         voxel_conv = 10000000
         self.assertEqual(voxel_conv, self.mesh.validate_voxel_unit(voxel_unit))
-        voxel_unit = "nm"
+        voxel_unit = VoxelUnits.um
         voxel_conv = 1
         self.assertEqual(voxel_conv, self.mesh.validate_voxel_unit(voxel_unit))
-        voxel_unit = "um"
+        voxel_unit = VoxelUnits.nm
         voxel_conv = 1000
         self.assertEqual(voxel_conv, self.mesh.validate_voxel_unit(voxel_unit))
-        voxel_unit = "mm"
+        voxel_unit = VoxelUnits.mm
         voxel_conv = 1000000
         self.assertEqual(voxel_conv, self.mesh.validate_voxel_unit(voxel_unit))
-        voxel_unit = "cm"
+        voxel_unit = VoxelUnits.cm
         voxel_conv = 10000000
         self.assertEqual(voxel_conv, self.mesh.validate_voxel_unit(voxel_unit))

@@ -14,7 +14,7 @@
 import six
 from abc import ABCMeta
 from six.moves import configparser
-from intern.service.mesh.service import MeshService
+from intern.service.mesh.service import MeshService, VoxelUnits
 import os
 
 CONFIG_FILE ='~/.intern/intern.cfg'
@@ -276,7 +276,7 @@ class Remote(object):
 
     def mesh(self, resource, resolution, 
             x_range, y_range, z_range, time_range=None, 
-            id_list=[], voxel_unit="nanometers", 
+            id_list=[], voxel_unit=VoxelUnits.nm, 
             voxel_size=[4,4,40], simp_fact = 0, max_simplification_error=60,
             normals=False, **kwargs):
         """Generate a mesh of the specified IDs

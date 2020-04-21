@@ -1,5 +1,5 @@
 from intern.remote.boss import BossRemote
-from intern.service.mesh.service import MeshService
+from intern.service.mesh.service import MeshService, VoxelUnits
 import numpy as np
 
 rmt = BossRemote({"protocol": "https", "host": "api.bossdb.io", "token": "public",})
@@ -29,7 +29,7 @@ mesh = rmt.mesh(
     y_rng,
     z_rng,
     id_list=[MESH_ID],
-    voxel_unit="micrometers",
+    voxel_unit=VoxelUnits.um,
     simp_fact=100,
 )
 

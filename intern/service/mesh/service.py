@@ -27,14 +27,6 @@ class MeshService(Service):
 
         Service.__init__(self)
 
-        # Valid voxel units list
-        self._valid_voxel_units = [
-            "nanometers", "nm",
-            "micrometers", "um",
-            "millimeters", "mm",
-            "centimeters", "cm",
-        ]
-
     def set_auth(self):
         """ No auth for Meshing
 		"""
@@ -42,7 +34,7 @@ class MeshService(Service):
 
     def create(self, volume,
             x_range, y_range, z_range, time_range=None, 
-            id_list=[], voxel_unit="nanometers", 
+            id_list=[], voxel_unit=None, 
             voxel_size=[4,4,40], simp_fact=0, max_simplification_error=60,
             normals=False, **kwargs):
         """Generate a mesh of the specified IDs
@@ -112,10 +104,12 @@ class MeshService(Service):
         Raises:
             ValueError
         """
-        if not isinstance(VoxelUnits[voxel_unit], VoxelUnits):
+        if not voxel_unit:
+            voxel_unit = VoxelUnits.nm
+        if not isinstance(voxel_unit, VoxelUnits):
             raise ValueError("{} is not a valid voxel unit".format(voxel_unit))
         else:
-            return VoxelUnits[voxel_unit].value
+            return voxel_unit.value
 
 class Mesh:
     def __init__(self, data):
@@ -161,4 +155,4 @@ class VoxelUnits(IntEnum):
     nanometers = 1, 
     micrometers = 1000, 
     millimeters = 100000, 
-    centimeters = 10000000
+    centimeters = 10000000,
