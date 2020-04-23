@@ -1,10 +1,10 @@
 # Change Log
 
 ---
-
 ## v?.?.?
 
 > This build switches `intern` to GitHub actions, and now tests both 3.6 as well as 3.7. Python 2.7 testing is no longer supported.
+> Addition of an intern MeshService. 
 
 ### Features
 

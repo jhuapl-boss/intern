@@ -4,6 +4,8 @@ blosc>=1.4.4
 six
 mock
 nose2
+zmesh
+enum34
 
 # cloud-volume
 brotli

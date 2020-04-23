@@ -14,6 +14,7 @@
 import six
 from abc import ABCMeta
 from six.moves import configparser
+from intern.service.mesh.service import MeshService, VoxelUnits
 import os
 
 CONFIG_FILE ='~/.intern/intern.cfg'
@@ -44,6 +45,7 @@ class Remote(object):
         self._metadata = None
         self._project = None
         self._object = None
+        self._mesh = None
 
         # Configuration data loaded from file or passed directly to the constructor
         # Is available for children Remote classes to use as needed
@@ -83,6 +85,8 @@ class Remote(object):
                 else:
                     raise IOError("Configuration file not found: {}. Please provide credential file or set environment variables".format(cfg_file_or_dict))
 
+        self._init_mesh_service()
+
     def load_config_file(self, config_handle):
         """Load config data for the Remote.
 
@@ -95,6 +99,22 @@ class Remote(object):
         cfg_parser = configparser.ConfigParser()
         cfg_parser.readfp(config_handle)
         return cfg_parser
+
+    def _init_mesh_service(self):
+        """
+        Method to initialize the Mesh Service
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        Raises:
+            (KeyError): if given invalid version.
+        """
+
+        self._mesh = MeshService()
 
     @property
     def volume_service(self):
@@ -111,6 +131,10 @@ class Remote(object):
     @property
     def object_service(self):
         return self._object
+
+    @property
+    def mesh_service(self):
+        return self._mesh
 
     def list_project(self, **kwargs):
         """Perform list operation on the project.
@@ -249,3 +273,43 @@ class Remote(object):
         """
         return self._volume.get_ids_in_region(
             resource, resolution, x_range, y_range, z_range, time_range)
+
+    def mesh(self, resource, resolution, 
+            x_range, y_range, z_range, time_range=None, 
+            id_list=[], voxel_unit=VoxelUnits.nm, 
+            voxel_size=[4,4,40], simp_fact = 0, max_simplification_error=60,
+            normals=False, **kwargs):
+        """Generate a mesh of the specified IDs
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with cutout operations.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            id_list (optional [list]): list of object ids to filter the volume by.
+            voxel_unit (optional VoxelUnit): voxel unit of measurement to derive conversion factor. 
+            voxel_size (optional [list]): list in form [x,y,z] of voxel size. Defaults to 4x4x40nm
+            simp_fact (optional int): mesh simplification factor, reduces triangles by given factor
+            max_simplification_error (optional int): Max tolerable error in physical distance
+            normals (optional bool): if true will calculate normals
+
+        Returns:
+            mesh (intern.service.mesh.Mesh): mesh class
+
+        Raises:
+            RuntimeError when given invalid resource.
+            Other exceptions may be raised depending on the volume service's implementation.
+
+        """
+
+        if not resource.valid_volume():
+            raise RuntimeError('Resource incompatible with the volume service.')
+        volume = self._volume.get_cutout(
+            resource, resolution, x_range, y_range, z_range, time_range, id_list, **kwargs)
+        mesh = self._mesh.create(
+            volume, x_range, y_range, z_range, time_range, id_list, voxel_unit, voxel_size,
+            simp_fact, max_simplification_error, normals)
+        return mesh
