@@ -243,17 +243,18 @@ class array:
             self._populate_coord_frame()
 
         if self.axis_order == AxisOrder.XYZ:
-            return (
+            vox_size = (
                 self._coord_frame.x_voxel_size,
                 self._coord_frame.y_voxel_size,
                 self._coord_frame.z_voxel_size,
             )
         elif self.axis_order == AxisOrder.ZYX:
-            return (
+            vox_size = (
                 self._coord_frame.z_voxel_size,
                 self._coord_frame.y_voxel_size,
                 self._coord_frame.x_voxel_size,
             )
+        return (vox_size, self._coord_frame.voxel_unit)
 
     def _populate_exp(self):
         """
