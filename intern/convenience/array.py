@@ -116,6 +116,7 @@ class array:
         resolution: int = 0,
         volume_provider: VolumeProvider = None,
         axis_order: str = AxisOrder.ZYX,
+        check_exists: bool = False,
     ) -> None:
         """
         Construct a new emboss.array.
