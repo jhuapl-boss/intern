@@ -47,7 +47,9 @@ class VolumeProvider:
 
 
 class InternVolumeProvider(VolumeProvider):
-    def __init__(self, boss: BossRemote):
+    def __init__(self, boss: BossRemote = None):
+        if boss is None:
+            boss = BossRemote()
         self.boss = boss
 
     def get_cutout(
@@ -121,18 +123,25 @@ class array:
         Arguments:
             channel (intern.resource.boss.ChannelResource): The channel from
                 which data will be downloaded.
+            resolution (int: 0): The native resolution or MIP to use
             backend (bossphorus.StorageManager): The storage manager to use
                 for data-cache.
             use_backend (boolean: False): If no backend is specified, this may
                 be set to True to construct a FilesystemBackend on the fly.
             volume_provider (VolumeProvider): TODO
+            check_exists (bool): True: Whether to check upon initialization
+                for whether the dataset exists already. !! Unimplemented.
+
+        Raises:
+            LookupError: If check_exists==True and the dataset does not exist
+
         """
         self.axis_order = axis_order
 
         # Handle custom Remote:
         self.volume_provider = volume_provider
         if volume_provider is None:
-            self.volume_provider = DEFAULT_VOLUME_PROVIDER()
+            self.volume_provider = InternVolumeProvider()
 
         self.resolution = resolution
         # If the channel is set as a Resource, then use that resource.
@@ -142,7 +151,7 @@ class array:
         # intern.Resource from a bossDB URI.
         elif isinstance(channel, str):
             uri = parse_bossdb_uri(channel)
-            self.resolution = uri.resolution
+            self.resolution = uri.resolution if not (uri.resolution is None) else self.resolution
             self._channel = self.volume_provider.get_channel(
                 uri.channel, uri.collection, uri.experiment
             )
@@ -195,11 +204,11 @@ class array:
             return (
                 int(
                     (self._coord_frame.y_stop - self._coord_frame.y_start)
-                    / 2 ** self.resolution
+                    / (2 ** self.resolution)
                 ),
                 int(
                     (self._coord_frame.x_stop - self._coord_frame.x_start)
-                    / 2 ** self.resolution
+                    / (2 ** self.resolution)
                 ),
                 (self._coord_frame.z_stop - self._coord_frame.z_start),
             )
@@ -208,11 +217,11 @@ class array:
                 (self._coord_frame.z_stop - self._coord_frame.z_start),
                 int(
                     (self._coord_frame.y_stop - self._coord_frame.y_start)
-                    / 2 ** self.resolution
+                    / (2 ** self.resolution)
                 ),
                 int(
                     (self._coord_frame.x_stop - self._coord_frame.x_start)
-                    / 2 ** self.resolution
+                    / (2 ** self.resolution)
                 ),
             )
 
