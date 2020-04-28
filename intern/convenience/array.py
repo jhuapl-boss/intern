@@ -66,47 +66,6 @@ def _construct_boss_url(boss, col, exp, chan, res, xs, ys, zs) -> str:
     return f"https://api.theboss.io/v1/cutout/{col}/{exp}/{chan}/{res}/{xs[0]}:{xs[1]}/{ys[0]}:{ys[1]}/{zs[0]}:{zs[1]}"
 
 
-class RawVolumeProvider(VolumeProvider):
-    def __init__(self, boss: BossRemote = None):
-        if not boss:
-            self.boss = BossRemote()
-        else:
-            self.boss = boss
-
-        self._token = self.boss.token_volume
-
-    def get_cutout(
-        self,
-        channel: ChannelResource,
-        resolution: int,
-        xs: Tuple[int, int],
-        ys: Tuple[int, int],
-        zs: Tuple[int, int],
-    ):
-
-        result = requests.get(
-            _construct_boss_url(
-                self.boss,
-                channel.coll_name,
-                channel.exp_name,
-                channel.name,
-                resolution,
-                xs,
-                ys,
-                zs,
-            ),
-            headers={"Authorization": f"token {self._token}"},
-        )
-        if not result.ok:
-            raise ValueError(result, result.content)
-        return np.frombuffer(
-            blosc.decompress(result.content), dtype=channel.datatype
-        ).reshape(zs[1] - zs[0], ys[1] - ys[0], xs[1] - xs[0])
-
-
-DEFAULT_VOLUME_PROVIDER = RawVolumeProvider
-
-
 def parse_bossdb_uri(uri: str) -> bossdbURI:
     """
     Parse a bossDB URI and handle malform errors.
@@ -120,7 +79,7 @@ def parse_bossdb_uri(uri: str) -> bossdbURI:
     """
     t = uri.split("://")[1].split("/")
     if len(t) is 3:
-        return bossdbURI(t[0], t[1], t[2], 0)
+        return bossdbURI(t[0], t[1], t[2], None)
     if len(t) is 4:
         return bossdbURI(t[0], t[1], t[2], int(t[3]))
     raise ValueError(f"Cannot parse URI {uri}.")
