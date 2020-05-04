@@ -39,11 +39,7 @@ bossdbURI = namedtuple(
 
 
 class VolumeProvider:
-    def get_channel(self, channel: str, collection: str, experiment: str):
-        return self.boss.get_channel(channel, collection, experiment)
-
-    def get_project(self, resource):
-        return self.boss.get_project(resource)
+    ...
 
 
 class InternVolumeProvider(VolumeProvider):
@@ -51,6 +47,12 @@ class InternVolumeProvider(VolumeProvider):
         if boss is None:
             boss = BossRemote()
         self.boss = boss
+
+    def get_channel(self, channel: str, collection: str, experiment: str):
+        return self.boss.get_channel(channel, collection, experiment)
+
+    def get_project(self, resource):
+        return self.boss.get_project(resource)
 
     def get_cutout(
         self,
@@ -96,17 +98,12 @@ class array:
     """
     An intern/bossDB-backed numpy array.
 
-    Like a numpy.memmap array, an emboss.array is backed by data that lives out
-    of conventional memory. The data can live in, for example, a bossDB that
-    lives in AWS, or it can live in a local or remote bossphorus instance.
+    Like a numpy.memmap array, an `intern.array` is backed by data that lives
+    outside of conventional memory. The data can live in, for example, a bossDB
+    that lives in AWS, or it can live in a local or remote bossphorus instance.
 
-    Data are downloaded when a request is made. This means that the emboss
-    library does not work when the bossDB-like API is unavailable (as in cases
-    where AWS is inaccessible or a bossphorus instance is offline).
-
-    In the future, emboss will support local cache using bossphorus and Docker.
-    For now, it is recommended that you use your own pass-through bossphorus
-    instance to improve runtime of indexing requests.
+    Data are downloaded when a request is made. This means that even "simple"
+    commands like `array#sum()` are very network-heavy (don't do this!).
 
     """
 
@@ -119,22 +116,15 @@ class array:
         check_exists: bool = False,
     ) -> None:
         """
-        Construct a new emboss.array.
+        Construct a new intern-backed array.
 
         Arguments:
             channel (intern.resource.boss.ChannelResource): The channel from
                 which data will be downloaded.
             resolution (int: 0): The native resolution or MIP to use
-            backend (bossphorus.StorageManager): The storage manager to use
-                for data-cache.
-            use_backend (boolean: False): If no backend is specified, this may
-                be set to True to construct a FilesystemBackend on the fly.
             volume_provider (VolumeProvider): TODO
             check_exists (bool): True: Whether to check upon initialization
                 for whether the dataset exists already. !! Unimplemented.
-
-        Raises:
-            LookupError: If check_exists==True and the dataset does not exist
 
         """
         self.axis_order = axis_order

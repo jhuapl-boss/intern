@@ -26,7 +26,7 @@ dependency_links = [
 setup(
     name="intern",
     version=__version__,
-    description="Python SDK for interacting neuroscience data via the Boss API.",
+    description="Python SDK for interacting with neuroscience data via the Boss API.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jhuapl-boss/intern",
