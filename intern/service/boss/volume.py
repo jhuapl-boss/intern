@@ -81,6 +81,25 @@ class VolumeService(BossService):
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     @check_channel
+    def create_cutout_to_black(
+        self, resource, resolution, x_range, y_range, z_range, time_range=None):
+        """Upload a black cutout to the volume service.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with cutout operations.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+        """
+
+
+        return self.service.create_cutout_to_black(
+            resource, resolution, x_range, y_range, z_range, time_range,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
+
+    @check_channel
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], access_mode=CacheMode.no_cache, **kwargs):
         """Get a cutout from the volume service.
 

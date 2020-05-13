@@ -209,6 +209,39 @@ class BaseVersion(object):
                 urlWithParams += '{}={}'.format(k,v)
         return urlWithParams
 
+    def build_cutout_to_black_url(
+        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None):
+        """Build the url to access the cutout_to_black function of the Boss' volume service.
+
+        Args:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+
+        Returns:
+            (string): Full URL to access API.
+
+        Raises:
+            (RuntimeError): if *_range invalid.
+        """
+        baseUrl = self.build_url(resource, url_prefix, 'cutout/to_black', req_type='cutout')
+        x_rng_lst = self.convert_int_list_range_to_str(x_range)
+        y_rng_lst = self.convert_int_list_range_to_str(y_range)
+        z_rng_lst = self.convert_int_list_range_to_str(z_range)
+
+        urlWithParams = (
+            baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+            '/' + z_rng_lst + '/')
+
+        if time_range is not None:
+            t_rng_lst = self.convert_int_list_range_to_str(time_range)
+            urlWithParams += t_rng_lst + '/'
+        
+        return urlWithParams
+
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
         """Create a request for accessing the Boss' data model services.
 
@@ -308,6 +341,35 @@ class BaseVersion(object):
             resource, url_prefix, resolution, x_range, y_range, z_range,  time_range, id_list, access_mode)
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = numpyVolume)
+    
+    def get_cutout_to_black_request(
+        self, resource, method, content, url_prefix, token,
+        resolution, x_range, y_range, z_range, time_range):
+
+        """Create a request for working with cutout_to_black (part of the Boss' volume service).
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (list[int]): time range such as [30, 40] which means t>=30 and t<40.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        url = self.build_cutout_to_black_url(
+            resource, url_prefix, resolution, x_range, y_range, z_range,  time_range)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
 
     def get_group_request(self, method, content, url_prefix, token, name=None):
         """Get a request for getting group information.
