@@ -65,3 +65,22 @@ Full detailed documentation can be found here: [https://jhuapl-boss.github.io/in
 ## Contributing
 
 Please submit bug reports, or get in touch using GitHub Issues.
+
+## Citation
+
+If you find this library useful to your work, please consider citing the following:
+
+https://www.biorxiv.org/content/10.1101/2020.05.15.098707v1
+
+```
+@article{intern,
+	doi = {10.1101/2020.05.15.098707},
+	url = {https://www.biorxiv.org/content/10.1101/2020.05.15.098707v1},
+	year = 2020,
+	month = {may},
+	publisher = {BiorXiv},
+	author = {Matelsky, Jordan K and Rodriguez, Luis and Xenes, Daniel and Gion, Timothy and Hider Jr., Robert and Wester, Brock and Gray-Roncal, William},
+	title = {{intern: Integrated Toolkit for Extensible and Reproducible Neuroscience}},
+	journal = {BiorXiv}
+}
+```
