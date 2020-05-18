@@ -98,6 +98,20 @@ class BaseVersionTest(unittest.TestCase):
             'cutout/' + coll + '/' + exp + '/' + chan,
             actual)
 
+    def test_build_url_for_cutout_to_black(self):
+        """
+        Test cutout to black URL
+        """
+        actual = self.test_project.build_url(
+        self.chanResource, self.url_prefix, 'cutout/to_black', req_type='cutout')
+        coll = self.chanResource.coll_name
+        exp = self.chanResource.exp_name
+        chan = self.chanResource.name
+        self.assertEqual(
+            self.url_prefix + '/' + self.test_project.version + '/' +
+            'cutout/to_black/' + coll + '/' + exp + '/' + chan,
+            actual)
+
     def test_build_url_normal(self):
         """Test standard use of BaseVersion.build_url().
         """
@@ -364,6 +378,26 @@ class BaseVersionTest(unittest.TestCase):
             '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
             y_range + '/' + z_range + '/',
             actual)
+    
+    def test_build_cutout_to_black_url_no_time_range(self):
+        res = 0
+        x_rng_lst = [20, 40]
+        x_range = '20:40'
+        y_rng_lst = [50, 70]
+        y_range = '50:70'
+        z_rng_lst = [30, 50]
+        z_range = '30:50'
+        t_rng_lst = None
+        actual = self.test_volume.build_cutout_to_black_url(
+            self.chanResource, self.url_prefix,
+            res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst)
+
+        self.assertEqual(
+            self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
+            '/' + self.chanResource.coll_name + '/' + self.chanResource.exp_name +
+            '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
+            y_range + '/' + z_range + '/',
+            actual)
 
     def test_build_cutout_url_no_time_range_with_ids(self):
         res = 0
@@ -398,6 +432,27 @@ class BaseVersionTest(unittest.TestCase):
         t_rng_lst = [10, 25]
         time_range = '10:25'
         actual = self.test_volume.build_cutout_url(
+            self.chanResource, self.url_prefix,
+            res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst)
+
+        self.assertEqual(
+            self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
+            '/' + self.chanResource.coll_name + '/' + self.chanResource.exp_name +
+            '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
+            y_range + '/' + z_range + '/' + time_range + '/',
+            actual)
+
+    def test_build_cutout_to_black_url_with_time_range(self):
+        res = 0
+        x_rng_lst = [20, 40]
+        x_range = '20:40'
+        y_rng_lst = [50, 70]
+        y_range = '50:70'
+        z_rng_lst = [30, 50]
+        z_range = '30:50'
+        t_rng_lst = [10, 25]
+        time_range = '10:25'
+        actual = self.test_volume.build_cutout_to_black_url(
             self.chanResource, self.url_prefix,
             res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst)
 

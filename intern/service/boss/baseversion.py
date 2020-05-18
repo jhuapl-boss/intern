@@ -212,7 +212,7 @@ class BaseVersion(object):
     def build_cutout_to_black_url(
         self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None):
         """Build the url to access the cutout_to_black function of the Boss' volume service.
-
+        TODO: Maybe delete this function and add a base_url parameter to build_cutout_url?
         Args:
             url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
             resolution (int): 0 indicates native resolution.
