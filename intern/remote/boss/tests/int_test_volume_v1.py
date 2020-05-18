@@ -935,7 +935,7 @@ class VolumeServiceTest_v1(unittest.TestCase):
         data = data.astype(numpy.uint8)
 
         self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data, time_range=t_rng)
-        self.rmt.create_cutout_to_black(self.chan, 0, x_rng, y_rng, z_rng, data, t_rng)
+        self.rmt.create_cutout_to_black(self.chan, 0, x_rng, y_rng, z_rng, time_range=t_rng)
         actual = self.rmt.get_cutout(self.chan, 0, x_rng, y_rng, z_rng, time_range=t_rng)
         numpy.testing.assert_array_equal(numpy.zeros((3, 5, 4, 8)), actual)
 
