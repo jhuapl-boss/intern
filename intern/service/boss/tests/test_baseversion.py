@@ -392,12 +392,20 @@ class BaseVersionTest(unittest.TestCase):
             self.chanResource, self.url_prefix,
             res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst)
 
-        self.assertEqual(
-            self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
-            '/' + self.chanResource.coll_name + '/' + self.chanResource.exp_name +
-            '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
-            y_range + '/' + z_range + '/',
-            actual)
+        expected = '/'.join([
+            self.url_prefix,
+            self.test_volume.version,
+            "cutout/to_black",
+            self.chanResource.coll_name,
+            self.chanResource.exp_name,
+            self.chanResource.name,
+            str(res),
+            x_range,
+            y_range,
+            z_range,
+        ]) + '/'
+
+        self.assertEqual(expected, actual)
 
     def test_build_cutout_url_no_time_range_with_ids(self):
         res = 0
@@ -455,13 +463,22 @@ class BaseVersionTest(unittest.TestCase):
         actual = self.test_volume.build_cutout_to_black_url(
             self.chanResource, self.url_prefix,
             res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst)
+        
+        expected = '/'.join([
+            self.url_prefix,
+            self.test_volume.version,
+            "cutout/to_black",
+            self.chanResource.coll_name,
+            self.chanResource.exp_name,
+            self.chanResource.name,
+            str(res),
+            x_range,
+            y_range,
+            z_range,
+            time_range,
+        ]) + '/'
 
-        self.assertEqual(
-            self.url_prefix + '/' + self.test_volume.version + '/' + self.test_volume.endpoint +
-            '/' + self.chanResource.coll_name + '/' + self.chanResource.exp_name +
-            '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
-            y_range + '/' + z_range + '/' + time_range + '/',
-            actual)
+        self.assertEqual(expected, actual)
 
     def test_build_cutout_url_with_time_range_and_ids(self):
         res = 0
