@@ -3,18 +3,23 @@ import unittest
 from intern import array
 from intern.remote.boss import BossRemote
 
+_DEFAULT_BOSS_OPTIONS = {
+    "protocol": "https",
+    "host": "api.bossdb.io",
+    "token": "public",
+}
+
 
 class TestConvenienceProjectCreation(unittest.TestCase):
     def test_can_initialize_array_without_checks(self):
         array("bossdb://Kasthuri/em/images")
-
 
     def test_array_instantiation_with_channel(self):
         """
         Array can be instantiated.
         .
         """
-        boss = BossRemote()
+        boss = BossRemote(_DEFAULT_BOSS_OPTIONS)
         _ = array(boss.get_channel("cc", "kasthuri2015", "em"))
 
     def test_array_instantiation_dtype(self):
@@ -22,7 +27,7 @@ class TestConvenienceProjectCreation(unittest.TestCase):
         Array can be instantiated with type.
         .
         """
-        boss = BossRemote()
+        boss = BossRemote(_DEFAULT_BOSS_OPTIONS)
         test_array = array(boss.get_channel("cc", "kasthuri2015", "em"))
         self.assertEqual(test_array.dtype, "uint8")
 
@@ -52,7 +57,7 @@ class TestConvenienceProjectCreation(unittest.TestCase):
 
     def test_can_retrieve_correct_u64_data(self):
         data = array("bossdb://kasthuri2015/em/3cylneuron_v1")
-        boss = BossRemote()
+        boss = BossRemote(_DEFAULT_BOSS_OPTIONS)
         get_cutout_data = boss.get_cutout(
             boss.get_channel("3cylneuron_v1", "kasthuri2015", "em"),
             0,
