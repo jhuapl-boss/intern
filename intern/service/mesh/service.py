@@ -13,21 +13,21 @@
 # limitations under the License.
 
 from intern.service.service import Service
-from zmesh import Mesher
 from enum import IntEnum
 import numpy as np
 
 class VoxelUnits(IntEnum):
     """Enum with valid VoxelUnits
     """
-    nm = 1,
-    um = 1000,
-    mm = 1000000,
-    cm = 10000000,
-    nanometers = 1, 
-    micrometers = 1000, 
-    millimeters = 1000000, 
-    centimeters = 10000000,
+    nm = 1
+    um = 1000
+    mm = 1000000
+    cm = 10000000
+    nanometers = 1
+    micrometers = 1000
+    millimeters = 1000000
+    centimeters = 10000000
+
 
 class MeshService(Service):
     """ Partial implementation of intern.service.service.Service for the Meshing' services.
@@ -74,6 +74,7 @@ class MeshService(Service):
 
         """
 
+        from zmesh import Mesher
         if np.unique(volume).shape[0] == 1:
             raise ValueError("The volume provided only has one unique ID (0). ID 0 is considered background.")
 
@@ -105,13 +106,14 @@ class MeshService(Service):
         return Mesh([volume, mesh])
 
     def _get_conversion_factor(self, voxel_unit):
-        """Validate the voxel unit type and derive conversion factor from it if valid
+        """
+        Validate the voxel unit type and derive conversion factor from it if valid
 
-        Args:
-            voxel_unit (str): 'nanometers', 'millimeters', <etc>
+        Arguments:
+            voxel_unit (VoxelUnits): 'nanometers', 'millimeters', <etc>
 
         Returns:
-            conv_factor(int): conversion factor to use by meshing service
+            int: conversion factor to use by meshing service
 
         Raises:
             ValueError
