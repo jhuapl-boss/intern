@@ -573,7 +573,6 @@ class array:
 
         Start-only (`10:`) or stop-only (`:10`) indexing is unsupported.
         """
-        # TODO: confirm shape is compatible
 
         if self.axis_order == AxisOrder.XYZ:
             key = (key[2], key[1], key[0])
@@ -631,6 +630,7 @@ class array:
         if len(value.shape) == 2:
             # TODO: Support other 2D shapes as well
             value = np.array([value])
+
         cutout = self.volume_provider.create_cutout(
             self._channel, self.resolution, xs, ys, zs, value
         )

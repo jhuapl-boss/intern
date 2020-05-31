@@ -2,7 +2,7 @@ import unittest
 
 from intern import array
 
-from intern.convenience import _DEFAULT_BOSS_OPTIONS
+from intern.convenience.array import _DEFAULT_BOSS_OPTIONS
 from intern.remote.boss import BossRemote
 
 
