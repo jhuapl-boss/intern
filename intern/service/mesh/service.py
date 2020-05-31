@@ -106,13 +106,14 @@ class MeshService(Service):
         return Mesh([volume, mesh])
 
     def _get_conversion_factor(self, voxel_unit):
-        """Validate the voxel unit type and derive conversion factor from it if valid
+        """
+        Validate the voxel unit type and derive conversion factor from it if valid
 
-        Args:
-            voxel_unit (str): 'nanometers', 'millimeters', <etc>
+        Arguments:
+            voxel_unit (VoxelUnits): 'nanometers', 'millimeters', <etc>
 
         Returns:
-            conv_factor(int): conversion factor to use by meshing service
+            int: conversion factor to use by meshing service
 
         Raises:
             ValueError
