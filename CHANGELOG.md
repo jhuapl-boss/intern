@@ -1,12 +1,15 @@
 # Change Log
 
 ---
+
 ## v?.?.?
 
 > This build switches `intern` to GitHub actions, and now tests both 3.6 as well as 3.7. Python 2.7 testing is no longer supported.
 
 ### Features
 
+-   **Convenience API** (#48)
+    -   This adds support for the simple `intern.array` interface which mocks the numpy array for getters and setters.
 -   Add support for DVID and cloud-volume hosted data with `DVIDRemote` and `CloudVolumeRemote`. (#46)
 -   Add parallelism to `BossRemote#get_cutout` calls by passing `parallel=True` or `parallel=<int # of jobs>` as an argument. (#52)
 -   Addition of a `MeshService` for local meshing of 3D segmentation data.
