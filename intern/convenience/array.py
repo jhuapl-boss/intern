@@ -16,6 +16,7 @@ limitations under the License.
 
 # Standard imports
 from typing import Optional, Union, Tuple
+import abc
 from collections import namedtuple
 
 # Pip-installable imports
@@ -38,15 +39,68 @@ bossdbURI = namedtuple(
     "bossdbURI", ["collection", "experiment", "channel", "resolution"]
 )
 
+_DEFAULT_BOSS_OPTIONS = {
+    "protocol": "https",
+    "host": "api.bossdb.io",
+    "token": "public",
+}
 
-class VolumeProvider:
-    ...
+
+class VolumeProvider(abc.ABC):
+    """
+    A provider for the common get/put cutout operations on a Remote.
+
+    TODO: This should ultimately be subsumed back into the Remote API.
+
+    """
+
+    def get_channel(self, channel: str, collection: str, experiment: str):
+        ...
+
+    def get_project(self, resource):
+        ...
+
+    def create_project(self, resource):
+        ...
+
+    def get_cutout(
+        self,
+        channel: ChannelResource,
+        resolution: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
+    ):
+        ...
+
+    def create_cutout(
+        self,
+        channel: ChannelResource,
+        resolution: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
+        data,
+    ):
+        ...
 
 
-class InternVolumeProvider(VolumeProvider):
+class _InternVolumeProvider(VolumeProvider):
+    """
+    A VolumeProvider that backends the intern.BossRemote API.
+
+    This is used instead of directly accessing the BossRemote so that the
+    convenience `array` can be easily stripped out. (The array module was
+    originally a visitor from another Python package called `emboss`, so moving
+    VolumeProvider endpoints back into the Remote API is an outstanding TODO.)
+    """
+
     def __init__(self, boss: BossRemote = None):
         if boss is None:
-            boss = BossRemote()
+            try:
+                boss = BossRemote()
+            except:
+                boss = BossRemote(_DEFAULT_BOSS_OPTIONS)
         self.boss = boss
 
     def get_channel(self, channel: str, collection: str, experiment: str):
@@ -118,7 +172,13 @@ class array:
     that lives in AWS, or it can live in a local or remote bossphorus instance.
 
     Data are downloaded when a request is made. This means that even "simple"
-    commands like `array#sum()` are very network-heavy (don't do this!).
+    commands like `array#[:]sum()` are very network-heavy (don't do this!).
+
+    Examples:
+
+    >>> import intern.array
+    >>> data = array("bossdb://collection/experiment/channel")
+    >>> downloaded_sample = data[100, 100:200, 100:200]
 
     """
 
@@ -143,9 +203,24 @@ class array:
                 which data will be downloaded.
             resolution (int: 0): The native resolution or MIP to use
             volume_provider (VolumeProvider): The remote-like to use
+            axis_order (str = AxisOrder.ZYX): The axis-ordering to use for data
+                cutouts. Defaults to ZYX. DOES NOT affect the `voxel_size` or
+                `extents` arguments to this constructor.
             create_new (bool: False): Whether to create new Resources if they
                 do not exist. Does not work with public token.
-            extents
+            dtype (str): Only required if `create_new = True`. Specifies the
+                numpy-style datatype for this new dataset (e.g. "uint8").
+            description (str): Only required if `create_new = True`. Sets the
+                description for the newly-created collection, experiment,
+                channel, and coordframe resources.
+            extents: Optional[Tuple[int, int, int]]: Only required if
+                `create_new = True`. Specifies the total dataset extents of
+                this new dataset, in ZYX order.
+            voxel_size: Optional[Tuple[int, int, int]]: Only required if
+                `create_new = True`. Specifies the voxel dimensions of this new
+                dataset, in ZYX order.
+            voxel_unit: Optional[str]: Only required if `create_new = True`.
+                Specifies the voxel-dimension unit. For example, "nanometers".
 
         """
         self.axis_order = axis_order
@@ -153,7 +228,7 @@ class array:
         # Handle custom Remote:
         self.volume_provider = volume_provider
         if volume_provider is None:
-            self.volume_provider = InternVolumeProvider()
+            self.volume_provider = _InternVolumeProvider()
 
         if create_new:
 

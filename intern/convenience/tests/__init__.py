@@ -1,13 +1,9 @@
 import unittest
 
 from intern import array
-from intern.remote.boss import BossRemote
 
-_DEFAULT_BOSS_OPTIONS = {
-    "protocol": "https",
-    "host": "api.bossdb.io",
-    "token": "public",
-}
+from intern.convenience import _DEFAULT_BOSS_OPTIONS
+from intern.remote.boss import BossRemote
 
 
 class TestConvenienceProjectCreation(unittest.TestCase):

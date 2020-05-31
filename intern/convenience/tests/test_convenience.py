@@ -1,7 +1,6 @@
 import unittest
 
 from ...convenience import parse_fquri, InvalidURIError
-from ...remote.boss import BossRemote
 
 
 class TestFQURIParser(unittest.TestCase):
