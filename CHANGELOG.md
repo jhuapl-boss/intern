@@ -2,9 +2,11 @@
 
 ---
 
-## v?.?.?
+## v1.0.0 — June 1, 2020
 
-> This build switches `intern` to GitHub actions, and now tests both 3.6 as well as 3.7. Python 2.7 testing is no longer supported.
+> This version introduces the convenience API which uses numpy-like indexing.
+
+This build switches `intern` CI to GitHub actions, and now tests both 3.6 as well as 3.7. Python 2.7 testing is no longer supported.
 
 ### Features
 
