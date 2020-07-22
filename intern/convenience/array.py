@@ -201,7 +201,6 @@ class array:
         collection_desc: Optional[str] = None,
         experiment_desc: Optional[str] = None,
         source_channel: Optional[str] = None,
-        base_resolution: Optional[int] = 0,
         boss_config: Optional[dict] = None,
     ) -> None:
         """
@@ -248,8 +247,6 @@ class array:
             source_channel (Optional[str]): The channel to use as the source
                 for this new channel, if `create_new` is True and this is
                 going to be an annotation channel (dtype!=uint8).
-            base_resolution (Optional[int]): The base resolution to set for the
-                newly created channel, if `create_new` is True.
             boss_config (Optional[dict]): The BossRemote configuration dict to
                 use in order to authenticate with a BossDB remote. This option
                 is mutually exclusive with the VolumeProvider configuration. If
@@ -355,7 +352,6 @@ class array:
                     description=description,
                     type="image" if dtype == "uint8" else "annotation",
                     datatype=dtype,
-                    base_resolution=base_resolution,
                     sources=[source_channel] if source_channel else [],
                 )
                 self.volume_provider.create_project(channel)
