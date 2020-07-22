@@ -194,6 +194,13 @@ class array:
         extents: Optional[Tuple[int, int, int]] = None,
         voxel_size: Optional[Tuple[int, int, int]] = None,
         voxel_unit: Optional[str] = None,
+        downsample_levels: int = 6,
+        downsample_method: Optional[str] = "anisotropic",
+        coordinate_frame_name: Optional[str] = None,
+        coordinate_frame_desc: Optional[str] = None,
+        collection_desc: Optional[str] = None,
+        experiment_desc: Optional[str] = None,
+        boss_config: Optional[dict] = None,
     ) -> None:
         """
         Construct a new intern-backed array.
@@ -221,6 +228,25 @@ class array:
                 dataset, in ZYX order.
             voxel_unit: Optional[str]: Only required if `create_new = True`.
                 Specifies the voxel-dimension unit. For example, "nanometers".
+            downsample_levels (int: 6): The number of downsample levels.
+            downsample_method (Optional[str]): The type of downsample to use.
+                If unset, defaults to 'anisotropic'.
+            coordinate_frame_name (Optional[str]): If set, the name to use for
+                the newly created coordinate frame. If not set, the name of the
+                coordinate frame will be chosen automatically.
+            coordinate_frame_desc (Optional[str]): If set, the description text
+                to use for the newly created coordinate frame. If not set, the
+                description will be chosen automatically.
+            collection_desc (Optional[str]): The description text to use for a
+                newly created collection. If not set, the description will be
+                chosen automatically.
+            experiment_desc (Optional[str]): The description text to use for a
+                newly created experiment. If not set, the description will be
+                chosen automatically.
+            boss_config (Optional[dict]): The BossRemote configuration dict to
+                use in order to authenticate with a BossDB remote. This option
+                is mutually exclusive with the VolumeProvider configuration. If
+                the `volume_provider` arg is set, this will be ignored.
 
         """
         self.axis_order = axis_order
@@ -228,7 +254,10 @@ class array:
         # Handle custom Remote:
         self.volume_provider = volume_provider
         if volume_provider is None:
-            self.volume_provider = _InternVolumeProvider()
+            if boss_config:
+                self.volume_provider = _InternVolumeProvider(BossRemote(boss_config))
+            else:
+                self.volume_provider = _InternVolumeProvider()
 
         if create_new:
 
@@ -255,20 +284,24 @@ class array:
                 )
             except:
                 # Create the collection:
-                collection = CollectionResource(uri.collection, description=description)
+                collection = CollectionResource(
+                    uri.collection, description=collection_desc or description
+                )
                 self.volume_provider.create_project(collection)
 
             # create coordframe if it doesn't exist:
             try:
                 # Try to get an existing coordframe:
                 coordframe = self.volume_provider.get_project(
-                    CoordinateFrameResource(f"CF_{uri.collection}_{uri.experiment}")
+                    CoordinateFrameResource(
+                        coordinate_frame_name or f"CF_{uri.collection}_{uri.experiment}"
+                    )
                 )
             except:
                 # Create the coordframe:
                 coordframe = CoordinateFrameResource(
-                    f"CF_{uri.collection}_{uri.experiment}",
-                    description=description,
+                    coordinate_frame_name or f"CF_{uri.collection}_{uri.experiment}",
+                    description=coordinate_frame_desc or description,
                     x_start=0,
                     y_start=0,
                     z_start=0,
@@ -293,8 +326,10 @@ class array:
                 experiment = ExperimentResource(
                     uri.experiment,
                     uri.collection,
-                    description=description,
+                    description=experiment_desc or description,
                     coord_frame=coordframe.name,
+                    num_hierarchy_levels=downsample_levels,
+                    hierarchy_method=downsample_method,
                 )
                 self.volume_provider.create_project(experiment)
 
