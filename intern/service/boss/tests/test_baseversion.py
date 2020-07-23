@@ -107,10 +107,18 @@ class BaseVersionTest(unittest.TestCase):
         coll = self.chanResource.coll_name
         exp = self.chanResource.exp_name
         chan = self.chanResource.name
-        self.assertEqual(
-            self.url_prefix + '/' + self.test_project.version + '/' +
-            'cutout/to_black/' + coll + '/' + exp + '/' + chan,
-            actual)
+        expected = "/".join(
+            [
+                self.url_prefix,
+                self.test_project.version,
+                "cutout/to_black",
+                coll,
+                exp,
+                chan,
+            ]
+        )
+
+        self.assertEqual(expected, actual)
 
     def test_build_url_normal(self):
         """Test standard use of BaseVersion.build_url().
