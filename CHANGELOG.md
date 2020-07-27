@@ -2,6 +2,14 @@
 
 ---
 
+## v1.2.0
+
+> This release adds support for parallel data uploads through `BossRemote#create_cutout`.
+
+-   Remotes
+    -   `BossRemote`
+        -   Parallel data upload with `BossRemote#create_cutout`
+
 ## v1.1.0 — July 27 2020
 
 > Updates to the convenience API.
