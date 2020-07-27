@@ -62,7 +62,7 @@ class VolumeService(BossService):
 
     @check_channel
     def create_cutout(
-        self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None):
+        self, resource, resolution, x_range, y_range, z_range, numpyVolume, time_range=None, **kwargs):
         """Upload a cutout to the volume service.
 
         Args:
@@ -78,7 +78,7 @@ class VolumeService(BossService):
 
         return self.service.create_cutout(
             resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
-            self.url_prefix, self.auth, self.session, self.session_send_opts)
+            self.url_prefix, self.auth, self.session, self.session_send_opts, **kwargs)
 
     @check_channel
     def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], access_mode=CacheMode.no_cache, **kwargs):
