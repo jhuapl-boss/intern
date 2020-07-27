@@ -22,9 +22,6 @@ from collections import namedtuple
 # Pip-installable imports
 import numpy as np
 
-import blosc
-import requests
-
 from intern.resource.boss.resource import (
     CollectionResource,
     ChannelResource,
@@ -144,7 +141,7 @@ def parse_bossdb_uri(uri: str) -> bossdbURI:
     Parse a bossDB URI and handle malform errors.
 
     Arguments:
-        uri (str): URI of the form bossdb://<collection/<experiment/<channel>
+        uri (str): URI of the form bossdb://<collection>/<experiment>/<channel>
 
     Returns:
         bossdbURI

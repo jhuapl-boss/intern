@@ -2,6 +2,15 @@
 
 ---
 
+## v1.1.0 — July 27 2020
+
+> Updates to the convenience API.
+
+-   **Convenience API**
+    -   New arguments to specify the source channel for annotation channels
+    -   Specify BossDB config inline without special imports with `array(..., boss_config: dict)` argument
+    -   Specify descriptions for newly created resources when calling `array(..., create_new=True)`.
+
 ## v1.0.0 — June 1, 2020
 
 > This version introduces the convenience API which uses numpy-like indexing.
@@ -11,7 +20,7 @@ This build switches `intern` CI to GitHub actions, and now tests both 3.6 as wel
 ### Features
 
 -   **Convenience API** (#48)
-    -   This adds support for the simple `intern.array` interface which mocks the numpy array for getters and setters.
+    -   This adds support for the simple `intern.array` interface which mocks the numpy array API for getters and setters.
 -   Add support for DVID and cloud-volume hosted data with `DVIDRemote` and `CloudVolumeRemote`. (#46)
 -   Add parallelism to `BossRemote#get_cutout` calls by passing `parallel=True` or `parallel=<int # of jobs>` as an argument. (#52)
 -   Addition of a `MeshService` for local meshing of 3D segmentation data.
