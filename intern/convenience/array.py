@@ -22,9 +22,6 @@ from collections import namedtuple
 # Pip-installable imports
 import numpy as np
 
-import blosc
-import requests
-
 from intern.resource.boss.resource import (
     CollectionResource,
     ChannelResource,
@@ -144,7 +141,7 @@ def parse_bossdb_uri(uri: str) -> bossdbURI:
     Parse a bossDB URI and handle malform errors.
 
     Arguments:
-        uri (str): URI of the form bossdb://<collection/<experiment/<channel>
+        uri (str): URI of the form bossdb://<collection>/<experiment>/<channel>
 
     Returns:
         bossdbURI
@@ -200,6 +197,7 @@ class array:
         coordinate_frame_desc: Optional[str] = None,
         collection_desc: Optional[str] = None,
         experiment_desc: Optional[str] = None,
+        source_channel: Optional[str] = None,
         boss_config: Optional[dict] = None,
     ) -> None:
         """
@@ -243,6 +241,9 @@ class array:
             experiment_desc (Optional[str]): The description text to use for a
                 newly created experiment. If not set, the description will be
                 chosen automatically.
+            source_channel (Optional[str]): The channel to use as the source
+                for this new channel, if `create_new` is True and this is
+                going to be an annotation channel (dtype!=uint8).
             boss_config (Optional[dict]): The BossRemote configuration dict to
                 use in order to authenticate with a BossDB remote. This option
                 is mutually exclusive with the VolumeProvider configuration. If
@@ -348,6 +349,7 @@ class array:
                     description=description,
                     type="image" if dtype == "uint8" else "annotation",
                     datatype=dtype,
+                    sources=[source_channel] if source_channel else [],
                 )
                 self.volume_provider.create_project(channel)
 
