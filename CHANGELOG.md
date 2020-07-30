@@ -9,6 +9,7 @@
 -   Remotes
     -   `BossRemote`
         -   Parallel data upload with `BossRemote#create_cutout`
+        -   `create_cutout` ignores all-zero data uploads for better performance and lower network IO
 
 ## v1.1.0 — July 27 2020
 
