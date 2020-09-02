@@ -8,7 +8,7 @@ import os.path
 # python setup.py sdist
 # twine upload dist/*
 
-__version__ = "1.0.0"
+__version__ = "1.1.1"
 
 here = path.abspath(path.dirname(__file__))
 
