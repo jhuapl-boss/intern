@@ -1,12 +1,14 @@
 from setuptools import setup, find_packages
 from codecs import open
 from os import path
-from intern import __version__
+import os.path
 
 # to update
+# Update intern.version.__version__, update __version__ below:
 # python setup.py sdist
 # twine upload dist/*
 
+__version__ = "1.0.0"
 
 here = path.abspath(path.dirname(__file__))
 
