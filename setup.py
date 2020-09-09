@@ -23,6 +23,8 @@ def get_version(rel_path):
         if line.startswith("__version__"):
             delim = '"' if '"' in line else "'"
             return line.split(delim)[1]
+        else:
+            raise RuntimeError("Unable to find version string.")
 
 
 __version__ = get_version("intern/version/__init__.py")
