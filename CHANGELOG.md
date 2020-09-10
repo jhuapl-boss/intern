@@ -2,7 +2,11 @@
 
 ---
 
-## v1.1.0 — July 27 2020
+## v1.1.1 — September 2, 2020
+
+> Pip-installability fix (#67).
+
+## v1.1.0 — July 27, 2020
 
 > Updates to the convenience API.
 
