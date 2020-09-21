@@ -1,12 +1,33 @@
 from setuptools import setup, find_packages
 from codecs import open
 from os import path
-from intern import __version__
+import os.path
 
 # to update
+# Update intern.version.__version__, update __version__ below:
 # python setup.py sdist
 # twine upload dist/*
 
+import codecs
+import os.path
+
+
+def read(rel_path):
+    here = os.path.abspath(os.path.dirname(__file__))
+    with codecs.open(os.path.join(here, rel_path), "r") as fp:
+        return fp.read()
+
+
+def get_version(rel_path):
+    for line in read(rel_path).splitlines():
+        if line.startswith("__version__"):
+            delim = '"' if '"' in line else "'"
+            return line.split(delim)[1]
+        else:
+            raise RuntimeError("Unable to find version string.")
+
+
+__version__ = get_version("intern/version/__init__.py")
 
 here = path.abspath(path.dirname(__file__))
 
