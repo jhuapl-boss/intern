@@ -149,6 +149,58 @@ class VolumeService_1(BaseVersion):
             resource.name, resp.status_code, resp.text))
         raise HTTPError(msg, request=req, response=resp)
 
+    def create_cutout_to_black(
+        self, resource, resolution, x_range, y_range, z_range, time_range, url_prefix, 
+        auth, session, send_opts):
+        """Upload a black cutout to the Boss data store.
+
+        Args:
+            resource (intern.resource.resource.Resource): Resource compatible with cutout operations.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+        """
+
+        # Check to see if this volume is larger than 1GB. If so, chunk it into
+        # several smaller bites:
+        if (
+                (x_range[1] - x_range[0]) *
+                (y_range[1] - y_range[0]) *
+                (z_range[1] - z_range[0])
+        ) > 1024 * 1024 * 32 * 2:
+            blocks = block_compute(
+                x_range[0], x_range[1],
+                y_range[0], y_range[1],
+                z_range[0], z_range[1],
+                block_size=(1024, 1024, 32)
+            )
+            for b in blocks:
+                self.create_cutout_to_black(
+                    resource, resolution, b[0], b[1], b[2],
+                    time_range, url_prefix, auth, session, send_opts
+                )
+            return
+
+        req = self.get_cutout_to_black_request(
+            resource, 'PUT', 'application/blosc',
+            url_prefix, auth,
+            resolution, x_range, y_range, z_range, time_range)
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            return
+
+        msg = ('Create cutout_to_black failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
+
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
             url_prefix, auth, session, send_opts, access_mode=CacheMode.no_cache, parallel: bool = True, **kwargs

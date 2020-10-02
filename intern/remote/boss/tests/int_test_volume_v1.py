@@ -912,5 +912,52 @@ class VolumeServiceTest_v1(unittest.TestCase):
         actual = self.rmt.get_cutout(self.chan, 0, x_rng, y_rng, z_rng, time_range=t_rng)
         numpy.testing.assert_array_equal(data, actual)
 
+    def test_upload_and_cutout_to_black(self):
+        x_rng = [0, 8]
+        y_rng = [0, 4]
+        z_rng = [0, 5]
+
+        data = numpy.random.randint(1, 254, (5, 4, 8))
+        data = data.astype(numpy.uint8)
+
+        self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
+        self.rmt.create_cutout_to_black(self.chan, 0, x_rng, y_rng, z_rng)
+        actual = self.rmt.get_cutout(self.chan, 0, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(numpy.zeros((5,4,8)), actual)
+
+    def test_upload_and_cutout_to_black_with_time(self):
+        x_rng = [0, 8]
+        y_rng = [0, 4]
+        z_rng = [0, 5]
+        t_rng = [3, 6]
+
+        data = numpy.random.randint(1, 254, (3, 5, 4, 8))
+        data = data.astype(numpy.uint8)
+
+        self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data, time_range=t_rng)
+        self.rmt.create_cutout_to_black(self.chan, 0, x_rng, y_rng, z_rng, time_range=t_rng)
+        actual = self.rmt.get_cutout(self.chan, 0, x_rng, y_rng, z_rng, time_range=t_rng)
+        numpy.testing.assert_array_equal(numpy.zeros((3, 5, 4, 8)), actual)
+
+    def test_upload_and_cutout_to_black_partial(self):
+        x_rng = [0, 1024]
+        y_rng = [0, 1024]
+        z_rng = [0, 5]
+
+        x_rng_black = [0, 256]
+        y_rng_black = [0, 512]
+        z_rng_black = [2,3] 
+
+        data = numpy.random.randint(1, 254, (5, 1024, 1024))
+        data = data.astype(numpy.uint8)
+
+        expected = numpy.copy(data)
+        expected[2:3, 0:512, 0:256] = 0
+
+        self.rmt.create_cutout(self.chan, 0, x_rng, y_rng, z_rng, data)
+        self.rmt.create_cutout_to_black(self.chan, 0, x_rng_black, y_rng_black, z_rng_black)
+        actual = self.rmt.get_cutout(self.chan, 0, x_rng, y_rng, z_rng)
+        numpy.testing.assert_array_equal(expected, actual)
+
 if __name__ == '__main__':
     unittest.main()

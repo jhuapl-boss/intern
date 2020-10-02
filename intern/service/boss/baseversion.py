@@ -169,18 +169,18 @@ class BaseVersion(object):
         Raises:
             (RuntimeError): if *_range invalid.
         """
-        baseUrl = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
+        base_url = self.build_url(resource, url_prefix, 'cutout', req_type='cutout')
         x_rng_lst = self.convert_int_list_range_to_str(x_range)
         y_rng_lst = self.convert_int_list_range_to_str(y_range)
         z_rng_lst = self.convert_int_list_range_to_str(z_range)
 
-        urlWithParams = (
-            baseUrl + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+        url_with_params = (
+            base_url + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
             '/' + z_rng_lst + '/')
 
         if time_range is not None:
             t_rng_lst = self.convert_int_list_range_to_str(time_range)
-            urlWithParams += t_rng_lst + '/'
+            url_with_params += t_rng_lst + '/'
 
         queryParamDict = {}
         if len(id_list) > 0:
@@ -191,23 +191,56 @@ class BaseVersion(object):
             queryParamDict['access-mode'] = access_mode.value 
         """
         TODO: LMR
-        The following could be done using urlib.urlencode(urlWithParams += '?' + urllib.parse.urlencode(queryParamDict,safe=",")),
+        The following could be done using urlib.urlencode(url_with_params += '?' + urllib.parse.urlencode(queryParamDict,safe=",")),
         however urllib's python2 version of this function does not take in the 'safe' parameter and thus we can not use the 
         function interchangable for python2/3. In order to keep our python2/3 compatability, we do not use urllib. 
         """
         if queryParamDict:
             # The first time include '?'
-            urlWithParams += '?'
+            url_with_params += '?'
             for k, v in queryParamDict.items():
                 # if this is the first run through, last char in str will be ?, so don't include '&'
-                if urlWithParams[len(urlWithParams)-1] == '?':
+                if url_with_params[len(url_with_params)-1] == '?':
                     pass
                 # otherwise use '&'
                 else:
-                    urlWithParams += '&'
+                    url_with_params += '&'
                 # Add key and value members
-                urlWithParams += '{}={}'.format(k,v)
-        return urlWithParams
+                url_with_params += '{}={}'.format(k,v)
+        return url_with_params
+
+    def build_cutout_to_black_url(
+        self, resource, url_prefix, resolution, x_range, y_range, z_range, time_range=None):
+        """Build the url to access the cutout_to_black function of the Boss' volume service.
+        TODO: Maybe delete this function and add a base_url parameter to build_cutout_url?
+        Args:
+            url_prefix (string): Do not end with a slash.  Example of expected value: https://api.theboss.io
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+
+        Returns:
+            (string): Full URL to access API.
+
+        Raises:
+            (RuntimeError): if *_range invalid.
+        """
+        base_url = self.build_url(resource, url_prefix, 'cutout/to_black', req_type='cutout')
+        x_rng_lst = self.convert_int_list_range_to_str(x_range)
+        y_rng_lst = self.convert_int_list_range_to_str(y_range)
+        z_rng_lst = self.convert_int_list_range_to_str(z_range)
+
+        url_with_params = (
+            base_url + '/' + str(resolution) + '/' + x_rng_lst + '/' + y_rng_lst +
+            '/' + z_rng_lst + '/')
+
+        if time_range is not None:
+            t_rng_lst = self.convert_int_list_range_to_str(time_range)
+            url_with_params += t_rng_lst + '/'
+        
+        return url_with_params
 
     def get_request(self, resource, method, content, url_prefix, token, proj_list_req=False, json=None, data=None):
         """Create a request for accessing the Boss' data model services.
@@ -308,6 +341,35 @@ class BaseVersion(object):
             resource, url_prefix, resolution, x_range, y_range, z_range,  time_range, id_list, access_mode)
         headers = self.get_headers(content, token)
         return Request(method, url, headers = headers, data = numpyVolume)
+    
+    def get_cutout_to_black_request(
+        self, resource, method, content, url_prefix, token,
+        resolution, x_range, y_range, z_range, time_range):
+
+        """Create a request for working with cutout_to_black (part of the Boss' volume service).
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            resolution (int): 0 indicates native resolution.
+            x_range (list[int]): x range such as [10, 20] which means x>=10 and x<20.
+            y_range (list[int]): y range such as [10, 20] which means y>=10 and y<20.
+            z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
+            time_range (list[int]): time range such as [30, 40] which means t>=30 and t<40.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        url = self.build_cutout_to_black_url(
+            resource, url_prefix, resolution, x_range, y_range, z_range,  time_range)
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers = headers)
 
     def get_group_request(self, method, content, url_prefix, token, name=None):
         """Get a request for getting group information.

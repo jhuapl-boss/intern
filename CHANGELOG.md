@@ -6,12 +6,11 @@
 
 > This release adds support for parallel data uploads through `BossRemote#create_cutout`.
 
--   Remotes
-    -   `BossRemote`
-        -   Parallel data upload with `BossRemote#create_cutout`
-        -   `create_cutout` ignores all-zero data uploads for better performance and lower network IO
+## v1.1.1 — September 2, 2020
 
-## v1.1.0 — July 27 2020
+> Pip-installability fix (#67).
+
+## v1.1.0 — July 27, 2020
 
 > Updates to the convenience API.
 
