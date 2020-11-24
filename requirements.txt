@@ -5,7 +5,3 @@ six
 mock
 nose2
 zmesh
-
-# cloud-volume
-brotli
-cloud-volume>=1.6.0
