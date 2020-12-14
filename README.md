@@ -54,6 +54,13 @@ For example, on a \*nix system, if intern was cloned to ~/intern:
 
 > **For Python 2 support, you will need to install intern v0.10.0 or earlier.**
 
+### Optional Dependencies
+To install depedencies required to use the [cloud-volume](https://github.com/seung-lab/cloud-volume) remote, run the command: 
+
+```shell
+pip install intern[cloudvolume]
+```
+
 ## Getting Started
 
 To quickly get started with intern, check out the wiki: [https://github.com/jhuapl-boss/intern/wiki](https://github.com/jhuapl-boss/intern/wiki)
