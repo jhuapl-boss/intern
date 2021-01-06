@@ -251,7 +251,13 @@ class VolumeService_1(BaseVersion):
             ), dtype=resource.datatype)
 
             if parallel:
-                pool = multiprocessing.Pool(processes=parallel if isinstance(parallel, int) and parallel > 0 else multiprocessing.cpu_count())
+                if type(parallel) == bool:
+                    parallel = multiprocessing.cpu_count()
+                elif parallel > 0:
+                    parallel = int(parallel)
+                else:
+                    raise ValueError("Parallel must be greater than 0.")
+                pool = multiprocessing.Pool(processes=parallel)
                 chunks = pool.starmap(self.get_cutout, [
                     (
                         resource, resolution, b[0], b[1], b[2],
