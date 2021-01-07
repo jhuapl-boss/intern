@@ -207,7 +207,7 @@ class VolumeService_1(BaseVersion):
                 no_cache = Will skip cache check but check for dirty keys
                 raw = Will skip both the cache and dirty keys check
             chunk_size (optional Tuple[int, int, int]): The chunk size to request
-            parallel (bool: True): Whether downloads should be parallelized using multiprocessing
+            parallel (Union[int, bool]: True): Whether downloads should be parallelized using multiprocessing
 
 
         Returns:
