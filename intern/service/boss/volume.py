@@ -100,7 +100,7 @@ class VolumeService(BossService):
             self.url_prefix, self.auth, self.session, self.session_send_opts)
 
     @check_channel
-    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], access_mode=CacheMode.no_cache, **kwargs):
+    def get_cutout(self, resource, resolution, x_range, y_range, z_range, time_range=None, id_list=[], access_mode=CacheMode.no_cache, parallel=True, **kwargs):
         """Get a cutout from the volume service.
 
         Args:
@@ -116,6 +116,9 @@ class VolumeService(BossService):
                 cache = Will check both cache and for dirty keys
                 no_cache = Will skip cache check but check for dirty keys
                 raw = Will skip both the cache and dirty keys check
+            parallel (optional bool | int): 
+                # of processes for parallel download. If set to True it will 
+                use # of CPU cores returned by multiprocess.cpu_count(). 
 
         Returns:
             (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
@@ -126,7 +129,7 @@ class VolumeService(BossService):
 
         return self.service.get_cutout(
             resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            self.url_prefix, self.auth, self.session, self.session_send_opts, access_mode, **kwargs)
+            self.url_prefix, self.auth, self.session, self.session_send_opts, access_mode, parallel, **kwargs)
 
     @check_channel
     def reserve_ids(self, resource, num_ids):
