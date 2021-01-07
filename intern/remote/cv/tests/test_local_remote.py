@@ -12,11 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+try:
+    from intern.remote.cv.remote import *
+    HAS_CLOUDVOLUME=True
+except ImportError:
+    HAS_CLOUDVOLUME=False
+
 import os
 import shutil
 import numpy as np
 import unittest
-from intern.remote.cv.remote import *
 
 FILE_PATH = "test_data/images/"
 
@@ -28,6 +33,7 @@ class TestCloudVolumeRemote(unittest.TestCase):
         'cloudpath': FILE_PATH
         })
     
+    @unittest.skipIf(not HAS_CLOUDVOLUME, "cloud-volume not installed. Skipping test.")
     def test_cutout_uint8(self):
         # Create Info JSON
         info = self.cv_remote.create_new_info(
@@ -49,6 +55,7 @@ class TestCloudVolumeRemote(unittest.TestCase):
         cutout = self.cv_remote.get_cutout(resource, 0, [32,96], [32,96], [32,96])
         np.testing.assert_array_equal(data[32:96, 32:96, 32:96], cutout)
 
+    @unittest.skipIf(not HAS_CLOUDVOLUME, "cloud-volume not installed. Skipping test.")
     def test_cutout_uint16(self):
         # Create Info JSON
         info = self.cv_remote.create_new_info(
@@ -69,7 +76,8 @@ class TestCloudVolumeRemote(unittest.TestCase):
         # Download cutout and check for equivalence 
         cutout = self.cv_remote.get_cutout(resource, 0, [32,96], [32,96], [32,96])
         np.testing.assert_array_equal(data[32:96, 32:96, 32:96], cutout)
-    
+
+    @unittest.skipIf(not HAS_CLOUDVOLUME, "cloud-volume not installed. Skipping test.")    
     def test_cutout_float64(self):
         # Create Info JSON
         info = self.cv_remote.create_new_info(
@@ -90,7 +98,8 @@ class TestCloudVolumeRemote(unittest.TestCase):
         # Download cutout and check for equivalence 
         cutout = self.cv_remote.get_cutout(resource, 0, [32,96], [32,96], [32,96])
         np.testing.assert_array_equal(data[32:96, 32:96, 32:96], cutout)
-    
+
+    @unittest.skipIf(not HAS_CLOUDVOLUME, "cloud-volume not installed. Skipping test.")    
     def test_multiple_mips(self):
         # Create Info JSON
         info = self.cv_remote.create_new_info(
@@ -123,6 +132,7 @@ class TestCloudVolumeRemote(unittest.TestCase):
         cutout_1 = self.cv_remote.get_cutout(resource, 1, [0,64], [0,64], [0,128])
         np.testing.assert_array_equal(data_1, cutout_1)         
     
+    @unittest.skipIf(not HAS_CLOUDVOLUME, "cloud-volume not installed. Skipping test.")
     def test_metadata(self):
         # Create Info JSON
         info = self.cv_remote.create_new_info(
@@ -150,7 +160,8 @@ class TestCloudVolumeRemote(unittest.TestCase):
         self.assertEqual("images", self.cv_remote.get_layer(resource))
         self.assertEqual("test_data", self.cv_remote.get_dataset_name(resource))
         self.assertEqual(range(0,8), self.cv_remote.list_res(resource))
-    
+
+    @unittest.skipIf(not HAS_CLOUDVOLUME, "cloud-volume not installed. Skipping test.")    
     def test_delete(self):
          # Create Info JSON
         info = self.cv_remote.create_new_info(
