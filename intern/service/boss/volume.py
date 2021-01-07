@@ -116,9 +116,9 @@ class VolumeService(BossService):
                 cache = Will check both cache and for dirty keys
                 no_cache = Will skip cache check but check for dirty keys
                 raw = Will skip both the cache and dirty keys check
-            parallel (optional bool | int): 
-                # of processes for parallel download. If set to True it will 
-                use # of CPU cores returned by multiprocess.cpu_count(). 
+            parallel (Union[int, bool]: True): Whether downloads should be parallelized using 
+                multiprocessing. If set to True, will use all available CPUs. If set to False,
+                will use only one CPU. If set to an integer, will spawn that number of threads.
 
         Returns:
             (numpy.array): A 3D or 4D (time) numpy matrix in (time)ZYX order.
