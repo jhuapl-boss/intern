@@ -347,7 +347,7 @@ class array:
                     uri.collection,
                     uri.experiment,
                     description=description,
-                    type="image" if dtype == "uint8" else "annotation",
+                    type="image" if dtype in ["uint8", "uint16"] else "annotation",
                     datatype=dtype,
                     sources=[source_channel] if source_channel else [],
                 )
