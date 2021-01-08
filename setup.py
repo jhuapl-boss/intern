@@ -4,7 +4,7 @@ from os import path
 import os.path
 
 # to update
-# Update intern.version.__version__, update __version__ below:
+# Update intern.version.__version__
 # python setup.py sdist
 # twine upload dist/*
 
@@ -77,12 +77,7 @@ setup(
     include_package_data=True,
     author="Johns Hopkins University Applied Physics Laboratory",
     install_requires=install_requires,
-    extras_require={
-        "cloudvolume":[
-            "cloud-volume>=3.4.0",
-            "brotli>=1.0.7"
-        ]
-    },
+    extras_require={"cloudvolume": ["cloud-volume>=3.4.0", "brotli>=1.0.7"]},
     dependency_links=dependency_links,
     author_email="iarpamicrons@jhuapl.edu",
 )
