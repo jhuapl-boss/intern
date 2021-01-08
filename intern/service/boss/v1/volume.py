@@ -203,7 +203,7 @@ class VolumeService_1(BaseVersion):
 
     def get_cutout(
             self, resource, resolution, x_range, y_range, z_range, time_range, id_list,
-            url_prefix, auth, session, send_opts, access_mode=CacheMode.no_cache, parallel: bool = True, **kwargs
+            url_prefix, auth, session, send_opts, access_mode=CacheMode.no_cache, parallel=True, **kwargs
         ):
         """
         Upload a cutout to the Boss data store.
@@ -226,8 +226,9 @@ class VolumeService_1(BaseVersion):
                 no_cache = Will skip cache check but check for dirty keys
                 raw = Will skip both the cache and dirty keys check
             chunk_size (optional Tuple[int, int, int]): The chunk size to request
-            parallel (bool: True): Whether downloads should be parallelized using multiprocessing
-
+            parallel (Union[int, bool]: True): Whether downloads should be parallelized using 
+                multiprocessing. If set to True, will use all available CPUs. If set to False,
+                will use only one CPU. If set to an integer, will spawn that number of threads.
 
         Returns:
             (numpy.array): A 3D or 4D numpy matrix in ZXY(time) order.
@@ -270,7 +271,13 @@ class VolumeService_1(BaseVersion):
             ), dtype=resource.datatype)
 
             if parallel:
-                pool = multiprocessing.Pool(processes=parallel if isinstance(parallel, int) and parallel > 0 else multiprocessing.cpu_count())
+                if type(parallel) == bool:
+                    parallel = multiprocessing.cpu_count()
+                elif parallel > 0:
+                    parallel = int(parallel)
+                else:
+                    raise ValueError("Parallel must be greater than 0.")
+                pool = multiprocessing.Pool(processes=parallel)
                 chunks = pool.starmap(self.get_cutout, [
                     (
                         resource, resolution, b[0], b[1], b[2],
