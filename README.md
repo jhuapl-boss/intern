@@ -1,21 +1,18 @@
 # intern
 
-[![PyPI version](https://badge.fury.io/py/intern.svg)](https://badge.fury.io/py/intern)
-![Python 3.6/3.7 Tests](https://github.com/jhuapl-boss/intern/workflows/Test%20Python%20Package/badge.svg?branch=master&event=push)
+[![PyPI version](https://img.shields.io/pypi/v/intern?style=for-the-badge)](https://pypi.org/project/intern/)
+[![Python 3.6/3.7 Tests](https://img.shields.io/github/workflow/status/jhuapl-boss/intern/Test%20Python%20Package?style=for-the-badge)](https://github.com/jhuapl-boss/intern/actions?query=workflow%3A%22Test+Python+Package%22)
 
-**intern** (Integrated Toolkit for Extensible and Reproducible Neuroscience) is
-a Python 2/3 module that enables big-data neuroscience. Currently, it provides
-an interface to the Boss API, and in the future may provide interfaces to other
-neuroscience databases.
+**intern** (Integrated Toolkit for Extensible and Reproducible Neuroscience) is a Python 3 module that enables big-data neuroscience. Currently, it provides an interface to common big-data neuroimaging databases such as [BossDB](https://bossdb.org), CloudVolume, DVID, and other standard formats.
 
-## The Boss Legal Notes
 
-Use or redistribution of the Boss system in source and/or binary forms, with or without modification, are permitted provided that the following conditions are met:
+## Getting Started
 
-1. Redistributions of source code or binary forms must adhere to the terms and conditions of any applicable software licenses.
-2. End-user documentation or notices, whether included as part of a redistribution or disseminated as part of a legal or scientific disclosure (e.g. publication) or advertisement, must include the following acknowledgement: The Boss software system was designed and developed by the Johns Hopkins University Applied Physics Laboratory (JHU/APL).
-3. The names "The Boss", "JHU/APL", "Johns Hopkins University", "Applied Physics Laboratory", "MICrONS", or "IARPA" must not be used to endorse or promote products derived from this software without prior written permission. For written permission, please contact BossAdmin@jhuapl.edu.
-4. This source code and library is distributed in the hope that it will be useful, but is provided without any warranty of any kind.
+To quickly get started with intern, check out the wiki: [https://github.com/jhuapl-boss/intern/wiki](https://github.com/jhuapl-boss/intern/wiki)
+
+## Documentation
+
+Full detailed documentation can be found here: [https://jhuapl-boss.github.io/intern/](https://jhuapl-boss.github.io/intern/)
 
 ## Installation
 
@@ -61,14 +58,6 @@ To install depedencies required to use the [cloud-volume](https://github.com/seu
 pip install intern[cloudvolume]
 ```
 
-## Getting Started
-
-To quickly get started with intern, check out the wiki: [https://github.com/jhuapl-boss/intern/wiki](https://github.com/jhuapl-boss/intern/wiki)
-
-## Documentation
-
-Full detailed documentation can be found here: [https://jhuapl-boss.github.io/intern/](https://jhuapl-boss.github.io/intern/)
-
 ## Contributing
 
 Please submit bug reports, or get in touch using GitHub Issues.
@@ -91,3 +80,13 @@ https://www.biorxiv.org/content/10.1101/2020.05.15.098707v1
 	journal = {BiorXiv}
 }
 ```
+
+## The Boss Legal Notes
+
+Use or redistribution of the Boss system in source and/or binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code or binary forms must adhere to the terms and conditions of any applicable software licenses.
+2. End-user documentation or notices, whether included as part of a redistribution or disseminated as part of a legal or scientific disclosure (e.g. publication) or advertisement, must include the following acknowledgement: The Boss software system was designed and developed by the Johns Hopkins University Applied Physics Laboratory (JHU/APL).
+3. The names "The Boss", "JHU/APL", "Johns Hopkins University", "Applied Physics Laboratory", "MICrONS", or "IARPA" must not be used to endorse or promote products derived from this software without prior written permission. For written permission, please contact BossAdmin@jhuapl.edu.
+4. This source code and library is distributed in the hope that it will be useful, but is provided without any warranty of any kind.
+
