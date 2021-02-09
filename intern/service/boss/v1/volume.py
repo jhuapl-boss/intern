@@ -223,10 +223,10 @@ class VolumeService_1(BaseVersion):
             # USUALLY is the fastest. There is some variabiity on number of threads. 
             chunk_size = kwargs.pop("chunk_size", (512, 512, 16 * 6))
         else:
-            # Single thread downloads are faster with a large chunk size, but can't surpass 500 MB limit. 
-            # To stay within 500 MB constraint with 64-bit data, we chose a chunk size of (512, 512, 128) 
-            # which is about 268 MB. The chunk limit is therefore ~320 MB. 
-            chunk_size = kwargs.pop("chunk_size", (512, 512, 16 * 8))
+            # Single thread downloads are faster with a large chunk size, but can't surpass 
+            # 500 MB limit. To stay within 500 MB constraint with 64-bit data, we chose a 
+            # chunk size of (512, 512, 192) which is about 402 MB. 
+            chunk_size = kwargs.pop("chunk_size", (512, 512, 16 * 12))
         
         # TODO: magic number
         chunk_limit = (chunk_size[0] * chunk_size[1] * chunk_size[2]) * 1.2
