@@ -148,9 +148,9 @@ def parse_bossdb_uri(uri: str) -> bossdbURI:
 
     """
     t = uri.split("://")[1].split("/")
-    if len(t) is 3:
+    if len(t) == 3:
         return bossdbURI(t[0], t[1], t[2], None)
-    if len(t) is 4:
+    if len(t) == 4:
         return bossdbURI(t[0], t[1], t[2], int(t[3]))
     raise ValueError(f"Cannot parse URI {uri}.")
 
@@ -347,7 +347,7 @@ class array:
                     uri.collection,
                     uri.experiment,
                     description=description,
-                    type="image" if dtype == "uint8" else "annotation",
+                    type="image" if dtype in ["uint8", "uint16"] else "annotation",
                     datatype=dtype,
                     sources=[source_channel] if source_channel else [],
                 )
