@@ -45,16 +45,16 @@ def parse_fquri(fully_qualified_uri, **kwargs):
     secondary_protocol = None
     remote_path = None
 
-    if len(split_by_protocol) is 1:
+    if len(split_by_protocol) == 1:
         raise InvalidURIError(fully_qualified_uri + " must have a `[protocol]://`.")
 
-    elif len(split_by_protocol) is 2:
+    elif len(split_by_protocol) == 2:
         # This URI is of the form `[protocol]://[remote+resource]`, and doesn't
         # specify, e.g., an HTTP/HTTPS protocol.
         protocol, remote_path = split_by_protocol
         secondary_protocol = None
 
-    elif len(split_by_protocol) is 3:
+    elif len(split_by_protocol) == 3:
         # This URI has a secondary (e.g. https) protocol, and is of the form
         # `[protocol]://[secondary_protocol]://[remote+resource]`.
         protocol, secondary_protocol, remote_path = split_by_protocol
@@ -75,7 +75,7 @@ def parse_fquri(fully_qualified_uri, **kwargs):
     if remote_constructor == BossRemote:
         # `remote_path` should be of the form `host/col/exp/chan`:
         remote_path_components = remote_path.split("/")
-        if len(remote_path_components) is 4:
+        if len(remote_path_components) == 4:
             host, collection, experiment, channel = remote_path_components
             remote = remote_constructor(
                 {
@@ -84,7 +84,7 @@ def parse_fquri(fully_qualified_uri, **kwargs):
                     "token": kwargs.get("token", "public"),
                 }
             )
-        elif len(remote_path_components) is 3 and secondary_protocol is None:
+        elif len(remote_path_components) == 3 and secondary_protocol is None:
             # This means the host/protocol/token will be specified in a config
             # file, and we only have col/exp/chan, of the form:
             # `bossdb://col/exp/chan`
