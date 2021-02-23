@@ -98,3 +98,7 @@ def parse_fquri(fully_qualified_uri, **kwargs):
 
         resource = remote.get_channel(channel, collection, experiment)
         return (remote, resource)
+    raise InvalidURIError(
+        "BossDB URIs must be of the form bossdb://http[s]://[host]/[collection]/[experiment]/[echannel], got "
+        + remote_path
+    )
