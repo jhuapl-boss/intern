@@ -17,7 +17,12 @@ limitations under the License.
 # Standard imports
 from typing import Optional, Union, Tuple
 import abc
+import json
 from collections import namedtuple
+from urllib.parse import unquote
+
+from .uri import parse_fquri
+
 
 # Pip-installable imports
 import numpy as np
@@ -29,7 +34,6 @@ from intern.resource.boss.resource import (
     ExperimentResource,
 )
 from intern.remote.boss import BossRemote
-from intern.utils.parallel import block_compute
 
 # A named tuple that represents a bossDB URI.
 bossdbURI = namedtuple(
@@ -671,3 +675,65 @@ class array:
         cutout = self.volume_provider.create_cutout(
             self._channel, self.resolution, xs, ys, zs, value
         )
+
+
+def arrays_from_neuroglancer(url: str):
+    """
+    Construct array(s) from a neuroglancer link.
+
+    Arguments:
+        url (str): The neuroglancer link to parse
+
+    Returns:
+        Dict[str, array]: A dictionary of arrays, where each is keyed by
+            the name of the channel in neuroglancer.
+
+    """
+    ngl_state = json.loads(unquote(url).split("#!")[1])
+
+    arrays = {}
+    for source in ngl_state["layers"]:
+        source_url = ""
+        if "boss://" in source["source"]:
+            source_url = source["source"]
+        elif (
+            isinstance(source["source"], dict) and "boss://" in source["source"]["url"]
+        ):
+            source_url = source["source"]["url"]
+        else:
+            continue
+        remote, channel = parse_fquri(source_url)
+        arrays[source["name"]] = array(
+            channel=channel, volume_provider=_InternVolumeProvider(remote)
+        )
+    return arrays
+
+
+def volumes_from_neuroglancer(
+    url: str, radius_zyx: Tuple[int, int, int] = (10, 1024, 1024)
+):
+    """
+    Download numpy arrays from BossDB based upon a neuroglancer URL.
+
+    Arguments:
+        url (str): The neuroglancer link to parse
+        radius_zyx (Tuple[int, int, int]): The amount of data along each axis
+            to download, centered at the position from the URL.
+
+    Returns:
+        Dict[str, np.ndarray]: A dictionary of np.arrays, where each is keyed
+            by the name of the channel in neuroglancer.
+
+
+    """
+    ngl_state = json.loads(unquote(url).split("#!")[1])
+
+    x, y, z = ngl_state["position"]
+    zr, yr, xr = radius_zyx
+
+    arrays = arrays_from_neuroglancer(url)
+    return {
+        key: dataset[z - zr : z + zr, y - yr : y + yr, x - xr : x + xr]
+        for key, dataset in arrays.items()
+    }
+
