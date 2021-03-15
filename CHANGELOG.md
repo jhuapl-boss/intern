@@ -12,6 +12,8 @@
     -   Fixes parallelism defaulting to n=1 (#70)
 -   **CloudVolume**
     - Removes cloudvolume core dependency, and makes it an optional extra-install (#68)
+- **Fixes and Improvements**
+    - Adds support for the new "queued" downsample channel status
 
 ## v1.1.1 — September 2, 2020
 
