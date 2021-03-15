@@ -533,47 +533,53 @@ class array:
         if self._coord_frame is None:
             self._populate_coord_frame()
 
-        _normalize_units = (1, 1, 1)
-        if isinstance(key[-1], str) and len(key) == 4:
-            if key[-1] != self._coord_frame.voxel_unit:
-                raise NotImplementedError(
-                    "Can only reference voxels in native size format which is "
-                    f"{self._coord_frame.voxel_unit} for this dataset."
-                )
-            _normalize_units = self.voxel_size
-
-        if isinstance(key[2], int):
-            xs = (key[2], key[2] + 1)
+        if isinstance(key, int):
+            # Get the full Z slice:
+            xs = (0, self.shape[2])
+            ys = (0, self.shape[1])
+            zs = (key, key + 1)
         else:
-            start = key[2].start if key[2].start else 0
-            stop = key[2].stop if key[2].stop else self.shape[0]
+            _normalize_units = (1, 1, 1)
+            if isinstance(key[-1], str) and len(key) == 4:
+                if key[-1] != self._coord_frame.voxel_unit:
+                    raise NotImplementedError(
+                        "Can only reference voxels in native size format which is "
+                        f"{self._coord_frame.voxel_unit} for this dataset."
+                    )
+                _normalize_units = self.voxel_size
 
-            start = start / _normalize_units[0]
-            stop = stop / _normalize_units[0]
+            if isinstance(key[2], int):
+                xs = (key[2], key[2] + 1)
+            else:
+                start = key[2].start if key[2].start else 0
+                stop = key[2].stop if key[2].stop else self.shape[0]
 
-            xs = (int(start), int(stop))
+                start = start / _normalize_units[0]
+                stop = stop / _normalize_units[0]
 
-        if isinstance(key[1], int):
-            ys = (key[1], key[1] + 1)
-        else:
-            start = key[1].start if key[1].start else 0
-            stop = key[1].stop if key[1].stop else self.shape[1]
+                xs = (int(start), int(stop))
 
-            start = start / _normalize_units[1]
-            stop = stop / _normalize_units[1]
+            if isinstance(key[1], int):
+                ys = (key[1], key[1] + 1)
+            else:
+                start = key[1].start if key[1].start else 0
+                stop = key[1].stop if key[1].stop else self.shape[1]
 
-            ys = (int(start), int(stop))
+                start = start / _normalize_units[1]
+                stop = stop / _normalize_units[1]
 
-        if isinstance(key[0], int):
-            zs = (key[0], key[0] + 1)
-        else:
-            start = key[0].start if key[0].start else 0
-            stop = key[0].stop if key[0].stop else self.shape[2]
+                ys = (int(start), int(stop))
 
-            start = start / _normalize_units[2]
-            stop = stop / _normalize_units[2]
+            if isinstance(key[0], int):
+                zs = (key[0], key[0] + 1)
+            else:
+                start = key[0].start if key[0].start else 0
+                stop = key[0].stop if key[0].stop else self.shape[2]
 
-            zs = (int(start), int(stop))
+                start = start / _normalize_units[2]
+                stop = stop / _normalize_units[2]
+
+                zs = (int(start), int(stop))
 
         cutout = self.volume_provider.get_cutout(
             self._channel, self.resolution, xs, ys, zs
