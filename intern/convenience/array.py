@@ -520,68 +520,117 @@ class array:
 
             myarray[1, 1:100, 2]
 
-        Start-only (`10:`) or stop-only (`:10`) indexing is unsupported.
         """
+        # If the user has requested XYZ mode, the first thing to do is reverse
+        # the array indices. Then you can continue this fn without any
+        # additional changes.
         if self.axis_order == AxisOrder.XYZ:
             key = (key[2], key[1], key[0])
 
-        # Set experiment if unset:
+        # Next, we need to get the shape of the dataset. We do this currently
+        # by getting the coordinate frame, which means that we need the
+        # coordframe data and experiment data if we don't have it already. In
+        # the future, we may also want to allow the user to specify general
+        # shape information so that we can avoid calling the API.
+
+        # Populate the experiment metadata if unset:
         if self._exp is None:
             self._populate_exp()
 
-        # Set cframe if unset:
+        # Populate the coordinate frame metadata if not yet set:
         if self._coord_frame is None:
             self._populate_coord_frame()
 
-        _normalize_units = (1, 1, 1)
-        if isinstance(key[-1], str) and len(key) == 4:
-            if key[-1] != self._coord_frame.voxel_unit:
-                raise NotImplementedError(
-                    "Can only reference voxels in native size format which is "
-                    f"{self._coord_frame.voxel_unit} for this dataset."
-                )
-            _normalize_units = self.voxel_size
+        # Now we can begin. There is a wide variety of indexing options
+        # available, including single-integer indexing, tuple-of-slices
+        # indexing, tuple-of-int indexing...
 
-        if isinstance(key[2], int):
-            xs = (key[2], key[2] + 1)
+        # First we'll address if the user presents a single integer.
+        # ```
+        # my_array[500]
+        # ```
+        # In this case, the user is asking for a single Z slice (or single X
+        # slice if in XYZ order... But that's a far less common use case.)
+        # We will get the full XY extents and download a single 2D array:
+        if isinstance(key, int):
+            # Get the full Z slice:
+            xs = (0, self.shape[2])
+            ys = (0, self.shape[1])
+            zs = (key, key + 1)
         else:
-            start = key[2].start if key[2].start else 0
-            stop = key[2].stop if key[2].stop else self.shape[0]
+            # We also support indexing with units. For example, you can ask for
+            # ```
+            # my_array[0:10, 0:10, 0:10, "nanometers"]
+            # ```
+            # which will download as many pixels as are required in order to
+            # download 10nm in each dimension. We do this by storing a
+            # "normalized units" measure which is a rescale factor for each
+            # dimension (in the same order, e.g. ZYX, as the array).
+            _normalize_units = (1, 1, 1)
+            if isinstance(key[-1], str) and len(key) == 4:
+                if key[-1] != self._coord_frame.voxel_unit:
+                    raise NotImplementedError(
+                        "Can only reference voxels in native size format which is "
+                        f"{self._coord_frame.voxel_unit} for this dataset."
+                    )
+                _normalize_units = self.voxel_size
 
-            start = start / _normalize_units[0]
-            stop = stop / _normalize_units[0]
+            # We will now do the following codeblock three times, for X,Y,Z:
+            # First, we check to see if this index is a single integer. If so,
+            # the user is requesting a 2D array with zero depth along this
+            # dimension. For example, if the user asks for
+            # ```
+            # my_data[0:120, 0:120, 150]
+            # ```
+            # Then "150" suggests that the user just wants one single X slice.
+            if isinstance(key[2], int):
+                xs = (key[2], key[2] + 1)
+            else:
+                # If the key is a Slice, then it has .start and .stop attrs.
+                # (The user is requesting an array with more than one slice
+                # in this dimension.)
+                start = key[2].start if key[2].start else 0
+                stop = key[2].stop if key[2].stop else self.shape[0]
 
-            xs = (int(start), int(stop))
+                start = int(start / _normalize_units[0])
+                stop = int(stop / _normalize_units[0])
 
-        if isinstance(key[1], int):
-            ys = (key[1], key[1] + 1)
-        else:
-            start = key[1].start if key[1].start else 0
-            stop = key[1].stop if key[1].stop else self.shape[1]
+                # Cast the coords to integers (since Boss needs int coords)
+                xs = (int(start), int(stop))
 
-            start = start / _normalize_units[1]
-            stop = stop / _normalize_units[1]
+            # Do the same thing again for the next dimension: Either a single
+            # integer, or a slice...
+            if isinstance(key[1], int):
+                ys = (key[1], key[1] + 1)
+            else:
+                start = key[1].start if key[1].start else 0
+                stop = key[1].stop if key[1].stop else self.shape[1]
 
-            ys = (int(start), int(stop))
+                start = start / _normalize_units[1]
+                stop = stop / _normalize_units[1]
 
-        if isinstance(key[0], int):
-            zs = (key[0], key[0] + 1)
-        else:
-            start = key[0].start if key[0].start else 0
-            stop = key[0].stop if key[0].stop else self.shape[2]
+                ys = (int(start), int(stop))
 
-            start = start / _normalize_units[2]
-            stop = stop / _normalize_units[2]
+            # Do the same thing again for the last dimension: Either a single
+            # integer, or a slice...
+            if isinstance(key[0], int):
+                zs = (key[0], key[0] + 1)
+            else:
+                start = key[0].start if key[0].start else 0
+                stop = key[0].stop if key[0].stop else self.shape[2]
 
-            zs = (int(start), int(stop))
+                start = start / _normalize_units[2]
+                stop = stop / _normalize_units[2]
 
+                zs = (int(start), int(stop))
+
+        # Finally, we can perform the cutout itself, using the x, y, and z
+        # coordinates that we computed in the previous step.
         cutout = self.volume_provider.get_cutout(
             self._channel, self.resolution, xs, ys, zs
         )
 
-        # Data are returned in ZYX order, which is probably not what you want.
-        # TODO: Permit ZYX ordering
-        # Commented out March 19, 2019. Now returns in ZYX.
+        # Data are returned in ZYX order:
         if self.axis_order == AxisOrder.XYZ:
             data = np.rollaxis(np.rollaxis(cutout, 1), 2)
         elif self.axis_order == AxisOrder.ZYX:
@@ -589,8 +638,8 @@ class array:
 
         # If any of the dimensions are of length 1, it's because the user
         # requested a single slice in their key; flatten the array in that
-        # dimension. (For example, if you request `[10, 0:10, 0:10]` then the
-        # result should be 2D (no X component).)
+        # dimension. For example, if you request `[10, 0:10, 0:10]` then the
+        # result should be 2D (no Z component).
         _shape = data.shape
         if _shape[0] == 1:
             data = data[0, :, :]
