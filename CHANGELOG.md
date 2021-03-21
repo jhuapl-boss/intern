@@ -2,7 +2,7 @@
 
 ---
 
-## v1.2.0 (Unreleased)
+## v1.2.0
 
 > Updates to the cloudvolume adapters, and parallelism fixes.
 
@@ -10,6 +10,7 @@
     -   Adds support for uint16 image channel creation with the convenience API (#71)
 -   **Parallelism**
     -   Fixes parallelism defaulting to n=1 (#70)
+    -   This release adds support for parallel data uploads through `BossRemote#create_cutout`.
 -   **CloudVolume**
     - Removes cloudvolume core dependency, and makes it an optional extra-install (#68)
 - **Fixes and Improvements**
