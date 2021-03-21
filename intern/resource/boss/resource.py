@@ -423,7 +423,7 @@ class ChannelResource(BossResource):
 
     _valid_datatypes = ['uint8', 'uint16', 'uint64']
     _valid_types = ['annotation', 'image']
-    _valid_downsample_status = ['NOT_DOWNSAMPLED', 'IN_PROGRESS', 'DOWNSAMPLED', "FAILED"]
+    _valid_downsample_status = ['NOT_DOWNSAMPLED', 'IN_PROGRESS', 'DOWNSAMPLED', "FAILED", "QUEUED"]
 
     def __init__(self, name, collection_name, experiment_name, type="image",
         description='', default_time_sample=0, datatype='',

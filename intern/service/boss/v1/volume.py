@@ -236,7 +236,17 @@ class VolumeService_1(BaseVersion):
         Raises:
             requests.HTTPError
         """
-        chunk_size = kwargs.pop("chunk_size", (512, 512, 16 * 8))
+        if parallel:
+            # Parallel downloads are faster with a smaller chunk size but can easily overwhelm
+            # the endpoint if its too small. Therefore from empirical testing (512, 512, 96) 
+            # USUALLY is the fastest. There is some variabiity on number of threads. 
+            chunk_size = kwargs.pop("chunk_size", (512, 512, 16 * 6))
+        else:
+            # Single thread downloads are faster with a large chunk size, but can't surpass 
+            # 500 MB limit. To stay within 500 MB constraint with 64-bit data, we chose a 
+            # chunk size of (512, 512, 192) which is about 402 MB. 
+            chunk_size = kwargs.pop("chunk_size", (512, 512, 16 * 12))
+        
         # TODO: magic number
         chunk_limit = (chunk_size[0] * chunk_size[1] * chunk_size[2]) * 1.2
 
@@ -322,7 +332,7 @@ class VolumeService_1(BaseVersion):
 
         if resp.status_code == 200:
             raw_data = blosc.decompress(resp.content)
-            data_mat = np.fromstring(raw_data, dtype=resource.datatype)
+            data_mat = np.frombuffer(raw_data, dtype=resource.datatype)
 
             if time_range:
                 # Reshape including time

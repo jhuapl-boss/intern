@@ -13,6 +13,9 @@
     -   This release adds support for parallel data uploads through `BossRemote#create_cutout`.
 -   **CloudVolume**
     - Removes cloudvolume core dependency, and makes it an optional extra-install (#68)
+- **Fixes and Improvements**
+    - Adds support for the new "queued" downsample channel status (#78)
+    - Adds support for z-index slicing in the convenience array API (#77)
 
 ## v1.1.1 — September 2, 2020
 
