@@ -69,20 +69,6 @@ class VolumeService_1(BaseVersion):
         if np.sum(numpyVolume) == 0:
             return
 
-        if parallel:
-            # Parallel uploads are faster with a smaller chunk size but can easily overwhelm
-            # the endpoint if its too small. Therefore from empirical testing (512, 512, 96) 
-            # USUALLY is the fastest. There is some variabiity on number of threads. 
-            chunk_size =  (512, 512, 16 * 6)
-        else:
-            # Single thread uploads are faster with a large chunk size, but can't surpass 
-            # 500 MB limit. To stay within 500 MB constraint with 64-bit data, we chose a 
-            # chunk size of (512, 512, 192) which is about 402 MB. 
-            chunk_size = (512, 512, 16 * 12)
-        
-        # TODO: magic number
-        chunk_limit = (chunk_size[0] * chunk_size[1] * chunk_size[2]) * 1.2
-
         if numpyVolume.ndim == 3:
             # Can't have time
             if time_range is not None:
