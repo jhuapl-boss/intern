@@ -212,3 +212,21 @@ class VolumeService(BossService):
             Other exceptions may be raised depending on the volume service's implementation.
         """
         return self.service.get_neuroglancer_link(resource, resolution, x_range, y_range, z_range, self.url_prefix, **kwargs)
+    
+    @check_channel
+    def get_cuboids_from_id(self, resource, resolution, id):
+        """Get corners for cuboids that belong to a specific ID.
+
+        All returned corners are cuboid aligned.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with annotation operations.
+            resolution (int): 0 indicates native resolution.
+            id (int): Id of object of interest.
+
+        Returns:
+            (dict): {'cuboids': [[512, 512, 64], [0, 512, 32], [512, 512, 32], [0, 512, 48]]}
+        """
+        return self.service.get_cuboids_from_id(
+            resource, resolution, id,
+            self.url_prefix, self.auth, self.session, self.session_send_opts)
