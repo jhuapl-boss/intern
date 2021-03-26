@@ -313,3 +313,21 @@ class Remote(object):
             volume, x_range, y_range, z_range, time_range, id_list, voxel_unit, voxel_size,
             simp_fact, max_simplification_error, normals)
         return mesh
+
+    def get_cuboids_from_id(self, resource, resolution, id):
+        """Get corners for cuboids that belong to a specific ID. 
+
+        All returned corners are cuboid aligned.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with annotation operations.
+            resolution (int): 0 indicates native resolution.
+            id (int): Id of object of interest.
+
+        Returns:
+            (dict): {'cuboids': [[512, 512, 64], [0, 512, 32], [512, 512, 32], [0, 512, 48]]}
+        """
+        if not resource.valid_volume():
+            raise RuntimeError('Resource incompatible with the volume service.')
+
+        return self._volume.get_cuboids_from_id(resource, resolution, id)
