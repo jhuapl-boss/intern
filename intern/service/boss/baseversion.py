@@ -696,8 +696,6 @@ class BaseVersion(object):
         if url_prefix is None or url_prefix == '':
             raise RuntimeError('url_prefix required.')
 
-        url = (url_prefix + '/' + self.version + '/cuboidsfromid/' +
-               resource.get_cutout_route() + '/{}/{}'.format(
-            resolution, id))
+        url = f"{url_prefix}/{self.version}/cuboidsfromid/{resource.get_cutout_route()}/{resolution}/{id}"
         headers = self.get_headers(content, token)
         return Request(method, url, headers=headers)

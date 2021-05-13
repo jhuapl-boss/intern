@@ -488,9 +488,10 @@ class VolumeService_1(BaseVersion):
 
     def get_cuboids_from_id(
             self, resource, resolution, _id, url_prefix, auth, session, send_opts):
-        """Get corners for cuboids that belong to a specific ID.
+        """
+        Get extents in XYZ order for cuboids that belong to a specific ID.
 
-        All returned corners are cuboid aligned.
+        All returned extents are cuboid aligned.
 
         Args:
             resource (intern.resource.Resource): Resource compatible with annotation operations.
@@ -502,7 +503,12 @@ class VolumeService_1(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
 
         Returns:
-            (dict): {'cuboids': [[512, 512, 64], [0, 512, 32], [512, 512, 32], [0, 512, 48]]}
+            (dict) : Extents of cuboids containing ID in XYZ order. Example output:
+            
+            {'cuboids': [
+                [(0, 512), (0, 512), (0,16)], 
+                [(512, 1024), (0, 512), (16,32)]
+                ]}
 
         Raises:
             requests.HTTPError
