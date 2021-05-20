@@ -325,7 +325,12 @@ class Remote(object):
             id (int): Id of object of interest.
 
         Returns:
-            (dict): {'cuboids': [[512, 512, 64], [0, 512, 32], [512, 512, 32], [0, 512, 48]]}
+            (dict) : Extents of cuboids containing ID in XYZ order. Example output:
+            
+            {'cuboids': [
+                [(0, 512), (0, 512), (0,16)], 
+                [(512, 1024), (0, 512), (16,32)]
+                ]}
         """
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
