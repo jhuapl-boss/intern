@@ -8,6 +8,7 @@
 
 -   **Convenience API**
     -   Adds support for uint16 image channel creation with the convenience API (#71)
+    -   Now, the `array` class reports voxel size as a `float[3]` and `voxel_units` as a string (e.g. "nanometers") to match the input arguments to the `array` constructor (#83)
 -   **Parallelism**
     -   Fixes parallelism defaulting to n=1 (#70)
 -   **CloudVolume**
