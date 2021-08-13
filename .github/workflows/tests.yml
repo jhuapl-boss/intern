@@ -28,6 +28,7 @@ jobs:
         pip install -r requirements.txt
         pip install brotli>=1.0.7
         pip install cloud-volume>=3.4.0
+        pip install zmesh>=0.5.0
 #     - name: Lint with flake8
 #       run: |
 #         pip install flake8
