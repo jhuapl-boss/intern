@@ -277,6 +277,7 @@ class VolumeService_1(BaseVersion):
                         # TODO: kwargs
                     )
                  for b in blocks])
+                pool.close()
 
                 for b, data in zip(blocks, chunks):
                     result[
