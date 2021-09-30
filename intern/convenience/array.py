@@ -1,5 +1,5 @@
 """
-Copyright 2018-2020 The Johns Hopkins University Applied Physics Laboratory.
+Copyright 2018-2021 The Johns Hopkins University Applied Physics Laboratory.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import json
 from collections import namedtuple
 from urllib.parse import unquote
 
+from intern.service.boss.httperrorlist import HTTPErrorList
+
 from .uri import parse_fquri
 
 
@@ -33,6 +35,7 @@ from intern.resource.boss.resource import (
     CoordinateFrameResource,
     ExperimentResource,
 )
+from intern.service.boss.metadata import MetadataService
 from intern.remote.boss import BossRemote
 
 # A named tuple that represents a bossDB URI.
@@ -163,6 +166,61 @@ class AxisOrder:
     XYZ = "XYZ"
     ZYX = "ZYX"
 
+
+class _MetadataProvider:
+    """
+    Serves as a dictionary-like API for resource metadata.
+
+    """
+
+    def __init__(self, dataset) -> None:
+        """
+        Create a new metadata provider.
+
+        Arguments:
+            dataset (array)
+
+        """
+        self._array = dataset
+        self._resource = dataset._channel
+        self._remote = dataset.volume_provider.boss
+
+    def keys(self):
+        return self._remote.list_metadata(self._resource)
+
+    def items(self):
+        for key in self.keys():
+            yield (key, self[key])
+
+    def __delitem__(self, key):
+        return self._remote.delete_metadata(self._resource, [key])
+
+    def __contains__(self, key):
+        try:
+            self[key]
+            return True
+        except KeyError:
+            return False
+
+    def __getitem__(self, key):
+        try:
+            return self._remote.get_metadata(self._resource, [key])[key]
+        except HTTPErrorList as err:
+            raise KeyError(
+                f"The key {key!s} was not found in the metadata database."
+            ) from err
+
+    def __setitem__(self, key, value):
+        return self._remote.create_metadata(self._resource, {key: value})
+
+    def update_item(self, key, value):
+        return self._remote.update_metadata(self._resource, {key: value})
+
+    def bulk_update(self, items: dict):
+        return self._remote.create_metadata(self._resource, items)
+
+    def bulk_delete(self, keys: list):
+        return self._remote.delete_metadata(self._resource, keys)
 
 class array:
     """
@@ -389,6 +447,16 @@ class array:
         self.collection_name = self._channel.coll_name
         self.experiment_name = self._channel.exp_name
         self.channel_name = self._channel.name
+
+        # Create a pointer to the metadata for the channel.
+        self._channel_metadata = _MetadataProvider(self)
+
+    @property
+    def metadata(self):
+        """
+        Returns a pointer to the metadata provider.
+        """
+        return self._channel_metadata
 
     @property
     def dtype(self):
@@ -795,4 +863,3 @@ def volumes_from_neuroglancer(
         key: dataset[z - zr : z + zr, y - yr : y + yr, x - xr : x + xr]
         for key, dataset in arrays.items()
     }
-
