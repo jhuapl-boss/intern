@@ -268,15 +268,15 @@ class VolumeService_1(BaseVersion):
                     parallel = int(parallel)
                 else:
                     raise ValueError("Parallel must be greater than 0.")
-                pool = multiprocessing.Pool(processes=parallel)
-                chunks = pool.starmap(self.get_cutout, [
-                    (
-                        resource, resolution, b[0], b[1], b[2],
-                        time_range, id_list, url_prefix, auth, session, send_opts,
-                        access_mode
-                        # TODO: kwargs
-                    )
-                 for b in blocks])
+                with multiprocessing.Pool(processes=parallel) as pool:
+                    chunks = pool.starmap(self.get_cutout, [
+                        (
+                            resource, resolution, b[0], b[1], b[2],
+                            time_range, id_list, url_prefix, auth, session, send_opts,
+                            access_mode
+                            # TODO: kwargs
+                        )
+                     for b in blocks])
 
                 for b, data in zip(blocks, chunks):
                     result[
