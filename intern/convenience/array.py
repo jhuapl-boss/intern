@@ -525,6 +525,7 @@ class array:
         """
         return self._channel.downsample_status
    
+    @property
     def available_resolutions(self):
         """
         Return a list of available resolutions for this channel.
