@@ -508,6 +508,7 @@ class array:
             CoordinateFrameResource(self._exp.coord_frame)
         )
        
+    @property
     def downsample_status(self):
         """
         Return the downsample status of the underlying channel.
