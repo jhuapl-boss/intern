@@ -1,4 +1,4 @@
-﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2021 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,6 +39,11 @@ class BossResource(Resource):
         self.description = description
         self.creator = creator
         self.raw = raw
+        self._public = raw.get("public", None)
+
+    @property
+    def public(self):
+        return self._public
 
     def valid_volume(self):
         return False

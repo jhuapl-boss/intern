@@ -585,6 +585,28 @@ class array:
         self._coord_frame = self.volume_provider.get_project(
             CoordinateFrameResource(self._exp.coord_frame)
         )
+       
+    @property
+    def downsample_status(self):
+        """
+        Return the downsample status of the underlying channel.
+        """
+        return self._channel.downsample_status
+   
+    @property
+    def available_resolutions(self):
+        """
+        Return a list of available resolutions for this channel.
+        
+        Arguments:
+            None
+           
+        Returns:
+            List[int]: A list of resolutions at which this dataset can be downloaded
+         
+        """
+        self._populate_exp()
+        return list(range(dataset._exp.num_hierarchy_levels))
 
     def __getitem__(self, key: Tuple) -> np.array:
         """
