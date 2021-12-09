@@ -303,6 +303,8 @@ class array:
                     )
                 )
             except:
+                # Default to nanometers if a voxel unit isn't provided
+                voxel_unit = voxel_unit or "nanometers"
                 # Create the coordframe:
                 coordframe = CoordinateFrameResource(
                     coordinate_frame_name or f"CF_{uri.collection}_{uri.experiment}",
@@ -486,7 +488,13 @@ class array:
                 self._coord_frame.y_voxel_size,
                 self._coord_frame.x_voxel_size,
             )
-        return (vox_size, self._coord_frame.voxel_unit)
+        return vox_size
+
+    @property
+    def voxel_unit(self):
+        if self._coord_frame is None:
+            self._populate_coord_frame()
+        return self._coord_frame.voxel_unit
 
     def _populate_exp(self):
         """
@@ -504,9 +512,33 @@ class array:
 
         Cache the results for later.
         """
+        if self._exp is None:
+            self._populate_exp()
         self._coord_frame = self.volume_provider.get_project(
             CoordinateFrameResource(self._exp.coord_frame)
         )
+       
+    @property
+    def downsample_status(self):
+        """
+        Return the downsample status of the underlying channel.
+        """
+        return self._channel.downsample_status
+   
+    @property
+    def available_resolutions(self):
+        """
+        Return a list of available resolutions for this channel.
+        
+        Arguments:
+            None
+           
+        Returns:
+            List[int]: A list of resolutions at which this dataset can be downloaded
+         
+        """
+        self._populate_exp()
+        return list(range(dataset._exp.num_hierarchy_levels))
 
     def __getitem__(self, key: Tuple) -> np.array:
         """
