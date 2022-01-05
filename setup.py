@@ -78,7 +78,7 @@ setup(
     author="Johns Hopkins University Applied Physics Laboratory",
     install_requires=install_requires,
     extras_require={
-        "cloudvolume": ["cloud-volume>=8.0.0", "brotli>=1.0.7"],
+        "cloudvolume": ["cloud-volume==6.1.1", "brotli>=1.0.7"],
         "meshing": ["zmesh>=0.5.0"],
     },
     dependency_links=dependency_links,
