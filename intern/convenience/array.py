@@ -1,5 +1,5 @@
 """
-Copyright 2018-2021 The Johns Hopkins University Applied Physics Laboratory.
+Copyright 2018-2022 The Johns Hopkins University Applied Physics Laboratory.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,12 +35,18 @@ from intern.resource.boss.resource import (
     CoordinateFrameResource,
     ExperimentResource,
 )
-from intern.service.boss.metadata import MetadataService
 from intern.remote.boss import BossRemote
+
+from intern.remote.cv import CloudVolumeRemote
+from intern.resource.cv.resource import CloudVolumeResource
 
 # A named tuple that represents a bossDB URI.
 bossdbURI = namedtuple(
     "bossdbURI", ["collection", "experiment", "channel", "resolution"]
+)
+
+cvURI = namedtuple(
+    "cvURI", ["protocol", "source", "bucket", "collection", "experiment", "channel", "resolution"]
 )
 
 _DEFAULT_BOSS_OPTIONS = {
@@ -88,8 +94,11 @@ class VolumeProvider(abc.ABC):
     ):
         ...
 
+    def get_vp_type(self) -> str:
+        ...
 
-class _InternVolumeProvider(VolumeProvider):
+
+class _BossDBVolumeProvider(VolumeProvider):
     """
     A VolumeProvider that backends the intern.BossRemote API.
 
@@ -106,6 +115,9 @@ class _InternVolumeProvider(VolumeProvider):
             except:
                 boss = BossRemote(_DEFAULT_BOSS_OPTIONS)
         self.boss = boss
+
+    def get_vp_type(self) -> str:
+        return "BossDB"
 
     def get_channel(self, channel: str, collection: str, experiment: str):
         return self.boss.get_channel(channel, collection, experiment)
@@ -138,12 +150,53 @@ class _InternVolumeProvider(VolumeProvider):
         return self.boss.create_cutout(channel, resolution, xs, ys, zs, data)
 
 
+class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
+    """
+    A volume provider that backends the intern.CloudVolumeRemote API."""
+
+    def __init__(self, cv_config: dict = None):
+        self.cv_config = cv_config or {
+            "protocol": "s3",
+            "cloudpath": "bossdb-open-data",
+        }
+        self._cv = CloudVolumeRemote(self.cv_config)
+
+    def get_vp_type(self) -> str:
+        return "CloudVolumeOpenData"
+
+    def get_channel(self, channel: str, collection: str, experiment: str):
+        return CloudVolumeResource(
+            self.cv_config["protocol"],
+            f"{self.cv_config['cloudpath']}/{collection}/{experiment}/{channel}",
+        )
+
+    def get_project(self, resource):
+        raise NotImplementedError(
+            "CloudVolumeOpenDataVolumeProvider does not support get_project"
+        )
+
+    def create_project(self, resource):
+        raise NotImplementedError(
+            "CloudVolumeOpenDataVolumeProvider does not support create_project"
+        )
+
+    def get_cutout(
+        self,
+        uri: str,
+        resolution: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
+    ):
+        return self._cv.get_cutout(uri, resolution, xs, ys, zs)
+
+
 def _construct_boss_url(boss, col, exp, chan, res, xs, ys, zs) -> str:
     # TODO: use boss host
     return f"https://api.theboss.io/v1/cutout/{col}/{exp}/{chan}/{res}/{xs[0]}:{xs[1]}/{ys[0]}:{ys[1]}/{zs[0]}:{zs[1]}"
 
 
-def parse_bossdb_uri(uri: str) -> bossdbURI:
+def _parse_bossdb_uri(uri: str) -> bossdbURI:
     """
     Parse a bossDB URI and handle malform errors.
 
@@ -154,12 +207,28 @@ def parse_bossdb_uri(uri: str) -> bossdbURI:
         bossdbURI
 
     """
-    t = uri.split("://")[1].split("/")
+    t = uri.split("://")[-1].split("/")
     if len(t) == 3:
-        return bossdbURI(t[0], t[1], t[2], None)
+        return bossdbURI(t[-3], t[-2], t[-1], None)
     if len(t) == 4:
-        return bossdbURI(t[0], t[1], t[2], int(t[3]))
+        return bossdbURI(t[-4], t[-3], t[-2], int(t[-1]))
     raise ValueError(f"Cannot parse URI {uri}.")
+
+
+def _parse_cloudvolume_uri(uri: str) -> cvURI:
+    """
+    Parse a CloudVolume URI and handle malform errors.
+
+    Arguments:
+        uri (str): URI of the form s3://<bucket>/<path>
+
+    Returns:
+        dict
+
+    """
+    protocol, source, path = uri.split("://")
+    bucket, col, exp, chan = path.split("/")
+    return cvURI(protocol, source, bucket, col, exp, chan, None)
 
 
 class AxisOrder:
@@ -221,6 +290,19 @@ class _MetadataProvider:
 
     def bulk_delete(self, keys: list):
         return self._remote.delete_metadata(self._resource, keys)
+
+
+def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
+    if isinstance(channel, ChannelResource):
+        return _BossDBVolumeProvider()
+
+    if isinstance(channel, str):
+        if channel.startswith("bossdb://"):
+            return _BossDBVolumeProvider()
+        if channel.startswith("s3://") or channel.startswith("precomputed://"):
+            return _CloudVolumeOpenDataVolumeProvider()
+    return None
+
 
 class array:
     """
@@ -314,15 +396,23 @@ class array:
         """
         self.axis_order = axis_order
 
-        # Handle custom Remote:
-        self.volume_provider = volume_provider
+        # Handle inferring the remote from the channel:
+        volume_provider = volume_provider or _infer_volume_provider(channel)
         if volume_provider is None:
             if boss_config:
-                self.volume_provider = _InternVolumeProvider(BossRemote(boss_config))
+                volume_provider = _BossDBVolumeProvider(BossRemote(boss_config))
             else:
-                self.volume_provider = _InternVolumeProvider()
+                volume_provider = _BossDBVolumeProvider()
+
+        # Handle custom Remote:
+        self.volume_provider = volume_provider
 
         if create_new:
+
+            if self.volume_provider.get_vp_type() != "bossdb":
+                raise ValueError(
+                    "Creating new resources with a non-bossdb volume provider is not currently supported."
+                )
 
             # We'll need at least `extents` and `voxel_size`.
             description = description or "Created with intern"
@@ -337,7 +427,7 @@ class array:
                     "If `create_new` is True, you must specify the voxel_size of the new coordinate frame as a [x, y, z]."
                 )
 
-            uri = parse_bossdb_uri(channel)
+            uri = _parse_bossdb_uri(channel)
 
             # create collection if it doesn't exist:
             try:
@@ -424,7 +514,10 @@ class array:
         # If it is set as a string, then parse the channel and generate an
         # intern.Resource from a bossDB URI.
         elif isinstance(channel, str):
-            uri = parse_bossdb_uri(channel)
+            uri = {
+                "BossDB": _parse_bossdb_uri,
+                "CloudVolumeOpenData": _parse_cloudvolume_uri,
+            }[self.volume_provider.get_vp_type()](channel)
             self.resolution = (
                 uri.resolution if not (uri.resolution is None) else self.resolution
             )
@@ -450,6 +543,10 @@ class array:
 
         # Create a pointer to the metadata for the channel.
         self._channel_metadata = _MetadataProvider(self)
+
+    @property
+    def remote(self):
+        return self.volume_provider.get_vp_type()
 
     @property
     def metadata(self):
@@ -585,25 +682,25 @@ class array:
         self._coord_frame = self.volume_provider.get_project(
             CoordinateFrameResource(self._exp.coord_frame)
         )
-       
+
     @property
     def downsample_status(self):
         """
         Return the downsample status of the underlying channel.
         """
         return self._channel.downsample_status
-   
+
     @property
     def available_resolutions(self):
         """
         Return a list of available resolutions for this channel.
-        
+
         Arguments:
             None
-           
+
         Returns:
             List[int]: A list of resolutions at which this dataset can be downloaded
-         
+
         """
         self._populate_exp()
         return list(range(dataset._exp.num_hierarchy_levels))
@@ -853,7 +950,7 @@ def arrays_from_neuroglancer(url: str):
             continue
         remote, channel = parse_fquri(source_url)
         arrays[source["name"]] = array(
-            channel=channel, volume_provider=_InternVolumeProvider(remote)
+            channel=channel, volume_provider=_BossDBVolumeProvider(remote)
         )
     return arrays
 
