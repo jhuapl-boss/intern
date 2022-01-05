@@ -49,8 +49,8 @@ class TestCloudVolumeRemote(unittest.TestCase):
         # Instantiate a new cloudvolume resource
         resource = self.cv_remote.cloudvolume(info=info)
         # Upload data
-        data = np.random.randint(0, 255, [127, 127, 127], dtype=np.uint8)
-        self.cv_remote.create_cutout(resource, 0, [0, 127], [0, 127], [0, 127], data)
+        data = np.random.randint(0, 255, [128, 128, 128], dtype=np.uint8)
+        self.cv_remote.create_cutout(resource, 0, [0, 128], [0, 128], [0, 128], data)
 
         # Download cutout and check for equivalence
         cutout = self.cv_remote.get_cutout(resource, 0, [32, 96], [32, 96], [32, 96])
@@ -71,8 +71,8 @@ class TestCloudVolumeRemote(unittest.TestCase):
         # Instantiate a new cloudvolume resource
         resource = self.cv_remote.cloudvolume(info=info)
         # Upload data
-        data = np.random.randint(0, 255, [127, 127, 127], dtype=np.uint16)
-        self.cv_remote.create_cutout(resource, 0, [0, 127], [0, 127], [0, 127], data)
+        data = np.random.randint(0, 255, [128, 128, 128], dtype=np.uint16)
+        self.cv_remote.create_cutout(resource, 0, [0, 128], [0, 128], [0, 128], data)
 
         # Download cutout and check for equivalence
         cutout = self.cv_remote.get_cutout(resource, 0, [32, 96], [32, 96], [32, 96])
@@ -94,7 +94,7 @@ class TestCloudVolumeRemote(unittest.TestCase):
         resource = self.cv_remote.cloudvolume(info=info)
         # Upload data
         data = np.random.rand(128, 128, 128)
-        self.cv_remote.create_cutout(resource, 0, [0, 127], [0, 127], [0, 127], data)
+        self.cv_remote.create_cutout(resource, 0, [0, 128], [0, 128], [0, 128], data)
 
         # Download cutout and check for equivalence
         cutout = self.cv_remote.get_cutout(resource, 0, [32, 96], [32, 96], [32, 96])
@@ -118,15 +118,15 @@ class TestCloudVolumeRemote(unittest.TestCase):
         resource = self.cv_remote.cloudvolume(info=info)
 
         # Upload data to mip 0
-        data_0 = np.random.randint(0, 255, [127, 127, 127], dtype=np.uint8)
-        self.cv_remote.create_cutout(resource, 0, [0, 127], [0, 127], [0, 127], data_0)
+        data_0 = np.random.randint(0, 255, [128, 128, 128], dtype=np.uint8)
+        self.cv_remote.create_cutout(resource, 0, [0, 128], [0, 128], [0, 128], data_0)
 
         # Upload data to mip 1
         data_1 = np.random.randint(0, 255, [64, 64, 128], dtype=np.uint8)
         self.cv_remote.create_cutout(resource, 1, [0, 64], [0, 64], [0, 128], data_1)
 
         # Download cutout and check for equivalence
-        cutout_0 = self.cv_remote.get_cutout(resource, 0, [0, 127], [0, 127], [0, 127])
+        cutout_0 = self.cv_remote.get_cutout(resource, 0, [0, 128], [0, 128], [0, 128])
         np.testing.assert_array_equal(data_0, cutout_0)
 
         # Download cutout and check for equivalence
@@ -180,8 +180,8 @@ class TestCloudVolumeRemote(unittest.TestCase):
         # Instantiate a new cloudvolume resource
         resource = self.cv_remote.cloudvolume(info=info, fill_missing=True)
         # Upload data
-        data = np.random.randint(0, 255, [127, 127, 127], dtype=np.uint8)
-        self.cv_remote.create_cutout(resource, 0, [0, 127], [0, 127], [0, 127], data)
+        data = np.random.randint(0, 255, [128, 128, 128], dtype=np.uint8)
+        self.cv_remote.create_cutout(resource, 0, [0, 128], [0, 128], [0, 128], data)
 
         # Delete data
         self.cv_remote.delete_data(resource, 0, [0, 64], [0, 64], [0, 64])
