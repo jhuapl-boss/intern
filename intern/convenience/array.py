@@ -197,9 +197,9 @@ class _BossDBVolumeProvider(VolumeProvider):
 
         # Return the bounds of the coordinate frame:
         return (
-            int((cf.x_stop - cf.x_start) / (2 ** resolution)),
-            int((cf.y_stop - cf.y_start) / (2 ** resolution)),
             (cf.z_stop - cf.z_start),
+            int((cf.y_stop - cf.y_start) / (2 ** resolution)),
+            int((cf.x_stop - cf.x_start) / (2 ** resolution)),
         )
 
     def get_voxel_size(
@@ -694,10 +694,10 @@ class array:
         # is the SIZE, not the extents; in other words, a cframe that starts at
         # x=10 and extends to x=110 will have a size of 100 here.
         if self.axis_order == self.volume_provider.get_axis_order():
-            return self.volume_provider.get_shape(self._channel)
+            return self.volume_provider.get_shape(self._channel, self.resolution)
         else:
             # elif self.axis_order == AxisOrder.ZYX: # TODO: Support other Axis orderings?
-            shape = self.volume_provider.get_shape(self._channel)
+            shape = self.volume_provider.get_shape(self._channel, self.resolution)
             return shape[2], shape[1], shape[0]
 
     @property
