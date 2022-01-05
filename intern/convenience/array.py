@@ -637,11 +637,6 @@ class array:
                 uri.channel, uri.collection, uri.experiment
             )
 
-        # Set empty experiment (will be dict)
-        self._exp = None
-        # Set empty coordframe (will be dict)
-        self._coord_frame = None
-
         # Set col/exp/chan based upon the channel or URI provided.
         self.collection_name = self._channel.coll_name
         self.experiment_name = self._channel.exp_name
@@ -713,46 +708,17 @@ class array:
         Will return (1, 1, 1) if a coordinate frame does not exist (as in cases
         of pre-v2 bossphorus instances); this will not restrict indexing.
         """
-        # Set experiment if unset:
-        if self._exp is None:
-            self._populate_exp()
-
-        # Set cframe if unset:
-        if self._coord_frame is None:
-            self._populate_coord_frame()
 
         if self.axis_order == self.volume_provider.get_axis_order():
-            vox_size = self.volume_provider.get_voxel_size(self._channel)
-        else:  # elif self.axis_order == AxisOrder.ZYX:
-            vox_size = self.volume_provider.get_voxel_size(self._channel)
-            vox_size = vox_size[2], vox_size[1], vox_size[0]
-        return vox_size
+            return self.volume_provider.get_voxel_size(self._channel)
+        else:
+            # elif self.axis_order == AxisOrder.ZYX: # TODO: Support other Axis orderings?
+            voxel_size = self.volume_provider.get_voxel_size(self._channel)
+            return voxel_size[2], voxel_size[1], voxel_size[0]
 
     @property
     def voxel_unit(self):
         return self.volume_provider.get_voxel_unit(self._channel)
-
-    def _populate_exp(self):
-        """
-        Populate the experiment component of this array.
-
-        Cache the results for later.
-        """
-        self._exp = self.volume_provider.get_project(
-            ExperimentResource(self._channel.exp_name, self._channel.coll_name)
-        )
-
-    def _populate_coord_frame(self):
-        """
-        Populate the array coordinate frame.
-
-        Cache the results for later.
-        """
-        if self._exp is None:
-            self._populate_exp()
-        self._coord_frame = self.volume_provider.get_project(
-            CoordinateFrameResource(self._exp.coord_frame)
-        )
 
     @property
     def downsample_status(self):
@@ -794,20 +760,6 @@ class array:
         if self.axis_order != self.volume_provider.get_axis_order():
             key = (key[2], key[1], key[0])
 
-        # # Next, we need to get the shape of the dataset. We do this currently
-        # # by getting the coordinate frame, which means that we need the
-        # # coordframe data and experiment data if we don't have it already. In
-        # # the future, we may also want to allow the user to specify general
-        # # shape information so that we can avoid calling the API.
-
-        # # Populate the experiment metadata if unset:
-        # if self._exp is None:
-        #     self._populate_exp()
-
-        # # Populate the coordinate frame metadata if not yet set:
-        # if self._coord_frame is None:
-        #     self._populate_coord_frame()
-
         # Now we can begin. There is a wide variety of indexing options
         # available, including single-integer indexing, tuple-of-slices
         # indexing, tuple-of-int indexing...
@@ -835,10 +787,10 @@ class array:
             # dimension (in the same order, e.g. ZYX, as the array).
             _normalize_units = (1, 1, 1)
             if isinstance(key[-1], str) and len(key) == 4:
-                if key[-1] != self._coord_frame.voxel_unit:
+                if key[-1] != self.volume_provider.get_voxel_unit():
                     raise NotImplementedError(
                         "Can only reference voxels in native size format which is "
-                        f"{self._coord_frame.voxel_unit} for this dataset."
+                        f"{self.volume_provider.get_voxel_unit()} for this dataset."
                     )
                 _normalize_units = self.voxel_size
 
@@ -932,23 +884,15 @@ class array:
         Start-only (`10:`) or stop-only (`:10`) indexing is unsupported.
         """
 
-        if self.axis_order == AxisOrder.XYZ:
+        if self.axis_order != self.volume_provider.get_axis_order():
             key = (key[2], key[1], key[0])
-
-        # Set experiment if unset:
-        if self._exp is None:
-            self._populate_exp()
-
-        # Set cframe if unset:
-        if self._coord_frame is None:
-            self._populate_coord_frame()
 
         _normalize_units = (1, 1, 1)
         if isinstance(key[-1], str) and len(key) == 4:
-            if key[-1] != self._coord_frame.voxel_unit:
+            if key[-1] != self.volume_provider.get_voxel_unit():
                 raise NotImplementedError(
                     "Can only reference voxels in native size format which is "
-                    f"{self._coord_frame.voxel_unit} for this dataset."
+                    f"{self.volume_provider.get_voxel_unit()} for this dataset."
                 )
             _normalize_units = self.voxel_size
 
