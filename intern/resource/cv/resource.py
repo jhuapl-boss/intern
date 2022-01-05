@@ -75,7 +75,13 @@ class CloudVolumeResource(Resource):
 
         self.url = protokey + cloudpath
         self.cloudvolume = CloudVolume(
-            self.url, mip=mip, info=info, parallel=parallel, cache=cache, **kwargs
+            self.url,
+            mip=mip,
+            info=info,
+            parallel=parallel,
+            cache=cache,
+            use_http=True,
+            **kwargs
         )
 
         if info is not None:
