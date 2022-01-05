@@ -97,7 +97,7 @@ class Remote(object):
             (configparser.ConfigParser)
         """
         cfg_parser = configparser.ConfigParser()
-        cfg_parser.readfp(config_handle)
+        cfg_parser.read_file(config_handle)
         return cfg_parser
 
     def _init_mesh_service(self):
