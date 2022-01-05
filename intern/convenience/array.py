@@ -15,7 +15,7 @@ limitations under the License.
 """
 
 # Standard imports
-from typing import Optional, Union, Tuple
+from typing import List, Optional, Union, Tuple
 import abc
 import json
 from collections import namedtuple
@@ -29,16 +29,18 @@ from .uri import parse_fquri
 # Pip-installable imports
 import numpy as np
 
+from intern.remote.boss import BossRemote
+from intern.remote.cv import CloudVolumeRemote
+
+from intern.resource import Resource
 from intern.resource.boss.resource import (
     CollectionResource,
     ChannelResource,
     CoordinateFrameResource,
     ExperimentResource,
 )
-from intern.remote.boss import BossRemote
-
-from intern.remote.cv import CloudVolumeRemote
 from intern.resource.cv.resource import CloudVolumeResource
+
 
 # A named tuple that represents a bossDB URI.
 bossdbURI = namedtuple(
@@ -46,8 +48,19 @@ bossdbURI = namedtuple(
 )
 
 cvURI = namedtuple(
-    "cvURI", ["protocol", "source", "bucket", "collection", "experiment", "channel", "resolution"]
+    "cvURI",
+    [
+        "protocol",
+        "source",
+        "bucket",
+        "collection",
+        "experiment",
+        "channel",
+        "resolution",
+    ],
 )
+
+URI = Union[cvURI, bossdbURI]
 
 _DEFAULT_BOSS_OPTIONS = {
     "protocol": "https",
@@ -64,10 +77,10 @@ class VolumeProvider(abc.ABC):
 
     """
 
-    def get_channel(self, channel: str, collection: str, experiment: str):
+    def get_channel(self, channel: str, collection: str, experiment: str) -> Resource:
         ...
 
-    def get_project(self, resource):
+    def get_project(self, resource) -> Resource:
         ...
 
     def create_project(self, resource):
@@ -80,7 +93,7 @@ class VolumeProvider(abc.ABC):
         xs: Tuple[int, int],
         ys: Tuple[int, int],
         zs: Tuple[int, int],
-    ):
+    ) -> np.ndarray:
         ...
 
     def create_cutout(
@@ -95,6 +108,23 @@ class VolumeProvider(abc.ABC):
         ...
 
     def get_vp_type(self) -> str:
+        ...
+
+    def get_axis_order(self) -> str:
+        ...
+
+    def get_shape(self, channel: Resource, resolution: int = 0) -> Tuple[int, int, int]:
+        ...
+
+    def get_voxel_size(
+        self, channel: Resource, resolution: int = 0
+    ) -> Tuple[float, float, float]:
+        ...
+
+    def get_voxel_unit(self, channel: Resource, resolution: int = 0) -> str:
+        ...
+
+    def get_available_resolutions(self, channel: Resource) -> List[int]:
         ...
 
 
@@ -119,10 +149,16 @@ class _BossDBVolumeProvider(VolumeProvider):
     def get_vp_type(self) -> str:
         return "BossDB"
 
+    def get_axis_order(self) -> str:
+        return AxisOrder.ZYX
+
+    def get_remote(self):
+        return self.boss
+
     def get_channel(self, channel: str, collection: str, experiment: str):
         return self.boss.get_channel(channel, collection, experiment)
 
-    def get_project(self, resource):
+    def get_project(self, resource) -> Resource:
         return self.boss.get_project(resource)
 
     def create_project(self, resource):
@@ -135,7 +171,7 @@ class _BossDBVolumeProvider(VolumeProvider):
         xs: Tuple[int, int],
         ys: Tuple[int, int],
         zs: Tuple[int, int],
-    ):
+    ) -> np.ndarray:
         return self.boss.get_cutout(channel, resolution, xs, ys, zs)
 
     def create_cutout(
@@ -149,6 +185,47 @@ class _BossDBVolumeProvider(VolumeProvider):
     ):
         return self.boss.create_cutout(channel, resolution, xs, ys, zs, data)
 
+    def get_shape(
+        self, channel: ChannelResource, resolution: int = 0
+    ) -> Tuple[int, int, int]:
+        # Get the experiment:
+        experiment = self.get_project(
+            ExperimentResource(channel.exp_name, channel.coll_name)
+        )
+        # Get the coordinate frame:
+        cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
+
+        # Return the bounds of the coordinate frame:
+        return (
+            int((cf.x_stop - cf.x_start) / (2 ** resolution)),
+            int((cf.y_stop - cf.y_start) / (2 ** resolution)),
+            (cf.z_stop - cf.z_start),
+        )
+
+    def get_voxel_size(
+        self, channel: ChannelResource, resolution: int = 0
+    ) -> Tuple[float, float, float]:
+        experiment = self.get_project(
+            ExperimentResource(channel.exp_name, channel.coll_name)
+        )
+        # Get the coordinate frame:
+        cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
+        return (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
+
+    def get_voxel_unit(self, channel: ChannelResource, resolution: int = 0) -> str:
+        experiment = self.get_project(
+            ExperimentResource(channel.exp_name, channel.coll_name)
+        )
+        # Get the coordinate frame:
+        cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
+        return cf.voxel_unit
+
+    def get_available_resolutions(self, channel: Resource) -> List[int]:
+        experiment = self.get_project(
+            ExperimentResource(channel.exp_name, channel.coll_name)
+        )
+        return list(range(experiment.num_hierarchy_levels))
+
 
 class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
     """
@@ -161,8 +238,14 @@ class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
         }
         self._cv = CloudVolumeRemote(self.cv_config)
 
+    def get_remote(self):
+        return self._cv
+
     def get_vp_type(self) -> str:
         return "CloudVolumeOpenData"
+
+    def get_axis_order(self) -> str:
+        return AxisOrder.XYZ
 
     def get_channel(self, channel: str, collection: str, experiment: str):
         return CloudVolumeResource(
@@ -170,7 +253,7 @@ class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
             f"{self.cv_config['cloudpath']}/{collection}/{experiment}/{channel}",
         )
 
-    def get_project(self, resource):
+    def get_project(self, resource) -> CloudVolumeResource:
         raise NotImplementedError(
             "CloudVolumeOpenDataVolumeProvider does not support get_project"
         )
@@ -187,8 +270,24 @@ class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
         xs: Tuple[int, int],
         ys: Tuple[int, int],
         zs: Tuple[int, int],
-    ):
+    ) -> np.ndarray:
         return self._cv.get_cutout(uri, resolution, xs, ys, zs)
+
+    def get_shape(
+        self, channel: CloudVolumeResource, resolution: int = 0
+    ) -> Tuple[int, int, int]:
+        return tuple(channel.cloudvolume.volume_size)
+
+    def get_voxel_size(
+        self, channel: CloudVolumeResource, resolution: int = 0
+    ) -> Tuple[float, float, float]:
+        return tuple(channel.cloudvolume.resolution)
+
+    def get_voxel_unit(self, channel: CloudVolumeResource) -> str:
+        return "nanometers"
+
+    def get_available_resolutions(self, channel: CloudVolumeResource) -> List[int]:
+        return list(channel.cloudvolume.available_mips)
 
 
 def _construct_boss_url(boss, col, exp, chan, res, xs, ys, zs) -> str:
@@ -196,7 +295,7 @@ def _construct_boss_url(boss, col, exp, chan, res, xs, ys, zs) -> str:
     return f"https://api.theboss.io/v1/cutout/{col}/{exp}/{chan}/{res}/{xs[0]}:{xs[1]}/{ys[0]}:{ys[1]}/{zs[0]}:{zs[1]}"
 
 
-def _parse_bossdb_uri(uri: str) -> bossdbURI:
+def _parse_bossdb_uri(uri: str) -> URI:
     """
     Parse a bossDB URI and handle malform errors.
 
@@ -215,7 +314,7 @@ def _parse_bossdb_uri(uri: str) -> bossdbURI:
     raise ValueError(f"Cannot parse URI {uri}.")
 
 
-def _parse_cloudvolume_uri(uri: str) -> cvURI:
+def _parse_cloudvolume_uri(uri: str) -> URI:
     """
     Parse a CloudVolume URI and handle malform errors.
 
@@ -226,6 +325,8 @@ def _parse_cloudvolume_uri(uri: str) -> cvURI:
         dict
 
     """
+    if uri.startswith("bossdb://"):
+        return _parse_bossdb_uri(uri)
     protocol, source, path = uri.split("://")
     bucket, col, exp, chan = path.split("/")
     return cvURI(protocol, source, bucket, col, exp, chan, None)
@@ -252,7 +353,7 @@ class _MetadataProvider:
         """
         self._array = dataset
         self._resource = dataset._channel
-        self._remote = dataset.volume_provider.boss
+        self._remote = dataset.volume_provider.get_remote()
 
     def keys(self):
         return self._remote.list_metadata(self._resource)
@@ -294,10 +395,21 @@ class _MetadataProvider:
 
 def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
     if isinstance(channel, ChannelResource):
+        # Check if the channel is backed by CloudVolume
+        if channel.raw["storage_type"] == "cloudvol":
+            return _CloudVolumeOpenDataVolumeProvider()
         return _BossDBVolumeProvider()
 
     if isinstance(channel, str):
         if channel.startswith("bossdb://"):
+            channel_uri = _parse_bossdb_uri(channel)
+            channel_obj = _BossDBVolumeProvider().get_channel(
+                channel_uri.channel, channel_uri.collection, channel_uri.experiment
+            )
+            if channel_obj.raw["storage_type"] == "cloudvol":
+                return _CloudVolumeOpenDataVolumeProvider()
+            return _BossDBVolumeProvider()
+
             return _BossDBVolumeProvider()
         if channel.startswith("s3://") or channel.startswith("precomputed://"):
             return _CloudVolumeOpenDataVolumeProvider()
@@ -513,7 +625,7 @@ class array:
             self._channel = channel
         # If it is set as a string, then parse the channel and generate an
         # intern.Resource from a bossDB URI.
-        elif isinstance(channel, str):
+        else:  # if isinstance(channel, str):
             uri = {
                 "BossDB": _parse_bossdb_uri,
                 "CloudVolumeOpenData": _parse_cloudvolume_uri,
@@ -523,12 +635,6 @@ class array:
             )
             self._channel = self.volume_provider.get_channel(
                 uri.channel, uri.collection, uri.experiment
-            )
-        else:
-            raise NotImplementedError(
-                "You must specify a channel of the form "
-                "'bossdb://collection/experiment/channel' or you must "
-                "provide an intern.Remote."
             )
 
         # Set empty experiment (will be dict)
@@ -582,48 +688,22 @@ class array:
         )
 
     @property
-    def shape(self):
+    def shape(self) -> Tuple[int, int, int]:
         """
         Get the dimensions (numpy-flavored) of the array.
 
         Will return (1, 1, 1) if a coordinate frame does not exist (as in cases
         of pre-v2 bossphorus instances); this will not restrict indexing.
         """
-        # Set experiment if unset:
-        if self._exp is None:
-            self._populate_exp()
-
-        # Set cframe if unset:
-        if self._coord_frame is None:
-            self._populate_coord_frame()
-
         # From the coordinate frame, get the x, y, and z sizes. Note that this
         # is the SIZE, not the extents; in other words, a cframe that starts at
         # x=10 and extends to x=110 will have a size of 100 here.
-        if self.axis_order == AxisOrder.XYZ:
-            return (
-                int(
-                    (self._coord_frame.y_stop - self._coord_frame.y_start)
-                    / (2 ** self.resolution)
-                ),
-                int(
-                    (self._coord_frame.x_stop - self._coord_frame.x_start)
-                    / (2 ** self.resolution)
-                ),
-                (self._coord_frame.z_stop - self._coord_frame.z_start),
-            )
-        elif self.axis_order == AxisOrder.ZYX:
-            return (
-                (self._coord_frame.z_stop - self._coord_frame.z_start),
-                int(
-                    (self._coord_frame.y_stop - self._coord_frame.y_start)
-                    / (2 ** self.resolution)
-                ),
-                int(
-                    (self._coord_frame.x_stop - self._coord_frame.x_start)
-                    / (2 ** self.resolution)
-                ),
-            )
+        if self.axis_order == self.volume_provider.get_axis_order():
+            return self.volume_provider.get_shape(self._channel)
+        else:
+            # elif self.axis_order == AxisOrder.ZYX: # TODO: Support other Axis orderings?
+            shape = self.volume_provider.get_shape(self._channel)
+            return shape[2], shape[1], shape[0]
 
     @property
     def voxel_size(self):
@@ -641,25 +721,16 @@ class array:
         if self._coord_frame is None:
             self._populate_coord_frame()
 
-        if self.axis_order == AxisOrder.XYZ:
-            vox_size = (
-                self._coord_frame.x_voxel_size,
-                self._coord_frame.y_voxel_size,
-                self._coord_frame.z_voxel_size,
-            )
-        elif self.axis_order == AxisOrder.ZYX:
-            vox_size = (
-                self._coord_frame.z_voxel_size,
-                self._coord_frame.y_voxel_size,
-                self._coord_frame.x_voxel_size,
-            )
+        if self.axis_order == self.volume_provider.get_axis_order():
+            vox_size = self.volume_provider.get_voxel_size(self._channel)
+        else:  # elif self.axis_order == AxisOrder.ZYX:
+            vox_size = self.volume_provider.get_voxel_size(self._channel)
+            vox_size = vox_size[2], vox_size[1], vox_size[0]
         return vox_size
 
     @property
     def voxel_unit(self):
-        if self._coord_frame is None:
-            self._populate_coord_frame()
-        return self._coord_frame.voxel_unit
+        return self.volume_provider.get_voxel_unit(self._channel)
 
     def _populate_exp(self):
         """
@@ -702,10 +773,9 @@ class array:
             List[int]: A list of resolutions at which this dataset can be downloaded
 
         """
-        self._populate_exp()
-        return list(range(dataset._exp.num_hierarchy_levels))
+        return self.volume_provider.get_available_resolutions(self._channel)
 
-    def __getitem__(self, key: Tuple) -> np.array:
+    def __getitem__(self, key: Tuple) -> np.ndarray:
         """
         Get a subarray or subvolume.
 
@@ -721,22 +791,22 @@ class array:
         # If the user has requested XYZ mode, the first thing to do is reverse
         # the array indices. Then you can continue this fn without any
         # additional changes.
-        if self.axis_order == AxisOrder.XYZ:
+        if self.axis_order != self.volume_provider.get_axis_order():
             key = (key[2], key[1], key[0])
 
-        # Next, we need to get the shape of the dataset. We do this currently
-        # by getting the coordinate frame, which means that we need the
-        # coordframe data and experiment data if we don't have it already. In
-        # the future, we may also want to allow the user to specify general
-        # shape information so that we can avoid calling the API.
+        # # Next, we need to get the shape of the dataset. We do this currently
+        # # by getting the coordinate frame, which means that we need the
+        # # coordframe data and experiment data if we don't have it already. In
+        # # the future, we may also want to allow the user to specify general
+        # # shape information so that we can avoid calling the API.
 
-        # Populate the experiment metadata if unset:
-        if self._exp is None:
-            self._populate_exp()
+        # # Populate the experiment metadata if unset:
+        # if self._exp is None:
+        #     self._populate_exp()
 
-        # Populate the coordinate frame metadata if not yet set:
-        if self._coord_frame is None:
-            self._populate_coord_frame()
+        # # Populate the coordinate frame metadata if not yet set:
+        # if self._coord_frame is None:
+        #     self._populate_coord_frame()
 
         # Now we can begin. There is a wide variety of indexing options
         # available, including single-integer indexing, tuple-of-slices
@@ -828,10 +898,11 @@ class array:
         )
 
         # Data are returned in ZYX order:
-        if self.axis_order == AxisOrder.XYZ:
-            data = np.rollaxis(np.rollaxis(cutout, 1), 2)
-        elif self.axis_order == AxisOrder.ZYX:
-            data = cutout
+        if self.axis_order != self.volume_provider.get_axis_order():
+            data: np.ndarray = np.swapaxes(cutout, 0, 2)
+            # data = np.rollaxis(np.rollaxis(cutout, 1), 2)
+        else:  # if self.axis_order == AxisOrder.ZYX:
+            data: np.ndarray = cutout
 
         # If any of the dimensions are of length 1, it's because the user
         # requested a single slice in their key; flatten the array in that
@@ -846,7 +917,7 @@ class array:
             data = data[:, :, 0]
         return data
 
-    def __setitem__(self, key: Tuple, value: np.array) -> np.array:
+    def __setitem__(self, key: Tuple, value: np.ndarray) -> None:
         """
         Set a subarray or subvolume.
 
@@ -918,7 +989,7 @@ class array:
             # TODO: Support other 2D shapes as well
             value = np.array([value])
 
-        cutout = self.volume_provider.create_cutout(
+        self.volume_provider.create_cutout(
             self._channel, self.resolution, xs, ys, zs, value
         )
 
