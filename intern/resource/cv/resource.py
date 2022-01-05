@@ -80,7 +80,7 @@ class CloudVolumeResource(Resource):
             info=info,
             parallel=parallel,
             cache=cache,
-            use_http=True,
+            use_https=True,
             **kwargs
         )
 
