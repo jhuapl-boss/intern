@@ -1,4 +1,4 @@
-# Copyright 2019 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2019-2022 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Union
 from intern.resource import Resource
-from cloudvolume import CloudVolume, Vec
-
-import numpy as np
-from os import path
+from cloudvolume import CloudVolume
 
 
 class CloudVolumeResource(Resource):
@@ -25,7 +23,16 @@ class CloudVolumeResource(Resource):
     Base class for CloudVolume resources.
     """
 
-    def __init__(self, protocol, cloudpath, mip, info, parallel, cache, **kwargs):
+    def __init__(
+        self,
+        protocol,
+        cloudpath,
+        mip: int = 0,
+        info: dict = None,
+        parallel: bool = True,
+        cache: Union[bool, str] = False,
+        **kwargs
+    ):
         """
         Initializes intern.Resource parent class and creates a cloudvolume object
 
@@ -81,3 +88,30 @@ class CloudVolumeResource(Resource):
             (bool) : True if calls to volume service may be made.
         """
         return True
+
+    @property
+    def coll_name(self):
+        """Returns the collection name of the resource.
+        Args:
+        Returns:
+            (str) : collection name
+        """
+        return self.url.split("/")[-3]
+
+    @property
+    def exp_name(self):
+        """Returns the experiment name of the resource.
+        Args:
+        Returns:
+            (str) : experiment name
+        """
+        return self.url.split("/")[-2]
+
+    @property
+    def name(self):
+        """Returns the name of the resource.
+        Args:
+        Returns:
+            (str) : name
+        """
+        return self.url.split("/")[-1]

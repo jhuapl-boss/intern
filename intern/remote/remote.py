@@ -61,7 +61,7 @@ class Remote(object):
             # Default to the config file in the user directory if no config file was provided
             cfg_file_or_dict = os.path.expanduser(CONFIG_FILE)
 
-        if isinstance(cfg_file_or_dict, dict) is True:
+        if isinstance(cfg_file_or_dict, dict):
             # A config dictionary was provided directly. Keep things consistent by creating an INI string.
             cfg_str = "[Default]\n"
             for key in cfg_file_or_dict:
