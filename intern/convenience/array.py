@@ -234,7 +234,8 @@ class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
     def __init__(self, cv_config: dict = None):
         self.cv_config = cv_config or {
             "protocol": "s3",
-            "cloudpath": "bossdb-open-data",
+            "cloudpath": "",
+            "bucket": "bossdb-open-data",
         }
         self._cv = CloudVolumeRemote(self.cv_config)
 
@@ -248,9 +249,12 @@ class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
         return AxisOrder.XYZ
 
     def get_channel(self, channel: str, collection: str, experiment: str):
+        cloudpath = (
+            self.cv_config["cloudpath"] or f"{collection}/{experiment}/{channel}"
+        )
         return CloudVolumeResource(
             self.cv_config["protocol"],
-            f"{self.cv_config['cloudpath']}/{collection}/{experiment}/{channel}",
+            f"{self.cv_config['bucket']}/{cloudpath}",
         )
 
     def get_project(self, resource) -> CloudVolumeResource:
@@ -397,7 +401,13 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
     if isinstance(channel, ChannelResource):
         # Check if the channel is backed by CloudVolume
         if channel.raw["storage_type"] == "cloudvol":
-            return _CloudVolumeOpenDataVolumeProvider()
+            return _CloudVolumeOpenDataVolumeProvider(
+                {
+                    "protocol": "s3",
+                    "bucket": channel.raw["bucket"],
+                    "cloudpath": channel.raw["cv_path"],
+                }
+            )
         return _BossDBVolumeProvider()
 
     if isinstance(channel, str):
@@ -407,10 +417,15 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
                 channel_uri.channel, channel_uri.collection, channel_uri.experiment
             )
             if channel_obj.raw["storage_type"] == "cloudvol":
-                return _CloudVolumeOpenDataVolumeProvider()
+                return _CloudVolumeOpenDataVolumeProvider(
+                    {
+                        "protocol": "s3",
+                        "bucket": channel_obj.raw["bucket"],
+                        "cloudpath": channel_obj.raw["cv_path"],
+                    }
+                )
             return _BossDBVolumeProvider()
 
-            return _BossDBVolumeProvider()
         if channel.startswith("s3://") or channel.startswith("precomputed://"):
             return _CloudVolumeOpenDataVolumeProvider()
     return None
