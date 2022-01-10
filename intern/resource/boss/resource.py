@@ -1,4 +1,4 @@
-﻿# Copyright 2021 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2021-2022 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -210,7 +210,7 @@ class ExperimentResource(BossResource):
 
     @property
     def coord_frame(self):
-        if self._coord_frame is '':
+        if self._coord_frame == "":
             raise ValueError('Coordinate frame name is blank.')
         else:
             return self._coord_frame

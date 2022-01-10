@@ -4,13 +4,17 @@ from intern.resource.dvid.resource import DataInstanceResource
 from intern.resource.dvid.resource import RepositoryResource
 import numpy as np
 from PIL import Image
-import matplotlib.pyplot as plt
 
 ########### NOTE ###########
 # This test requires an accessible DVID instance
 
 # DVID Data fetch:
-dvid = DVIDRemote({"protocol": "http", "host": "localhost:8001",})
+dvid = DVIDRemote(
+    {
+        "protocol": "http",
+        "host": "localhost:8001",
+    }
+)
 
 DATA_INSTANCE = "ex_EM"
 ALIAS = "Test_alias"
@@ -115,4 +119,3 @@ got_cutout = dvid.get_cutout(instance_setup_up, 0, [0, 454], [0, 480], [0, 1])
 # Check for equality
 if (got_cutout == data_tile).all():
     print("Both tiles equate")
-
