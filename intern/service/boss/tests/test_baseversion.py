@@ -83,7 +83,7 @@ class BaseVersionTest(unittest.TestCase):
             self.resource, self.url_prefix, 'collection', req_type='list')
         self.assertEqual(
             self.url_prefix + '/' + self.test_project.version + '/' +
-            self.test_project.endpoint + '/',
+            self.test_project.endpoint + '/' + self.resource.name + '/',
             actual)
 
     def test_build_url_for_cutout(self):
@@ -269,7 +269,7 @@ class BaseVersionTest(unittest.TestCase):
         actual = self.test_project.get_user_request(
             'POST', 'application/json', url_prefix, token, user, email=email)
 
-    def test_get_user_request_with_password(self):
+    def test_get_user_request_with_password_and_email(self):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         user = 'fire'
@@ -386,7 +386,7 @@ class BaseVersionTest(unittest.TestCase):
             '/' + self.chanResource.name + '/' + str(res) + '/' + x_range + '/' +
             y_range + '/' + z_range + '/',
             actual)
-    
+
     def test_build_cutout_to_black_url_no_time_range(self):
         res = 0
         x_rng_lst = [20, 40]
@@ -471,7 +471,7 @@ class BaseVersionTest(unittest.TestCase):
         actual = self.test_volume.build_cutout_to_black_url(
             self.chanResource, self.url_prefix,
             res, x_rng_lst, y_rng_lst, z_rng_lst, t_rng_lst)
-        
+
         expected = '/'.join([
             self.url_prefix,
             self.test_volume.version,

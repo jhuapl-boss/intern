@@ -144,7 +144,7 @@ class CollectionResource(BossResource):
         return self.name
 
     def get_list_route(self):
-        return ''
+        return self.name + "/"
 
     def get_cutout_route(self):
         raise RuntimeError('Not supported for collections.')
@@ -173,7 +173,7 @@ class ExperimentResource(BossResource):
     """
     def __init__(self, name, collection_name, coord_frame='', description='',
         num_hierarchy_levels=1, hierarchy_method='anisotropic',
-        num_time_samples=1, creator='', raw={}, 
+        num_time_samples=1, creator='', raw={},
         time_step=0, time_step_unit='seconds'):
         """Constructor.
 
@@ -436,9 +436,9 @@ class ChannelResource(BossResource):
         """Constructor.
 
         Note, if the channel _already_ exists in the Boss, you can use the
-        helper method get_channel(), that is part of BossRemote, to 
+        helper method get_channel(), that is part of BossRemote, to
         instantiate the ChannelResource with all the correct values, using only
-        the names of the collection, experiment, and channel.  
+        the names of the collection, experiment, and channel.
 
         rmt = BossRemote()
         channel = rmt.get_channel('myChannel', 'myCollection', 'myExperiment')
