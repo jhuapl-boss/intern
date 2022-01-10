@@ -8,6 +8,7 @@
     -   Adds support for channel-level metadata using the array().metadata dict-like API (#87)
     -   Adds a `array().downsampled` property on the convenience API (#84)
     -   Fixes voxel_unit getters and setters to be more consistent with convenience API constructor (#83)
+    -   Adds data-source inference to redirect requests to the correct `Remote` (#91)
 -   **Improvements**
     -   Adds a `BossResource.public` boolean flag to mirror if a resource is publicly accessible (#89)
 -   **Fixes**
