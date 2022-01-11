@@ -269,7 +269,7 @@ class BaseVersionTest(unittest.TestCase):
         actual = self.test_project.get_user_request(
             'POST', 'application/json', url_prefix, token, user, email=email)
 
-    def test_get_user_request_with_password_and_email(self):
+    def test_get_user_request_with_password_and_user(self):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         user = 'fire'
@@ -286,7 +286,7 @@ class BaseVersionTest(unittest.TestCase):
         self.assertEqual(expected, actual.url)
         self.assertDictEqual(expectedData, actual.json)
 
-    def test_get_user_request_with_password(self):
+    def test_get_user_request_with_password_and_email(self):
         url_prefix = 'https://api.theboss.io'
         token = 'foobar'
         user = 'fire'
