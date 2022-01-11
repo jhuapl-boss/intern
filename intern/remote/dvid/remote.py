@@ -1,5 +1,5 @@
 """
-# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020-2022 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -211,7 +211,7 @@ class DVIDRemote(Remote):
 
 		"""
         t = uri.split("://")[1].split("/")
-        if len(t) is 3:
+        if len(t) == 3:
             return self.get_instance(t[0], t[1])
         raise ValueError("Cannot parse URI " + uri + ".")
 

@@ -2,7 +2,21 @@
 
 ---
 
-## v1.2.0
+
+## v1.3.0 (Unreleased)
+
+-   **Convenience API**
+    -   Adds support for channel-level metadata using the array().metadata dict-like API (#87)
+    -   Adds a `array().downsampled` property on the convenience API (#84)
+    -   Fixes voxel_unit getters and setters to be more consistent with convenience API constructor (#83)
+    -   Adds data-source inference to redirect requests to the correct `Remote` (#91)
+    -   Adds a metadata interface `Metadata()` for general metadata read/write access (#92)
+-   **Improvements**
+    -   Adds a `BossResource.public` boolean flag to mirror if a resource is publicly accessible (#89)
+-   **Fixes**
+    -   Closes the multiprocessing Pool to avoid too many open files when parallelizing requests (#86)
+
+## v1.2.0 (April 15, 2021)
 
 > Updates to the cloudvolume adapters, and parallelism fixes.
 
@@ -13,10 +27,10 @@
     -   Fixes parallelism defaulting to n=1 (#70)
     -   This release adds support for parallel data uploads through `BossRemote#create_cutout`.
 -   **CloudVolume**
-    - Removes cloudvolume core dependency, and makes it an optional extra-install (#68)
-- **Fixes and Improvements**
-    - Adds support for the new "queued" downsample channel status (#78)
-    - Adds support for z-index slicing in the convenience array API (#77)
+    -   Removes cloudvolume core dependency, and makes it an optional extra-install (#68)
+-   **Fixes and Improvements**
+    -   Adds support for the new "queued" downsample channel status (#78)
+    -   Adds support for z-index slicing in the convenience array API (#77)
 
 ## v1.1.1 — September 2, 2020
 

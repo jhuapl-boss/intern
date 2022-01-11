@@ -1,4 +1,4 @@
-# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020-2022 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from intern.resource.cv.resource import CloudVolumeResource
 from intern.service.cv.service import CloudVolumeService
 
 import numpy as np
@@ -86,4 +85,3 @@ class VolumeService(CloudVolumeService):
         y1, y2 = y_range
         z1, z2 = z_range
         resource.cloudvolume.delete(np.s_[x1:x2, y1:y2, z1:z2])
-
