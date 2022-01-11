@@ -34,6 +34,7 @@ from intern.remote.cv import CloudVolumeRemote
 
 from intern.resource import Resource
 from intern.resource.boss.resource import (
+    BossResource,
     CollectionResource,
     ChannelResource,
     CoordinateFrameResource,
@@ -341,23 +342,31 @@ class AxisOrder:
     ZYX = "ZYX"
 
 
-class _MetadataProvider:
-    """
-    Serves as a dictionary-like API for resource metadata.
+class Metadata:
+    def __init__(self, resource: Union[BossResource, str], remote: BossRemote = None):
+        self._remote = remote or BossRemote(_DEFAULT_BOSS_OPTIONS)
+        if isinstance(resource, str):
+            resource = resource.split("://")[-1]
+            path_items = resource.split("/")
+            if len(path_items) == 1:
+                self._resource = self._remote.get_project(
+                    CollectionResource(path_items[0])
+                )
+            elif len(path_items) == 2:
+                self._resource = self._remote.get_project(
+                    ExperimentResource(path_items[1], path_items[0])
+                )
+            elif len(path_items) == 3:
+                self._resource = self._remote.get_project(
+                    ChannelResource(path_items[2], path_items[0], path_items[1])
+                )
+            else:
+                raise ValueError(f"Invalid resource path: {resource}")
+        else:
+            self._resource = resource
 
-    """
-
-    def __init__(self, dataset) -> None:
-        """
-        Create a new metadata provider.
-
-        Arguments:
-            dataset (array)
-
-        """
-        self._array = dataset
-        self._resource = dataset._channel
-        self._remote = dataset.volume_provider.get_remote()
+    def __truediv__(self, path: str):
+        return Metadata(self._resource.get_list_route() + path, remote=self._remote)
 
     def keys(self):
         return self._remote.list_metadata(self._resource)
@@ -395,6 +404,9 @@ class _MetadataProvider:
 
     def bulk_delete(self, keys: list):
         return self._remote.delete_metadata(self._resource, keys)
+
+    def to_dict(self):
+        return {k: v for k, v in self.items()}
 
 
 def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
@@ -658,7 +670,7 @@ class array:
         self.channel_name = self._channel.name
 
         # Create a pointer to the metadata for the channel.
-        self._channel_metadata = _MetadataProvider(self)
+        self._channel_metadata = Metadata(self._channel)
 
     @property
     def remote(self):
