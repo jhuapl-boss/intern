@@ -38,14 +38,12 @@ class TestConvenienceProjectCreation(unittest.TestCase):
 
     def test_can_get_shape_of_array(self):
         data = array("bossdb://Kasthuri/em/images")
-        self.assertEqual(data.shape, (1850, 26624 / 2, 21504 / 2))
+        self.assertEqual(data.shape, (1856, 26624, 21504))
 
     def test_can_get_shape_of_array_with_resolution(self):
         res = 1
         data = array("bossdb://Kasthuri/em/images", resolution=res)
-        self.assertEqual(
-            data.shape, (1850, (26624 / 2) / (2 ** res), (21504 / 2) / (2 ** res))
-        )
+        self.assertEqual(data.shape, (1856, 26624, 21504))
 
     def test_can_retrieve_data_of_correct_shape(self):
         data = array("bossdb://Kasthuri/em/images", resolution=1)
