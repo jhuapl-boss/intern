@@ -2,7 +2,7 @@
 
 ---
 
-## v1.3.0 (Unreleased)
+## v1.3.0 (June 2022)
 
 -   **Convenience API**
     -   Adds support for channel-level metadata using the array().metadata dict-like API (#87)
