@@ -1,4 +1,4 @@
-﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2021-2022 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,6 +39,11 @@ class BossResource(Resource):
         self.description = description
         self.creator = creator
         self.raw = raw
+        self._public = raw.get("public", None)
+
+    @property
+    def public(self):
+        return self._public
 
     def valid_volume(self):
         return False
@@ -139,7 +144,7 @@ class CollectionResource(BossResource):
         return self.name
 
     def get_list_route(self):
-        return ''
+        return self.name + "/"
 
     def get_cutout_route(self):
         raise RuntimeError('Not supported for collections.')
@@ -168,7 +173,7 @@ class ExperimentResource(BossResource):
     """
     def __init__(self, name, collection_name, coord_frame='', description='',
         num_hierarchy_levels=1, hierarchy_method='anisotropic',
-        num_time_samples=1, creator='', raw={}, 
+        num_time_samples=1, creator='', raw={},
         time_step=0, time_step_unit='seconds'):
         """Constructor.
 
@@ -205,7 +210,7 @@ class ExperimentResource(BossResource):
 
     @property
     def coord_frame(self):
-        if self._coord_frame is '':
+        if self._coord_frame == "":
             raise ValueError('Coordinate frame name is blank.')
         else:
             return self._coord_frame
@@ -431,9 +436,9 @@ class ChannelResource(BossResource):
         """Constructor.
 
         Note, if the channel _already_ exists in the Boss, you can use the
-        helper method get_channel(), that is part of BossRemote, to 
+        helper method get_channel(), that is part of BossRemote, to
         instantiate the ChannelResource with all the correct values, using only
-        the names of the collection, experiment, and channel.  
+        the names of the collection, experiment, and channel.
 
         rmt = BossRemote()
         channel = rmt.get_channel('myChannel', 'myCollection', 'myExperiment')

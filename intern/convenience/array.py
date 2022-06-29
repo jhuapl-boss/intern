@@ -1,5 +1,5 @@
 """
-Copyright 2018-2020 The Johns Hopkins University Applied Physics Laboratory.
+Copyright 2018-2022 The Johns Hopkins University Applied Physics Laboratory.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@ limitations under the License.
 """
 
 # Standard imports
-from typing import Optional, Union, Tuple
+from typing import List, Optional, Union, Tuple
 import abc
 import json
 from collections import namedtuple
 from urllib.parse import unquote
+
+from intern.service.boss.httperrorlist import HTTPErrorList
 
 from .uri import parse_fquri
 
@@ -27,18 +29,39 @@ from .uri import parse_fquri
 # Pip-installable imports
 import numpy as np
 
+from intern.remote.boss import BossRemote
+from intern.remote.cv import CloudVolumeRemote
+
+from intern.resource import Resource
 from intern.resource.boss.resource import (
+    BossResource,
     CollectionResource,
     ChannelResource,
     CoordinateFrameResource,
     ExperimentResource,
 )
-from intern.remote.boss import BossRemote
+from intern.resource.cv.resource import CloudVolumeResource
+
 
 # A named tuple that represents a bossDB URI.
 bossdbURI = namedtuple(
     "bossdbURI", ["collection", "experiment", "channel", "resolution"]
 )
+
+cvURI = namedtuple(
+    "cvURI",
+    [
+        "protocol",
+        "source",
+        "bucket",
+        "collection",
+        "experiment",
+        "channel",
+        "resolution",
+    ],
+)
+
+URI = Union[cvURI, bossdbURI]
 
 _DEFAULT_BOSS_OPTIONS = {
     "protocol": "https",
@@ -55,10 +78,10 @@ class VolumeProvider(abc.ABC):
 
     """
 
-    def get_channel(self, channel: str, collection: str, experiment: str):
+    def get_channel(self, channel: str, collection: str, experiment: str) -> Resource:
         ...
 
-    def get_project(self, resource):
+    def get_project(self, resource) -> Resource:
         ...
 
     def create_project(self, resource):
@@ -71,7 +94,7 @@ class VolumeProvider(abc.ABC):
         xs: Tuple[int, int],
         ys: Tuple[int, int],
         zs: Tuple[int, int],
-    ):
+    ) -> np.ndarray:
         ...
 
     def create_cutout(
@@ -85,8 +108,28 @@ class VolumeProvider(abc.ABC):
     ):
         ...
 
+    def get_vp_type(self) -> str:
+        ...
 
-class _InternVolumeProvider(VolumeProvider):
+    def get_axis_order(self) -> str:
+        ...
+
+    def get_shape(self, channel: Resource, resolution: int = 0) -> Tuple[int, int, int]:
+        ...
+
+    def get_voxel_size(
+        self, channel: Resource, resolution: int = 0
+    ) -> Tuple[float, float, float]:
+        ...
+
+    def get_voxel_unit(self, channel: Resource, resolution: int = 0) -> str:
+        ...
+
+    def get_available_resolutions(self, channel: Resource) -> List[int]:
+        ...
+
+
+class _BossDBVolumeProvider(VolumeProvider):
     """
     A VolumeProvider that backends the intern.BossRemote API.
 
@@ -104,10 +147,19 @@ class _InternVolumeProvider(VolumeProvider):
                 boss = BossRemote(_DEFAULT_BOSS_OPTIONS)
         self.boss = boss
 
+    def get_vp_type(self) -> str:
+        return "BossDB"
+
+    def get_axis_order(self) -> str:
+        return AxisOrder.ZYX
+
+    def get_remote(self):
+        return self.boss
+
     def get_channel(self, channel: str, collection: str, experiment: str):
         return self.boss.get_channel(channel, collection, experiment)
 
-    def get_project(self, resource):
+    def get_project(self, resource) -> Resource:
         return self.boss.get_project(resource)
 
     def create_project(self, resource):
@@ -120,7 +172,7 @@ class _InternVolumeProvider(VolumeProvider):
         xs: Tuple[int, int],
         ys: Tuple[int, int],
         zs: Tuple[int, int],
-    ):
+    ) -> np.ndarray:
         return self.boss.get_cutout(channel, resolution, xs, ys, zs)
 
     def create_cutout(
@@ -134,13 +186,121 @@ class _InternVolumeProvider(VolumeProvider):
     ):
         return self.boss.create_cutout(channel, resolution, xs, ys, zs, data)
 
+    def get_shape(
+        self, channel: ChannelResource, resolution: int = 0
+    ) -> Tuple[int, int, int]:
+        # Get the experiment:
+        experiment = self.get_project(
+            ExperimentResource(channel.exp_name, channel.coll_name)
+        )
+        # Get the coordinate frame:
+        cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
+
+        # Return the bounds of the coordinate frame:
+        return (
+            (cf.z_stop - cf.z_start),
+            int((cf.y_stop - cf.y_start) / (2 ** resolution)),
+            int((cf.x_stop - cf.x_start) / (2 ** resolution)),
+        )
+
+    def get_voxel_size(
+        self, channel: ChannelResource, resolution: int = 0
+    ) -> Tuple[float, float, float]:
+        experiment = self.get_project(
+            ExperimentResource(channel.exp_name, channel.coll_name)
+        )
+        # Get the coordinate frame:
+        cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
+        return (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
+
+    def get_voxel_unit(self, channel: ChannelResource, resolution: int = 0) -> str:
+        experiment = self.get_project(
+            ExperimentResource(channel.exp_name, channel.coll_name)
+        )
+        # Get the coordinate frame:
+        cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
+        return cf.voxel_unit
+
+    def get_available_resolutions(self, channel: Resource) -> List[int]:
+        experiment = self.get_project(
+            ExperimentResource(channel.exp_name, channel.coll_name)
+        )
+        return list(range(experiment.num_hierarchy_levels))
+
+
+class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
+    """
+    A volume provider that backends the intern.CloudVolumeRemote API."""
+
+    def __init__(self, cv_config: dict = None):
+        self.cv_config = cv_config or {
+            "protocol": "s3",
+            "cloudpath": "",
+            "bucket": "bossdb-open-data",
+        }
+        self._cv = CloudVolumeRemote(self.cv_config)
+
+    def get_remote(self):
+        return self._cv
+
+    def get_vp_type(self) -> str:
+        return "CloudVolumeOpenData"
+
+    def get_axis_order(self) -> str:
+        return AxisOrder.XYZ
+
+    def get_channel(self, channel: str, collection: str, experiment: str):
+        cloudpath = (
+            self.cv_config["cloudpath"] or f"{collection}/{experiment}/{channel}"
+        )
+        return CloudVolumeResource(
+            self.cv_config["protocol"],
+            f"{self.cv_config['bucket']}/{cloudpath}",
+        )
+
+    def get_project(self, resource) -> CloudVolumeResource:
+        raise NotImplementedError(
+            "CloudVolumeOpenDataVolumeProvider does not support get_project"
+        )
+
+    def create_project(self, resource):
+        raise NotImplementedError(
+            "CloudVolumeOpenDataVolumeProvider does not support create_project"
+        )
+
+    def get_cutout(
+        self,
+        uri: str,
+        resolution: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
+    ) -> np.ndarray:
+        return self._cv.get_cutout(uri, resolution, xs, ys, zs)
+
+    def get_shape(
+        self, channel: CloudVolumeResource, resolution: int = 0
+    ) -> Tuple[int, int, int]:
+        return tuple(channel.cloudvolume.volume_size)
+
+    def get_voxel_size(
+        self, channel: CloudVolumeResource, resolution: int = 0
+    ) -> Tuple[float, float, float]:
+        return tuple(channel.cloudvolume.resolution)
+
+    def get_voxel_unit(self, channel: CloudVolumeResource) -> str:
+        return "nanometers"
+
+    def get_available_resolutions(self, channel: CloudVolumeResource) -> List[int]:
+        return list(channel.cloudvolume.available_mips)
+
 
 def _construct_boss_url(boss, col, exp, chan, res, xs, ys, zs) -> str:
     # TODO: use boss host
     return f"https://api.theboss.io/v1/cutout/{col}/{exp}/{chan}/{res}/{xs[0]}:{xs[1]}/{ys[0]}:{ys[1]}/{zs[0]}:{zs[1]}"
 
 
-def parse_bossdb_uri(uri: str) -> bossdbURI:
+def _parse_bossdb_uri(uri: str) -> URI:
     """
     Parse a bossDB URI and handle malform errors.
 
@@ -151,17 +311,136 @@ def parse_bossdb_uri(uri: str) -> bossdbURI:
         bossdbURI
 
     """
-    t = uri.split("://")[1].split("/")
+    t = uri.split("://")[-1].split("/")
     if len(t) == 3:
-        return bossdbURI(t[0], t[1], t[2], None)
+        return bossdbURI(t[-3], t[-2], t[-1], None)
     if len(t) == 4:
-        return bossdbURI(t[0], t[1], t[2], int(t[3]))
+        return bossdbURI(t[-4], t[-3], t[-2], int(t[-1]))
     raise ValueError(f"Cannot parse URI {uri}.")
+
+
+def _parse_cloudvolume_uri(uri: str) -> URI:
+    """
+    Parse a CloudVolume URI and handle malform errors.
+
+    Arguments:
+        uri (str): URI of the form s3://<bucket>/<path>
+
+    Returns:
+        dict
+
+    """
+    if uri.startswith("bossdb://"):
+        return _parse_bossdb_uri(uri)
+    protocol, source, path = uri.split("://")
+    bucket, col, exp, chan = path.split("/")
+    return cvURI(protocol, source, bucket, col, exp, chan, None)
 
 
 class AxisOrder:
     XYZ = "XYZ"
     ZYX = "ZYX"
+
+
+class Metadata:
+    def __init__(self, resource: Union[BossResource, str], remote: BossRemote = None):
+        self._remote = remote or BossRemote(_DEFAULT_BOSS_OPTIONS)
+        if isinstance(resource, str):
+            resource = resource.split("://")[-1]
+            path_items = resource.split("/")
+            if len(path_items) == 1:
+                self._resource = self._remote.get_project(
+                    CollectionResource(path_items[0])
+                )
+            elif len(path_items) == 2:
+                self._resource = self._remote.get_project(
+                    ExperimentResource(path_items[1], path_items[0])
+                )
+            elif len(path_items) == 3:
+                self._resource = self._remote.get_project(
+                    ChannelResource(path_items[2], path_items[0], path_items[1])
+                )
+            else:
+                raise ValueError(f"Invalid resource path: {resource}")
+        else:
+            self._resource = resource
+
+    def __truediv__(self, path: str):
+        return Metadata(self._resource.get_list_route() + path, remote=self._remote)
+
+    def keys(self):
+        return self._remote.list_metadata(self._resource)
+
+    def items(self):
+        for key in self.keys():
+            yield (key, self[key])
+
+    def __delitem__(self, key):
+        return self._remote.delete_metadata(self._resource, [key])
+
+    def __contains__(self, key):
+        try:
+            self[key]
+            return True
+        except KeyError:
+            return False
+
+    def __getitem__(self, key):
+        try:
+            return self._remote.get_metadata(self._resource, [key])[key]
+        except HTTPErrorList as err:
+            raise KeyError(
+                f"The key {key!s} was not found in the metadata database."
+            ) from err
+
+    def __setitem__(self, key, value):
+        return self._remote.create_metadata(self._resource, {key: value})
+
+    def update_item(self, key, value):
+        return self._remote.update_metadata(self._resource, {key: value})
+
+    def bulk_update(self, items: dict):
+        return self._remote.create_metadata(self._resource, items)
+
+    def bulk_delete(self, keys: list):
+        return self._remote.delete_metadata(self._resource, keys)
+
+    def to_dict(self):
+        return {k: v for k, v in self.items()}
+
+
+def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
+    if isinstance(channel, ChannelResource):
+        # Check if the channel is backed by CloudVolume
+        if channel.raw["storage_type"] == "cloudvol":
+            return _CloudVolumeOpenDataVolumeProvider(
+                {
+                    "protocol": "s3",
+                    "bucket": channel.raw["bucket"],
+                    "cloudpath": channel.raw["cv_path"],
+                }
+            )
+        return _BossDBVolumeProvider()
+
+    if isinstance(channel, str):
+        if channel.startswith("bossdb://"):
+            channel_uri = _parse_bossdb_uri(channel)
+            channel_obj = _BossDBVolumeProvider().get_channel(
+                channel_uri.channel, channel_uri.collection, channel_uri.experiment
+            )
+            if channel_obj.raw["storage_type"] == "cloudvol":
+                return _CloudVolumeOpenDataVolumeProvider(
+                    {
+                        "protocol": "s3",
+                        "bucket": channel_obj.raw["bucket"],
+                        "cloudpath": channel_obj.raw["cv_path"],
+                    }
+                )
+            return _BossDBVolumeProvider()
+
+        if channel.startswith("s3://") or channel.startswith("precomputed://"):
+            return _CloudVolumeOpenDataVolumeProvider()
+    return None
 
 
 class array:
@@ -256,15 +535,23 @@ class array:
         """
         self.axis_order = axis_order
 
-        # Handle custom Remote:
-        self.volume_provider = volume_provider
+        # Handle inferring the remote from the channel:
+        volume_provider = volume_provider or _infer_volume_provider(channel)
         if volume_provider is None:
             if boss_config:
-                self.volume_provider = _InternVolumeProvider(BossRemote(boss_config))
+                volume_provider = _BossDBVolumeProvider(BossRemote(boss_config))
             else:
-                self.volume_provider = _InternVolumeProvider()
+                volume_provider = _BossDBVolumeProvider()
+
+        # Handle custom Remote:
+        self.volume_provider = volume_provider
 
         if create_new:
+
+            if self.volume_provider.get_vp_type() != "bossdb":
+                raise ValueError(
+                    "Creating new resources with a non-bossdb volume provider is not currently supported."
+                )
 
             # We'll need at least `extents` and `voxel_size`.
             description = description or "Created with intern"
@@ -279,7 +566,7 @@ class array:
                     "If `create_new` is True, you must specify the voxel_size of the new coordinate frame as a [x, y, z]."
                 )
 
-            uri = parse_bossdb_uri(channel)
+            uri = _parse_bossdb_uri(channel)
 
             # create collection if it doesn't exist:
             try:
@@ -303,6 +590,8 @@ class array:
                     )
                 )
             except:
+                # Default to nanometers if a voxel unit isn't provided
+                voxel_unit = voxel_unit or "nanometers"
                 # Create the coordframe:
                 coordframe = CoordinateFrameResource(
                     coordinate_frame_name or f"CF_{uri.collection}_{uri.experiment}",
@@ -363,30 +652,36 @@ class array:
             self._channel = channel
         # If it is set as a string, then parse the channel and generate an
         # intern.Resource from a bossDB URI.
-        elif isinstance(channel, str):
-            uri = parse_bossdb_uri(channel)
+        else:  # if isinstance(channel, str):
+            uri = {
+                "BossDB": _parse_bossdb_uri,
+                "CloudVolumeOpenData": _parse_cloudvolume_uri,
+            }[self.volume_provider.get_vp_type()](channel)
             self.resolution = (
                 uri.resolution if not (uri.resolution is None) else self.resolution
             )
             self._channel = self.volume_provider.get_channel(
                 uri.channel, uri.collection, uri.experiment
             )
-        else:
-            raise NotImplementedError(
-                "You must specify a channel of the form "
-                "'bossdb://collection/experiment/channel' or you must "
-                "provide an intern.Remote."
-            )
-
-        # Set empty experiment (will be dict)
-        self._exp = None
-        # Set empty coordframe (will be dict)
-        self._coord_frame = None
 
         # Set col/exp/chan based upon the channel or URI provided.
         self.collection_name = self._channel.coll_name
         self.experiment_name = self._channel.exp_name
         self.channel_name = self._channel.name
+
+        # Create a pointer to the metadata for the channel.
+        self._channel_metadata = Metadata(self._channel)
+
+    @property
+    def remote(self):
+        return self.volume_provider.get_vp_type()
+
+    @property
+    def metadata(self):
+        """
+        Returns a pointer to the metadata provider.
+        """
+        return self._channel_metadata
 
     @property
     def dtype(self):
@@ -415,48 +710,22 @@ class array:
         )
 
     @property
-    def shape(self):
+    def shape(self) -> Tuple[int, int, int]:
         """
         Get the dimensions (numpy-flavored) of the array.
 
         Will return (1, 1, 1) if a coordinate frame does not exist (as in cases
         of pre-v2 bossphorus instances); this will not restrict indexing.
         """
-        # Set experiment if unset:
-        if self._exp is None:
-            self._populate_exp()
-
-        # Set cframe if unset:
-        if self._coord_frame is None:
-            self._populate_coord_frame()
-
         # From the coordinate frame, get the x, y, and z sizes. Note that this
         # is the SIZE, not the extents; in other words, a cframe that starts at
         # x=10 and extends to x=110 will have a size of 100 here.
-        if self.axis_order == AxisOrder.XYZ:
-            return (
-                int(
-                    (self._coord_frame.y_stop - self._coord_frame.y_start)
-                    / (2 ** self.resolution)
-                ),
-                int(
-                    (self._coord_frame.x_stop - self._coord_frame.x_start)
-                    / (2 ** self.resolution)
-                ),
-                (self._coord_frame.z_stop - self._coord_frame.z_start),
-            )
-        elif self.axis_order == AxisOrder.ZYX:
-            return (
-                (self._coord_frame.z_stop - self._coord_frame.z_start),
-                int(
-                    (self._coord_frame.y_stop - self._coord_frame.y_start)
-                    / (2 ** self.resolution)
-                ),
-                int(
-                    (self._coord_frame.x_stop - self._coord_frame.x_start)
-                    / (2 ** self.resolution)
-                ),
-            )
+        if self.axis_order == self.volume_provider.get_axis_order():
+            return self.volume_provider.get_shape(self._channel, self.resolution)
+        else:
+            # elif self.axis_order == AxisOrder.ZYX: # TODO: Support other Axis orderings?
+            shape = self.volume_provider.get_shape(self._channel, self.resolution)
+            return shape[2], shape[1], shape[0]
 
     @property
     def voxel_size(self):
@@ -466,49 +735,40 @@ class array:
         Will return (1, 1, 1) if a coordinate frame does not exist (as in cases
         of pre-v2 bossphorus instances); this will not restrict indexing.
         """
-        # Set experiment if unset:
-        if self._exp is None:
-            self._populate_exp()
 
-        # Set cframe if unset:
-        if self._coord_frame is None:
-            self._populate_coord_frame()
+        if self.axis_order == self.volume_provider.get_axis_order():
+            return self.volume_provider.get_voxel_size(self._channel)
+        else:
+            # elif self.axis_order == AxisOrder.ZYX: # TODO: Support other Axis orderings?
+            voxel_size = self.volume_provider.get_voxel_size(self._channel)
+            return voxel_size[2], voxel_size[1], voxel_size[0]
 
-        if self.axis_order == AxisOrder.XYZ:
-            vox_size = (
-                self._coord_frame.x_voxel_size,
-                self._coord_frame.y_voxel_size,
-                self._coord_frame.z_voxel_size,
-            )
-        elif self.axis_order == AxisOrder.ZYX:
-            vox_size = (
-                self._coord_frame.z_voxel_size,
-                self._coord_frame.y_voxel_size,
-                self._coord_frame.x_voxel_size,
-            )
-        return (vox_size, self._coord_frame.voxel_unit)
+    @property
+    def voxel_unit(self):
+        return self.volume_provider.get_voxel_unit(self._channel)
 
-    def _populate_exp(self):
+    @property
+    def downsample_status(self):
         """
-        Populate the experiment component of this array.
-
-        Cache the results for later.
+        Return the downsample status of the underlying channel.
         """
-        self._exp = self.volume_provider.get_project(
-            ExperimentResource(self._channel.exp_name, self._channel.coll_name)
-        )
+        return self._channel.downsample_status
 
-    def _populate_coord_frame(self):
+    @property
+    def available_resolutions(self):
         """
-        Populate the array coordinate frame.
+        Return a list of available resolutions for this channel.
 
-        Cache the results for later.
+        Arguments:
+            None
+
+        Returns:
+            List[int]: A list of resolutions at which this dataset can be downloaded
+
         """
-        self._coord_frame = self.volume_provider.get_project(
-            CoordinateFrameResource(self._exp.coord_frame)
-        )
+        return self.volume_provider.get_available_resolutions(self._channel)
 
-    def __getitem__(self, key: Tuple) -> np.array:
+    def __getitem__(self, key: Tuple) -> np.ndarray:
         """
         Get a subarray or subvolume.
 
@@ -524,22 +784,8 @@ class array:
         # If the user has requested XYZ mode, the first thing to do is reverse
         # the array indices. Then you can continue this fn without any
         # additional changes.
-        if self.axis_order == AxisOrder.XYZ:
+        if self.axis_order != self.volume_provider.get_axis_order():
             key = (key[2], key[1], key[0])
-
-        # Next, we need to get the shape of the dataset. We do this currently
-        # by getting the coordinate frame, which means that we need the
-        # coordframe data and experiment data if we don't have it already. In
-        # the future, we may also want to allow the user to specify general
-        # shape information so that we can avoid calling the API.
-
-        # Populate the experiment metadata if unset:
-        if self._exp is None:
-            self._populate_exp()
-
-        # Populate the coordinate frame metadata if not yet set:
-        if self._coord_frame is None:
-            self._populate_coord_frame()
 
         # Now we can begin. There is a wide variety of indexing options
         # available, including single-integer indexing, tuple-of-slices
@@ -568,10 +814,10 @@ class array:
             # dimension (in the same order, e.g. ZYX, as the array).
             _normalize_units = (1, 1, 1)
             if isinstance(key[-1], str) and len(key) == 4:
-                if key[-1] != self._coord_frame.voxel_unit:
+                if key[-1] != self.volume_provider.get_voxel_unit():
                     raise NotImplementedError(
                         "Can only reference voxels in native size format which is "
-                        f"{self._coord_frame.voxel_unit} for this dataset."
+                        f"{self.volume_provider.get_voxel_unit()} for this dataset."
                     )
                 _normalize_units = self.voxel_size
 
@@ -631,10 +877,11 @@ class array:
         )
 
         # Data are returned in ZYX order:
-        if self.axis_order == AxisOrder.XYZ:
-            data = np.rollaxis(np.rollaxis(cutout, 1), 2)
-        elif self.axis_order == AxisOrder.ZYX:
-            data = cutout
+        if self.axis_order != self.volume_provider.get_axis_order():
+            data: np.ndarray = np.swapaxes(cutout, 0, 2)
+            # data = np.rollaxis(np.rollaxis(cutout, 1), 2)
+        else:  # if self.axis_order == AxisOrder.ZYX:
+            data: np.ndarray = cutout
 
         # If any of the dimensions are of length 1, it's because the user
         # requested a single slice in their key; flatten the array in that
@@ -649,7 +896,7 @@ class array:
             data = data[:, :, 0]
         return data
 
-    def __setitem__(self, key: Tuple, value: np.array) -> np.array:
+    def __setitem__(self, key: Tuple, value: np.ndarray) -> None:
         """
         Set a subarray or subvolume.
 
@@ -664,23 +911,15 @@ class array:
         Start-only (`10:`) or stop-only (`:10`) indexing is unsupported.
         """
 
-        if self.axis_order == AxisOrder.XYZ:
+        if self.axis_order != self.volume_provider.get_axis_order():
             key = (key[2], key[1], key[0])
-
-        # Set experiment if unset:
-        if self._exp is None:
-            self._populate_exp()
-
-        # Set cframe if unset:
-        if self._coord_frame is None:
-            self._populate_coord_frame()
 
         _normalize_units = (1, 1, 1)
         if isinstance(key[-1], str) and len(key) == 4:
-            if key[-1] != self._coord_frame.voxel_unit:
+            if key[-1] != self.volume_provider.get_voxel_unit():
                 raise NotImplementedError(
                     "Can only reference voxels in native size format which is "
-                    f"{self._coord_frame.voxel_unit} for this dataset."
+                    f"{self.volume_provider.get_voxel_unit()} for this dataset."
                 )
             _normalize_units = self.voxel_size
 
@@ -721,7 +960,7 @@ class array:
             # TODO: Support other 2D shapes as well
             value = np.array([value])
 
-        cutout = self.volume_provider.create_cutout(
+        self.volume_provider.create_cutout(
             self._channel, self.resolution, xs, ys, zs, value
         )
 
@@ -753,7 +992,7 @@ def arrays_from_neuroglancer(url: str):
             continue
         remote, channel = parse_fquri(source_url)
         arrays[source["name"]] = array(
-            channel=channel, volume_provider=_InternVolumeProvider(remote)
+            channel=channel, volume_provider=_BossDBVolumeProvider(remote)
         )
     return arrays
 
@@ -785,4 +1024,3 @@ def volumes_from_neuroglancer(
         key: dataset[z - zr : z + zr, y - yr : y + yr, x - xr : x + xr]
         for key, dataset in arrays.items()
     }
-

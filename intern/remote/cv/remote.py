@@ -1,5 +1,5 @@
 ﻿"""
-# Copyright 2020 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2020-2022 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ from intern.service.cv.project import ProjectService
 
 class CloudVolumeRemote(Remote):
     def __init__(
-        self, cfg_file_or_dict=None,
+        self,
+        cfg_file_or_dict=None,
     ):
         """Constructor.
         Protocol and host specifications are taken in as keys -values of dictionary.
@@ -31,6 +32,7 @@ class CloudVolumeRemote(Remote):
             cfg_file_or_dict (optional[string|dict]): Path to config file in
                 INI format or a dict of config parameters.
         """
+        cfg_file_or_dict = cfg_file_or_dict or {}
         Remote.__init__(self, cfg_file_or_dict)
         self.protocol = self._config["Default"]["protocol"]
         self.cloudpath = self._config["Default"]["cloudpath"]

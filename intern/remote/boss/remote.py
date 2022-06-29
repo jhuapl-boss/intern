@@ -1,5 +1,5 @@
 """
-# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2016-2022 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -871,7 +871,7 @@ class BossRemote(Remote):
 
         """
         t = uri.split("://")[1].split("/")
-        if len(t) is 3:
+        if len(t) == 3:
             return self.get_channel(t[2], t[0], t[1])
         raise ValueError("Cannot parse URI " + uri + ".")
 
