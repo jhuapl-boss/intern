@@ -281,7 +281,7 @@ class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
     def get_shape(
         self, channel: CloudVolumeResource, resolution: int = 0
     ) -> Tuple[int, int, int]:
-        return tuple(channel.cloudvolume.volume_size)
+        return tuple(channel.cloudvolume.scales[resolution]["size"])
 
     def get_voxel_size(
         self, channel: CloudVolumeResource, resolution: int = 0
