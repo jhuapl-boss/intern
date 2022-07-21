@@ -2,6 +2,11 @@
 
 ---
 
+## v1.3.1 (July 2022)
+
+-   **Fixes**
+    -   Resolves an issue with accessing cloudvolume-backed public data in BossDB with ZYX/XYZ axis-ordering
+
 ## v1.3.0 (June 2022)
 
 -   **Convenience API**
