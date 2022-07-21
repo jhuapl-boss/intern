@@ -148,7 +148,7 @@ class _BossDBVolumeProvider(VolumeProvider):
         self.boss = boss
 
     def get_vp_type(self) -> str:
-        return "BossDB"
+        return "bossdb"
 
     def get_axis_order(self) -> str:
         return AxisOrder.ZYX
@@ -199,8 +199,8 @@ class _BossDBVolumeProvider(VolumeProvider):
         # Return the bounds of the coordinate frame:
         return (
             (cf.z_stop - cf.z_start),
-            int((cf.y_stop - cf.y_start) / (2 ** resolution)),
-            int((cf.x_stop - cf.x_start) / (2 ** resolution)),
+            int((cf.y_stop - cf.y_start) / (2**resolution)),
+            int((cf.x_stop - cf.x_start) / (2**resolution)),
         )
 
     def get_voxel_size(
@@ -425,17 +425,20 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
     if isinstance(channel, str):
         if channel.startswith("bossdb://"):
             channel_uri = _parse_bossdb_uri(channel)
-            channel_obj = _BossDBVolumeProvider().get_channel(
-                channel_uri.channel, channel_uri.collection, channel_uri.experiment
-            )
-            if channel_obj.raw["storage_type"] == "cloudvol":
-                return _CloudVolumeOpenDataVolumeProvider(
-                    {
-                        "protocol": "s3",
-                        "bucket": channel_obj.raw["bucket"],
-                        "cloudpath": channel_obj.raw["cv_path"],
-                    }
+            try:
+                channel_obj = _BossDBVolumeProvider().get_channel(
+                    channel_uri.channel, channel_uri.collection, channel_uri.experiment
                 )
+                if channel_obj.raw["storage_type"] == "cloudvol":
+                    return _CloudVolumeOpenDataVolumeProvider(
+                        {
+                            "protocol": "s3",
+                            "bucket": channel_obj.raw["bucket"],
+                            "cloudpath": channel_obj.raw["cv_path"],
+                        }
+                    )
+            except:
+                return _BossDBVolumeProvider()
             return _BossDBVolumeProvider()
 
         if channel.startswith("s3://") or channel.startswith("precomputed://"):
