@@ -178,7 +178,7 @@ class TestCloudVolumeRemote(unittest.TestCase):
         )
 
         # Instantiate a new cloudvolume resource
-        resource = self.cv_remote.cloudvolume(info=info, fill_missing=True)
+        resource = self.cv_remote.cloudvolume(info=info)
         # Upload data
         data = np.random.randint(0, 255, [128, 128, 128], dtype=np.uint8)
         self.cv_remote.create_cutout(resource, 0, [0, 128], [0, 128], [0, 128], data)

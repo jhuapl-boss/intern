@@ -81,6 +81,8 @@ class CloudVolumeResource(Resource):
             parallel=parallel,
             cache=cache,
             use_https=True,
+            progress=False,
+            fill_missing=True,
             **kwargs
         )
 
