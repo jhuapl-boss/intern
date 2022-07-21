@@ -276,7 +276,7 @@ class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
         ys: Tuple[int, int],
         zs: Tuple[int, int],
     ) -> np.ndarray:
-        return self._cv.get_cutout(uri, resolution, xs, ys, zs)
+        return self._cv.get_cutout(uri, resolution, zs, ys, xs)
 
     def get_shape(
         self, channel: CloudVolumeResource, resolution: int = 0
@@ -657,9 +657,9 @@ class array:
         # intern.Resource from a bossDB URI.
         else:  # if isinstance(channel, str):
             uri = {
-                "BossDB": _parse_bossdb_uri,
-                "CloudVolumeOpenData": _parse_cloudvolume_uri,
-            }[self.volume_provider.get_vp_type()](channel)
+                "bossdb": _parse_bossdb_uri,
+                "cloudvolumeopendata": _parse_cloudvolume_uri,
+            }[self.volume_provider.get_vp_type().lower()](channel)
             self.resolution = (
                 uri.resolution if not (uri.resolution is None) else self.resolution
             )

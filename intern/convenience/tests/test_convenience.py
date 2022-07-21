@@ -31,11 +31,6 @@ class TestConvenienceProjectCreation(unittest.TestCase):
         test_array = array(boss.get_channel("cc", "kasthuri2015", "em"))
         self.assertEqual(test_array.dtype, "uint8")
 
-    # TODO: check_exists=False is unimplemented.
-    # def test_cannot_initialize_invalid_path_array(self):
-    #     with self.assertRaises(LookupError):
-    #         array("bossdb://Kasthuri/em/DNE_images")
-
     def test_can_get_shape_of_array(self):
         data = array("bossdb://Kasthuri/em/images")
         self.assertEqual(data.shape, (1856, 26624, 21504))
