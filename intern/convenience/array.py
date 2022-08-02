@@ -148,7 +148,7 @@ class _BossDBVolumeProvider(VolumeProvider):
         self.boss = boss
 
     def get_vp_type(self) -> str:
-        return "BossDB"
+        return "bossdb"
 
     def get_axis_order(self) -> str:
         return AxisOrder.ZYX
@@ -199,8 +199,8 @@ class _BossDBVolumeProvider(VolumeProvider):
         # Return the bounds of the coordinate frame:
         return (
             (cf.z_stop - cf.z_start),
-            int((cf.y_stop - cf.y_start) / (2 ** resolution)),
-            int((cf.x_stop - cf.x_start) / (2 ** resolution)),
+            int((cf.y_stop - cf.y_start) / (2**resolution)),
+            int((cf.x_stop - cf.x_start) / (2**resolution)),
         )
 
     def get_voxel_size(
@@ -276,12 +276,12 @@ class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
         ys: Tuple[int, int],
         zs: Tuple[int, int],
     ) -> np.ndarray:
-        return self._cv.get_cutout(uri, resolution, xs, ys, zs)
+        return self._cv.get_cutout(uri, resolution, zs, ys, xs)
 
     def get_shape(
         self, channel: CloudVolumeResource, resolution: int = 0
     ) -> Tuple[int, int, int]:
-        return tuple(channel.cloudvolume.volume_size)
+        return tuple(channel.cloudvolume.scales[resolution]["size"])
 
     def get_voxel_size(
         self, channel: CloudVolumeResource, resolution: int = 0
@@ -425,17 +425,20 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
     if isinstance(channel, str):
         if channel.startswith("bossdb://"):
             channel_uri = _parse_bossdb_uri(channel)
-            channel_obj = _BossDBVolumeProvider().get_channel(
-                channel_uri.channel, channel_uri.collection, channel_uri.experiment
-            )
-            if channel_obj.raw["storage_type"] == "cloudvol":
-                return _CloudVolumeOpenDataVolumeProvider(
-                    {
-                        "protocol": "s3",
-                        "bucket": channel_obj.raw["bucket"],
-                        "cloudpath": channel_obj.raw["cv_path"],
-                    }
+            try:
+                channel_obj = _BossDBVolumeProvider().get_channel(
+                    channel_uri.channel, channel_uri.collection, channel_uri.experiment
                 )
+                if channel_obj.raw["storage_type"] == "cloudvol":
+                    return _CloudVolumeOpenDataVolumeProvider(
+                        {
+                            "protocol": "s3",
+                            "bucket": channel_obj.raw["bucket"],
+                            "cloudpath": channel_obj.raw["cv_path"],
+                        }
+                    )
+            except:
+                return _BossDBVolumeProvider()
             return _BossDBVolumeProvider()
 
         if channel.startswith("s3://") or channel.startswith("precomputed://"):
@@ -654,9 +657,9 @@ class array:
         # intern.Resource from a bossDB URI.
         else:  # if isinstance(channel, str):
             uri = {
-                "BossDB": _parse_bossdb_uri,
-                "CloudVolumeOpenData": _parse_cloudvolume_uri,
-            }[self.volume_provider.get_vp_type()](channel)
+                "bossdb": _parse_bossdb_uri,
+                "cloudvolumeopendata": _parse_cloudvolume_uri,
+            }[self.volume_provider.get_vp_type().lower()](channel)
             self.resolution = (
                 uri.resolution if not (uri.resolution is None) else self.resolution
             )
