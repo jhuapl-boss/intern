@@ -446,7 +446,7 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
                     }
                 )
             else:
-                warnings.warn("CloudVolume is not installed. Accessing channel using CVDB.", )
+                warnings.warn("CloudVolume is not installed. Accessing channel using CVDB.", ImportWarning)
             return _BossDBVolumeProvider()
 
         if channel.startswith("s3://") or channel.startswith("precomputed://"):
