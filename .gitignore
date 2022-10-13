@@ -38,3 +38,5 @@ nose2-junit.xml
 /intern.egg-info
 /dist
 .mypy_cache/
+
+venv/
