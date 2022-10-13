@@ -48,7 +48,7 @@ try:
 except ModuleNotFoundError:
     HAS_CLOUDVOLUME = False
 
-warnings.simplefilter('once')
+warnings.simplefilter('once', 'CloudVolume')
 
 # A named tuple that represents a bossDB URI.
 bossdbURI = namedtuple(
