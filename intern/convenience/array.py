@@ -20,6 +20,7 @@ import abc
 import json
 from collections import namedtuple
 from urllib.parse import unquote
+import warnings
 
 from intern.service.boss.httperrorlist import HTTPErrorList
 
@@ -30,7 +31,6 @@ from .uri import parse_fquri
 import numpy as np
 
 from intern.remote.boss import BossRemote
-from intern.remote.cv import CloudVolumeRemote
 
 from intern.resource import Resource
 from intern.resource.boss.resource import (
@@ -40,8 +40,15 @@ from intern.resource.boss.resource import (
     CoordinateFrameResource,
     ExperimentResource,
 )
-from intern.resource.cv.resource import CloudVolumeResource
 
+HAS_CLOUDVOLUME = True
+try:
+    from intern.remote.cv import CloudVolumeRemote
+    from intern.resource.cv.resource import CloudVolumeResource
+except ModuleNotFoundError:
+    HAS_CLOUDVOLUME = False
+
+warnings.simplefilter('once', 'CloudVolume')
 
 # A named tuple that represents a bossDB URI.
 bossdbURI = namedtuple(
@@ -227,72 +234,72 @@ class _BossDBVolumeProvider(VolumeProvider):
         )
         return list(range(experiment.num_hierarchy_levels))
 
+if HAS_CLOUDVOLUME:
+    class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
+        """
+        A volume provider that backends the intern.CloudVolumeRemote API."""
 
-class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
-    """
-    A volume provider that backends the intern.CloudVolumeRemote API."""
+        def __init__(self, cv_config: dict = None):
+            self.cv_config = cv_config or {
+                "protocol": "s3",
+                "cloudpath": "",
+                "bucket": "bossdb-open-data",
+            }
+            self._cv = CloudVolumeRemote(self.cv_config)
 
-    def __init__(self, cv_config: dict = None):
-        self.cv_config = cv_config or {
-            "protocol": "s3",
-            "cloudpath": "",
-            "bucket": "bossdb-open-data",
-        }
-        self._cv = CloudVolumeRemote(self.cv_config)
+        def get_remote(self):
+            return self._cv
 
-    def get_remote(self):
-        return self._cv
+        def get_vp_type(self) -> str:
+            return "CloudVolumeOpenData"
 
-    def get_vp_type(self) -> str:
-        return "CloudVolumeOpenData"
+        def get_axis_order(self) -> str:
+            return AxisOrder.XYZ
 
-    def get_axis_order(self) -> str:
-        return AxisOrder.XYZ
+        def get_channel(self, channel: str, collection: str, experiment: str):
+            cloudpath = (
+                self.cv_config["cloudpath"] or f"{collection}/{experiment}/{channel}"
+            )
+            return CloudVolumeResource(
+                self.cv_config["protocol"],
+                f"{self.cv_config['bucket']}/{cloudpath}",
+            )
 
-    def get_channel(self, channel: str, collection: str, experiment: str):
-        cloudpath = (
-            self.cv_config["cloudpath"] or f"{collection}/{experiment}/{channel}"
-        )
-        return CloudVolumeResource(
-            self.cv_config["protocol"],
-            f"{self.cv_config['bucket']}/{cloudpath}",
-        )
+        def get_project(self, resource) -> CloudVolumeResource:
+            raise NotImplementedError(
+                "CloudVolumeOpenDataVolumeProvider does not support get_project"
+            )
 
-    def get_project(self, resource) -> CloudVolumeResource:
-        raise NotImplementedError(
-            "CloudVolumeOpenDataVolumeProvider does not support get_project"
-        )
+        def create_project(self, resource):
+            raise NotImplementedError(
+                "CloudVolumeOpenDataVolumeProvider does not support create_project"
+            )
 
-    def create_project(self, resource):
-        raise NotImplementedError(
-            "CloudVolumeOpenDataVolumeProvider does not support create_project"
-        )
+        def get_cutout(
+            self,
+            uri: str,
+            resolution: int,
+            xs: Tuple[int, int],
+            ys: Tuple[int, int],
+            zs: Tuple[int, int],
+        ) -> np.ndarray:
+            return self._cv.get_cutout(uri, resolution, zs, ys, xs)
 
-    def get_cutout(
-        self,
-        uri: str,
-        resolution: int,
-        xs: Tuple[int, int],
-        ys: Tuple[int, int],
-        zs: Tuple[int, int],
-    ) -> np.ndarray:
-        return self._cv.get_cutout(uri, resolution, zs, ys, xs)
+        def get_shape(
+            self, channel: CloudVolumeResource, resolution: int = 0
+        ) -> Tuple[int, int, int]:
+            return tuple(channel.cloudvolume.scales[resolution]["size"])
 
-    def get_shape(
-        self, channel: CloudVolumeResource, resolution: int = 0
-    ) -> Tuple[int, int, int]:
-        return tuple(channel.cloudvolume.scales[resolution]["size"])
+        def get_voxel_size(
+            self, channel: CloudVolumeResource, resolution: int = 0
+        ) -> Tuple[float, float, float]:
+            return tuple(channel.cloudvolume.resolution)
 
-    def get_voxel_size(
-        self, channel: CloudVolumeResource, resolution: int = 0
-    ) -> Tuple[float, float, float]:
-        return tuple(channel.cloudvolume.resolution)
+        def get_voxel_unit(self, channel: CloudVolumeResource) -> str:
+            return "nanometers"
 
-    def get_voxel_unit(self, channel: CloudVolumeResource) -> str:
-        return "nanometers"
-
-    def get_available_resolutions(self, channel: CloudVolumeResource) -> List[int]:
-        return list(channel.cloudvolume.available_mips)
+        def get_available_resolutions(self, channel: CloudVolumeResource) -> List[int]:
+            return list(channel.cloudvolume.available_mips)
 
 
 def _construct_boss_url(boss, col, exp, chan, res, xs, ys, zs) -> str:
@@ -411,8 +418,8 @@ class Metadata:
 
 def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
     if isinstance(channel, ChannelResource):
-        # Check if the channel is backed by CloudVolume
-        if channel.raw["storage_type"] == "cloudvol":
+        # Check if the channel is backed by CloudVolume and cloudvolume is installed.
+        if channel.raw["storage_type"] == "cloudvol" and HAS_CLOUDVOLUME:
             return _CloudVolumeOpenDataVolumeProvider(
                 {
                     "protocol": "s3",
@@ -420,29 +427,33 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
                     "cloudpath": channel.raw["cv_path"],
                 }
             )
+        else:
+            warnings.warn("CloudVolume is not installed. Accessing channel using CVDB.", ImportWarning)
         return _BossDBVolumeProvider()
 
     if isinstance(channel, str):
         if channel.startswith("bossdb://"):
             channel_uri = _parse_bossdb_uri(channel)
-            try:
-                channel_obj = _BossDBVolumeProvider().get_channel(
-                    channel_uri.channel, channel_uri.collection, channel_uri.experiment
+            channel_obj = _BossDBVolumeProvider().get_channel(
+                channel_uri.channel, channel_uri.collection, channel_uri.experiment
+            )
+            if channel_obj.raw["storage_type"] == "cloudvol" and HAS_CLOUDVOLUME:
+                return _CloudVolumeOpenDataVolumeProvider(
+                    {
+                        "protocol": "s3",
+                        "bucket": channel_obj.raw["bucket"],
+                        "cloudpath": channel_obj.raw["cv_path"],
+                    }
                 )
-                if channel_obj.raw["storage_type"] == "cloudvol":
-                    return _CloudVolumeOpenDataVolumeProvider(
-                        {
-                            "protocol": "s3",
-                            "bucket": channel_obj.raw["bucket"],
-                            "cloudpath": channel_obj.raw["cv_path"],
-                        }
-                    )
-            except:
-                return _BossDBVolumeProvider()
+            else:
+                warnings.warn("CloudVolume is not installed. Accessing channel using CVDB.", ImportWarning)
             return _BossDBVolumeProvider()
 
         if channel.startswith("s3://") or channel.startswith("precomputed://"):
-            return _CloudVolumeOpenDataVolumeProvider()
+            if HAS_CLOUDVOLUME:
+                return _CloudVolumeOpenDataVolumeProvider()
+            else:
+                raise ModuleNotFoundError("CloudVolume is not installed.")
     return None
 
 

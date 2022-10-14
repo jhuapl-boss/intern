@@ -2,6 +2,11 @@
 
 ---
 
+## v1.3.2 (October 2022)
+
+-   **Fixes**
+    -   Resolves an issue with cloudvolume imports on non-cloudvolume-dependent resources. 
+
 ## v1.3.1 (July 2022)
 
 -   **Fixes**
