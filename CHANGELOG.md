@@ -2,6 +2,11 @@
 
 ---
 
+## v1.3.3 (October 2022)
+
+-   **Fixes**
+    -   Resolves a TypeError when warning in the non-cloudvolume case.
+
 ## v1.3.2 (October 2022)
 
 -   **Fixes**
