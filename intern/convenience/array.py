@@ -1220,7 +1220,7 @@ class array:
         img_folder: str,
         img_pattern: str = "*",
         dtype: str = "uint8",
-        voxel_size: tuple[float, float, float] = (1, 1, 1),
+        voxel_size: Tuple[float, float, float] = (1, 1, 1),
         voxel_unit: str = "nanometers",
         ram_percent: float = 0.5,
         boss_config=None,
