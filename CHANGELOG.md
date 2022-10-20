@@ -2,6 +2,11 @@
 
 ---
 
+## v?.?.? (Unreleased)
+
+-   **Features**
+    -   A new convenience function `array.from_images` uploads an entire directory as a new BossDB dataset
+
 ## v1.3.3 (October 2022)
 
 -   **Fixes**
@@ -10,7 +15,7 @@
 ## v1.3.2 (October 2022)
 
 -   **Fixes**
-    -   Resolves an issue with cloudvolume imports on non-cloudvolume-dependent resources. 
+    -   Resolves an issue with cloudvolume imports on non-cloudvolume-dependent resources.
 
 ## v1.3.1 (July 2022)
 
