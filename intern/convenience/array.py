@@ -94,8 +94,8 @@ class ZSliceIngestJob:
         self,
         channel_uri: str,
         image: dict,
-        annotations: list[dict] = None,  # type: ignore
-        voxel_size: tuple[float, float, float] = (1.0, 1.0, 1.0),
+        annotations: List[dict] = None,  # type: ignore
+        voxel_size: Tuple[float, float, float] = (1.0, 1.0, 1.0),
         voxel_unit: str = "nanometers",
         verify_data: bool = True,
         ram_pct_to_use: float = 0.75,
@@ -230,7 +230,7 @@ class ZSliceIngestJob:
 
         return count
 
-    def _get_zslice_image_paths(self) -> list[pathlib.Path]:
+    def _get_zslice_image_paths(self) -> List[pathlib.Path]:
         """
         Get the paths to the z-slices.
 
@@ -240,7 +240,7 @@ class ZSliceIngestJob:
         """
         return list(sorted(self.image["path"].glob(self.image["pattern"])))
 
-    def _get_zslice_annotation_paths(self) -> list[list[pathlib.Path]]:
+    def _get_zslice_annotation_paths(self) -> List[List[pathlib.Path]]:
         """
         Get the paths to the z-slices.
 
