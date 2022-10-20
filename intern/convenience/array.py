@@ -23,6 +23,7 @@ from urllib.parse import unquote
 import warnings
 
 from intern.service.boss.httperrorlist import HTTPErrorList
+from .sliceingest import ZSliceIngestJob
 
 from .uri import parse_fquri
 
@@ -48,7 +49,7 @@ try:
 except ModuleNotFoundError:
     HAS_CLOUDVOLUME = False
 
-warnings.filterwarnings('once', 'CloudVolume')
+warnings.filterwarnings("once", "CloudVolume")
 
 # A named tuple that represents a bossDB URI.
 bossdbURI = namedtuple(
@@ -234,7 +235,9 @@ class _BossDBVolumeProvider(VolumeProvider):
         )
         return list(range(experiment.num_hierarchy_levels))
 
+
 if HAS_CLOUDVOLUME:
+
     class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
         """
         A volume provider that backends the intern.CloudVolumeRemote API."""
@@ -428,7 +431,10 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
                 }
             )
         else:
-            warnings.warn("CloudVolume is not installed. Accessing channel using CVDB.", ImportWarning)
+            warnings.warn(
+                "CloudVolume is not installed. Accessing channel using CVDB.",
+                ImportWarning,
+            )
         return _BossDBVolumeProvider()
 
     if isinstance(channel, str):
@@ -446,7 +452,10 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
                     }
                 )
             else:
-                warnings.warn("CloudVolume is not installed. Accessing channel using CVDB.", ImportWarning)
+                warnings.warn(
+                    "CloudVolume is not installed. Accessing channel using CVDB.",
+                    ImportWarning,
+                )
             return _BossDBVolumeProvider()
 
         if channel.startswith("s3://") or channel.startswith("precomputed://"):
@@ -781,6 +790,30 @@ class array:
 
         """
         return self.volume_provider.get_available_resolutions(self._channel)
+
+    @staticmethod
+    def from_images(
+        uri: str,
+        img_folder: str,
+        img_pattern: str = "*",
+        dtype: str = "uint8",
+        voxel_size: tuple[float, float, float] = (1, 1, 1),
+        voxel_unit: str = "nanometer",
+        ram_percent: float = 0.5,
+    ) -> bool:
+        return ZSliceIngestJob(
+            uri,
+            {
+                "name": uri,
+                "path": img_folder,
+                "pattern": img_pattern,
+                "dtype": dtype,
+            },
+            [],
+            voxel_size=voxel_size,
+            voxel_unit=voxel_unit,
+            ram_pct_to_use=ram_percent,
+        ).upload_images()
 
     def __getitem__(self, key: Tuple) -> np.ndarray:
         """
