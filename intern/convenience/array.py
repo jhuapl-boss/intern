@@ -369,7 +369,7 @@ class ZSliceIngestJob:
             batch_array = Parallel(n_jobs=-1)(
                 delayed(Image.open)(path) for path in zslice_paths[start:end]
             )
-            batch_array = np.stack(batch_array, axis=0)
+            batch_array = np.stack(batch_array, axis=0).astype(self.image["dtype"])
 
             # Upload the batch
             dataset[start:end, 0 : shape[1], 0 : shape[0]] = batch_array
@@ -465,7 +465,7 @@ class ZSliceIngestJob:
                 batch_array = Parallel(n_jobs=-1)(
                     delayed(Image.open)(path) for path in paths[start:end]
                 )
-                batch_array = np.stack(batch_array, axis=0)
+                batch_array = np.stack(batch_array, axis=0).astype(anno_dict["dtype"])
 
                 # Upload the batch
                 dataset[start:end, 0 : shape[1], 0 : shape[0]] = batch_array
