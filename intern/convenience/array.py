@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 # Standard imports
+import time
 from typing import List, Optional, Union, Tuple
 import abc
 import json
@@ -89,6 +90,7 @@ _DEFAULT_BOSS_OPTIONS = {
 class ZSliceIngestJob:
 
     _max_batch_size: int = 256
+    _retry_wait: int = 5
 
     def __init__(
         self,
@@ -99,6 +101,7 @@ class ZSliceIngestJob:
         voxel_unit: str = "nanometers",
         verify_data: bool = True,
         ram_pct_to_use: float = 0.75,
+        retries: int = 5,
         boss_options: dict = None,
     ):
         """
@@ -118,6 +121,7 @@ class ZSliceIngestJob:
             verify_data (bool): Whether to verify that the data are the correct
                 size and dtype before uploading. Defaults to True.
             ram_pct_to_use (float): Percentage of free RAM to use for uploading.
+            retries (int): Number of times to retry an upload if it fails.
             boss_options (dict): Options for the BossRemote.
 
         """
@@ -131,6 +135,7 @@ class ZSliceIngestJob:
         self.voxel_unit = voxel_unit
         self._ram_pct_to_use = ram_pct_to_use
         self._boss_options = boss_options
+        self._retries = retries
         if verify_data:
             self._verify_paths()
             self._verify_shapes()
@@ -362,20 +367,28 @@ class ZSliceIngestJob:
             start = batch * batch_size
             end = min((batch + 1) * batch_size, zslice_count)
 
-            # batch_array = np.zeros(
-            #     (end - start, shape[1], shape[0]), dtype=self.image["dtype"]
-            # )
-            # for i, path in enumerate(zslice_paths[start:end]):
-            #     batch_array[i] = np.array(Image.open(path))
+            for _ in range(self._retries):
+                try:
+                    batch_array = Parallel(n_jobs=-1)(
+                        delayed(Image.open)(path) for path in zslice_paths[start:end]
+                    )
+                    batch_array = np.stack(batch_array, axis=0).astype(
+                        self.image["dtype"]
+                    )
 
-            # joblib version:
-            batch_array = Parallel(n_jobs=-1)(
-                delayed(Image.open)(path) for path in zslice_paths[start:end]
-            )
-            batch_array = np.stack(batch_array, axis=0).astype(self.image["dtype"])
-
-            # Upload the batch
-            dataset[start:end, 0 : shape[1], 0 : shape[0]] = batch_array
+                    # Upload the batch
+                    dataset[start:end, 0 : shape[1], 0 : shape[0]] = batch_array
+                except:
+                    # Wait for a bit before trying again
+                    time.sleep(self._retry_wait)
+                else:
+                    # Break out of the retry loop
+                    break
+            else:
+                warnings.warn(
+                    f"Failed to upload slices {start} to {end} of channel {self.image['name']} after {self._retries} retries."
+                )
+                return False
 
             # Update the progress bar
             if progress:
@@ -461,20 +474,29 @@ class ZSliceIngestJob:
                 start = batch * batch_size
                 end = min((batch + 1) * batch_size, zslice_count)
 
-                # batch_array = np.zeros(
-                #     (end - start, shape[1], shape[0]), dtype=anno_dict["dtype"]
-                # )
-                # for i, paths in enumerate(zslice_paths[start:end]):
-                #     batch_array[i] = np.array(Image.open(paths[0])).T
+                for _ in range(self._retries):
+                    try:
+                        batch_array = Parallel(n_jobs=-1)(
+                            delayed(Image.open)(path) for path in paths[start:end]
+                        )
+                        batch_array = np.stack(batch_array, axis=0).astype(
+                            anno_dict["dtype"]
+                        )
 
-                # joblib version:
-                batch_array = Parallel(n_jobs=-1)(
-                    delayed(Image.open)(path) for path in paths[start:end]
-                )
-                batch_array = np.stack(batch_array, axis=0).astype(anno_dict["dtype"])
-
-                # Upload the batch
-                dataset[start:end, 0 : shape[1], 0 : shape[0]] = batch_array
+                        # Upload the batch
+                        dataset[start:end, 0 : shape[1], 0 : shape[0]] = batch_array
+                    except:
+                        # Wait a bit before trying again
+                        time.sleep(self._retry_wait)
+                    else:
+                        # if we get here, then the upload was successful
+                        break
+                else:
+                    # If we get here, then the upload failed
+                    warnings.warn(
+                        f"Failed to upload slices {start} to {end} of channel {self.image['name']} after {self._retries} retries."
+                    )
+                    return False
 
                 # Update the progress bar
                 if progress:
