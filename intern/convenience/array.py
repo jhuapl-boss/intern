@@ -99,7 +99,7 @@ class ZSliceIngestJob:
         voxel_unit: str = "nanometers",
         verify_data: bool = True,
         ram_pct_to_use: float = 0.75,
-        boss_options: dict = _DEFAULT_BOSS_OPTIONS,
+        boss_options: dict = None,
     ):
         """
         Create a new ZSliceIngestJob.
@@ -335,9 +335,12 @@ class ZSliceIngestJob:
 
         # Try making the array pointer. If it already exists, then make sure
         # that the shape is the same.
+        boss_config_partial = (
+            dict(boss_config=self._boss_options) if self._boss_options else {}
+        )
         try:
             # Does it already exist?
-            dataset = array(self.image["name"], boss_config=self._boss_options)
+            dataset = array(self.image["name"], **boss_config_partial)
         except:
             # Create the array
             dataset = array(
@@ -347,7 +350,7 @@ class ZSliceIngestJob:
                 extents=(zslice_count, shape[1], shape[0]),
                 voxel_size=self.voxel_size,  # type: ignore
                 voxel_unit=self.voxel_unit,
-                boss_config=self._boss_options,
+                **boss_config_partial,
             )
 
         # Now break up the images into batches and upload them. First we'll do
@@ -421,9 +424,12 @@ class ZSliceIngestJob:
 
             # Try making the array pointer. If it already exists, then make sure
             # that the shape is the same.
+            boss_config_partial = (
+                dict(boss_config=self._boss_options) if self._boss_options else {}
+            )
             try:
                 # Does it already exist?
-                dataset = array(anno_dict["name"], boss_config=self._boss_options)
+                dataset = array(anno_dict["name"], **boss_config_partial)
             except:
                 # Create the array
                 dataset = array(
@@ -433,8 +439,8 @@ class ZSliceIngestJob:
                     extents=(zslice_count, shape[1], shape[0]),
                     voxel_size=self.voxel_size,  # type: ignore
                     voxel_unit=self.voxel_unit,
-                    source_channel=self.image["name"],
-                    boss_config=self._boss_options,
+                    source_channel=self.image["name"].split("/")[-1],
+                    **boss_config_partial,
                 )
 
             if dataset.dtype != anno_dict["dtype"]:
