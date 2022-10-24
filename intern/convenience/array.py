@@ -88,7 +88,7 @@ _DEFAULT_BOSS_OPTIONS = {
 
 class ZSliceIngestJob:
 
-    _max_batch_size: int = 64
+    _max_batch_size: int = 256
 
     def __init__(
         self,
