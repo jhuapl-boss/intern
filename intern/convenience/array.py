@@ -94,7 +94,6 @@ class ZSliceIngestJob:
 
     def __init__(
         self,
-        channel_uri: str,
         image: dict,
         annotations: List[dict] = None,  # type: ignore
         voxel_size: Tuple[float, float, float] = (1.0, 1.0, 1.0),
@@ -112,7 +111,6 @@ class ZSliceIngestJob:
         "0.5" will allow this upload to use 25 GB of RAM.
 
         Arguments:
-            channel_uri (str): URI of the channel to upload to.
             image (dict): Information about the image.
             annotations (list[dict]): Information about the annotations.
             voxel_size (tuple[float, float, float]): Size of a voxel. ZYX.
@@ -125,7 +123,6 @@ class ZSliceIngestJob:
             boss_options (dict): Options for the BossRemote.
 
         """
-        self.channel_uri = channel_uri
         self.image = image
         self.image["path"] = pathlib.Path(self.image["path"])
         self.annotations = annotations or []
@@ -1254,7 +1251,6 @@ class array:
         boss_config=None,
     ) -> "array":
         ZSliceIngestJob(
-            uri,
             {
                 "name": uri,
                 "path": img_folder,
