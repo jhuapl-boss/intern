@@ -99,6 +99,7 @@ class ZSliceIngestJob:
         voxel_size: Tuple[float, float, float] = (1.0, 1.0, 1.0),
         voxel_unit: str = "nanometers",
         verify_data: bool = True,
+        ignore_hidden: bool = True,
         ram_pct_to_use: float = 0.75,
         retries: int = 5,
         boss_options: dict = None,
@@ -118,6 +119,8 @@ class ZSliceIngestJob:
                 "nanometers". Other options are "micrometers" and "millimeters".
             verify_data (bool): Whether to verify that the data are the correct
                 size and dtype before uploading. Defaults to True.
+            ignore_hidden (bool): Whether to ignore files starting with a dot.
+                Defaults to True.
             ram_pct_to_use (float): Percentage of free RAM to use for uploading.
             retries (int): Number of times to retry an upload if it fails.
             boss_options (dict): Options for the BossRemote.
@@ -131,6 +134,7 @@ class ZSliceIngestJob:
         self.voxel_size = voxel_size or (1, 1, 1)
         self.voxel_unit = voxel_unit
         self._ram_pct_to_use = ram_pct_to_use
+        self._ignore_hidden = ignore_hidden
         self._boss_options = boss_options
         self._retries = retries
         if verify_data:
@@ -159,6 +163,12 @@ class ZSliceIngestJob:
 
         return True
 
+    def _get_image_filenames(self) -> List[pathlib.Path]:
+        fnames = list(self.image["path"].glob(self.image["pattern"]))
+        if self._ignore_hidden:
+            fnames = [f for f in fnames if not f.name.startswith(".")]
+        return sorted(fnames)
+
     def _get_ram_bytes_available(self):
         """
         Get the amount of RAM available on the system.
@@ -182,7 +192,7 @@ class ZSliceIngestJob:
 
         """
         # Read in the first image
-        image = Image.open(list(self.image["path"].glob(self.image["pattern"]))[0])
+        image = Image.open(self._get_image_filenames()[0])
         return image.size[0] * image.size[1]
 
     def _get_size_bytes_of_zslice(self, dtype):
@@ -240,7 +250,7 @@ class ZSliceIngestJob:
             list[pathlib.Path]: Paths to the z-slices.
 
         """
-        return list(sorted(self.image["path"].glob(self.image["pattern"])))
+        return self._get_image_filenames()
 
     def _get_zslice_annotation_paths(self) -> List[List[pathlib.Path]]:
         """
@@ -251,7 +261,13 @@ class ZSliceIngestJob:
 
         """
         return [
-            list(sorted(annotation["path"].glob(annotation["pattern"])))
+            [
+                fname
+                for fname in list(
+                    sorted(annotation["path"].glob(annotation["pattern"]))
+                )
+                if not self._ignore_hidden or not fname.name.startswith(".")
+            ]
             for annotation in self.annotations
         ]
 
@@ -1247,6 +1263,7 @@ class array:
         dtype: str = "uint8",
         voxel_size: Tuple[float, float, float] = (1, 1, 1),
         voxel_unit: str = "nanometers",
+        ignore_hidden: bool = True,
         ram_percent: float = 0.5,
         boss_config=None,
     ) -> "array":
@@ -1261,6 +1278,7 @@ class array:
             voxel_size=voxel_size,
             voxel_unit=voxel_unit,
             ram_pct_to_use=ram_percent,
+            ignore_hidden=ignore_hidden,
             boss_options=boss_config,  # type: ignore
         ).upload_images()
         return array(uri)
