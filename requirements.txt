@@ -6,3 +6,5 @@ mock
 nose2
 joblib
 psutil
+pillow
+tqdm
