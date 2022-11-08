@@ -2,7 +2,7 @@
 
 ---
 
-## v?.?.? (Unreleased)
+## v1.4.0 (November 2022)
 
 -   **Features**
     -   A new convenience function `array.from_images` uploads an entire directory as a new BossDB dataset
