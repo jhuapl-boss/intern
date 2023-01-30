@@ -683,7 +683,10 @@ class _BossDBVolumeProvider(VolumeProvider):
         )
         # Get the coordinate frame:
         cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
-        return (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
+        return tuple(
+            dimension * 2**self.resolution
+            for dimension in (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
+        )
 
     def get_voxel_unit(self, channel: ChannelResource, resolution: int = 0) -> str:
         experiment = self.get_project(
