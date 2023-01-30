@@ -684,7 +684,7 @@ class _BossDBVolumeProvider(VolumeProvider):
         # Get the coordinate frame:
         cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
         return tuple(
-            dimension * (2 ** (self.resolution + 1))
+            dimension * (2**resolution)
             for dimension in (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
         )
 
@@ -1227,10 +1227,14 @@ class array:
         """
 
         if self.axis_order == self.volume_provider.get_axis_order():
-            return self.volume_provider.get_voxel_size(self._channel)
+            return self.volume_provider.get_voxel_size(
+                self._channel, resolution=self.resolution
+            )
         else:
             # elif self.axis_order == AxisOrder.ZYX: # TODO: Support other Axis orderings?
-            voxel_size = self.volume_provider.get_voxel_size(self._channel)
+            voxel_size = self.volume_provider.get_voxel_size(
+                self._channel, resolution=self.resolution
+            )
             return voxel_size[2], voxel_size[1], voxel_size[0]
 
     @property
