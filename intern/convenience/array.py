@@ -684,7 +684,7 @@ class _BossDBVolumeProvider(VolumeProvider):
         # Get the coordinate frame:
         cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
         return tuple(
-            dimension * 2**self.resolution
+            dimension * (2 ** (self.resolution + 1))
             for dimension in (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
         )
 
