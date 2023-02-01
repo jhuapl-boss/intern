@@ -683,7 +683,10 @@ class _BossDBVolumeProvider(VolumeProvider):
         )
         # Get the coordinate frame:
         cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
-        return (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
+        return tuple(
+            dimension * (2**resolution)
+            for dimension in (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
+        )
 
     def get_voxel_unit(self, channel: ChannelResource, resolution: int = 0) -> str:
         experiment = self.get_project(
@@ -1224,10 +1227,14 @@ class array:
         """
 
         if self.axis_order == self.volume_provider.get_axis_order():
-            return self.volume_provider.get_voxel_size(self._channel)
+            return self.volume_provider.get_voxel_size(
+                self._channel, resolution=self.resolution
+            )
         else:
             # elif self.axis_order == AxisOrder.ZYX: # TODO: Support other Axis orderings?
-            voxel_size = self.volume_provider.get_voxel_size(self._channel)
+            voxel_size = self.volume_provider.get_voxel_size(
+                self._channel, resolution=self.resolution
+            )
             return voxel_size[2], voxel_size[1], voxel_size[0]
 
     @property
@@ -1283,19 +1290,24 @@ class array:
         ).upload_images()
         return array(uri)
 
-    def __getitem__(self, key: Tuple) -> np.ndarray:
+    def _normalize_key(
+        self, key: Tuple, permit_single_int: bool = True
+    ) -> Tuple[Tuple]:
         """
-        Get a subarray or subvolume.
+        Given indexing tuple, return (start, stop) for each dimension XYZ
 
-        Uses one of two indexing methods:
-            1. Start/Stop (`int:int`)
-            2. Single index (`int`)
+        Arguments:
+            key (Tuple): An array of three values in one of the following formats
+                1. Start/Stop (`int:int`)
+                2. Single index (`int`)
+            permit_single_int (bool): Default True. Permit a single integer.
+                This integer is assumed to be a single z slice
 
-        Each element of the key can be one of those two options. For example,
-
-            myarray[1, 1:100, 2]
-
+        Returns:
+            Tuple[Tuple]: Set of three tuples with (start, stop) integers
+                for each dimension in XYZ
         """
+
         # If the user has requested XYZ mode, the first thing to do is reverse
         # the array indices. Then you can continue this fn without any
         # additional changes.
@@ -1313,7 +1325,7 @@ class array:
         # In this case, the user is asking for a single Z slice (or single X
         # slice if in XYZ order... But that's a far less common use case.)
         # We will get the full XY extents and download a single 2D array:
-        if isinstance(key, int):
+        if isinstance(key, int) and permit_single_int:
             # Get the full Z slice:
             xs = (0, self.shape[2])
             ys = (0, self.shape[1])
@@ -1385,6 +1397,23 @@ class array:
 
                 zs = (int(start), int(stop))
 
+        return xs, ys, zs
+
+    def __getitem__(self, key: Tuple) -> np.ndarray:
+        """
+        Get a subarray or subvolume.
+
+        Uses one of two indexing methods:
+            1. Start/Stop (`int:int`)
+            2. Single index (`int`)
+
+        Each element of the key can be one of those two options. For example,
+
+            myarray[1, 1:100, 2]
+
+        """
+        xs, ys, zs = self._normalize_key(key=key)
+
         # Finally, we can perform the cutout itself, using the x, y, and z
         # coordinates that we computed in the previous step.
         cutout = self.volume_provider.get_cutout(
@@ -1426,50 +1455,7 @@ class array:
         Start-only (`10:`) or stop-only (`:10`) indexing is unsupported.
         """
 
-        if self.axis_order != self.volume_provider.get_axis_order():
-            key = (key[2], key[1], key[0])
-
-        _normalize_units = (1, 1, 1)
-        if isinstance(key[-1], str) and len(key) == 4:
-            if key[-1] != self.volume_provider.get_voxel_unit():
-                raise NotImplementedError(
-                    "Can only reference voxels in native size format which is "
-                    f"{self.volume_provider.get_voxel_unit()} for this dataset."
-                )
-            _normalize_units = self.voxel_size
-
-        if isinstance(key[2], int):
-            xs = (key[2], key[2] + 1)
-        else:
-            start = key[2].start if key[2].start else 0
-            stop = key[2].stop if key[2].stop else self.shape[0]
-
-            start = start / _normalize_units[0]
-            stop = stop / _normalize_units[0]
-
-            xs = (int(start), int(stop))
-
-        if isinstance(key[1], int):
-            ys = (key[1], key[1] + 1)
-        else:
-            start = key[1].start if key[1].start else 0
-            stop = key[1].stop if key[1].stop else self.shape[1]
-
-            start = start / _normalize_units[1]
-            stop = stop / _normalize_units[1]
-
-            ys = (int(start), int(stop))
-
-        if isinstance(key[0], int):
-            zs = (key[0], key[0] + 1)
-        else:
-            start = key[0].start if key[0].start else 0
-            stop = key[0].stop if key[0].stop else self.shape[2]
-
-            start = start / _normalize_units[2]
-            stop = stop / _normalize_units[2]
-
-            zs = (int(start), int(stop))
+        xs, ys, zs = self._normalize_key(key=key, permit_single_int=False)
 
         if len(value.shape) == 2:
             # TODO: Support other 2D shapes as well
