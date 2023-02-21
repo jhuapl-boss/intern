@@ -65,6 +65,8 @@ class VolumeService_1(BaseVersion):
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
         """
+        numpyVolume = np.ascontiguousarray(numpyVolume)
+
         if np.sum(numpyVolume) == 0:
             return
 

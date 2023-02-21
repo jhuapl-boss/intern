@@ -124,9 +124,7 @@ class VolumeService(DVIDService):
         """
         # Check that the data array is C Contiguous
         blktypes = ["uint8blk", "labelblk", "rgba8blk"]
-
-        if not numpyVolume.flags["C_CONTIGUOUS"]:
-            numpyVolume = np.ascontiguousarray(numpyVolume)
+        numpyVolume = np.ascontiguousarray(numpyVolume)
 
         if resource._type == "tile":
             # Compress the data
