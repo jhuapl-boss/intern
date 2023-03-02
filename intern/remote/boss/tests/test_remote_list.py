@@ -15,7 +15,7 @@
 from intern.remote import Remote
 from intern.remote.boss import BossRemote
 import unittest
-from mock import patch
+from unittest.mock import patch
 
 
 class TestRemoteListMethods(unittest.TestCase):
