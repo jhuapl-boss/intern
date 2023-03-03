@@ -18,8 +18,8 @@ from intern.resource.dvid.resource import RepositoryResource
 import numpy
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
-from mock import patch, ANY
-import mock
+from unittest.mock import patch, ANY
+from unittest import mock
 
 
 class TestProject(unittest.TestCase):

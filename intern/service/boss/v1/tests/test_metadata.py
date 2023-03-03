@@ -17,7 +17,7 @@ from intern.resource.boss.resource import ChannelResource
 from intern.service.boss.httperrorlist import HTTPErrorList
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
-from mock import patch
+from unittest.mock import patch
 
 
 class TestMetadata_v1(unittest.TestCase):

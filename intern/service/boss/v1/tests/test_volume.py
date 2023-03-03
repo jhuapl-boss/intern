@@ -20,7 +20,7 @@ import blosc
 import numpy
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
-from mock import patch, ANY
+from unittest.mock import patch, ANY
 
 
 class TestVolume_v1(unittest.TestCase):
