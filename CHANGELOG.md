@@ -2,6 +2,13 @@
 
 ---
 
+## v1.4.1 (March 2023)
+
+-   **Improvements**
+    -   Removes the `mock` library (thanks @musicinmybrain!)
+    -   Confirms that incoming upload data are C-contiguous prior to upload
+    -   Extracts the `normalize_key` function to make slicing into convenience arrays more robust and reports voxel size relative to the requested resolution (thanks @CBroz1!)
+
 ## v1.4.0 (November 2022)
 
 -   **Features**
