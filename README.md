@@ -1,7 +1,7 @@
 # intern
 
 [![PyPI version](https://img.shields.io/pypi/v/intern?style=for-the-badge)](https://pypi.org/project/intern/)
-[![Python 3.6/3.7 Tests](https://img.shields.io/github/workflow/status/jhuapl-boss/intern/Test%20Python%20Package?style=for-the-badge)](https://github.com/jhuapl-boss/intern/actions?query=workflow%3A%22Test+Python+Package%22)
+[![Python 3.6/3.7 Tests](https://img.shields.io/github/actions/workflow/status/jhuapl-boss/intern/tests.yml?style=for-the-badge)](https://github.com/jhuapl-boss/intern/actions?query=workflow%3A%22Test+Python+Package%22)
 
 **intern** (Integrated Toolkit for Extensible and Reproducible Neuroscience) is a Python 3 module that enables big-data neuroscience. Currently, it provides an interface to common big-data neuroimaging databases such as [BossDB](https://bossdb.org), CloudVolume, DVID, and other standard formats.
 
