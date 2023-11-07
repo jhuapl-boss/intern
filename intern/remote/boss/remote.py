@@ -1,5 +1,5 @@
 """
-# Copyright 2016-2022 The Johns Hopkins University Applied Physics Laboratory
+# Copyright 2016-2023 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -761,6 +761,25 @@ class BossRemote(Remote):
         """
         self.project_service.set_auth(self._token_project)
         return self.project_service.update(resource_name, resource)
+
+    def set_project_public_visibility(self, resource, public: bool):
+        """
+        Set the public visibility of the given resource.
+
+        Args:
+            resource (intern.resource.boss.BossResource): resource.name as well
+                as any parents must be identified to succeed.
+            public (bool): True if the resource should be public, False otherwise.
+
+        Returns:
+            (intern.resource.boss.BossResource): Returns resource of type
+                requested on success.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.project_service.set_auth(self._token_project)
+        return self.project_service.set_public_visibility(resource, public)
 
     def delete_project(self, resource):
         """
