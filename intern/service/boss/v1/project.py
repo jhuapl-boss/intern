@@ -1,4 +1,4 @@
-﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016-2023 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -828,6 +828,33 @@ class ProjectService_1(BaseVersion):
 
         err = ('Update failed on {}, got HTTP response: ({}) - {}'.format(
             old_resource.name, resp.status_code, resp.text))
+        raise HTTPError(err, request = req, response = resp)
+    
+    def set_public_visibility(self, resource, public: bool, url_prefix, auth, session, send_opts):
+        """Set the public visibility of the given resource.
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to set public visibility on.
+            public (bool): True to make resource public, False to make it private.
+            url_prefix (string): Protocol + host such as https://api.bossdb.io.
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        json = { 'public': public }
+        req = self.get_request(resource, 'PUT', 'application/json', url_prefix, auth, json=json)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            return
+
+        err = ('Set public visibility failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
         raise HTTPError(err, request = req, response = resp)
 
 

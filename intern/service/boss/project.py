@@ -1,4 +1,4 @@
-﻿# Copyright 2016 The Johns Hopkins University Applied Physics Laboratory
+﻿# Copyright 2016-2023 The Johns Hopkins University Applied Physics Laboratory
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -449,6 +449,20 @@ class ProjectService(BossService):
         return self.service.update(
             resource_name, resource, self.url_prefix, self.auth,
             self.session, self.session_send_opts)
+    
+    def set_public_visibility(self, resource, public: bool):
+        """Sets the public visibility of the given resource.
+
+        Args:
+            resource (intern.resource.boss.BossResource): resource.name as well as any parents must be identified to succeed.
+            public (bool): True if resource should be public.
+
+        Raises:
+            requests.HTTPError on failure.
+        """
+        self.service.set_public_visibility(
+            resource, public, self.url_prefix, self.auth, self.session,
+            self.session_send_opts)
 
     def delete(self, resource):
         """Deletes the entity described by the given resource.
