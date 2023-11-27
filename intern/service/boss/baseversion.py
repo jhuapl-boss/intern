@@ -15,6 +15,7 @@ import six
 from abc import ABCMeta, abstractmethod
 from intern.resource.boss.resource import CoordinateFrameResource
 from requests import Request
+from intern.version import __version__
 
 @six.add_metaclass(ABCMeta)
 class BaseVersion(object):
@@ -87,7 +88,8 @@ class BaseVersion(object):
         """
         return {
             'Authorization': 'Token ' + token,
-            'Content-Type': content_type
+            'Content-Type': content_type,
+            'User-Agent': 'intern-py-{}'.format(__version__)
         }
 
     def build_url(self, resource, url_prefix, service, req_type='normal'):

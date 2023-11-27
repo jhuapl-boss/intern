@@ -2,6 +2,14 @@
 
 ---
 
+## v?.?.? (Unreleased)
+
+-   **Improvements**
+    -   Adds User-Agent headers to outgoing calls to BossDB (#110)
+    -   Adds the ability to toggle the `public` status of a Boss Resource (#109)
+-   **Fixes**
+    -   Fixes single-index cutouts in the CloudVolume convenience volume provider (#108)
+
 ## v1.4.1 (March 2023)
 
 -   **Improvements**
