@@ -175,10 +175,10 @@ class Remote(object):
         return self._volume.get_cutout(
             resource, resolution,
             x_range, y_range, z_range, time_range,
-            id_list, parallel = parallel, **kwargs
+            id_list, parallel=parallel, **kwargs
         )
 
-    def create_cutout(self, resource, resolution, x_range, y_range, z_range, data, time_range=None):
+    def create_cutout(self, resource, resolution, x_range, y_range, z_range, data, time_range=None, parallel=True):
         """Upload a cutout to the volume service.
 
         Args:
@@ -189,6 +189,7 @@ class Remote(object):
             z_range (list[int]): z range such as [10, 20] which means z>=10 and z<20.
             data (object): Type depends on implementation.
             time_range (optional [list[int]]): time range such as [30, 40] which means t>=30 and t<40.
+            parallel (Union[bool, int]: True): Parallel upload count, or True/False to use/avoid parallelism.            
 
         Returns:
             (): Return type depends on volume service's implementation.
@@ -200,7 +201,7 @@ class Remote(object):
         if not resource.valid_volume():
             raise RuntimeError('Resource incompatible with the volume service.')
         return self._volume.create_cutout(
-            resource, resolution, x_range, y_range, z_range, data, time_range)
+            resource, resolution, x_range, y_range, z_range, data, time_range, parallel=parallel)
 
     def reserve_ids(self, resource, num_ids):
         """Reserve a block of unique, sequential ids for annotations.
