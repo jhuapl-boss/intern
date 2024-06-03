@@ -1187,6 +1187,8 @@ class array:
         """
         Get a pointer to this Channel on the BossDB page.
         """
+        # TODO: handle the CV case, in which case BossDB may not have the
+        # corresponding project page.
         return f"{self.volume_provider.boss._project._base_protocol}://{self.volume_provider.boss._project._base_url}/v1/mgmt/resources/{self.collection_name}/{self.experiment_name}/{self.channel_name}"
 
     @property
@@ -1194,10 +1196,21 @@ class array:
         """
         Get a pointer to this Channel on the BossDB page.
         """
-        return "https://neuroglancer.bossdb.io/#!{'layers':{'image':{'source':'boss://__replace_me__'}}}".replace(
-            "__replace_me__",
-            f"{self.volume_provider.boss._project._base_protocol}://{self.volume_provider.boss._project._base_url}/{self.collection_name}/{self.experiment_name}/{self.channel_name}",
-        )
+        if self.volume_provider.get_vp_type() == "bossdb":
+            return 'https://neuroglancer.bossdb.io/#!{"layers":[{"type":"image","name":"image","source":"boss://__replace_me__"}]}'.replace(
+                "__replace_me__",
+                f"{self.volume_provider.boss._project._base_protocol}://{self.volume_provider.boss._project._base_url}/{self.collection_name}/{self.experiment_name}/{self.channel_name}",
+            )
+        elif self.volume_provider.get_vp_type() == "CloudVolumeOpenData":
+            return 'https://neuroglancer.bossdb.io/#!{"layers":[{"type":"image","name":"image","source":"precomputed://__replace_me__"}]}'.replace(
+                "__replace_me__",
+                f"s3://{self.volume_provider.cv_config['bucket']}/{self.volume_provider.cv_config['cloudpath']}",
+            )
+        else:
+            print(
+                "Cannot produce a neuroglancer link for data stored with "
+                + self.volume_provider.get_vp_type()
+            )
 
     @property
     def shape(self) -> Tuple[int, int, int]:
