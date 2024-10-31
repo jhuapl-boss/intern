@@ -715,7 +715,14 @@ if HAS_CLOUDVOLUME:
                 "cloudpath": "",
                 "bucket": "bossdb-open-data",
             }
-            self._cv = CloudVolumeRemote(self.cv_config)
+            # NOTE: Hotfix to translate the array configuration to a cloudvolume 
+            # remote configuration. The CV Remote does not distinguish between 
+            # bucket and path as separate attributes currently.
+            self._cv = CloudVolumeRemote({
+                "protocol": self.cv_config["protocol"],
+                "cloudpath": f"{self.cv_config['bucket']}/{self.cv_config['cloudpath']}"
+            })
+
 
         def get_remote(self):
             return self._cv
