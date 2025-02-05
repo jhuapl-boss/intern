@@ -26,6 +26,8 @@ import pathlib
 import psutil
 import warnings
 
+from requests.exceptions import HTTPError
+
 import numpy as np
 from PIL import Image
 
@@ -914,9 +916,15 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
     if isinstance(channel, str):
         if channel.startswith("bossdb://"):
             channel_uri = _parse_bossdb_uri(channel)
-            channel_obj = _BossDBVolumeProvider().get_channel(
-                channel_uri.channel, channel_uri.collection, channel_uri.experiment
-            )
+            try:
+                channel_obj = _BossDBVolumeProvider().get_channel(
+                    channel_uri.channel, channel_uri.collection, channel_uri.experiment
+                )
+            except HTTPError:
+                # If the resource is not found, it is probably because we are
+                # creating a new resource...
+                return _BossDBVolumeProvider()
+
             if channel_obj.raw["storage_type"] == "cloudvol" and HAS_CLOUDVOLUME:
                 return _CloudVolumeOpenDataVolumeProvider(
                     {
