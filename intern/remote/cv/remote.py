@@ -124,7 +124,7 @@ class CloudVolumeRemote(Remote):
             vol (CloudVolume) : Existing cloudvolume instance
             x_range (list) : x range within the 3D space
             y_range (list) : y range within the 3D space
-            z_range (list) : z range witinn the 3D space
+            z_range (list) : z range within the 3D space
         Retruns:
             message (str) : Uploading Data... message
         """
