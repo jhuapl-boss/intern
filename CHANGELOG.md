@@ -2,6 +2,41 @@
 
 ---
 
+## v?.?.? (Unreleased)
+
+-   **Improvements**
+    -   Adds User-Agent headers to outgoing calls to BossDB (#110)
+    -   Adds the ability to toggle the `public` status of a Boss Resource (#109)
+-   **Fixes**
+    -   Fixes single-index cutouts in the CloudVolume convenience volume provider (#108)
+
+## v1.4.1 (March 2023)
+
+-   **Improvements**
+    -   Removes the `mock` library (thanks @musicinmybrain!)
+    -   Confirms that incoming upload data are C-contiguous prior to upload
+    -   Extracts the `normalize_key` function to make slicing into convenience arrays more robust and reports voxel size relative to the requested resolution (thanks @CBroz1!)
+
+## v1.4.0 (November 2022)
+
+-   **Features**
+    -   A new convenience function `array.from_images` uploads an entire directory as a new BossDB dataset
+
+## v1.3.3 (October 2022)
+
+-   **Fixes**
+    -   Resolves a TypeError when warning in the non-cloudvolume case.
+
+## v1.3.2 (October 2022)
+
+-   **Fixes**
+    -   Resolves an issue with cloudvolume imports on non-cloudvolume-dependent resources.
+
+## v1.3.1 (July 2022)
+
+-   **Fixes**
+    -   Resolves an issue with accessing cloudvolume-backed public data in BossDB with ZYX/XYZ axis-ordering
+
 ## v1.3.0 (June 2022)
 
 -   **Convenience API**

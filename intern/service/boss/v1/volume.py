@@ -66,6 +66,8 @@ class VolumeService_1(BaseVersion):
             send_opts (dictionary): Additional arguments to pass to session.send().
             parallel (Union[bool, int]: True): Parallel upload count, or True/False to use/avoid parallelism.
         """
+        numpyVolume = np.ascontiguousarray(numpyVolume)
+
         if np.sum(numpyVolume) == 0:
             return
 

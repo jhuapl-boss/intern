@@ -66,8 +66,9 @@ class VolumeService(CloudVolumeService):
             x_range[0] : x_range[1], y_range[0] : y_range[1], z_range[0] : z_range[1]
         ]
 
-        # Remove channel dimension if num_channel = 1
-        data = np.squeeze(data)
+        # Remove channel dimension
+        if data.ndim == 4:
+            data = data[:,:,:,0]
         return data
 
     def delete_data(self, resource, res, x_range, y_range, z_range):

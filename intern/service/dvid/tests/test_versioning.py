@@ -17,8 +17,8 @@ from intern.resource.dvid.resource import DataInstanceResource
 import numpy
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
-from mock import patch, ANY
-import mock
+from unittest.mock import patch, ANY
+from unittest import mock
 
 
 class TestVersioning(unittest.TestCase):

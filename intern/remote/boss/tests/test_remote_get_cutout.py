@@ -16,7 +16,7 @@ from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import ChannelResource
 from intern.service.boss.volume import VolumeService
 from intern.service.boss.v1.volume import CacheMode
-from mock import patch, ANY
+from unittest.mock import patch, ANY
 import unittest
 
 

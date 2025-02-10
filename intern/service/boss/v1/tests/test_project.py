@@ -16,7 +16,7 @@ from intern.service.boss.v1.project import ProjectService_1
 from intern.resource.boss.resource import *
 from requests import HTTPError, PreparedRequest, Response, Session
 import unittest
-from mock import patch
+from unittest.mock import patch
 
 
 class TestProject_v1(unittest.TestCase):

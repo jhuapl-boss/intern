@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from intern.remote.dvid import DVIDRemote
-from mock import patch, ANY
+from unittest.mock import patch, ANY
 import unittest
 
 

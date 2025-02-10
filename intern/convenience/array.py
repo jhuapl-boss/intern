@@ -15,14 +15,27 @@ limitations under the License.
 """
 
 # Standard imports
+import time
 from typing import List, Optional, Union, Tuple
 import abc
 import json
 from collections import namedtuple
 from urllib.parse import unquote
+import warnings
+import pathlib
+import psutil
+import warnings
+
+from requests.exceptions import HTTPError
+
+import numpy as np
+from PIL import Image
+
+import math
+from tqdm.auto import tqdm
+from joblib import Parallel, delayed
 
 from intern.service.boss.httperrorlist import HTTPErrorList
-
 from .uri import parse_fquri
 
 
@@ -30,7 +43,6 @@ from .uri import parse_fquri
 import numpy as np
 
 from intern.remote.boss import BossRemote
-from intern.remote.cv import CloudVolumeRemote
 
 from intern.resource import Resource
 from intern.resource.boss.resource import (
@@ -40,8 +52,15 @@ from intern.resource.boss.resource import (
     CoordinateFrameResource,
     ExperimentResource,
 )
-from intern.resource.cv.resource import CloudVolumeResource
 
+HAS_CLOUDVOLUME = True
+try:
+    from intern.remote.cv import CloudVolumeRemote
+    from intern.resource.cv.resource import CloudVolumeResource
+except ModuleNotFoundError:
+    HAS_CLOUDVOLUME = False
+
+warnings.filterwarnings("once", "CloudVolume")
 
 # A named tuple that represents a bossDB URI.
 bossdbURI = namedtuple(
@@ -68,6 +87,461 @@ _DEFAULT_BOSS_OPTIONS = {
     "host": "api.bossdb.io",
     "token": "public",
 }
+
+
+class ZSliceIngestJob:
+
+    _max_batch_size: int = 256
+    _retry_wait: int = 5
+
+    def __init__(
+        self,
+        image: dict,
+        annotations: List[dict] = None,  # type: ignore
+        voxel_size: Tuple[float, float, float] = (1.0, 1.0, 1.0),
+        voxel_unit: str = "nanometers",
+        verify_data: bool = True,
+        ignore_hidden: bool = True,
+        ram_pct_to_use: float = 0.75,
+        retries: int = 5,
+        boss_options: dict = None,
+    ):
+        """
+        Create a new ZSliceIngestJob.
+
+        A note on `ram_pct_to_use`: This is a percentage of currently-available
+        RAM, so if you have a 100 GB machine and you're using 50 GB of RAM,
+        "0.5" will allow this upload to use 25 GB of RAM.
+
+        Arguments:
+            image (dict): Information about the image.
+            annotations (list[dict]): Information about the annotations.
+            voxel_size (tuple[float, float, float]): Size of a voxel. ZYX.
+            voxel_unit (str, optional): Unit of the voxel size. Defaults to
+                "nanometers". Other options are "micrometers" and "millimeters".
+            verify_data (bool): Whether to verify that the data are the correct
+                size and dtype before uploading. Defaults to True.
+            ignore_hidden (bool): Whether to ignore files starting with a dot.
+                Defaults to True.
+            ram_pct_to_use (float): Percentage of free RAM to use for uploading.
+            retries (int): Number of times to retry an upload if it fails.
+            boss_options (dict): Options for the BossRemote.
+
+        """
+        self.image = image
+        self.image["path"] = pathlib.Path(self.image["path"])
+        self.annotations = annotations or []
+        for annotation in self.annotations:
+            annotation["path"] = pathlib.Path(annotation["path"])
+        self.voxel_size = voxel_size or (1, 1, 1)
+        self.voxel_unit = voxel_unit
+        self._ram_pct_to_use = ram_pct_to_use
+        self._ignore_hidden = ignore_hidden
+        self._boss_options = boss_options
+        self._retries = retries
+        if verify_data:
+            self._verify_paths()
+            self._verify_shapes()
+
+    def _verify_paths(self, warn: bool = True) -> bool:
+        """
+        Verify that the paths exist.
+
+        Arguments:
+            warn (bool): Whether to warn if the paths do not exist.
+
+        Returns:
+            bool: Whether the paths exist.
+
+        """
+        if not self.image["path"].exists():
+            warnings.warn(f"Image path {self.image['path']} does not exist.")
+            return False
+
+        for annotation in self.annotations:
+            if not annotation["path"].exists():
+                warnings.warn(f"Annotation path {annotation['path']} does not exist.")
+                return False
+
+        return True
+
+    def _get_image_filenames(self) -> List[pathlib.Path]:
+        fnames = list(self.image["path"].glob(self.image["pattern"]))
+        if self._ignore_hidden:
+            fnames = [f for f in fnames if not f.name.startswith(".")]
+        return sorted(fnames)
+
+    def _get_ram_bytes_available(self):
+        """
+        Get the amount of RAM available on the system.
+
+        Returns:
+            int: Amount of RAM in bytes.
+
+        """
+        return psutil.virtual_memory().available
+
+    def _get_shape_px_of_zslice(
+        self,
+    ):
+        """
+        Get the size of a z-slice in pixels.
+
+        Uses the IMAGE as a reference.
+
+        Returns:
+            int: Size of a z-slice in pixels.
+
+        """
+        # Read in the first image
+        image = Image.open(self._get_image_filenames()[0])
+        return image.size[0] * image.size[1]
+
+    def _get_size_bytes_of_zslice(self, dtype):
+        """
+        Get the size of a z-slice in bytes.
+
+        Arguments:
+            dtype (numpy.dtype): The data type of the array.
+
+        Returns:
+            int: Size of a z-slice in bytes.
+
+        """
+        return self._get_shape_px_of_zslice() * dtype.itemsize
+
+    def _get_permitted_zcount(self, dtype):
+        """
+        Get the number of z-slices that can be uploaded at once.
+
+        Arguments:
+            dtype (numpy.dtype): The data type of the array.
+
+        Returns:
+            int: Number of z-slices that can be uploaded at once.
+
+        """
+        if isinstance(dtype, str):
+            dtype = np.dtype(dtype)
+        count = int(
+            self._get_ram_bytes_available()
+            * self._ram_pct_to_use
+            / self._get_size_bytes_of_zslice(dtype)
+        )
+
+        if count == 0:
+            raise ValueError(
+                "The dtype is too large to fit in the available RAM. "
+                "Try a larger AVAILABLE_RAM_PERCENT_TO_USE."
+            )
+
+        if count < 4:
+            warnings.warn(
+                "The z slices are very large compared to available RAM, and will "
+                f"only be uploaded in groups of {count}. This may result in a "
+                "long upload time."
+            )
+
+        return count
+
+    def _get_zslice_image_paths(self) -> List[pathlib.Path]:
+        """
+        Get the paths to the z-slices.
+
+        Returns:
+            list[pathlib.Path]: Paths to the z-slices.
+
+        """
+        return self._get_image_filenames()
+
+    def _get_zslice_annotation_paths(self) -> List[List[pathlib.Path]]:
+        """
+        Get the paths to the z-slices.
+
+        Returns:
+            list[list[pathlib.Path]]: Paths to the z-slices.
+
+        """
+        return [
+            [
+                fname
+                for fname in list(
+                    sorted(annotation["path"].glob(annotation["pattern"]))
+                )
+                if not self._ignore_hidden or not fname.name.startswith(".")
+            ]
+            for annotation in self.annotations
+        ]
+
+    def _get_zslice_count(self):
+        """
+        Get the number of z-slices.
+
+        Returns:
+            int: Number of z-slices.
+
+        """
+        return len(self._get_zslice_image_paths())
+
+    def _verify_shapes(self, warn: bool = True):
+        """
+        Verify the shape of every image in the stacks.
+
+        Note that this can be a bit slow if the image stacks are large enough.
+
+        Arguments:
+            None
+
+        Returns:
+            bool: True if all the images are the same size, else False.
+
+        """
+        image_slice_count = self._get_zslice_count()
+        anno_slice_counts = [len(s) for s in self._get_zslice_annotation_paths()]
+        for anno_count, anno in zip(anno_slice_counts, self.annotations):
+            if anno_count != image_slice_count:
+                if warn:
+                    warnings.warn(
+                        "Not all stacks have the same number of z-slices. "
+                        f"Annotation [{anno['name']}] has {anno_count} z-slices, but the image has {image_slice_count}."
+                    )
+                return False
+
+        # Get the shape of the first image
+        shape = Image.open(self._get_zslice_image_paths()[0]).size
+
+        # Check that all the other images are the same size
+        for path in self._get_zslice_image_paths()[1:]:
+            if Image.open(path).size != shape:
+                if warn:
+                    warnings.warn(
+                        "Not all image stacks have the same shape. "
+                        f"Image [{path}] has shape {Image.open(path).size}, but the first image has shape {shape}."
+                    )
+                return False
+
+        return True
+
+    def upload_images(self, progress: bool = True) -> bool:
+        """
+        Upload the images to the channel.
+
+        Arguments:
+            progress (bool): Whether to show a progress bar.
+
+        Returns:
+            bool: Whether the upload was successful.
+
+        """
+        # Get the z-slice paths
+        zslice_paths = self._get_zslice_image_paths()
+
+        # Get the number of z-slices
+        zslice_count = len(zslice_paths)
+
+        # Get the shape of the images
+        shape = Image.open(zslice_paths[0]).size
+
+        # Get the number of images to upload per batch
+        batch_size = min(
+            self._get_permitted_zcount(self.image["dtype"]), self._max_batch_size
+        )
+        # Get the number of batches
+        batch_count = math.ceil(zslice_count / batch_size)
+
+        # Set the progress bar lambda
+        if progress:
+            progress_bar = tqdm(total=zslice_count, desc="Uploading images")
+
+        # Try making the array pointer. If it already exists, then make sure
+        # that the shape is the same.
+        boss_config_partial = (
+            dict(boss_config=self._boss_options) if self._boss_options else {}
+        )
+        try:
+            # Does it already exist?
+            dataset = array(self.image["name"], **boss_config_partial)
+        except:
+            # Create the array
+            dataset = array(
+                self.image["name"],
+                create_new=True,
+                dtype=self.image["dtype"],
+                extents=(zslice_count, shape[1], shape[0]),
+                voxel_size=self.voxel_size,  # type: ignore
+                voxel_unit=self.voxel_unit,
+                **boss_config_partial,
+            )
+
+        # Now break up the images into batches and upload them. First we'll do
+        # all of the batches of size `batch_size`, then we'll do the last batch
+        # (if it exists) which may be smaller than `batch_size` if the total
+        # number of z-slices is not divisible by `batch_size`.
+        for batch in range(batch_count):
+            # Get the start and end indices for the batch
+            start = batch * batch_size
+            end = min((batch + 1) * batch_size, zslice_count)
+
+            for _ in range(self._retries):
+                try:
+                    batch_array = Parallel(n_jobs=-1)(
+                        delayed(Image.open)(path) for path in zslice_paths[start:end]
+                    )
+                    batch_array = np.stack(batch_array, axis=0).astype(
+                        self.image["dtype"]
+                    )
+
+                    # Upload the batch
+                    dataset[start:end, 0 : shape[1], 0 : shape[0]] = batch_array
+                except:
+                    # Wait for a bit before trying again
+                    time.sleep(self._retry_wait)
+                else:
+                    # Break out of the retry loop
+                    break
+            else:
+                warnings.warn(
+                    f"Failed to upload slices {start} to {end} of channel {self.image['name']} after {self._retries} retries."
+                )
+                return False
+
+            # Update the progress bar
+            if progress:
+                progress_bar.update(end - start)  # type: ignore
+
+        # Close the progress bar
+        if progress:
+            progress_bar.close()  # type: ignore
+
+        return True
+
+    def upload_annotations(self, progress: bool = True) -> bool:
+        """
+        Upload the annotations to the channel.
+
+        Arguments:
+            progress (bool): Whether to show a progress bar.
+
+        Returns:
+            bool: Whether the upload was successful.
+
+        """
+        # Get the z-slice paths
+        zslice_paths = self._get_zslice_annotation_paths()
+
+        for anno_dict, paths in zip(self.annotations, zslice_paths):
+
+            # Get the number of z-slices
+            zslice_count = len(paths)
+
+            # Get the shape of the images
+            shape = Image.open(paths[0]).size
+
+            # Get the number of images to upload per batch
+            batch_size = min(
+                self._get_permitted_zcount(anno_dict["dtype"]), self._max_batch_size
+            )
+            # Get the number of batches
+            batch_count = math.ceil(zslice_count / batch_size)
+
+            # Set the progress bar lambda
+            if progress:
+                progress_bar = tqdm(
+                    total=zslice_count, desc=f"Uploading channel [{anno_dict['name']}]"
+                )
+
+            # Try making the array pointer. If it already exists, then make sure
+            # that the shape is the same.
+            boss_config_partial = (
+                dict(boss_config=self._boss_options) if self._boss_options else {}
+            )
+            try:
+                # Does it already exist?
+                dataset = array(anno_dict["name"], **boss_config_partial)
+            except:
+                # Create the array
+                dataset = array(
+                    anno_dict["name"],
+                    create_new=True,
+                    dtype=anno_dict["dtype"],
+                    extents=(zslice_count, shape[1], shape[0]),
+                    voxel_size=self.voxel_size,  # type: ignore
+                    voxel_unit=self.voxel_unit,
+                    source_channel=self.image["name"].split("/")[-1],
+                    **boss_config_partial,
+                )
+
+            if dataset.dtype != anno_dict["dtype"]:
+                raise ValueError(
+                    f"Array [{anno_dict['name']}] already exists, but has a different dtype."
+                )
+            if dataset.shape != (zslice_count, shape[1], shape[0]):
+                raise ValueError(
+                    f"Array [{anno_dict['name']}] already exists, but has a different shape."
+                )
+
+            # Now break up the images into batches and upload them. First we'll do
+            # all of the batches of size `batch_size`, then we'll do the last batch
+            # (if it exists) which may be smaller than `batch_size` if the total
+            # number of z-slices is not divisible by `batch_size`.
+            for batch in range(batch_count):
+                # Get the start and end indices for the batch
+                start = batch * batch_size
+                end = min((batch + 1) * batch_size, zslice_count)
+
+                for _ in range(self._retries):
+                    try:
+                        batch_array = Parallel(n_jobs=-1)(
+                            delayed(Image.open)(path) for path in paths[start:end]
+                        )
+                        batch_array = np.stack(batch_array, axis=0).astype(
+                            anno_dict["dtype"]
+                        )
+
+                        # Upload the batch
+                        dataset[start:end, 0 : shape[1], 0 : shape[0]] = batch_array
+                    except:
+                        # Wait a bit before trying again
+                        time.sleep(self._retry_wait)
+                    else:
+                        # if we get here, then the upload was successful
+                        break
+                else:
+                    # If we get here, then the upload failed
+                    warnings.warn(
+                        f"Failed to upload slices {start} to {end} of channel {self.image['name']} after {self._retries} retries."
+                    )
+                    return False
+
+                # Update the progress bar
+                if progress:
+                    progress_bar.update(end - start)  # type: ignore
+
+            # Close the progress bar
+            if progress:
+                progress_bar.close()  # type: ignore
+
+        return True
+
+    def upload(self, progress: bool = True) -> bool:
+        """
+        Upload the image and annotations to the channel.
+
+        Arguments:
+            progress (bool): Whether to show a progress bar.
+
+        Returns:
+            bool: Whether the upload was successful.
+
+        """
+        # Upload the image
+        self.upload_images(progress=progress)
+
+        if len(self.annotations) > 0:
+            # Upload the annotations
+            self.upload_annotations(progress=progress)
+
+        return True
 
 
 class VolumeProvider(abc.ABC):
@@ -148,7 +622,7 @@ class _BossDBVolumeProvider(VolumeProvider):
         self.boss = boss
 
     def get_vp_type(self) -> str:
-        return "BossDB"
+        return "bossdb"
 
     def get_axis_order(self) -> str:
         return AxisOrder.ZYX
@@ -199,8 +673,8 @@ class _BossDBVolumeProvider(VolumeProvider):
         # Return the bounds of the coordinate frame:
         return (
             (cf.z_stop - cf.z_start),
-            int((cf.y_stop - cf.y_start) / (2 ** resolution)),
-            int((cf.x_stop - cf.x_start) / (2 ** resolution)),
+            int((cf.y_stop - cf.y_start) / (2**resolution)),
+            int((cf.x_stop - cf.x_start) / (2**resolution)),
         )
 
     def get_voxel_size(
@@ -211,7 +685,10 @@ class _BossDBVolumeProvider(VolumeProvider):
         )
         # Get the coordinate frame:
         cf = self.get_project(CoordinateFrameResource(experiment.coord_frame))
-        return (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
+        return tuple(
+            dimension * (2**resolution)
+            for dimension in (cf.x_voxel_size, cf.y_voxel_size, cf.z_voxel_size)
+        )
 
     def get_voxel_unit(self, channel: ChannelResource, resolution: int = 0) -> str:
         experiment = self.get_project(
@@ -228,71 +705,80 @@ class _BossDBVolumeProvider(VolumeProvider):
         return list(range(experiment.num_hierarchy_levels))
 
 
-class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
-    """
-    A volume provider that backends the intern.CloudVolumeRemote API."""
+if HAS_CLOUDVOLUME:
 
-    def __init__(self, cv_config: dict = None):
-        self.cv_config = cv_config or {
-            "protocol": "s3",
-            "cloudpath": "",
-            "bucket": "bossdb-open-data",
-        }
-        self._cv = CloudVolumeRemote(self.cv_config)
+    class _CloudVolumeOpenDataVolumeProvider(VolumeProvider):
+        """
+        A volume provider that backends the intern.CloudVolumeRemote API."""
 
-    def get_remote(self):
-        return self._cv
+        def __init__(self, cv_config: dict = None):
+            self.cv_config = cv_config or {
+                "protocol": "s3",
+                "cloudpath": "",
+                "bucket": "bossdb-open-data",
+            }
+            # NOTE: Hotfix to translate the array configuration to a cloudvolume 
+            # remote configuration. The CV Remote does not distinguish between 
+            # bucket and path as separate attributes currently.
+            self._cv = CloudVolumeRemote({
+                "protocol": self.cv_config["protocol"],
+                "cloudpath": f"{self.cv_config['bucket']}/{self.cv_config['cloudpath']}"
+            })
 
-    def get_vp_type(self) -> str:
-        return "CloudVolumeOpenData"
 
-    def get_axis_order(self) -> str:
-        return AxisOrder.XYZ
+        def get_remote(self):
+            return self._cv
 
-    def get_channel(self, channel: str, collection: str, experiment: str):
-        cloudpath = (
-            self.cv_config["cloudpath"] or f"{collection}/{experiment}/{channel}"
-        )
-        return CloudVolumeResource(
-            self.cv_config["protocol"],
-            f"{self.cv_config['bucket']}/{cloudpath}",
-        )
+        def get_vp_type(self) -> str:
+            return "CloudVolumeOpenData"
 
-    def get_project(self, resource) -> CloudVolumeResource:
-        raise NotImplementedError(
-            "CloudVolumeOpenDataVolumeProvider does not support get_project"
-        )
+        def get_axis_order(self) -> str:
+            return AxisOrder.XYZ
 
-    def create_project(self, resource):
-        raise NotImplementedError(
-            "CloudVolumeOpenDataVolumeProvider does not support create_project"
-        )
+        def get_channel(self, channel: str, collection: str, experiment: str):
+            cloudpath = (
+                self.cv_config["cloudpath"] or f"{collection}/{experiment}/{channel}"
+            )
+            return CloudVolumeResource(
+                self.cv_config["protocol"],
+                f"{self.cv_config['bucket']}/{cloudpath}",
+            )
 
-    def get_cutout(
-        self,
-        uri: str,
-        resolution: int,
-        xs: Tuple[int, int],
-        ys: Tuple[int, int],
-        zs: Tuple[int, int],
-    ) -> np.ndarray:
-        return self._cv.get_cutout(uri, resolution, xs, ys, zs)
+        def get_project(self, resource) -> CloudVolumeResource:
+            raise NotImplementedError(
+                "CloudVolumeOpenDataVolumeProvider does not support get_project"
+            )
 
-    def get_shape(
-        self, channel: CloudVolumeResource, resolution: int = 0
-    ) -> Tuple[int, int, int]:
-        return tuple(channel.cloudvolume.volume_size)
+        def create_project(self, resource):
+            raise NotImplementedError(
+                "CloudVolumeOpenDataVolumeProvider does not support create_project"
+            )
 
-    def get_voxel_size(
-        self, channel: CloudVolumeResource, resolution: int = 0
-    ) -> Tuple[float, float, float]:
-        return tuple(channel.cloudvolume.resolution)
+        def get_cutout(
+            self,
+            uri: str,
+            resolution: int,
+            xs: Tuple[int, int],
+            ys: Tuple[int, int],
+            zs: Tuple[int, int],
+        ) -> np.ndarray:
+            return self._cv.get_cutout(uri, resolution, zs, ys, xs)
 
-    def get_voxel_unit(self, channel: CloudVolumeResource) -> str:
-        return "nanometers"
+        def get_shape(
+            self, channel: CloudVolumeResource, resolution: int = 0
+        ) -> Tuple[int, int, int]:
+            return tuple(channel.cloudvolume.scales[resolution]["size"])
 
-    def get_available_resolutions(self, channel: CloudVolumeResource) -> List[int]:
-        return list(channel.cloudvolume.available_mips)
+        def get_voxel_size(
+            self, channel: CloudVolumeResource, resolution: int = 0
+        ) -> Tuple[float, float, float]:
+            return tuple(channel.cloudvolume.resolution)
+
+        def get_voxel_unit(self, channel: CloudVolumeResource) -> str:
+            return "nanometers"
+
+        def get_available_resolutions(self, channel: CloudVolumeResource) -> List[int]:
+            return list(channel.cloudvolume.available_mips)
 
 
 def _construct_boss_url(boss, col, exp, chan, res, xs, ys, zs) -> str:
@@ -411,8 +897,8 @@ class Metadata:
 
 def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
     if isinstance(channel, ChannelResource):
-        # Check if the channel is backed by CloudVolume
-        if channel.raw["storage_type"] == "cloudvol":
+        # Check if the channel is backed by CloudVolume and cloudvolume is installed.
+        if channel.raw["storage_type"] == "cloudvol" and HAS_CLOUDVOLUME:
             return _CloudVolumeOpenDataVolumeProvider(
                 {
                     "protocol": "s3",
@@ -420,15 +906,26 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
                     "cloudpath": channel.raw["cv_path"],
                 }
             )
+        else:
+            warnings.warn(
+                "CloudVolume is not installed. Accessing channel using CVDB.",
+                ImportWarning,
+            )
         return _BossDBVolumeProvider()
 
     if isinstance(channel, str):
         if channel.startswith("bossdb://"):
             channel_uri = _parse_bossdb_uri(channel)
-            channel_obj = _BossDBVolumeProvider().get_channel(
-                channel_uri.channel, channel_uri.collection, channel_uri.experiment
-            )
-            if channel_obj.raw["storage_type"] == "cloudvol":
+            try:
+                channel_obj = _BossDBVolumeProvider().get_channel(
+                    channel_uri.channel, channel_uri.collection, channel_uri.experiment
+                )
+            except HTTPError:
+                # If the resource is not found, it is probably because we are
+                # creating a new resource...
+                return _BossDBVolumeProvider()
+
+            if channel_obj.raw["storage_type"] == "cloudvol" and HAS_CLOUDVOLUME:
                 return _CloudVolumeOpenDataVolumeProvider(
                     {
                         "protocol": "s3",
@@ -436,10 +933,18 @@ def _infer_volume_provider(channel: Union[ChannelResource, str, Tuple]):
                         "cloudpath": channel_obj.raw["cv_path"],
                     }
                 )
+            else:
+                warnings.warn(
+                    "CloudVolume is not installed. Accessing channel using CVDB.",
+                    ImportWarning,
+                )
             return _BossDBVolumeProvider()
 
         if channel.startswith("s3://") or channel.startswith("precomputed://"):
-            return _CloudVolumeOpenDataVolumeProvider()
+            if HAS_CLOUDVOLUME:
+                return _CloudVolumeOpenDataVolumeProvider()
+            else:
+                raise ModuleNotFoundError("CloudVolume is not installed.")
     return None
 
 
@@ -654,9 +1159,9 @@ class array:
         # intern.Resource from a bossDB URI.
         else:  # if isinstance(channel, str):
             uri = {
-                "BossDB": _parse_bossdb_uri,
-                "CloudVolumeOpenData": _parse_cloudvolume_uri,
-            }[self.volume_provider.get_vp_type()](channel)
+                "bossdb": _parse_bossdb_uri,
+                "cloudvolumeopendata": _parse_cloudvolume_uri,
+            }[self.volume_provider.get_vp_type().lower()](channel)
             self.resolution = (
                 uri.resolution if not (uri.resolution is None) else self.resolution
             )
@@ -697,6 +1202,8 @@ class array:
         """
         Get a pointer to this Channel on the BossDB page.
         """
+        # TODO: handle the CV case, in which case BossDB may not have the
+        # corresponding project page.
         return f"{self.volume_provider.boss._project._base_protocol}://{self.volume_provider.boss._project._base_url}/v1/mgmt/resources/{self.collection_name}/{self.experiment_name}/{self.channel_name}"
 
     @property
@@ -704,10 +1211,21 @@ class array:
         """
         Get a pointer to this Channel on the BossDB page.
         """
-        return "https://neuroglancer.bossdb.io/#!{'layers':{'image':{'source':'boss://__replace_me__'}}}".replace(
-            "__replace_me__",
-            f"{self.volume_provider.boss._project._base_protocol}://{self.volume_provider.boss._project._base_url}/{self.collection_name}/{self.experiment_name}/{self.channel_name}",
-        )
+        if self.volume_provider.get_vp_type() == "bossdb":
+            return 'https://neuroglancer.bossdb.io/#!{"layers":[{"type":"image","name":"image","source":"boss://__replace_me__"}]}'.replace(
+                "__replace_me__",
+                f"{self.volume_provider.boss._project._base_protocol}://{self.volume_provider.boss._project._base_url}/{self.collection_name}/{self.experiment_name}/{self.channel_name}",
+            )
+        elif self.volume_provider.get_vp_type() == "CloudVolumeOpenData":
+            return 'https://neuroglancer.bossdb.io/#!{"layers":[{"type":"image","name":"image","source":"precomputed://__replace_me__"}]}'.replace(
+                "__replace_me__",
+                f"s3://{self.volume_provider.cv_config['bucket']}/{self.volume_provider.cv_config['cloudpath']}",
+            )
+        else:
+            print(
+                "Cannot produce a neuroglancer link for data stored with "
+                + self.volume_provider.get_vp_type()
+            )
 
     @property
     def shape(self) -> Tuple[int, int, int]:
@@ -737,10 +1255,14 @@ class array:
         """
 
         if self.axis_order == self.volume_provider.get_axis_order():
-            return self.volume_provider.get_voxel_size(self._channel)
+            return self.volume_provider.get_voxel_size(
+                self._channel, resolution=self.resolution
+            )
         else:
             # elif self.axis_order == AxisOrder.ZYX: # TODO: Support other Axis orderings?
-            voxel_size = self.volume_provider.get_voxel_size(self._channel)
+            voxel_size = self.volume_provider.get_voxel_size(
+                self._channel, resolution=self.resolution
+            )
             return voxel_size[2], voxel_size[1], voxel_size[0]
 
     @property
@@ -768,19 +1290,52 @@ class array:
         """
         return self.volume_provider.get_available_resolutions(self._channel)
 
-    def __getitem__(self, key: Tuple) -> np.ndarray:
+    @staticmethod
+    def from_images(
+        uri: str,
+        img_folder: str,
+        img_pattern: str = "*",
+        dtype: str = "uint8",
+        voxel_size: Tuple[float, float, float] = (1, 1, 1),
+        voxel_unit: str = "nanometers",
+        ignore_hidden: bool = True,
+        ram_percent: float = 0.5,
+        boss_config=None,
+    ) -> "array":
+        ZSliceIngestJob(
+            {
+                "name": uri,
+                "path": img_folder,
+                "pattern": img_pattern,
+                "dtype": dtype,
+            },
+            [],
+            voxel_size=voxel_size,
+            voxel_unit=voxel_unit,
+            ram_pct_to_use=ram_percent,
+            ignore_hidden=ignore_hidden,
+            boss_options=boss_config,  # type: ignore
+        ).upload_images()
+        return array(uri)
+
+    def _normalize_key(
+        self, key: Tuple, permit_single_int: bool = True
+    ) -> Tuple[Tuple]:
         """
-        Get a subarray or subvolume.
+        Given indexing tuple, return (start, stop) for each dimension XYZ
 
-        Uses one of two indexing methods:
-            1. Start/Stop (`int:int`)
-            2. Single index (`int`)
+        Arguments:
+            key (Tuple): An array of three values in one of the following formats
+                1. Start/Stop (`int:int`)
+                2. Single index (`int`)
+            permit_single_int (bool): Default True. Permit a single integer.
+                This integer is assumed to be a single z slice
 
-        Each element of the key can be one of those two options. For example,
-
-            myarray[1, 1:100, 2]
-
+        Returns:
+            Tuple[Tuple]: Set of three tuples with (start, stop) integers
+                for each dimension in XYZ
         """
+
         # If the user has requested XYZ mode, the first thing to do is reverse
         # the array indices. Then you can continue this fn without any
         # additional changes.
@@ -798,7 +1353,7 @@ class array:
         # In this case, the user is asking for a single Z slice (or single X
         # slice if in XYZ order... But that's a far less common use case.)
         # We will get the full XY extents and download a single 2D array:
-        if isinstance(key, int):
+        if isinstance(key, int) and permit_single_int:
             # Get the full Z slice:
             xs = (0, self.shape[2])
             ys = (0, self.shape[1])
@@ -870,6 +1425,23 @@ class array:
 
                 zs = (int(start), int(stop))
 
+        return xs, ys, zs
+
+    def __getitem__(self, key: Tuple) -> np.ndarray:
+        """
+        Get a subarray or subvolume.
+
+        Uses one of two indexing methods:
+            1. Start/Stop (`int:int`)
+            2. Single index (`int`)
+
+        Each element of the key can be one of those two options. For example,
+
+            myarray[1, 1:100, 2]
+
+        """
+        xs, ys, zs = self._normalize_key(key=key)
+
         # Finally, we can perform the cutout itself, using the x, y, and z
         # coordinates that we computed in the previous step.
         cutout = self.volume_provider.get_cutout(
@@ -911,50 +1483,7 @@ class array:
         Start-only (`10:`) or stop-only (`:10`) indexing is unsupported.
         """
 
-        if self.axis_order != self.volume_provider.get_axis_order():
-            key = (key[2], key[1], key[0])
-
-        _normalize_units = (1, 1, 1)
-        if isinstance(key[-1], str) and len(key) == 4:
-            if key[-1] != self.volume_provider.get_voxel_unit():
-                raise NotImplementedError(
-                    "Can only reference voxels in native size format which is "
-                    f"{self.volume_provider.get_voxel_unit()} for this dataset."
-                )
-            _normalize_units = self.voxel_size
-
-        if isinstance(key[2], int):
-            xs = (key[2], key[2] + 1)
-        else:
-            start = key[2].start if key[2].start else 0
-            stop = key[2].stop if key[2].stop else self.shape[0]
-
-            start = start / _normalize_units[0]
-            stop = stop / _normalize_units[0]
-
-            xs = (int(start), int(stop))
-
-        if isinstance(key[1], int):
-            ys = (key[1], key[1] + 1)
-        else:
-            start = key[1].start if key[1].start else 0
-            stop = key[1].stop if key[1].stop else self.shape[1]
-
-            start = start / _normalize_units[1]
-            stop = stop / _normalize_units[1]
-
-            ys = (int(start), int(stop))
-
-        if isinstance(key[0], int):
-            zs = (key[0], key[0] + 1)
-        else:
-            start = key[0].start if key[0].start else 0
-            stop = key[0].stop if key[0].stop else self.shape[2]
-
-            start = start / _normalize_units[2]
-            stop = stop / _normalize_units[2]
-
-            zs = (int(start), int(stop))
+        xs, ys, zs = self._normalize_key(key=key, permit_single_int=False)
 
         if len(value.shape) == 2:
             # TODO: Support other 2D shapes as well

@@ -16,8 +16,8 @@ from intern.service.mesh.service import MeshService
 from intern.service.mesh.service import VoxelUnits
 import numpy
 import unittest
-from mock import patch, ANY
-import mock
+from unittest.mock import patch, ANY
+from unittest import mock
 
 
 class TestMesh(unittest.TestCase):
