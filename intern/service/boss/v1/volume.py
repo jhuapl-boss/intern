@@ -487,3 +487,51 @@ class VolumeService_1(BaseVersion):
         """
         link = "https://neuroglancer.theboss.io/#!{'layers':{'" + str(resource.name)   + "':{'type':'" + resource.type + "'_'source':" + "'boss://" + url_prefix+ "/" + resource.coll_name + "/" + resource.exp_name + "/" + resource.name + "'}}_'navigation':{'pose':{'position':{'voxelCoordinates':[" + str(x_range[0]) + "_" + str(y_range[0]) + "_" + str(z_range[0]) + "]}}}}"
         return link
+
+    def get_cuboids_from_id(
+            self, resource, resolution, _id, url_prefix, auth, session, send_opts):
+        """
+        Get extents in XYZ order for cuboids that belong to a specific ID.
+
+        All returned extents are cuboid aligned.
+
+        Args:
+            resource (intern.resource.Resource): Resource compatible with annotation operations.
+            resolution (int): 0 indicates native resolution.
+            _id (int): Id of object of interest.
+            url_prefix (string): Protocol + host such as https://api.theboss.io
+            auth (string): Token to send in the request header.
+            session (requests.Session): HTTP session to use for request.
+            send_opts (dictionary): Additional arguments to pass to session.send().
+
+        Returns:
+            (dict) : Extents of cuboids containing ID in XYZ order. Example output:
+            
+            {'cuboids': [
+                [(0, 512), (0, 512), (0,16)], 
+                [(512, 1024), (0, 512), (16,32)]
+                ]}
+
+        Raises:
+            requests.HTTPError
+            TypeError: if resource is not an annotation channel.
+        """
+        if not isinstance(resource, ChannelResource):
+            raise TypeError('resource must be ChannelResource')
+        if resource.type != 'annotation':
+            raise TypeError('Channel is not an annotation channel')
+
+        req = self.get_cuboids_from_id_request(
+            resource, 'GET', 'application/json', url_prefix, auth, resolution,
+            _id)
+
+        prep = session.prepare_request(req)
+        resp = session.send(prep, **send_opts)
+
+        if resp.status_code == 200:
+            json_data = resp.json()
+            return json_data
+
+        msg = ('Get bounding box failed on {}, got HTTP response: ({}) - {}'.format(
+            resource.name, resp.status_code, resp.text))
+        raise HTTPError(msg, request=req, response=resp)
