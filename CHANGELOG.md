@@ -2,7 +2,7 @@
 
 ---
 
-## v?.?.? (Unreleased)
+## v1.4.2 (April 2025)
 
 -   **Improvements**
     -   Adds User-Agent headers to outgoing calls to BossDB (#110)
