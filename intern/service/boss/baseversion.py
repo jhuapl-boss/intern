@@ -675,3 +675,29 @@ class BaseVersion(object):
             resource, url_prefix, resolution, x_range, y_range, z_range, time_range)
         headers = self.get_headers(content, token)
         return Request(method, url, headers=headers)
+
+    def get_cuboids_from_id_request(
+            self, resource, method, content, url_prefix, token, resolution, id):
+        """Create a request for cuboids_from_id endpoint. 
+
+        Args:
+            resource (intern.resource.boss.BossResource): Resource to perform operation on.
+            method (string): HTTP verb such as 'GET'.
+            content (string): HTTP Content-Type such as 'application/json'.
+            url_prefix (string): protocol + initial portion of URL such as https://api.theboss.io  Do not end with a forward slash.
+            token (string): Django Rest Framework token for auth.
+            resolution (int): 0 = default resolution.
+            id (int): Annotation object id.
+
+        Returns:
+            (requests.Request): A newly constructed Request object.
+
+        Raises:
+            RuntimeError if url_prefix is None or an empty string.
+        """
+        if url_prefix is None or url_prefix == '':
+            raise RuntimeError('url_prefix required.')
+
+        url = f"{url_prefix}/{self.version}/cuboidsfromid/{resource.get_cutout_route()}/{resolution}/{id}"
+        headers = self.get_headers(content, token)
+        return Request(method, url, headers=headers)
