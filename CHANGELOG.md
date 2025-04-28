@@ -59,6 +59,7 @@
     -   Now, the `array` class reports voxel size as a `float[3]` and `voxel_units` as a string (e.g. "nanometers") to match the input arguments to the `array` constructor (#83)
 -   **Parallelism**
     -   Fixes parallelism defaulting to n=1 (#70)
+    -   This release adds support for parallel data uploads through `BossRemote#create_cutout`.
 -   **CloudVolume**
     -   Removes cloudvolume core dependency, and makes it an optional extra-install (#68)
 -   **Fixes and Improvements**

@@ -49,7 +49,7 @@ class VolumeService_1(BaseVersion):
 
     def create_cutout(
         self, resource, resolution, x_range, y_range, z_range, time_range, numpyVolume,
-        url_prefix, auth, session, send_opts):
+        url_prefix, auth, session, send_opts, parallel=True):
         """Upload a cutout to the Boss data store.
 
         Args:
@@ -64,6 +64,7 @@ class VolumeService_1(BaseVersion):
             auth (string): Token to send in the request header.
             session (requests.Session): HTTP session to use for request.
             send_opts (dictionary): Additional arguments to pass to session.send().
+            parallel (Union[bool, int]: True): Parallel upload count, or True/False to use/avoid parallelism.
         """
         numpyVolume = np.ascontiguousarray(numpyVolume)
 
@@ -100,8 +101,10 @@ class VolumeService_1(BaseVersion):
                 block_size=(1024, 1024, 32)
             )
 
-            for b in blocks:
-                _data = np.ascontiguousarray(
+            def _create_new_contiguous_array(b, z_range, y_range, x_range):
+                # Create a new C ordered numpy array. Used below to construct
+                # each block.
+                return np.ascontiguousarray(
                     numpyVolume[
                         b[2][0] - z_range[0]: b[2][1] - z_range[0],
                         b[1][0] - y_range[0]: b[1][1] - y_range[0],
@@ -109,11 +112,25 @@ class VolumeService_1(BaseVersion):
                     ],
                     dtype=numpyVolume.dtype
                 )
-                self.create_cutout(
-                    resource, resolution, b[0], b[1], b[2],
-                    time_range, _data, url_prefix, auth, session, send_opts
-                )
-            return
+
+            if parallel:
+                pool = multiprocessing.Pool(processes=parallel if isinstance(parallel, int) and parallel > 0 else multiprocessing.cpu_count())
+                pool.starmap(self.create_cutout, [
+                    (
+                        resource, resolution, b[0], b[1], b[2],
+                        time_range, 
+                        _create_new_contiguous_array(b, z_range, y_range, x_range), 
+                        url_prefix, auth, session, send_opts,
+                    )
+                 for b in blocks])
+            else:
+                for b in blocks:
+                    _data = _create_new_contiguous_array(b, z_range, y_range, x_range)
+                    self.create_cutout(
+                        resource, resolution, b[0], b[1], b[2],
+                        time_range, _data, url_prefix, auth, session, send_opts
+                    )
+                return
 
         compressed = blosc.compress(
             numpyVolume, typesize=self.get_bit_width(resource)
